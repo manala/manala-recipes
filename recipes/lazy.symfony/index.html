@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>    Manala Recipes - Lazy - Symfony
+</title>
+                    <link rel="stylesheet" href="/manala-recipes/build/app.dd4df6b8.css">
+            </head>
+    <body>
+
+        <div class="container">
+                <section>
+        <article>
+            <body><h1 id="lazy-symfony">Lazy - Symfony<a href="#lazy-symfony" class="anchor"></a></h1>
+<ul>
+<li><a href="#requirements">Requirements</a></li>
+</ul>
+<h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
+<ul>
+<li>Docker Desktop 2.2.0+</li>
+</ul>
+<h2 id="setup">Setup<a href="#setup" class="anchor"></a></h2>
+<p>Ok, let's init a <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application.</p>
+<pre class="code-multiline"><code id="a013611cb7020339f848fe1872d5a1ca">$ manala init -i lazy.symfony foo
+$ cd foo</code></pre>
+<p>Up the environment and shell into it into another terminal</p>
+<pre class="code-multiline"><code id="5a9d292db944439b57077c5402a9a54f">$ make up
+$ make sh</code></pre>
+<p>Create the <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application into <code class="code-inline" id="d42b9c57d24cf5db3bd8d332dc35437f">/tmp</code> and move files into your project (symfony can't create application in an non empty dir)</p>
+<pre class="code-multiline"><code id="210042da02df19f0a910a16ce3decb46">$ symfony new /tmp/foo --no-git --demo
+$ rsync -a /tmp/foo/ ./</code></pre>
+<p>Browse to <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> and enjoy :)</p></body>
+        </article>
+    </section>
+
+    <time datetime="2020-10-06UTC16:07:31+00:00">Last modified: October 6, 2020 16:07</time>
+        </div>
+
+                    <script src="/manala-recipes/build/runtime.1850121c.js"></script><script src="/manala-recipes/build/app.31659c40.js"></script>
+            </body>
+</html>

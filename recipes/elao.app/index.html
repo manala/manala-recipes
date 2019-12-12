@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>    Manala Recipes - Elao - App
+</title>
+                    <link rel="stylesheet" href="/manala-recipes/build/app.dd4df6b8.css">
+            </head>
+    <body>
+
+        <div class="container">
+                <section>
+        <article>
+            <body><h1 id="elao-app">Elao - App<a href="#elao-app" class="anchor"></a></h1>
+<ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#quick-start">Quick start</a></li>
+<li><a href="#system">System</a></li>
+<li><a href="#integration">Integration</a></li>
+<li><a href="#releases">Releases</a></li>
+<li><a href="#makefile">Makefile</a></li>
+<li><a href="#secrets">Secrets</a></li>
+<li><a href="#tips-tricks-and-tweaks">Tips, Tricks, and Tweaks</a></li>
+</ul>
+<h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
+<ul>
+<li>Make</li>
+<li>Vagrant 2.2.10+</li>
+<li>Landrush 1.3.2+</li>
+<li>VirtualBox 6.1.12+</li>
+<li>Docker Desktop 2.2.0+</li>
+</ul>
+<h2 id="overview">Overview<a href="#overview" class="anchor"></a></h2>
+<p>This recipe contains some helpful scripts in the context of a php/nodejs app, such as Makefile tasks in order to release and deploy your app.</p>
+<h2 id="quick-start">Quick start<a href="#quick-start" class="anchor"></a></h2>
+<p>In a shell terminal, change directory to your app, and run the following commands:</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="e51e49d30db61843f5a81c64e3192658">$ <span class="token builtin class-name">cd</span> /path/to/my/app
+    $ manala init
+    <span class="token comment"># Select the "elao.app" recipe</span></code></pre>
+<p>Edit the <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code> at the root directory of your project and add the following lines at the beginning of the file:</p>
+<pre class="code-multiline"><code id="9373f17e5e68c64fb38756e6ecd46f7d">.SILENT:
+
+-include .manala/Makefile</code></pre>
+<p>Then update the <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> file (see <a href="#releases">the releases example</a> below) and then run the <code class="code-inline" id="5dd555b7998ff20d65ca5d7bc7328329">manala up</code> command:</p>
+<pre class="code-multiline"><code id="11aada865406fa053cb0558d611871a8">    $ manala up</code></pre>
+<blockquote>
+<p>:warning: don't forget to run the <code class="code-inline" id="5dd555b7998ff20d65ca5d7bc7328329">manala up</code> command each time you update the <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> file to actually apply your changes !!!</p>
+</blockquote>
+<p>From now on, if you execute the <code class="code-inline" id="1e44bdd89936c3da837c09c086678c89">make help</code> command in your console, you should obtain the following output:</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="ce3b4a17aa39417b1cc03b30188cbe40">Usage: <span class="token function">make</span> <span class="token punctuation">[</span>target<span class="token punctuation">]</span>
+
+Help:
+  <span class="token builtin class-name">help</span> This <span class="token builtin class-name">help</span>
+
+Docker:
+  docker Run docker container
+
+App:</code></pre>
+<h2 id="system">System<a href="#system" class="anchor"></a></h2>
+<p>Here is an example of a system configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="9fd00663000f889ad17b1b2f2077ad47"><span class="token comment">##########</span>
+<span class="token comment"># System #</span>
+<span class="token comment">##########</span>
+
+<span class="token key atrule">system</span><span class="token punctuation">:</span>
+    <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">10</span>
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> app.vm
+    <span class="token comment">#memory: 2048 # Optionnal</span>
+    <span class="token comment">#cpus: 1 # Optionnal</span>
+    <span class="token comment">#motd: # Optionnal</span>
+    <span class="token comment">#    template: template/elao.j2</span>
+    <span class="token comment">#    message: App</span>
+    <span class="token comment">#timezone: Etc/UTC # Optionnal</span>
+    <span class="token comment">#locales: # Optionnal</span>
+    <span class="token comment">#    default: C.UTF-8</span>
+    <span class="token comment">#    codes: []</span>
+    <span class="token comment">#env: # Optionnal</span>
+    <span class="token comment">#    FOO: bar</span>
+    <span class="token key atrule">apt</span><span class="token punctuation">:</span>
+        <span class="token comment">#repositories: [] # Optionnal</span>
+        <span class="token comment">#preferences: [] # Optionnal</span>
+        <span class="token key atrule">packages</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> pdftk
+          <span class="token punctuation">-</span> https<span class="token punctuation">:</span>//github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5<span class="token punctuation">-</span>1.stretch_amd64.deb
+    <span class="token key atrule">files</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> /srv/app/var/log
+        <span class="token key atrule">src</span><span class="token punctuation">:</span> /srv/log
+        <span class="token key atrule">state</span><span class="token punctuation">:</span> link_directory
+      <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> /srv/app/var/cache
+        <span class="token key atrule">src</span><span class="token punctuation">:</span> /srv/cache
+        <span class="token key atrule">state</span><span class="token punctuation">:</span> link_directory
+      <span class="token comment">#- path: /srv/app/api/var/log</span>
+      <span class="token comment">#  src: /srv/log/api</span>
+      <span class="token comment">#  state: link_directory</span>
+      <span class="token comment">#- path: /srv/app/api/var/cache</span>
+      <span class="token comment">#  src: /srv/cache/api</span>
+      <span class="token comment">#  state: link_directory</span>
+    <span class="token key atrule">nginx</span><span class="token punctuation">:</span>
+        <span class="token key atrule">configs</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token comment"># configs:</span>
+        <span class="token comment">#     # Php fpm</span>
+        <span class="token comment">#     - file: app_php_fpm</span>
+        <span class="token comment">#       template: nginx/app_php_fpm.j2</span>
+        <span class="token comment">#     # Gzip</span>
+        <span class="token comment">#     - file: app_gzip</span>
+        <span class="token comment">#       template: nginx/app_gzip.j2</span>
+        <span class="token comment">#     # Ssl</span>
+        <span class="token comment">#     - file: app_ssl.conf</span>
+        <span class="token comment">#       template: nginx/app_ssl_offloading.conf.j2</span>
+        <span class="token comment">#     # Cors</span>
+        <span class="token comment">#     - file: app_cors</span>
+        <span class="token comment">#       template: nginx/app_cors.j2</span>
+        <span class="token comment">#     # No index</span>
+        <span class="token comment">#     - file: app_no_index</span>
+        <span class="token comment">#       template: nginx/app_no_index.j2</span>
+    <span class="token key atrule">php</span><span class="token punctuation">:</span>
+        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">7.4</span>
+        <span class="token key atrule">extensions</span><span class="token punctuation">:</span>
+          <span class="token comment"># Symfony</span>
+          <span class="token punctuation">-</span> intl
+          <span class="token punctuation">-</span> curl
+          <span class="token punctuation">-</span> mbstring
+          <span class="token punctuation">-</span> xml
+          <span class="token comment"># App</span>
+          <span class="token punctuation">-</span> mysql
+    <span class="token key atrule">nodejs</span><span class="token punctuation">:</span>
+        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">12</span>
+        <span class="token comment"># packages:</span>
+        <span class="token comment">#   - package: mjml</span>
+        <span class="token comment">#     version: 4.6.3</span>
+    <span class="token comment"># cron:</span>
+    <span class="token comment">#     files:</span>
+    <span class="token comment">#       - file: app</span>
+    <span class="token comment">#         env:</span>
+    <span class="token comment">#           SHELL: /usr/bin/zsh</span>
+    <span class="token comment">#           HOME: /srv/app</span>
+    <span class="token comment">#         jobs:</span>
+    <span class="token comment">#           - name: foo-bar</span>
+    <span class="token comment">#             job: bin/console app:foo:bar --no-interaction -vv &gt;&gt; /srv/log/cron.foo-bar.log 2&gt;&amp;1</span>
+    <span class="token comment">#             minute: 0</span>
+    <span class="token comment"># supervisor:</span>
+    <span class="token comment">#     configs:</span>
+    <span class="token comment">#         - file: app.conf</span>
+    <span class="token comment">#           programs:</span>
+    <span class="token comment">#               foo-bar:</span>
+    <span class="token comment">#                   command: zsh -c "bin/console app:foo:bar --no-interaction -vv"</span>
+    <span class="token comment">#                   directory: /srv/app</span>
+    <span class="token comment">#                   stdout_logfile: /srv/log/supervisor.foo-bar.log</span>
+    <span class="token comment"># MariaDB</span>
+    <span class="token key atrule">mariadb</span><span class="token punctuation">:</span>
+        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">10.5</span>
+    <span class="token comment"># ...*OR* MySQL...</span>
+    <span class="token key atrule">mysql</span><span class="token punctuation">:</span>
+        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">5.7</span>
+    <span class="token comment"># redis:</span>
+    <span class="token comment">#     version: "*"</span>
+    <span class="token comment">#     config:</span>
+    <span class="token comment">#       - save: '""' # Disable persistence</span>
+    <span class="token key atrule">elasticsearch</span><span class="token punctuation">:</span>
+        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">7</span>
+        <span class="token key atrule">plugins</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> analysis<span class="token punctuation">-</span>icu
+    <span class="token comment"># influxdb:</span>
+    <span class="token comment">#     version: "*"</span>
+    <span class="token comment">#     databases:</span>
+    <span class="token comment">#       - app</span>
+    <span class="token comment">#     users:</span>
+    <span class="token comment">#       - database: app</span>
+    <span class="token comment">#         name: app</span>
+    <span class="token comment">#         password: app</span>
+    <span class="token comment">#     privileges:</span>
+    <span class="token comment">#       - database: app</span>
+    <span class="token comment">#         user: app</span>
+    <span class="token comment">#         grant: ALL</span>
+    <span class="token comment">#     config:</span>
+    <span class="token comment">#       - reporting-disabled: true</span>
+    <span class="token key atrule">ssh</span><span class="token punctuation">:</span>
+        <span class="token key atrule">config</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">
+            Host *.elao.run
+                User         app
+                ForwardAgent yes
+            Host *.elao.local
+                User         app
+                ForwardAgent yes
+                ProxyCommand ssh gateway@bastion.elao.com -W %h:%p</span></code></pre>
+<h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
+<p>Here are some examples of integration configurations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="ac20e7dd52ce8d45320e8fa8aa1d3bfa"><span class="token comment">###############</span>
+<span class="token comment"># Integration #</span>
+<span class="token comment">###############</span>
+
+<span class="token key atrule">integration</span><span class="token punctuation">:</span>
+    <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
+      <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Integration
+        <span class="token key atrule">junit</span><span class="token punctuation">:</span> report/junit/<span class="token important">*.xml</span>
+        <span class="token key atrule">parallel</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+        <span class="token key atrule">warn</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+        <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Lint
+            <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.php<span class="token punctuation">-</span>cs<span class="token punctuation">-</span>fixer@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.twig@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.yaml@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.eslint@integration
+          <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Security
+            <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.symfony@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.yarn@integration
+          <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Test
+            <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.phpunit@integration
+                <span class="token key atrule">artifacts</span><span class="token punctuation">:</span> var/log/<span class="token important">*.log</span>
+                <span class="token comment"># artifacts:</span>
+                <span class="token comment">#   - var/log/foo.log</span>
+                <span class="token comment">#   - var/log/bar.log</span>
+                <span class="token comment"># env:</span>
+                <span class="token comment">#     DATABASE_URL: mysql://root@127.0.0.1:3306/app</span></code></pre>
+<p>In this example we have two parallel stages: <code class="code-inline" id="8a5da52ed126447d359e70c05721a8aa">api</code> and <code class="code-inline" id="532c28d5412dd75bf975fb951c740a30">mobile</code>, corresponding to two different sub-apps.</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="0c7b5430d01cc213104506ffe10637d0"><span class="token comment">###############</span>
+<span class="token comment"># Integration #</span>
+<span class="token comment">###############</span>
+
+<span class="token key atrule">integration</span><span class="token punctuation">:</span>
+    <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Integration <span class="token comment"># Optionnal</span>
+        <span class="token key atrule">parallel</span><span class="token punctuation">:</span> <span class="token boolean important">true</span> <span class="token comment"># ! Careful ! Could *NOT* be nested !</span>
+        <span class="token key atrule">junit</span><span class="token punctuation">:</span> report/junit/<span class="token important">*.xml</span>
+        <span class="token key atrule">artifacts</span><span class="token punctuation">:</span> var/log/<span class="token important">*.log</span>
+        <span class="token key atrule">warn</span><span class="token punctuation">:</span> <span class="token boolean important">true</span> <span class="token comment"># Turn errors into warnings (recursively applied)</span>
+        <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">app</span><span class="token punctuation">:</span> api <span class="token comment"># Optionnal</span>
+            <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.php<span class="token punctuation">-</span>cs<span class="token punctuation">-</span>fixer@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.symfony@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.phpunit@integration
+                <span class="token key atrule">artifacts</span><span class="token punctuation">:</span> var/log/<span class="token important">*.log</span>
+                <span class="token comment"># env:</span>
+                <span class="token comment">#     DATABASE_URL: mysql://root@127.0.0.1:3306/app</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">app</span><span class="token punctuation">:</span> mobile
+            <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.eslint@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.jest@integration</code></pre>
+<p>Add in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>:</p>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="47b245d62a5a426fee968acfc64942da"><span class="token comment">###########</span>
+<span class="token comment"># Install #</span>
+<span class="token comment">###########</span>
+
+...
+
+<span class="token symbol">install@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> APP_ENV <span class="token operator">=</span> test
+<span class="token symbol">install@integration</span><span class="token punctuation">:</span>
+    <span class="token comment"># Composer</span>
+    composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
+    <span class="token comment">#composer run-script symfony-scripts --ansi --verbose --no-interaction</span>
+    <span class="token comment"># Npm</span>
+    npm install --color<span class="token operator">=</span>always --no-progress --no-audit
+    <span class="token comment"># Yarn</span>
+    yarn install --color<span class="token operator">=</span>always --no-progress
+
+<span class="token comment">###########</span>
+<span class="token comment"># Build #</span>
+<span class="token comment">###########</span>
+
+...
+
+<span class="token symbol">build@integration</span><span class="token punctuation">:</span>
+    <span class="token comment"># Webpack Encore</span>
+    npx encore production --color<span class="token operator">=</span>always --no-progress
+
+<span class="token comment">########</span>
+<span class="token comment"># Lint #</span>
+<span class="token comment">########</span>
+
+...
+
+<span class="token symbol">lint.php-cs-fixer@integration</span><span class="token punctuation">:</span>
+    mkdir -p report/junit
+    vendor/bin/php-cs-fixer fix --dry-run --diff --format<span class="token operator">=</span>junit &gt; report/junit/php-cs-fixer.xml
+
+<span class="token symbol">lint.phpstan@integration</span><span class="token punctuation">:</span>
+    mkdir -p report/junit
+    vendor/bin/phpstan --error-format<span class="token operator">=</span>junit --no-progress --no-interaction analyse &gt; report/junit/phpstan.xml
+
+<span class="token symbol">lint.twig@integration</span><span class="token punctuation">:</span>
+<span class="token symbol">    bin/console lint</span><span class="token punctuation">:</span>twig templates --ansi --no-interaction
+
+<span class="token symbol">lint.yaml@integration</span><span class="token punctuation">:</span>
+<span class="token symbol">    bin/console lint</span><span class="token punctuation">:</span>yaml config translations --ansi --no-interaction
+
+<span class="token symbol">lint.eslint@integration</span><span class="token punctuation">:</span>
+    npx eslint src --format junit --output-file report/junit/eslint.xml
+
+<span class="token symbol">lint.stylelint@integration</span><span class="token punctuation">:</span>
+    mkdir -p report/junit
+    npx stylelint <span class="token string">"assets/styles/**/*.scss"</span> \
+        --syntax scss \
+        --custom-formatter <span class="token string">"node_modules/stylelint-junit-formatter"</span> \
+        &gt; report/junit/stylelint.xml
+
+<span class="token symbol">lint.flow@integration</span><span class="token punctuation">:</span>
+    mkdir -p report/junit
+    npx flow check --json <span class="token operator">|</span> npx flow-junit-transformer &gt; report/junit/flow.xml
+
+<span class="token comment">############</span>
+<span class="token comment"># Security #</span>
+<span class="token comment">############</span>
+
+...
+
+<span class="token symbol">security.symfony@integration</span><span class="token punctuation">:</span>
+<span class="token symbol">    symfony check</span><span class="token punctuation">:</span>security
+
+<span class="token symbol">security.yarn@integration</span><span class="token punctuation">:</span>
+    yarn audit <span class="token punctuation">;</span> RC<span class="token operator">=</span><span class="token variable">$$</span><span class="token punctuation">{</span>?<span class="token punctuation">}</span> <span class="token punctuation">;</span> [ <span class="token variable">$$</span><span class="token punctuation">{</span>RC<span class="token punctuation">}</span> -gt 2 ] &amp;&amp; exit <span class="token variable">$$</span><span class="token punctuation">{</span>RC<span class="token punctuation">}</span> <span class="token operator">|</span><span class="token operator">|</span> exit 0
+
+<span class="token symbol">security.npm@integration</span><span class="token punctuation">:</span>
+    npm audit --audit-level moderate
+
+<span class="token comment">########</span>
+<span class="token comment"># Test #</span>
+<span class="token comment">########</span>
+
+...
+
+<span class="token symbol">test.phpunit@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> APP_ENV <span class="token operator">=</span> test
+<span class="token symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
+    <span class="token comment"># Db</span>
+<span class="token symbol">    bin/console doctrine</span><span class="token punctuation">:</span>database<span class="token punctuation">:</span>create --ansi
+<span class="token symbol">    bin/console doctrine</span><span class="token punctuation">:</span>schema<span class="token punctuation">:</span>create --ansi
+    <span class="token comment"># PHPUnit</span>
+    bin/phpunit --colors<span class="token operator">=</span>always --log-junit report/junit/phpunit.xml
+
+<span class="token symbol">test.jest@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> JEST_JUNIT_OUTPUT_DIR <span class="token operator">=</span> report/junit
+<span class="token symbol">test.jest@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> JEST_JUNIT_OUTPUT_NAME <span class="token operator">=</span> jest.xml
+<span class="token symbol">test.jest@integration</span><span class="token punctuation">:</span>
+    npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
+<h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
+<p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="ea0ece5be829e8b29c60f50781f8bbfd"><span class="token comment">############</span>
+<span class="token comment"># Releases #</span>
+<span class="token comment">############</span>
+
+<span class="token key atrule">releases</span><span class="token punctuation">:</span>
+
+  <span class="token punctuation">-</span> <span class="token important">&amp;release</span>
+    <span class="token comment">#app: api # Optionnal</span>
+    <span class="token key atrule">mode</span><span class="token punctuation">:</span> production
+    <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@git.elao.com<span class="token punctuation">:</span>&lt;vendor<span class="token punctuation">&gt;</span>/&lt;app<span class="token punctuation">&gt;</span><span class="token punctuation">-</span>release.git
+    <span class="token comment"># Release</span>
+    <span class="token key atrule">release_tasks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@production
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@production
+    <span class="token comment"># You can either explicitly list all the paths you want to include</span>
+    <span class="token key atrule">release_add</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> bin
+      <span class="token punctuation">-</span> config
+      <span class="token punctuation">-</span> public
+      <span class="token punctuation">-</span> src
+      <span class="token punctuation">-</span> templates
+      <span class="token punctuation">-</span> translations
+      <span class="token punctuation">-</span> vendor
+      <span class="token punctuation">-</span> composer.* <span class="token comment"># Composer.json required by src/Kernel.php to determine project root dir</span>
+                   <span class="token comment"># Composer.lock required by composer on post-install (warmup)</span>
+      <span class="token punctuation">-</span> Makefile
+
+    <span class="token comment"># Or you can include all by default and only list the paths you want to exclude</span>
+    <span class="token comment"># release_removed:</span>
+    <span class="token comment">#   - ansible</span>
+    <span class="token comment">#   - build</span>
+    <span class="token comment">#   - doc</span>
+    <span class="token comment">#   - node_modules</span>
+    <span class="token comment">#   - tests</span>
+    <span class="token comment">#   - .env.test</span>
+    <span class="token comment">#   - .php_cs.dist</span>
+    <span class="token comment">#   - .manala*</span>
+    <span class="token comment">#   - package.json</span>
+    <span class="token comment">#   - phpunit.xml.dist</span>
+    <span class="token comment">#   - README.md</span>
+    <span class="token comment">#   - Vagrantfile</span>
+    <span class="token comment">#   - webpack.config.js</span>
+    <span class="token comment">#   - yarn.lock</span>
+
+    <span class="token comment"># Deploy</span>
+    <span class="token key atrule">deploy_hosts</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">ssh_host</span><span class="token punctuation">:</span> foo<span class="token punctuation">-</span>01.bar.elao.local
+        <span class="token comment">#master: true # Any custom variable are welcomed</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">ssh_host</span><span class="token punctuation">:</span> foo<span class="token punctuation">-</span>02.bar.elao.local
+    <span class="token key atrule">deploy_dir</span><span class="token punctuation">:</span> /srv/app
+    <span class="token key atrule">deploy_shared_files</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> config/parameters.yml
+    <span class="token key atrule">deploy_shared_dirs</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> var/log
+    <span class="token key atrule">deploy_tasks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make warmup@production
+      <span class="token comment">#- shell: make migration@production</span>
+      <span class="token comment">#  when: master | default # Conditions on custom host variables (jinja2 format)</span>
+    <span class="token key atrule">deploy_post_tasks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> sudo /bin/systemctl reload php7.4<span class="token punctuation">-</span>fpm
+      <span class="token comment">#- shell: sudo /bin/systemctl restart supervisor</span>
+
+  <span class="token punctuation">-</span> <span class="token key atrule">&lt;&lt;</span> <span class="token punctuation">:</span> <span class="token important">*release</span>
+    <span class="token key atrule">mode</span><span class="token punctuation">:</span> staging
+    <span class="token key atrule">release_tasks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@staging
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@staging
+    <span class="token comment"># Deploy</span>
+    <span class="token key atrule">deploy_hosts</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">ssh_host</span><span class="token punctuation">:</span> foo.bar.elao.ninja.local
+    <span class="token key atrule">deploy_tasks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make warmup@staging</code></pre>
+<h2 id="makefile">Makefile<a href="#makefile" class="anchor"></a></h2>
+<p>Makefile targets that are supposed to be runned via docker must be prefixed.</p>
+<pre class="code-multiline"><code id="26eefa121751e343b4a2dd990d202594">foo: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+foo:
+    # Do something really foo...</code></pre>
+<p>Ssh</p>
+<pre class="code-multiline"><code id="fff8ca7a134d45e620fa8df859671e74">#######
+# Ssh #
+#######
+
+## Ssh to staging server
+ssh@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+ssh@staging:
+    ssh app@foo.staging.elao.run
+
+# Single host...
+
+ssh@production: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+ssh@production:
+    ...
+
+# Multi host...
+
+ssh@production-01: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+ssh@production-01:
+    ...</code></pre>
+<p>Sync</p>
+<pre class="code-multiline"><code id="238b5937ce83ac1228f809c183b529a9">sync@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+sync@staging:
+    mkdir -p var
+    rsync --archive --compress --verbose --delete-after \
+        app@foo.staging.elao.run:/srv/app/current/var/files/ \
+        var/files/
+
+# Multi targets...
+sync-uploads@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+sync-uploads@staging:
+  ...
+
+# Multi apps...
+sync.api-uploads@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+sync.api-uploads@staging:
+  ...</code></pre>
+<h3 id="git-tools">Git tools<a href="#git-tools" class="anchor"></a></h3>
+<p>This recipe contains some git helpers such as the <a href="./make/make.git.mk"><code class="code-inline" id="e6c58e1556cef6518971d204931757e6">git_diff</code></a> function.</p>
+<p>This function is useful for example to apply <code class="code-inline" id="bb7790bfaa80da52ecba1a151b299b55">php-cs</code>, <code class="code-inline" id="84a40fcfe7ec43f029d5956efb08d1c2">php-cs-fix</code> or <code class="code-inline" id="b098e670cdbfc421583801f6038ae38d">PHPStan</code> checks only on the subset of updated PHP files and not on any PHP file of your project.</p>
+<p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="e9821a313f802ec649b58e33a335fc7e">lint.php-cs-fixer: DIFF <span class="token operator">=</span> <span class="token variable"><span class="token variable">$(</span>call git_diff, php, src tests<span class="token variable">)</span></span>
+lint.php-cs-fixer:
+    <span class="token variable"><span class="token variable">$(</span><span class="token keyword">if</span> <span class="token punctuation">$(</span>DIFF<span class="token punctuation">)</span>, <span class="token punctuation">\</span>
+        vendor/bin/php-cs-fixer fix --config<span class="token operator">=</span>.php_cs.dist --path-mode<span class="token operator">=</span>intersection --diff --dry-run <span class="token punctuation">$(</span>DIFF<span class="token punctuation">)</span>, <span class="token punctuation">\</span>
+        <span class="token builtin class-name">printf</span> <span class="token string">"You have made no change in PHP files<span class="token entity" title="\n">\n</span>"</span> <span class="token punctuation">\</span>
+    <span class="token variable">)</span></span></code></pre>
+<h3 id="try-tools">Try tools<a href="#try-tools" class="anchor"></a></h3>
+<p>This recipe contains some try helpers such as the <a href="./make/make.try.mk"><code class="code-inline" id="73691059dcea540103db82ad2b3c40f7">try_finally</code></a> function.</p>
+<p>This function is useful for example to run <code class="code-inline" id="85af727fd022d3a13e7972fd6a418582">phpunit</code> tests needing a started symfony server, and to stop this server regardless of the tests retur code.</p>
+<p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="e0f9aa14ca8d2939a55c0be70ca37768">test.phpunit@integration:
+    symfony server:start --ansi --no-humanize --daemon --no-tls --port<span class="token operator">=</span><span class="token number">8000</span>
+    <span class="token variable"><span class="token variable">$(</span>call try_finally, <span class="token punctuation">\</span>
+        bin/phpunit --colors<span class="token operator">=</span>always --log-junit report/junit/phpunit.xml, <span class="token punctuation">\</span>
+        symfony server:stop --ansi <span class="token punctuation">\</span>
+    <span class="token variable">)</span></span></code></pre>
+<h2 id="secrets">Secrets<a href="#secrets" class="anchor"></a></h2>
+<p>In order to deploy secrets, you can use <a href="https://docs.gomplate.ca" target="_blank">Gomplate</a>, called by a make task.
+Gomplate takes a template, queries its values from a Vault server and renders a file.</p>
+<p>Add the following task in the <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>:</p>
+<pre class="code-multiline"><code id="660962ab80697974ea8ff30b8ab7dcf0">###########
+# Secrets #
+###########
+
+secrets/%: _secrets
+    gomplate --config=secrets/$(*)
+_secrets:</code></pre>
+<p>Put templates in a <code class="code-inline" id="7de38f3c3d3baa7ca58a366f09577586">secrets</code> directory at the root of the project.</p>
+<p>Here is an example of template:</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="1517f3aa313cc05cefd6244de5c34c93"><span class="token comment"># .env.prod</span>
+
+%YAML <span class="token number">1.1</span>
+---
+
+datasources:
+  vault:
+    url: vault+https://my-vault-server.com
+
+outputFiles:
+  - /path/to/rendered/file
+
+in: <span class="token operator">|</span>
+  Loop on all values of the secret:
+    <span class="token punctuation">{</span><span class="token punctuation">{</span> range <span class="token variable">$key</span>, <span class="token variable">$value</span> :<span class="token operator">=</span> <span class="token punctuation">(</span>datasource <span class="token string">"vault"</span> <span class="token string">"MyApp/data/env"</span><span class="token punctuation">)</span>.data -<span class="token punctuation">}</span><span class="token punctuation">}</span>
+    <span class="token punctuation">{</span><span class="token punctuation">{</span> <span class="token variable">$key</span> <span class="token punctuation">}</span><span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">{</span> <span class="token variable">$value</span> <span class="token operator">|</span> quote <span class="token punctuation">}</span><span class="token punctuation">}</span>
+    <span class="token punctuation">{</span><span class="token punctuation">{</span> end -<span class="token punctuation">}</span><span class="token punctuation">}</span>
+
+  Query only one value of the secret:
+    <span class="token punctuation">{</span><span class="token punctuation">{</span> <span class="token punctuation">(</span>datasource <span class="token string">"vault"</span> <span class="token string">"MyApp/data/env"</span><span class="token punctuation">)</span>.data.value1 -<span class="token punctuation">}</span><span class="token punctuation">}</span></code></pre>
+<p>/!\ Note that the path to the secret will slightly differ from what the Vault server will display \
+/!\ If the path is <code class="code-inline" id="64c63aa5770c80950856a62d52f3197e">MyApp/production/env</code> on the Vault server, it will become <code class="code-inline" id="d1fe1e84e8be71210179d429f6295150">MyApp/data/production/env</code> in the template</p>
+<p>Gomplate uses <a href="https://docs.gomplate.ca/syntax/" target="_blank">Go Template syntax</a></p>
+<p>To render the file, call the template with the <code class="code-inline" id="cbc77f6d5fa27f4f0878b22157489a6d">make secrets/%</code> task, where <code class="code-inline" id="0bcef9c45bd8a48eda1b26eb0c61c869">%</code> is the name of the template.</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="38d14903b9a4b0dcfdee2abcc47ad167"><span class="token function">make</span> secrets/.env.prod</code></pre>
+<h2 id="tips-tricks-and-tweaks">Tips, Tricks, and Tweaks<a href="#tips-tricks-and-tweaks" class="anchor"></a></h2>
+<ul>
+<li>Vagrant root privilege requirement
+<a href="https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement" target="_blank">https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement</a></li>
+<li>Debug ansible provisionning
+<pre class="code-multiline"><code id="5ed0125f03431e6a4f2df8fd17f0e610">ansible-galaxy collection install manala.roles --collections-path /vagrant/ansible/collections</code></pre></li>
+</ul></body>
+        </article>
+    </section>
+
+    <time datetime="2020-10-06UTC16:07:31+00:00">Last modified: October 6, 2020 16:07</time>
+        </div>
+
+                    <script src="/manala-recipes/build/runtime.1850121c.js"></script><script src="/manala-recipes/build/app.31659c40.js"></script>
+            </body>
+</html>
