@@ -1,0 +1,43 @@
+manala:
+    description: Elao - Generic application with PHP and Node.js support
+    sync:
+      - .manala/ansible
+      - .manala/docker
+      - .manala/jenkins
+      - .manala/make
+      - .manala/.gitignore
+      - README.md .manala/README.md
+      - .manala.yaml.tmpl.dist
+
+##########
+# System #
+##########
+
+system:
+    version: 9
+    hostname: app.vm
+    php:
+        version: ~
+    nodejs:
+        version: ~
+    mysql:
+        version: ~
+    mariadb:
+        version: ~
+    apt:
+        packages: []
+    ssh:
+        config: ~
+
+###############
+# Integration #
+###############
+
+integration:
+    stages: []
+
+############
+# Releases #
+############
+
+releases: []

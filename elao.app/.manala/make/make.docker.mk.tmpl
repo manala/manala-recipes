@@ -1,0 +1,42 @@
+##########
+# Docker #
+##########
+
+# Run docker container.
+#
+# Examples:
+#
+# Example #1:
+#
+#   $(call docker_run)
+#
+# Example #2:
+#
+#   $(call docker_run, whoami)
+
+define docker_run
+	$(call message, Building docker image...) \
+	&& ID=$$( \
+		docker build \
+			--quiet \
+			.manala/docker \
+	) \
+	&& mkdir -p $(CURDIR)/.manala/.cache/docker \
+	&& docker run \
+		--rm \
+		--tty \
+		--interactive \
+		--hostname {{ .Vars.system.hostname }} \
+		--mount type=bind,consistency=delegated,source=$(CURDIR),target=/srv/app \
+		--env XDG_CACHE_HOME=/srv/.cache \
+		--mount type=bind,consistency=delegated,source=$(CURDIR)/.manala/.cache/docker,target=/srv/.cache \
+		--env SSH_KEY=/home/docker/.ssh/id_rsa \
+		--mount type=bind,consistency=cached,source=$(HOME)/.ssh/id_rsa,target=/home/docker/.ssh/id_rsa \
+		--mount type=bind,consistency=cached,source=$(HOME)/.gitconfig,target=/home/docker/.gitconfig \
+		$${ID} \
+		$(if $(1),$(strip $(1)),bash)
+endef
+
+ifneq ($(container),docker)
+DOCKER_SHELL = $(call docker_run,$(SHELL))
+endif

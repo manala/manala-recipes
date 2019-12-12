@@ -1,0 +1,49 @@
+{{/* Release makefile target */}}
+{{ define "release_target" -}}
+    {{- $release := . -}}
+    {{ if hasKey $release "app" }}.{{ $release.app }}{{ end }}@{{ $release.mode }}
+{{- end -}}
+
+{{/* Release makefile help */}}
+{{- define "release_help" -}}
+    {{- $release := . -}}
+    {{ if hasKey $release "app" }}{{ $release.app }} {{ end }}in {{ $release.mode }}
+{{- end -}}
+
+{{/* Release ansible group */}}
+{{- define "release_group" -}}
+    {{- $release := . -}}
+    {{ if hasKey $release "app" }}{{ $release.app }}_{{ end }}{{ $release.mode }}
+{{- end -}}
+
+{{/* Release ansible host */}}
+{{- define "release_host" -}}
+    {{- $release := . -}}
+    {{ if hasKey $release "app" }}.{{ $release.app }}{{ end }}@{{ $release.mode }}
+{{- end -}}
+
+{{/* Release ansible tasks */}}
+{{- define "release_tasks" -}}
+    {{- $tasks := list -}}
+    {{- range $task := . -}}
+      {{- if hasKey $task "when" -}}
+        {{- $task := set $task "when" (cat "{{" $task.when "}}")  -}}
+      {{- end -}}
+      {{ $tasks = mustAppend $tasks $task -}}
+    {{- end -}}
+    {{- $tasks | toYaml }}
+{{- end -}}
+
+{{/* Debian release */}}
+{{- define "debian_release" -}}
+    {{- $debian_releases := dict 8 "jessie" 9 "stretch" 10 "buster" -}}
+    {{- $version := .version -}}
+    {{- index $debian_releases ($version | toString) -}}
+{{- end -}}
+
+{{/* Ubuntu release */}}
+{{- define "ubuntu_release" -}}
+    {{- $ubuntu_releases := dict 8 "trusty" 9 "xenial" 10 "bionic" -}}
+    {{- $version := .version -}}
+    {{- index $ubuntu_releases ($version | toString) -}}
+{{- end -}}

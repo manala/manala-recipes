@@ -1,0 +1,9 @@
+Host *
+    StrictHostKeyChecking no
+    HashKnownHosts        no
+    UserKnownHostsFile    /dev/null
+    LogLevel              ERROR
+
+{{ if .Vars.system.ssh.config -}}
+{{ .Vars.system.ssh.config }}
+{{- end -}}
