@@ -1,0 +1,138 @@
+{{- $debian_releases := dict 8 "jessie" 9 "stretch" 10 "buster" -}}
+{{- $debian_release := index $debian_releases (.Vars.system.version|toString) -}}
+
+{{- $ubuntu_releases := dict 8 "trusty" 9 "xenial" 10 "bionic" -}}
+{{- $ubuntu_release := index $ubuntu_releases (.Vars.system.version|toString) -}}
+
+FROM debian:{{ $debian_release }}-slim
+
+LABEL maintainer="Elao <contact@elao.com>"
+
+##########
+# System #
+##########
+
+# The 'container' environment variable tells systemd that it's running inside a
+# Docker container environment.
+# It's also internally used for checking we're running inside a container too.
+ENV container="docker"
+
+RUN \
+    # Disable irrelevants apt-key warnings
+    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
+    # Disable all debian user interaction
+    && export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        bash bash-completion \
+        apt-utils apt-transport-https \
+        ca-certificates \
+        procps \
+        curl \
+        make \
+        less \
+        vim-tiny \
+        gnupg2 dirmngr \
+        openssh-client \
+        sudo \
+        git \
+        rsync \
+    # Srv
+    && mkdir --parents /srv \
+    && chmod 777 /srv \
+    # User
+    && adduser --disabled-password --gecos "" docker \
+    # Bash
+    && sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /home/docker/.bashrc \
+    # Sudo
+    && echo "docker ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/docker \
+    # Ansible
+    && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu {{ $ubuntu_release }} main" > /etc/apt/sources.list.d/ansible.list \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ansible
+
+COPY etc/ssh_config /etc/ssh/ssh_config
+
+ENV \
+    ANSIBLE_GATHER_SUBSET="all,!hardware" \
+    ANSIBLE_STDOUT_CALLBACK="skippy" \
+    ANSIBLE_RETRY_FILES_ENABLED="0" \
+    ANSIBLE_CACHE_PLUGIN="jsonfile" \
+    ANSIBLE_SSH_PIPELINING="1"
+
+COPY bin/entrypoint /usr/local/bin/entrypoint
+
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
+
+WORKDIR /srv/app
+
+{{ if .Vars.system.php.version -}}
+{{- $php := .Vars.system.php -}}
+#######
+# Php #
+#######
+
+RUN \
+    echo "deb https://packages.sury.org/php/ {{ $debian_release }} main" > /etc/apt/sources.list.d/php.list \
+    && curl -sSL https://packages.sury.org/php/apt.gpg --output /etc/apt/trusted.gpg.d/php.gpg \
+    # Disable irrelevants apt-key warnings
+    && export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
+    # Disable all debian user interaction
+    && export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        php{{ $php.version }}-cli \
+        {{- range $extension := $php.extensions }}
+        php{{ $php.version }}-{{ $extension }} \
+        {{- end }}
+    # Composer
+    && apt-get install -y --no-install-recommends \
+        unzip \
+    && curl -sSL https://getcomposer.org/installer | php -- --install-dir /usr/local/bin --filename composer
+
+{{- end }}
+
+{{ if .Vars.system.nodejs.version -}}
+{{- $nodejs := .Vars.system.nodejs -}}
+##########
+# NodeJs #
+##########
+
+RUN \
+    echo "deb https://deb.nodesource.com/node_{{ $nodejs.version }}.x {{ $debian_release }} main" > /etc/apt/sources.list.d/node.list \
+    && curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
+        | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
+    && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg \
+        | apt-key add - \
+    # Disable irrelevants apt-key warnings
+    && export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
+    # Disable all debian user interaction
+    && export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        nodejs \
+        yarn
+
+{{- end }}
+
+{{ if .Vars.system.apt.packages -}}
+{{- $apt := .Vars.system.apt -}}
+#######
+# Apt #
+#######
+
+RUN \
+    # Disable irrelevants apt-key warnings
+    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
+    # Disable all debian user interaction
+    && export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        {{ $apt.packages | join " " }}
+
+{{- end }}
+
+USER docker

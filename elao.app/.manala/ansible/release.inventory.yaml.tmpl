@@ -1,0 +1,52 @@
+{{- define "release_group" -}}
+  {{ if .app }}{{ .app }}_{{ end }}{{ .env }}
+{{- end -}}
+
+{{- define "release_host" -}}
+  {{ if .app }}.{{ .app }}{{ end }}@{{ .env }}
+{{- end -}}
+
+{{- define "release_tasks" -}}
+  {{- $indent := .indent -}}
+  {{- range $task := .tasks }}
+{{ (print "- shell: " ($task.shell | toYaml | indent 2 | trim)) | indent $indent }}
+  {{- if $task.when }}
+{{ (print "  when: \"{{ " $task.when " }}\"") | indent $indent }}
+  {{- end }}
+  {{- end }}
+{{- end -}}
+
+all:
+  children:
+{{ range $release := .Vars.releases }}
+    {{ template "release_group" $release }}:
+      hosts:
+        localhost{{ template "release_host" $release }}:
+          ansible_connection: local
+      vars:
+        release_dir: /srv/release/{{ if .app }}{{ .app }}/{{ end }}{{ .env }}
+        release_git_dir: /srv/app
+        {{- if or .app .app_dir }}
+        release_target_dir: {{ default .app .app_dir }}
+        {{- end }}
+        {{- if .Vars.release_tasks }}
+        release_tasks:
+          {{- template "release_tasks" dict "tasks" .Vars.release_tasks "indent" 8 }}
+        {{- end }}
+        release_repo: {{ .repo }}
+        {{- if or .env .env_branch }}
+        release_version: {{ if .env_branch -}}
+                            {{ .env_branch }}
+                         {{- else -}}
+                            {{ if .app }}{{ .app }}/{{ end }}{{ .env }}
+                         {{- end }}
+        {{- end }}
+        {{- if .Vars.release_removed }}
+        release_removed:
+        {{ .Vars.release_removed | toYaml | indent 8 | trim }}
+        {{- end }}
+        {{- if .Vars.release_add }}
+        release_add:
+        {{ .Vars.release_add | toYaml | nindent 8 | trim }}
+        {{- end }}
+{{ end -}}

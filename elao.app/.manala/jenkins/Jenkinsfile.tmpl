@@ -1,0 +1,45 @@
+#!/usr/bin/env groovy
+
+pipeline {
+  agent {
+      dockerfile {
+          dir '.manala/docker'
+      }
+  }
+  stages {
+    {{- range $stage := .Vars.integration.stages }}
+    stage('{{ $stage.label }}') {
+      parallel {
+        {{- range $track := $stage.tracks }}
+        stage('{{ default "App" (default ((default "" $track.app) | title) $track.label) }}') {
+          stages {
+            {{- range $step := $track.steps }}
+            stage('{{ $step.label }}') {
+              steps {
+                {{- if $track.app }}
+                dir('{{ default $track.app $track.app_dir }}') {
+                  {{- range $task := $step.tasks }}
+                  sh '{{ $task }}'
+                  {{- end }}
+                }
+                {{- else }}
+                {{- range $task := $step.tasks }}
+                sh '{{ $task }}'
+                {{- end }}
+                {{- end }}
+              }
+            }
+            {{- end }}
+          }
+        }
+        {{- end }}
+      }
+    }
+    {{- end }}
+  }
+  post {
+    always {
+      junit testResults: '**/report/junit/*.xml', allowEmptyResults: true
+    }
+  }
+}

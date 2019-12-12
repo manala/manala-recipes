@@ -1,0 +1,71 @@
+{{- define "release_group" -}}
+  {{ if .app }}{{ .app }}_{{ end }}{{ .env }}
+{{- end -}}
+
+{{- define "release_host" -}}
+  {{ if .app }}.{{ .app }}{{ end }}@{{ .env }}
+{{- end -}}
+
+{{- define "release_tasks" -}}
+  {{- $indent := .indent -}}
+  {{- range $task := .tasks }}
+{{ (print "- shell: " ($task.shell | toYaml | indent 2 | trim)) | indent $indent }}
+  {{- if $task.when }}
+{{ (print "  when: \"{{ " $task.when " }}\"") | indent $indent }}
+  {{- end }}
+  {{- end }}
+{{- end -}}
+
+all:
+  children:
+{{ range $release := .Vars.releases }}
+{{- if $release.deploy_hosts }}
+    {{ template "release_group" $release }}:
+      hosts:
+        {{- range $index, $host := .deploy_hosts }}
+        {{ (add $index 1) | printf "%02d" }}{{ template "release_host" $release }}:
+          # Ansible
+          ansible_host: {{ $host.ssh_host }}
+          {{- if $host.ssh_user }}
+          ansible_ssh_user: {{ $host.ssh_user }}
+          {{- end }}
+          {{- if $host.ssh_args }}
+          ansible_ssh_extra_args: {{ $host.ssh_args }}
+          {{- end }}
+          # Host
+          {{ $host | toYaml | indent 10 | trim }}
+        {{- end }}
+      vars:
+        deploy_releases: {{ default 3 .deploy_releases }}
+        deploy_strategy: git
+        deploy_strategy_git_repo: {{ .repo }}
+        {{- if or .env .env_branch }}
+        deploy_strategy_git_version: {{ if .env_branch -}}
+                            {{ .env_branch }}
+                         {{- else -}}
+                            {{ if .app }}{{ .app }}/{{ end }}{{ .env }}
+                         {{- end }}
+        {{- end }}
+        deploy_dir: {{ .deploy_dir }}
+        {{- if .deploy_tasks }}
+        deploy_tasks:
+          {{- template "release_tasks" dict "tasks" .deploy_tasks "indent" 8 }}
+        {{- end }}
+        {{- if .deploy_post_tasks }}
+        deploy_post_tasks:
+          {{- template "release_tasks" dict "tasks" .deploy_post_tasks "indent" 8 }}
+        {{- end }}
+        {{- if .deploy_shared_files }}
+        deploy_shared_files:
+        {{ .deploy_shared_files | toYaml | indent 8 | trim }}
+        {{- end }}
+        {{- if .deploy_shared_dirs }}
+        deploy_shared_dirs:
+        {{ .deploy_shared_dirs | toYaml | indent 8 | trim }}
+        {{- end }}
+        {{- if .deploy_writable_dirs }}
+        deploy_writable_dirs:
+        {{ .deploy_writable_dirs | toYaml | indent 8 | trim }}
+        {{- end }}
+{{ end -}}
+{{ end -}}

@@ -1,0 +1,27 @@
+####################################################################
+# !!! REMINDER !!!                                                 #
+# Don't forget to run `manala up` each time you update this file ! #
+####################################################################
+
+manala:
+    recipe: elao.app
+
+##########
+# System #
+##########
+
+system:
+    version: {{ .Vars.system.version }}
+    hostname: {{ .Vars.system.hostname }}
+    # php:
+    #     version: 7.3
+    #     extensions:
+    #       # Symfony
+    #       - intl
+    #       - curl
+    #       - mbstring
+    #       - xml
+    #       # App
+    #       - mysql
+    # nodejs:
+    #     version: 12
