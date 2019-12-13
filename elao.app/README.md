@@ -32,7 +32,7 @@ Edit the `Makefile` at the root directory of your project and add the following 
 ```
 .SILENT:
 
--include .manala/make/Makefile
+-include .manala/Makefile
 ```
 
 Then update the `.manala.yaml` file (see [the releases example](#releases) below) and then run the `manala up` command:
@@ -67,10 +67,42 @@ Here is an example of a system configuration in `.manala.yaml`:
 ##########
 
 system:
-    version: 9
+    version: 10
     hostname: app.vm
+    #memory: 2048 # Optionnal
+    #cpus: 1 # Optionnal
+    #motd: # Optionnal
+    #    template: template/elao.j2
+    #    message: App
+    #timezone: Etc/UTC # Optionnal
+    #locales: # Optionnal
+    #    default: C.UTF-8
+    #    codes: []
+    #env: # Optionnal
+    #    FOO: bar
+    apt:
+        #repositories: [] # Optionnal
+        #preferences: [] # Optionnal
+        packages:
+          - pdftk
+          - https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb
+    files:
+      - path: /srv/app/var/log
+        src: /srv/log
+        state: link_directory
+      - path: /srv/app/var/cache
+        src: /srv/cache
+        state: link_directory
+      #- path: /srv/app/api/var/log
+      #  src: /srv/log/api
+      #  state: link_directory
+      #- path: /srv/app/api/var/cache
+      #  src: /srv/cache/api
+      #  state: link_directory
+    nginx:
+        configs: []
     php:
-        version: 7.3
+        version: 7.4
         extensions:
           # Symfony
           - intl
@@ -79,8 +111,6 @@ system:
           - xml
           # App
           - mysql
-    symfony:
-        version: "*"
     nodejs:
         version: 12
     # MariaDB
@@ -93,10 +123,6 @@ system:
         version: 7
         plugins:
           - analysis-icu
-    apt:
-        packages:
-          - pdftk
-          - https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb
     ssh:
         config: |
             Host *.elao.run

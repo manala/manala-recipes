@@ -27,11 +27,6 @@ system:
           - mysql
     {{- end }}
 
-    {{- if .Vars.system.symfony.version }}
-    symfony:
-        version: {{ .Vars.system.symfony.version | toYaml }}
-    {{- end }}
-
     {{- if .Vars.system.nodejs.version }}
     nodejs:
         version: {{ .Vars.system.nodejs.version | toYaml }}

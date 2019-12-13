@@ -1,0 +1,364 @@
+{{- with .Vars.system -}}
+
+all:
+    hosts:
+
+        ###############
+        # Development #
+        ###############
+
+        development:
+            # Ansible
+            ansible_connection: local
+            ansible_python_interpreter: /usr/bin/python3
+            # Accounts
+            manala_accounts_enabled: true
+            # Motd
+            manala_motd_enabled: true
+            # Timezone
+            manala_timezone_enabled: true
+            # Locales
+            manala_locales_enabled: true
+            # Zsh
+            manala_zsh_enabled: true
+            # Environment
+            manala_environment_enabled: true
+            # Apt
+            manala_apt_enabled: true
+            manala_apt_packages:
+              - rsync
+              - wget
+              - curl
+              - make
+              - less
+              - ssl-cert
+              - htop
+            {{- if .apt.packages }}
+              # App
+              {{- .apt.packages | toYaml | nindent 14 }}
+            {{- end }}
+            # Ssh
+            manala_ssh_enabled: true
+            manala_ssh_client_config_template: config/client/default.dev.j2
+            # Git
+            manala_git_enabled: true
+            # Oh my zsh
+            manala_ohmyzsh_enabled: true
+            # Vim
+            manala_vim_enabled: true
+            # Alternatives
+            manala_alternatives_enabled: true
+            # Files
+            manala_files_enabled: true
+            # NodeJS
+            manala_nodejs_enabled: {{ not (empty .nodejs.version) | ternary "true" "false" }}
+            # Php
+            manala_php_enabled: {{ not (empty .php.version) | ternary "true" "false" }}
+            # Nginx
+            manala_nginx_enabled: {{ not (empty .nginx.configs) | ternary "true" "false" }}
+            # Supervisor
+            manala_supervisor_enabled: {{ not (empty .supervisor.configs) | ternary "true" "false" }}
+            # Ngrok
+            manala_ngrok_enabled: true
+            # Cron
+            manala_cron_enabled: false
+            # MySQL / MariaDB
+            manala_mysql_enabled: {{ or (not (empty .mysql.version)) (not (empty .mariadb.version)) | ternary "true" "false" }}
+            # Docker
+            manala_docker_enabled: true
+
+        ###############
+        # Integration #
+        ###############
+
+        integration:
+            # Ansible
+            ansible_connection: local
+            ansible_python_interpreter: /usr/bin/python3
+            # Apt
+            manala_apt_enabled: true
+            manala_apt_packages:
+              - rsync
+              - wget
+              - curl
+              - make
+              - less
+              - ssl-cert
+              - procps
+              - vim-tiny
+            {{- if .apt.packages }}
+              # App
+              {{- .apt.packages | toYaml | nindent 14 }}
+            {{- end }}
+            # Ssh
+            manala_ssh_enabled: true
+            manala_ssh_server: false
+            manala_ssh_client_config_template: config/client/default.test.j2
+            # Git
+            manala_git_enabled: true
+            # NodeJS
+            manala_nodejs_enabled: {{ not (empty .nodejs.version) | ternary "true" "false" }}
+            # Php
+            manala_php_enabled: {{ not (empty .php.version) | ternary "true" "false" }}
+            manala_php_sapis:
+              - cli
+
+    vars:
+
+        #######
+        # All #
+        #######
+
+        # Accounts
+        manala_accounts_groups:
+          - group: docker
+            system: true
+        manala_accounts_users:
+          - user: vagrant
+            group: vagrant
+            groups: ['docker']
+
+        # Motd
+        manala_motd_template: {{ .motd.template }}
+        manala_motd_message: {{ .motd.message }}
+
+        # Timezone
+        manala_timezone_default: {{ .timezone }}
+
+        # Locales
+        manala_locales_codes_default: {{ .locales.default }}
+        {{- if .locales.codes }}
+        manala_locales_codes:
+            # App
+            {{- .locales.codes | toYaml | nindent 10 }}
+        {{- end }}
+
+        # Environment
+        manala_environment_files:
+          - zsh
+        {{- if or .env (not (empty .php.version)) }}
+        manala_environment_variables:
+        {{- if not (empty .php.version) }}
+            COMPOSER_MEMORY_LIMIT: -1
+        {{- end }}
+        {{- if .env }}
+            # App
+            {{- .env | toYaml | nindent 12 }}
+        {{- end }}
+        {{- end }}
+
+        # Apt
+        manala_apt_repositories_exclusive: true
+        {{- if .apt.repositories }}
+        manala_apt_repositories:
+            # App
+            {{- .apt.repositories | toYaml | nindent 10 }}
+        {{- end }}
+        manala_apt_preferences_exclusive: true
+        manala_apt_preferences:
+          - ansible@ansible
+          - preference: htop@backports
+            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
+          - preference: docker@docker
+            state: {{ `"{{ manala_docker_enabled | ternary('present', 'absent') }}"` }}
+          - preference: git@backports
+            state: {{ `"{{ manala_git_enabled and (ansible_distribution_release in ['jessie', 'stretch']) | ternary('present', 'absent') }}"` }}
+          - preference: supervisor@{{ `{{ (ansible_distribution_release in ['jessie']) | ternary('manala', 'backports') }}` }}
+            state: {{ `"{{ manala_supervisor_enabled and (ansible_distribution_release in ['jessie', 'stretch']) | ternary('present', 'absent') }}"` }}
+          - preference: php@sury_php
+            state: {{ `"{{ manala_php_enabled | ternary('present', 'absent') }}"` }}
+          - preference: nginx@nginx
+            state: {{ `"{{ manala_nginx_enabled | ternary('present', 'absent') }}"` }}
+          - preference: nodejs@{{ not (empty .nodejs.version) | ternary (print "nodesource_" .nodejs.version | replace "." "_") "default" }}
+            state: {{ `"{{ manala_nodejs_enabled | ternary('present', 'absent') }}"` }}
+          - preference: yarn@yarn
+            state: {{ `"{{ manala_yarn_enabled | ternary('present', 'absent') }}"` }}
+          - preference: mysql@{{ not (empty .mysql.version) | ternary (print "mysql_" .mysql.version | replace "." "_") "default" }}
+            state: {{ `"{{ manala_mysql_enabled | ternary('present', 'absent') }}"` }}
+        {{- if .apt.preferences }}
+          # App
+          {{- .apt.preferences | toYaml | nindent 10 }}
+        {{- end }}
+        manala_apt_update_holds:
+          # Hold ansible package update when ansible itself runs in local
+          - ansible
+
+        # Ssh
+        manala_ssh_server_config_template: config/server/default.dev.j2
+        manala_ssh_server_config:
+          - AcceptEnv: WORKDIR
+        {{- if .ssh.client.config }}
+        manala_ssh_client_config:
+          # App
+          {{- .ssh.client.config | toYaml | nindent 10 }}
+        {{- end }}
+        manala_ssh_known_hosts:
+          - github.com
+          - git.elao.com
+
+        # Git
+        manala_git_config_template: config/default.dev.j2
+
+        # Oh my zsh
+        manala_ohmyzsh_users:
+          - user: vagrant
+            group: vagrant
+            template: users/default.dev.j2
+            config:
+              - "[ -d ${WORKDIR:-/srv/app} ] && cd ${WORKDIR:-/srv/app}"
+
+        # Vim
+        manala_vim_config_template: config/default.dev.j2
+
+        # Alternatives
+        manala_alternatives_selections:
+          - selection: editor
+            path: /usr/bin/vim.basic
+
+        # Files
+        manala_files_attributes_defaults:
+          - path: "^/srv/"
+            user: vagrant
+            group: vagrant
+        manala_files_attributes:
+          - path: /srv/log
+            state: directory
+          - path: /srv/cache
+            state: directory
+          - path: /usr/share/elao/html
+            state: directory
+          - path: /usr/share/elao/html/404.html
+            template: files/404.html.j2
+        {{- if .files }}
+          # App
+          {{- .files| toYaml | nindent 10 }}
+        {{- end }}
+
+        # Yarn
+        manala_yarn_enabled: {{ `"{{ manala_nodejs_enabled }}"` }}
+
+        # Php
+        manala_php_version: {{ .php.version }}
+        manala_php_sapis_exclusive: true
+        manala_php_fpm_pools_exclusive: true
+        manala_php_fpm_pools:
+          - file: app.conf
+            template: fpm_pools/app.dev.j2
+            config:
+              - app:
+                  - user: vagrant
+                  - group: vagrant
+                  {{- if .env }}
+                  - env:
+                        {{- .env | toYaml | nindent 26 }}
+                  {{- end }}
+                  - php_admin_value[error_log]: /srv/log/php.error.log
+        manala_php_extensions_exclusive: true
+        manala_php_extensions:
+          - opcache
+          - readline
+          - json
+          - extension: xdebug
+            enabled: false
+        {{- if .php.extensions }}
+          # App
+          {{- .php.extensions | toYaml | nindent 10 }}
+        {{- end }}
+        manala_php_configs_exclusive: true
+        manala_php_configs:
+          - file: 50-xdebug.ini
+            template: configs/xdebug.dev.j2
+        {{- if .php.configs }}
+          # App
+          {{- .php.configs | toYaml | nindent 10 }}
+        {{- end }}
+
+        # Composer
+        manala_composer_enabled: {{ `"{{ manala_php_enabled }}"` }}
+
+        # Symfony Cli
+        manala_symfony_cli_enabled: {{ `"{{ manala_php_enabled }}"` }}
+
+        # Nginx
+        manala_nginx_config_template: config/http.dev.j2
+        manala_nginx_configs_exclusive: true
+        manala_nginx_configs:
+          - file: default.conf
+            config:
+              - server:
+                - listen: '* default_server'
+                - error_page: '404 /404.html'
+                - location /404.html:
+                  - root: /usr/share/elao/html
+                  - internal;
+        {{- if .nginx.configs }}
+          # App
+          {{- .nginx.configs | toYaml | nindent 10 }}
+        {{- end }}
+
+        # Supervisor
+        manala_supervisor_config_template: config/default.dev.j2
+        manala_supervisor_configs_exclusive: true
+        manala_supervisor_configs:
+          - file: inet-http-server.conf
+            template: configs/inet_http_server.dev.j2
+        {{- if .supervisor.configs }}
+          # App
+          {{- .supervisor.configs | toYaml | nindent 10 }}
+        {{- end }}
+
+        # Ngrok
+        manala_ngrok_configs_exclusive: true
+        manala_ngrok_configs:
+          - file: config.yml
+            template: configs/default.dev.j2
+
+        # MySQL / MariaDB
+        manala_mysql_config_template: config/default.dev.j2
+        manala_mysql_configs_exclusive: true
+        manala_mysql_configs:
+          - file: my.cnf
+            template: configs/default.dev.j2
+        manala_mysql_users:
+          # Create a password-less and host-anywhere root user...
+          - name: root
+            password: ~
+            host: "%"
+            priv: "*.*:ALL,GRANT"
+          # ... then remove the default "localhost" one, where authentication
+          # could be socket based on MariaDB or MySQL 5.7+
+          - name: root
+            host: localhost
+            state: absent
+        {{- if .mariadb.version }}
+        manala_mysql_install_packages:
+          - mariadb-server
+          - mariadb-client
+        {{- end }}
+
+        # Docker
+        manala_docker_containers:
+          - name: mailhog
+            image: mailhog/mailhog:v1.0.0
+            state: started
+            restart_policy: unless-stopped
+            ports:
+              - 25:1025
+              - 8025:8025
+          - name: phpmyadmin
+            image: phpmyadmin/phpmyadmin
+            state: {{ or (not (empty .mysql.version)) (not (empty .mariadb.version)) | ternary "started" "absent" }}
+            restart_policy: unless-stopped
+            env:
+              PMA_USER: root
+              # Default docker host ip
+              PMA_HOST: 172.17.0.1
+              UPLOAD_LIMIT: 64M
+            ports:
+              - 1979:80
+        {{- if .docker.containers }}
+          # App
+          {{- .docker.containers | toYaml | nindent 10 }}
+        {{- end }}
+
+{{- end }}
