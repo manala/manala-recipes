@@ -1,0 +1,42 @@
+---
+
+all:
+  hosts:
+    localhost:
+      # Ansible
+      ansible_connection: local
+      ansible_become: true
+      # System
+      host_system:
+        {{- .system | toYaml | nindent 8 }}
+  children:
+    app:
+      children:
+        app_dev:
+          vars:
+            env: dev # En déplacant les templates en local, ce devrait pouvoir dégager...
+          children:
+            app_local:
+              hosts:
+                localhost:
+    # default:
+    #   hosts:
+    #     localhost:
+    #   vars:
+    #     # # Test
+    #     # group_app_local_system:
+    #     #   #motd: prout
+    #     #   motd:
+    #     #     template: template/elao.j2
+    #     #     message: App
+    #
+    #     # System
+    #     group_default_system:
+    #       pipi: caca
+    #       # motd:
+    #       #   template: template/elao.j2
+    #       #   message: App
+    #       timezone: Etc/UTC
+    #       locales:
+    #         codes: []
+    #         default: C.UTF-8

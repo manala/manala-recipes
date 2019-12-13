@@ -5,6 +5,7 @@ manala:
       - .manala/docker
       - .manala/jenkins
       - .manala/make
+      - .manala/vagrant
       - .manala/.gitignore
       - README.md .manala/README.md
       - .manala.yaml.tmpl.dist

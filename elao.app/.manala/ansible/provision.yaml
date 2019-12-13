@@ -1,0 +1,240 @@
+---
+
+- hosts: app
+  collections:
+   - manala.roles
+  vars:
+
+    # merge_hashes: "{{
+    #   group_names|map('regex_replace', '^(.*)$', 'group_\\1_system')|list
+    #   + ['default_system']
+    #   + ['host_system']
+    # }}"
+    # merge_hashes:
+    #   - group_default_system
+
+    merge_hashes:
+      - host_system
+
+    default_system:
+      motd:
+        template: template/elao.j2
+        message: App
+      timezone: Etc/UTC
+      locales:
+        codes: []
+        default: C.UTF-8
+      env: []
+      apt:
+        repositories: []
+        preferences:
+          - ansible@ansible
+          - preference: openjdk@backports
+            state: "{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"
+          - preference: git@backports
+            state: "{{ (ansible_distribution_release in ['jessie', 'stretch']) | ternary('present', 'absent') }}"
+          - preference: supervisor@{{ (ansible_distribution_release in ['jessie']) | ternary('manala', 'backports') }}
+            state: "{{ (ansible_distribution_release in ['jessie', 'stretch']) | ternary('present', 'absent') }}"
+          - preference: htop@backports
+            state: "{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"
+          - preference: php@sury_php
+            state: "{{ query('merge', 'php.version', merge_hashes, default=False) | ternary('present', 'absent') }}"
+          - preference: nginx@nginx
+            state: "{{ query('merge', 'nginx', merge_hashes, default=False) | ternary('present', 'absent') }}"
+          - preference: "nodejs@{{ query('merge', 'nodejs.version', merge_hashes, default=False) | ternary(
+              'nodesource_' ~ query('merge', 'nodejs.version', merge_hashes, default='') | string | replace('.', '_'),
+              'default'
+            )}}"
+            state: "{{ query('merge', 'nodejs.version', merge_hashes, default=False) | ternary('present', 'absent') }}"
+          - preference: yarn@yarn
+            state: "{{ query('merge', 'nodejs.version', merge_hashes, default=False) | ternary('present', 'absent') }}"
+          - preference: "mysql@{{ query('merge', 'mysql.version', merge_hashes, default=False) | ternary(
+              'mysql_' ~ query('merge', 'mysql.version', merge_hashes, default='') | string | replace('.', '_'),
+              'default'
+            )}}"
+            state: "{{ query('merge', 'mysql.version', merge_hashes, default=False) | ternary('present', 'absent') }}"
+          - preference: postgresql@postgresql
+            state: "{{ query('merge', 'postgresql.version', merge_hashes, default=False) | ternary('present', 'absent') }}"
+          - preference: "mongodb@{{ query('merge', 'mongodb.version', merge_hashes, default=False) | ternary(
+              'mongodb_' ~ query('merge', 'mongodb.version', merge_hashes, default='') | string | replace('.', '_'),
+              'default'
+            )}}"
+            state: "{{ query('merge', 'mongodb.version', merge_hashes, default=False) | ternary('present', 'absent') }}"
+          - preference: "elasticsearch@{{ query('merge', 'elasticsearch.version', merge_hashes, default=False) | ternary(
+              'elasticsearch_' ~ query('merge', 'elasticsearch.version', merge_hashes, default='') | string | replace('.', '_'),
+              'default'
+            )}}"
+            state: "{{ query('merge', 'elasticsearch.version', merge_hashes, default=False) | ternary('present', 'absent') }}"
+          - preference: influxdb@influxdata
+            state: "{{ query('merge', 'influxdb', merge_hashes, default=False) | ternary('present', 'absent') }}"
+        packages:
+          - debfoster
+          - rsync
+          - wget
+          - curl
+          - htop
+          - less
+          - ssl-cert
+      php:
+        # Required to enable php
+        version: ~
+      nodejs:
+        # Required to enable nodejs
+        version: ~
+      nginx:
+        configs: []
+      mysql:
+        # Required to enable mysql
+        version: ~
+      mariadb:
+        # Required to enable mysql
+        version: ~
+      postgresql:
+        # Required to enable postgresql
+        version: ~
+      mongodb:
+        # Required to enable mongodb
+        version: ~
+      elasticsearch:
+        # Required to enable mongodb
+        version: ~
+      influxdb: ~
+
+    app_default_options:
+      # OK
+      motd:                  true
+      timezone:              true
+      locales:               true
+      apt:                   true
+
+      # Problemes...
+      environment:           true
+      # -> Passage en minuscules des noms des variables
+      # -> Confusion entre `env` staging|production et `env` lste des variables d'environement
+
+      # Neeeext....
+      ssh:                   true
+      make:                  true
+      git:                   true
+      zsh:                   true
+      ohmyzsh:               true
+      vim:                   true
+      alternatives:          true
+      files:                 true
+      mailhog:               true
+      nodejs:                true
+      nodejs_version:        "12" # '0.10'|'0.12'|'4'|'5'|'6'|'7'|'8'|'10'|'12'
+      npm:                   true
+      yarn:                  true
+      php:                   true
+      php_version:           "7.3" # '5.6'|'7.0'|'7.1'|'7.2'|'7.3'
+      composer:              true
+      nginx:                 true
+      supervisor:            true
+      phantomjs:             true
+      ngrok:                 true
+      ntp:                   true
+      java:                  false
+      cron:                  true
+      opcache_dashboard:     true
+      mysql:                 false
+      mysql_version:         '5.7' # '5.6'|'5.7'
+      mariadb:               false
+      mariadb_version:       '10.3' # '10.0'|'10.1'|'10.2'|'10.3'
+      phpmyadmin:            true
+      postgresql:            false
+      postgresql_version:    '9.5'
+      phppgadmin:            true
+      redis:                 false
+      phpredisadmin:         true
+      mongodb:               false
+      mongodb_version:       '3.2'
+      mongo_express:         true
+      elasticsearch:         false
+      elasticsearch_version: '6' # '1.5'|'1.6'|'1.7'|'2'|'5'|'6'|'7'
+      influxdb:              false
+      dnsmasq:               false
+      sqlite:                false
+      thumbor:               false
+      # App
+      app:
+        env:          dev
+        env_vars:     {}
+        user:         vagrant
+        group:        vagrant
+        host:         "{{ ansible_fqdn }}"
+        dir:          /srv/app
+        dir_release:  ~
+        log_dir:      /var/log/app # Nouvelle norme ?
+        cache_dir:    /var/cache/app # Nouvelle norme ?
+        sessions_dir: /var/lib/app/sessions # Nouvelle norme ?
+
+  tasks:
+
+    # Motd (See: https://github.com/manala/ansible-role-motd)
+    - include_role:
+        name: motd
+      vars:
+        manala_motd_template: "{{ query('merge', 'motd.template', merge_hashes, default=default_system.motd.template) }}"
+        manala_motd_message: "{{ query('merge', 'motd.message', merge_hashes, default=default_system.motd.message) }}"
+
+    # Timezone (See: https://github.com/manala/ansible-role-timezone)
+    - include_role:
+        name: timezone
+      vars:
+        manala_timezone_default: "{{ query('merge', 'timezone', merge_hashes, default=default_system.timezone) }}"
+
+    # Locales (See: https://github.com/manala/ansible-role-locales)
+    - include_role:
+        name: locales
+      vars:
+        manala_locales_codes: "{{ query('merge', 'locales.codes', merge_hashes, default=default_system.locales.codes) }}"
+        manala_locales_codes_default: "{{ query('merge', 'locales.default', merge_hashes, default=default_system.locales.default) }}"
+
+    # Environment (See: https://github.com/manala/ansible-role-environment)
+    - include_role:
+        name: environment
+      vars:
+        manala_environment_files:
+          - zsh
+        manala_environment_variables: "{{ query('merge', 'env', merge_hashes, default=default_system.env) }}"
+
+    # Apt (See: https://github.com/manala/ansible-role-apt)
+    - include_role:
+        name: apt
+      vars:
+        manala_apt_configs:
+          - file: archive
+            template: configs/check_valid_until_false.j2
+            state: "{{ (ansible_distribution_release in ['jessie'])|ternary('present', 'absent') }}"
+        manala_apt_components:
+          - main
+        manala_apt_sources_list_template: sources_list/security_updates.j2
+        manala_apt_repositories_exclusive: true
+        manala_apt_repositories: "{{
+          default_system.apt.repositories
+          + query('merge', 'apt.repositories', merge_hashes, default=[])
+        }}"
+        manala_apt_preferences_exclusive: true
+        manala_apt_preferences: "{{
+          default_system.apt.preferences
+          + query('merge', 'apt.preferences', merge_hashes, default=[])
+        }}"
+        # Hold ansible package update when ansible itself runs in local
+        manala_apt_update_holds: "{{
+          (ansible_connection == 'local')|ternary(['ansible'],[])
+        }}"
+        manala_apt_packages: "{{
+          default_system.apt.packages
+          + query('merge', 'apt.packages', merge_hashes, default=[])
+        }}"
+
+    # - debug:
+    #     var: merge_hashes
+
+    # - debug:
+    #     #msg: "{{ query('merge', 'foo.bar', merge_hashes, default='baz') }}"
+    #     #msg: "{{ query('merge', 'motd.template', merge_hashes) }}"
+    #     #msg: "{{ query('merge', 'motd.message', merge_hashes) }}"
+    #     msg: "{{ query('merge', 'locales.codes', merge_hashes) }}"
+    #     msg: "{{ query('merge', 'locales.default', merge_hashes) }}"

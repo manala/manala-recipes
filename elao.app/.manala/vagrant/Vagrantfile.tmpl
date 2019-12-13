@@ -1,0 +1,113 @@
+{{- $box_versions := dict 8 "201912.03.0" 9 "201912.05.0" 10 "201912.05.0" -}}
+{{- $box_version := index $box_versions (.system.version|toString) -}}
+
+{{- $ubuntu_releases := dict 8 "trusty" 9 "xenial" 10 "bionic" -}}
+{{- $ubuntu_release := index $ubuntu_releases (.system.version|toString) -}}
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_version '>= 2.2.6'
+
+# Override vagrant dotfile path
+# See: https://stackoverflow.com/a/55153081
+if ENV['VAGRANT_DOTFILE_PATH'].nil?
+  ENV['VAGRANT_DOTFILE_PATH'] = '.manala/.cache/vagrant'
+  FileUtils.rm_r('.vagrant')
+  exec 'vagrant ' + ARGV.map{|arg| Shellwords.escape arg}.join(' ')
+end
+
+# Check virtualbox version
+# See: https://stackoverflow.com/a/46125027
+#if Gem::Version.new(`VBoxManage --version`.strip) < Gem::Version.new('6.0.14')
+#  abort 'Please upgrade Virtualbox to 6.0.14 or later!'
+#end
+
+# Check virtualbox version
+# See: https://github.com/hashicorp/vagrant/issues/4649#issuecomment-378675037
+#MIN_VIRTUALBOX_VERSION = Gem::Version.new('5.2.8')
+#version = `VBoxManage --version`
+#clean_version = /[0-9]+\.[0-9]+\.[0-9]+/.match(version)
+#if Gem::Version.new(clean_version) < MIN_VIRTUALBOX_VERSION
+#    abort "Please upgrade to Virtualbox >= #{MIN_VIRTUALBOX_VERSION}"
+#end
+
+ENV['LC_PIPI'] = 'caca'
+# ENV['container'] = 'vagrant'
+# Ouais, nan, ca sera plutot à base de /etc/environment ou ~/.profile
+# Ah, non, en fait: https://stackoverflow.com/a/36126518
+# Oui, c'est ca, c'est lié à la config de sshd, ou on laisse passer QUE les LC_*
+
+Vagrant.configure('2') do |config|
+
+  # Ssh
+  config.ssh.forward_agent = true
+  config.ssh.insert_key = false
+  config.ssh.extra_args = ['-q']
+  #config.ssh.forward_env = ['container', 'PIPI']
+
+  # Vm
+  config.vm.box = 'bento/debian-{{ .system.version }}'
+  config.vm.box_version = '>= {{ $box_version }}'
+  config.vm.hostname = '{{ .system.hostname }}'
+  config.vm.network 'private_network', type: 'dhcp'
+  config.vm.synced_folder '.', '/srv/app',
+    type: 'nfs',
+    mount_options: ['nolock', 'actimeo=1', 'fsc']
+
+  # Vm - Provider Virtualbox
+  config.vm.provider 'virtualbox' # Force provider
+  config.vm.provider :virtualbox do |virtualbox|
+    virtualbox.name = '{{ regexReplaceAll "^(.*)\\.[^.]*$" .system.hostname "${1}" }}'
+    {{- if .system.memory }}
+    virtualbox.memory = {{ .system.memory }}
+    {{- end }}
+  end
+
+  # Plugins - Landrush
+  if Vagrant.has_plugin?('landrush')
+    config.landrush.enabled            = true
+    config.landrush.tld                = config.vm.hostname
+    config.landrush.guest_redirect_dns = false
+  end
+
+  # Vm - Provision - Dotfiles
+  for dotfile in ['.gitconfig', '.gitignore']
+    if File.exists?(File.join(Dir.home, dotfile)) then
+      config.vm.provision dotfile, type: 'file', run: 'always' do |file|
+        file.source      = '~/' + dotfile
+        file.destination = dotfile
+      end
+    end
+  end
+
+  # Vm - Provision - Bootstrap
+  config.vm.provision 'bootstrap', type: 'shell',
+    keep_color: true,
+    inline: <<-SHELL
+      printf "[\033[36mAnsible\033[0m] \033[32mInstall...\033[0m\n"
+      echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu {{ $ubuntu_release }} main" > /etc/apt/sources.list.d/ppa_launchpad_net_ansible_ansible_ubuntu.list
+      apt-key adv -q --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+      apt-get update -qq
+      apt-get install -qq -y --no-install-recommends \
+        ansible
+      printf "[\033[36m36mAnsible Collection\033[0m] \033[32mInstall...\033[0m\n"
+      ansible-galaxy collection install --collections-path /usr/share/ansible/collections --force manala.roles
+    SHELL
+
+  # ansible-playbook --inventory .manala/ansible/provision.inventory.yaml /srv/app/ansible/app.yml
+  # ansible-playbook --inventory .manala/ansible/provision.inventory.yaml .manala/ansible/provision.yaml
+
+  # Vm - Provision
+  config.vm.provision 'provision', type: 'shell',
+    keep_color: true,
+    env: {
+      'ANSIBLE_FORCE_COLOR' => 1
+    },
+    inline: <<-SHELL
+      printf "[\033[36mAnsible\033[0m] \033[32mProvision...\033[0m\n"
+      ansible-playbook \
+        --inventory .manala/ansible/provision.inventory.yaml \
+        /srv/app/ansible/app.yml
+    SHELL
+end
