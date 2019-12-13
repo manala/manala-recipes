@@ -5,55 +5,110 @@ manala:
       - .manala/docker
       - .manala/jenkins
       - .manala/make
+      - .manala/vagrant
+      - .manala/.dockerignore
       - .manala/.gitignore
-      - README.md .manala/README.md
+      - .manala/Dockerfile.tmpl
+      - .manala/Jenkinsfile.tmpl
+      - .manala/Makefile.tmpl
+      - .manala/Vagrantfile.tmpl
       - .manala.yaml.tmpl.dist
+      - Makefile.dist
+      - README.md .manala/README.md
 
 ##########
 # System #
 ##########
 
 system:
-    # @schema {"enum": [9, 8]}
     # @option {"label": "System version"}
+    # @schema {"enum": [10, 9, 8]}
     version: ~
-    # @schema {"type": "string", "format": "domain"}
     # @option {"label": "Hostname"}
+    # @schema {"type": "string", "format": "domain"}
     hostname: ~
+    # @schema {"type": ["integer"]}
+    memory: 2048
+    # @schema {"type": ["integer"]}
+    cpus: 1
+    motd:
+        # @schema {"type": ["string"]}
+        template: motd/elao.j2
+        # @schema {"type": ["string", "array"]}
+        message:
+          - A curl vaillant, rien d'impossible !
+          - --force et owner !
+    # @schema {"type": ["string"], "pattern": "^[a-zA-Z]+/[a-zA-Z]+$"}
+    timezone: Etc/UTC
+    locales:
+        # @schema {"type": ["string"]}
+        default: C.UTF-8
+        # @schema {"items": {"type": "string"}}
+        codes: []
+    # @schema {
+    #     "additionalProperties": {"type": ["string", "integer"]},
+    #     "propertyNames": {"pattern": "^[A-Z_]+$"}
+    # }
+    env: {}
+    apt:
+        # @schema {"items": {"type": "string"}}
+        repositories: []
+        # @schema {"items": {"type": "string"}}
+        preferences: []
+        # @schema {"items": {"type": "string"}}
+        packages: []
+    # @schema {"items": {"type": "object"}}
+    files: []
+    nginx:
+        # @schema {"items": {"type": "object"}}
+        configs: []
     php:
-        # @schema {"enum": [null, 7.4, 7.3, 7.2, 7.1, "7.0", 5.6]}
         # @option {"label": "Php version"}
+        # @schema {"enum": [null, 7.4, 7.3, 7.2, 7.1, "7.0", 5.6]}
         version: ~
         # @schema {"items": {"type": "string"}}
         extensions: []
-    symfony:
-        # @schema {"enum": [null, "*"]}
-        # @option {"label": "Symfony version"}
-        version: ~
+        # @schema {"items": {"type": "object"}}
+        configs: []
+    cron:
+        # @schema {"items": {"type": "object"}}
+        files: []
+    supervisor:
+        # @schema {"items": {"type": "object"}}
+        configs: []
     nodejs:
-        # @schema {"enum": [null, 12, 10, 8, 6]}
         # @option {"label": "Nodejs version"}
+        # @schema {"enum": [null, 12, 10, 8, 6]}
         version: ~
+        # @schema {"items": {"type": "object"}}
+        packages: []
     mariadb:
-        # @schema {"enum": [null, 10.4, 10.3, 10.2, 10.1, "10.0"]}
         # @option {"label": "MariaDB version"}
+        # @schema {"enum": [null, 10.4, 10.3, 10.2, 10.1, "10.0"]}
         version: ~
     mysql:
-        # @schema {"enum": [null, 5.7, 5.6]}
         # @option {"label": "MySQL version"}
+        # @schema {"enum": [null, 5.7, 5.6]}
         version: ~
+    redis:
+        # @option {"label": "Redis version"}
+        # @schema {"enum": [null, "*"]}
+        version: ~
+        # @schema {"items": {"type": "object"}}
+        config: []
     elasticsearch:
-        # @schema {"enum": [null, 7, 6, 5, 2, 1.7, 1.6, 1.5]}
         # @option {"label": "Elasticsearch version"}
+        # @schema {"enum": [null, 7, 6, 5, 2, 1.7, 1.6, 1.5]}
         version: ~
         # @schema {"items": {"type": "string"}}
         plugins: []
-    apt:
-        # @schema {"items": {"type": "string"}}
-        packages: []
     ssh:
-        # @schema {"type": ["null", "string"]}
-        config: ~
+        client:
+            # @schema {"items": {"type": "object"}}
+            config: []
+    docker:
+        # @schema {"items": {"type": "object"}}
+        containers: []
 
 ###############
 # Integration #

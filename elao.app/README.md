@@ -8,9 +8,14 @@
 * [Releases](#releases)
 * [Makefile](#makefile)
 * [Secrets](#secrets)
+* [Tips, Tricks, and Tweaks](#tips-tricks-and-tweaks)
 
 ## Requirements
 
+* Make
+* Vagrant 2.2.10+
+* Landrush 1.3.2+
+* VirtualBox 6.1.12+
 * Docker Desktop 2.2.0+
 
 ## Overview
@@ -32,7 +37,7 @@ Edit the `Makefile` at the root directory of your project and add the following 
 ```
 .SILENT:
 
--include .manala/make/Makefile
+-include .manala/Makefile
 ```
 
 Then update the `.manala.yaml` file (see [the releases example](#releases) below) and then run the `manala up` command:
@@ -67,10 +72,58 @@ Here is an example of a system configuration in `.manala.yaml`:
 ##########
 
 system:
-    version: 9
+    version: 10
     hostname: app.vm
+    #memory: 2048 # Optionnal
+    #cpus: 1 # Optionnal
+    #motd: # Optionnal
+    #    template: template/elao.j2
+    #    message: App
+    #timezone: Etc/UTC # Optionnal
+    #locales: # Optionnal
+    #    default: C.UTF-8
+    #    codes: []
+    #env: # Optionnal
+    #    FOO: bar
+    apt:
+        #repositories: [] # Optionnal
+        #preferences: [] # Optionnal
+        packages:
+          - pdftk
+          - https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb
+    files:
+      - path: /srv/app/var/log
+        src: /srv/log
+        state: link_directory
+      - path: /srv/app/var/cache
+        src: /srv/cache
+        state: link_directory
+      #- path: /srv/app/api/var/log
+      #  src: /srv/log/api
+      #  state: link_directory
+      #- path: /srv/app/api/var/cache
+      #  src: /srv/cache/api
+      #  state: link_directory
+    nginx:
+        configs: []
+        # configs:
+        #     # Php fpm
+        #     - file: app_php_fpm
+        #       template: nginx/app_php_fpm.j2
+        #     # Gzip
+        #     - file: app_gzip
+        #       template: nginx/app_gzip.j2
+        #     # Ssl
+        #     - file: app_ssl.conf
+        #       template: nginx/app_ssl_offloading.conf.j2
+        #     # Cors
+        #     - file: app_cors
+        #       template: nginx/app_cors.j2
+        #     # No index
+        #     - file: app_no_index
+        #       template: nginx/app_no_index.j2        
     php:
-        version: 7.3
+        version: 7.4
         extensions:
           # Symfony
           - intl
@@ -79,24 +132,43 @@ system:
           - xml
           # App
           - mysql
-    symfony:
-        version: "*"
     nodejs:
         version: 12
+        # packages:
+        #   - package: mjml
+        #     version: 4.6.3
+    # cron:
+    #     files:
+    #       - file: app
+    #         env:
+    #           SHELL: /usr/bin/zsh
+    #           HOME: /srv/app
+    #         jobs:
+    #           - name: foo-bar
+    #             job: bin/console app:foo:bar --no-interaction -vv >> /srv/log/cron.foo-bar.log 2>&1
+    #             minute: 0
+    # supervisor:
+    #     configs:
+    #         - file: app.conf
+    #           programs:
+    #               foo-bar:
+    #                   command: zsh -c "bin/console app:foo:bar --no-interaction -vv"
+    #                   directory: /srv/app
+    #                   stdout_logfile: /srv/log/supervisor.foo-bar.log
     # MariaDB
     mariadb:
         version: 10.4
     # ...*OR* MySQL...
     mysql:
         version: 5.7
+    # redis:
+    #     version: "*"
+    #     config:
+    #       - save: '""' # Disable persistence
     elasticsearch:
         version: 7
         plugins:
           - analysis-icu
-    apt:
-        packages:
-          - pdftk
-          - https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb
     ssh:
         config: |
             Host *.elao.run
@@ -140,8 +212,11 @@ integration:
             tasks:
               - shell: make test.phpunit@integration
                 artifacts: var/log/*.log
-                env:
-                    DATABASE_URL: mysql://root@127.0.0.1:3306/app
+                # artifacts:
+                #   - var/log/foo.log
+                #   - var/log/bar.log
+                # env:
+                #     DATABASE_URL: mysql://root@127.0.0.1:3306/app
 ```
 
 In this example we have two parallel stages: `api` and `mobile`, corresponding to two different sub-apps.
@@ -167,8 +242,8 @@ integration:
               - shell: make security.symfony@integration
               - shell: make test.phpunit@integration
                 artifacts: var/log/*.log
-                env:
-                    DATABASE_URL: mysql://root@127.0.0.1:3306/app
+                # env:
+                #     DATABASE_URL: mysql://root@127.0.0.1:3306/app
           - app: mobile
             tasks:
               - shell: make install@integration
@@ -192,9 +267,9 @@ install@integration:
 	composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
 	#composer run-script symfony-scripts --ansi --verbose --no-interaction
 	# Npm
-	npm install --no-audit --no-progress --color=always
+	npm install --color=always --no-progress --no-audit
 	# Yarn
-	yarn install --no-progress --color=always
+	yarn install --color=always --no-progress
 
 ###########
 # Build #
@@ -204,7 +279,7 @@ install@integration:
 
 build@integration:
 	# Webpack Encore
-	npx encore production --no-progress --color=always
+	npx encore production --color=always --no-progress
 
 ########
 # Lint #
@@ -495,3 +570,12 @@ To render the file, call the template with the `make secrets/%` task, where `%` 
 ```shell
 make secrets/.env.prod
 ```
+
+## Tips, Tricks, and Tweaks
+
+* Vagrant root privilege requirement
+  https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement
+* Debug ansible provisionning
+  ```
+  ansible-galaxy collection install manala.roles --collections-path /vagrant/ansible/collections
+  ```
