@@ -1,3 +1,5 @@
+{{- with .Vars.system -}}
+
 ####################################################################
 # !!! REMINDER !!!                                                 #
 # Don't forget to run `manala up` each time you update this file ! #
@@ -11,12 +13,37 @@ manala:
 ##########
 
 system:
-    version: {{ .Vars.system.version | toYaml }}
-    hostname: {{ .Vars.system.hostname | toYaml }}
-
-    {{- if .Vars.system.php.version }}
+    version: {{ .version | toYaml }}
+    hostname: {{ .hostname | toYaml }}
+    nginx:
+        configs:
+          {{- if .php.version }}
+          # Php fpm
+          - file: app_php_fpm
+            template: configs/app_php_fpm.dev.j2
+          {{- end }}
+          # Gzip
+          - file: app_gzip
+            template: configs/app_gzip.dev.j2
+          # App
+          - file: app.conf
+            config:
+              - server:
+                - server_name: ~.
+                - root: /srv/app/public
+                - access_log: /srv/log/nginx.access.log
+                - error_log: /srv/log/nginx.error.log
+                - include: conf.d/app_gzip
+                {{- if .php.version }}
+                - location /:
+                  - try_files: $uri /index.php$is_args$args
+                - location ~ ^/index\.php(/|$):
+                  - include: conf.d/app_php_fpm
+                  - internal;
+                {{- end }}
+    {{- if .php.version }}
     php:
-        version: {{ .Vars.system.php.version | toYaml }}
+        version: {{ .php.version | toYaml }}
         extensions:
           # Symfony
           - intl
@@ -24,31 +51,69 @@ system:
           - mbstring
           - xml
           # App
+          {{- if or (not (empty .mysql.version)) (not (empty .mariadb.version)) }}
           - mysql
+          {{- end }}
+        configs:
+          - file: app_opcache.ini
+            template: configs/app_opcache.dev.j2
+          - file: app.ini
+            template: configs/app.dev.j2
+            config:
+              - date.timezone: UTC
     {{- end }}
 
-    {{- if .Vars.system.symfony.version }}
-    symfony:
-        version: {{ .Vars.system.symfony.version | toYaml }}
-    {{- end }}
-
-    {{- if .Vars.system.nodejs.version }}
+    {{- if .nodejs.version }}
     nodejs:
-        version: {{ .Vars.system.nodejs.version | toYaml }}
+        version: {{ .nodejs.version | toYaml }}
     {{- end }}
 
-    {{- if .Vars.system.mariadb.version }}
+    {{- if .mariadb.version }}
     mariadb:
-        version: {{ .Vars.system.mariadb.version | toYaml }}
+        version: {{ .mariadb.version | toYaml }}
     {{- end }}
 
-    {{- if .Vars.system.mysql.version }}
+    {{- if .mysql.version }}
     mysql:
-        version: {{ .Vars.system.mysql.version | toYaml }}
+        version: {{ .mysql.version | toYaml }}
     {{- end }}
 
-    {{- if .Vars.system.elasticsearch.version }}
+    {{- if .redis.version }}
+    redis:
+        version: {{ .redis.version | toYaml }}
+    {{- end }}
+
+    {{- if .elasticsearch.version }}
     elasticsearch:
-        version: {{ .Vars.system.elasticsearch.version | toYaml }}
+        version: {{ .elasticsearch.version | toYaml }}
         plugins: []
     {{- end }}
+    # files:
+    #   # Single symfony app
+    #   # ------------------
+    #   - path: /srv/app/var/log
+    #     src: /srv/log
+    #     state: link_directory
+    #     force: true
+    #   - path: /srv/app/var/cache
+    #     src: /srv/cache
+    #     state: link_directory
+    #     force: true
+    #   # Multi apps
+    #   # ----------
+    #   - path: /srv/app/foo/var/log
+    #     src: /srv/log/foo
+    #     state: link_directory
+    #     force: true
+    #   - path: /srv/app/foo/var/cache
+    #     src: /srv/cache/foo
+    #     state: link_directory
+    #     force: true
+    # ssh:
+    #     client:
+    #         config:
+    #           - Host *.elao.run:
+    #             - User: app
+    #             - ForwardAgent: true
+
+{{- end }}

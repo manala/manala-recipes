@@ -1,4 +1,4 @@
-all:
+deploy:
     children:
     {{- range $release := .Vars.releases }}
     {{- if hasKey $release "deploy_hosts" }}

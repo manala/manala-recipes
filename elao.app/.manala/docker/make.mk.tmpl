@@ -19,17 +19,17 @@ define docker_run
 	&& ID=$$( \
 		docker build \
 			--quiet \
-			.manala/docker \
+			$(_ROOT_DIR)/.manala \
 	) \
-	&& mkdir -p "$(CURDIR)/.manala/.cache/docker" \
 	&& docker run \
 		--rm \
 		--tty \
 		--interactive \
 		--hostname {{ .Vars.system.hostname }} \
-		--mount 'type=bind,consistency=delegated,source=$(CURDIR),target=/srv/app' \
-		--env XDG_CACHE_HOME=/srv/.cache \
-		--mount 'type=bind,consistency=delegated,source=$(CURDIR)/.manala/.cache/docker,target=/srv/.cache' \
+		--mount 'type=bind,consistency=delegated,source=$(realpath $(_ROOT_DIR)),target=/srv/app' \
+		--workdir /srv/app/$(_DIR) \
+		--env XDG_CACHE_HOME=/docker/.cache/docker \
+		--mount 'type=bind,consistency=delegated,source=$(realpath $(_ROOT_DIR)/.manala),target=/docker' \
 		$(if $(OS_DARWIN),\
 			--env SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
 			--volume /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock, \
