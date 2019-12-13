@@ -1,0 +1,65 @@
+#!/usr/bin/env groovy
+
+// https://github.com/jenkinsci/pipeline-examples
+// Todo:
+// * Utilisation et comprehension des labels
+// * tag image, on met quoi ? en pipeline ca donne un truc du genre "10f93923a20de7d07dbc6273e1b20232cdbd8c79:latest" d'ou ca sort ?!?'
+
+podTemplate(
+  containers: [
+    containerTemplate(
+      name: 'jnlp',
+      image: 'odavid/jenkins-jnlp-slave:3.35-5-19-alpine' // Support docker
+    ),
+    containerTemplate(
+      name: 'mysql',
+      image: 'mysql:5.6',
+      envVars: [
+          envVar(key: 'MYSQL_ALLOW_EMPTY_PASSWORD', value: 'true')
+      ],
+      ports: [portMapping(name: 'mysql', containerPort: 3306, hostPort: 3306)]
+    ),
+    containerTemplate(
+      name: 'debian',
+      image: 'debian',
+      ttyEnabled: true,
+      command: 'cat'
+    ),
+  ],
+  volumes: [
+    hostPathVolume(
+      hostPath: '/var/run/docker.sock',
+      mountPath: '/var/run/docker.sock'
+    )
+  ],
+  idleMinutes: 360
+) {
+  node(POD_LABEL) {
+    stage('Checkout') {
+      checkout scm
+    }
+    stage('Taiste') {
+      echo 'Taiste...'
+    }
+    stage('Shell') {
+      sh 'whoami'
+      sh 'pwd'
+      sh 'ls -lsa'
+    }
+    stage('Debian') {
+      container('debian') {
+        sh 'whoami'
+        sh 'pwd'
+        sh 'ls -lsa'
+      }
+    }
+    stage('Jnlp Build') {
+      docker.build("integration:${env.BUILD_ID}", ".manala/docker").inside("--net=host") {
+        sh 'whoami'
+        sh 'pwd'
+        sh 'ls -lsa'
+        sh 'mysql -h 127.0.0.1 -u root -p -e "show databases;"'
+      }
+    }
+  }
+}

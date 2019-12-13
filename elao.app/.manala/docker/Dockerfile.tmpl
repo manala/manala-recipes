@@ -68,6 +68,18 @@ ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 WORKDIR /srv/app
 
+#########
+# MySql #
+#########
+
+RUN \
+    # Disable irrelevants apt-key warnings
+    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
+    # Disable all debian user interaction
+    && export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get install -y --no-install-recommends \
+        default-mysql-client
+
 {{ if .Vars.system.php.version -}}
 {{- $php := .Vars.system.php -}}
 #######

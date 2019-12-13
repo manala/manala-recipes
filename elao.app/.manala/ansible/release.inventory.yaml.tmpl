@@ -26,8 +26,8 @@ all:
       vars:
         release_dir: /srv/release/{{ if .app }}{{ .app }}/{{ end }}{{ .env }}
         release_git_dir: /srv/app
-        {{- if or .app .app_dir }}
-        release_target_dir: {{ default .app .app_dir }}
+        {{- if .app }}
+        release_target_dir: {{ .app }}
         {{- end }}
         {{- if .Vars.release_tasks }}
         release_tasks:

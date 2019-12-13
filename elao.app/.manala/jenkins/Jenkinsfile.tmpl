@@ -1,45 +1,81 @@
+{{- define "integration_node" -}}
+  {{- $node := .node -}}
+  {{- $app := .app -}}
+  {{- $indent := .indent -}}
+  {{- $leaf := .leaf -}}
+  {{- $label := "Task" -}}
+
+  {{/* Label */}}
+  {{- if $node.label -}}
+    {{- $label = $node.label -}}
+  {{- else if $node.app -}}
+    {{- $label = $node.app | title -}}
+  {{- else if and ($node.shell) (regexMatch "^make .+@.+$" ($node.shell | default "")) -}}
+    {{- $label = (regexReplaceAll "^make (.+)@.+$" $node.shell "${1}") | replace "." " - " | title -}}
+  {{- end -}}
+
+  {{/* Loop */}}
+  {{- if $node.shell -}}
+    {{- print "stage('" $label "') {" | nindent $indent }}
+      {{- "steps {" | nindent ($indent | add 2 | int) }}
+        {{- $node_indent := $indent | add 4 | int -}}
+        {{- if $app -}}
+          {{- print "dir('" $app "') {" | nindent ($indent | add 4 | int) }}
+          {{- $node_indent = $node_indent | add 2 | int -}}
+        {{-  end -}}
+        {{- "sh '''" | nindent $node_indent }}
+          {{- print "echo \"" $node.shell "\"" | nindent ($node_indent | add 2 | int) }}
+        {{- "'''" | nindent $node_indent }}
+        {{- if $app -}}
+          {{- "}" | nindent ($indent | add 4 | int) }}
+        {{-  end -}}
+      {{- "}" | nindent ($indent | add 2 | int) }}
+    {{- "}" | nindent $indent }}
+  {{- else if $node.tasks -}}
+    {{- $node_indent := $indent -}}
+    {{- if $leaf -}}
+      {{- print "stage('" $label "') {" | nindent $indent }}
+      {{- $node_indent = $node_indent | add 2 | int -}}
+    {{- end -}}
+    {{- if $node.parallel -}}
+      {{- "parallel {" | nindent $node_indent }}
+    {{- else -}}
+      {{- "stages {" | nindent $node_indent }}
+    {{- end -}}
+      {{- range $task := $node.tasks }}
+        {{- template "integration_node" dict "node" $task "indent" ($node_indent | add 2 | int) "app" $node.app "leaf" true }}
+      {{- end }}
+      {{- "}" | nindent $node_indent }}
+      {{- if $node.junit -}}
+        {{- "post {" | nindent $node_indent }}
+          {{- "always {" | nindent ($node_indent | add 2 | int) }}
+            {{- print "junit testResults: '" ((empty $node.app) | ternary "" (print $node.app "/")) $node.junit "', allowEmptyResults: true" | nindent ($node_indent | add 4 | int) }}
+          {{- "}" | nindent ($node_indent | add 2 | int) }}
+        {{- "}" | nindent $node_indent }}
+      {{- end }}
+    {{- if $leaf -}}
+      {{- "}" | nindent $indent }}
+    {{- end }}
+  {{- end }}
+{{- end -}}
+
 #!/usr/bin/env groovy
 
 pipeline {
   agent {
-      dockerfile {
-          dir '.manala/docker'
-      }
+    dockerfile {
+      dir '.manala/docker'
+    }
   }
+  {{- if not .integration.tasks }}
   stages {
-    {{- range $stage := .Vars.integration.stages }}
-    stage('{{ $stage.label }}') {
-      parallel {
-        {{- range $track := $stage.tracks }}
-        stage('{{ default "App" (default ((default "" $track.app) | title) $track.label) }}') {
-          stages {
-            {{- range $step := $track.steps }}
-            stage('{{ $step.label }}') {
-              steps {
-                {{- if $track.app }}
-                dir('{{ default $track.app $track.app_dir }}') {
-                  {{- range $task := $step.tasks }}
-                  sh '{{ $task }}'
-                  {{- end }}
-                }
-                {{- else }}
-                {{- range $task := $step.tasks }}
-                sh '{{ $task }}'
-                {{- end }}
-                {{- end }}
-              }
-            }
-            {{- end }}
-          }
-        }
-        {{- end }}
+    stage('¯\\_(ツ)_/¯') {
+      steps {
+        echo 'Testing is doubting...'
       }
     }
-    {{- end }}
   }
-  post {
-    always {
-      junit testResults: '**/report/junit/*.xml', allowEmptyResults: true
-    }
-  }
+  {{- else }}
+  {{- template "integration_node" dict "node" .integration "indent" 2 }}
+  {{- end }}
 }

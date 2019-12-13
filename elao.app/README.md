@@ -104,33 +104,20 @@ On each sub-project we have _install_, _lint_ and _test_ stages.
 ###############
 
 integration:
-  stages:
-    - label: Integration
-      tracks:
-        - #label: MyApi # Optionnal
-          #app: api # Optionnal
-          #app_dir: api # Optionnal, <app> by default
-          steps:
-            - label: Install
-              tasks:
-                - make install@integration
-            - label: Lint
-              tasks:
-                - make lint@integration
-            - label: Test
-              tasks:
-                - make test@integration
+  tasks:
+    - label: Integration # Optionnal
+      parallel: true # ! Careful ! Could *NOT* be nested !
+      tasks:
+        - app: api # Optionnal
+          tasks:
+            - shell: make install@integration
+            - shell: make lint@integration
+            - shell: make test@integration
         - app: mobile
-          steps:
-            - label: Install
-              tasks:
-                - make install@integration
-            - label: Lint
-              tasks:
-                - make lint@integration
-            - label: Test
-              tasks:
-                - make test@integration
+          tasks:
+            - shell: make install@integration  
+            - shell: make lint@integration
+            - shell: make test@integration
 ```
 
 Add in your `api/Makefile`:
@@ -221,7 +208,6 @@ releases:
 
   - &release
     #app: api # Optionnal
-    #app_dir: api # Optionnal, <app> by default
     env: production
     #env_branch: api/production # Optionnal, <app>/<env> by default
     repo: git@git.elao.com:<vendor>/<app>-release.git
