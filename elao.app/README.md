@@ -76,8 +76,12 @@ system:
           - mysql
     nodejs:
         version: 12
+    # MySQL...
     mysql:
-        version: 5.6
+        version: 5.7
+    # ...*OR* MariaDB
+    mariadb:
+        version: 10.3
     apt:
         packages:
           - pdftk
@@ -106,32 +110,23 @@ On each sub-project we have _install_, _lint_ and _test_ stages.
 ###############
 
 integration:
-  stages:
-    - label: Integration
-      tracks:
-        - #label: MyApi # Optionnal
-          #app: api # Optionnal
-          steps:
-            - label: Install
-              tasks:
-                - make install@integration
-            - label: Lint
-              tasks:
-                - make lint@integration
-            - label: Test
-              tasks:
-                - make test@integration
-        - app: mobile
-          steps:
-            - label: Install
-              tasks:
-                - make install@integration
-            - label: Lint
-              tasks:
-                - make lint@integration
-            - label: Test
-              tasks:
-                - make test@integration
+    tasks:
+      - label: Integration # Optionnal
+        parallel: true # ! Careful ! Could *NOT* be nested !
+        junit: report/junit/*.xml # Optionnal
+        tasks:
+          - app: api # Optionnal
+            tasks:
+              - shell: make install@integration
+              - shell: make lint@integration
+              - shell: make test@integration
+                env:
+                    DATABASE_URL: mysql://root@127.0.0.1:3306/app
+          - app: mobile
+            tasks:
+              - shell: make install@integration  
+              - shell: make lint@integration
+              - shell: make test@integration
 ```
 
 Add in your `api/Makefile`:
@@ -140,17 +135,23 @@ Add in your `api/Makefile`:
 ###########
 # Install #
 ###########
-#...
 
-install@integration: export SYMFONY_ENV = test
+...
+
+install@integration: export APP_ENV = test
 install@integration:
 	# Composer
-	composer install --verbose --no-progress --no-interaction --no-scripts
+	composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
+  # Npm
+	npm install --no-progress --color=always
+  # Yarn
+	yarn install --no-progress --color=always
 
 ########
 # Lint #
 ########
-# ...
+
+...
 
 lint@integration:
 	mkdir --parents report/junit
@@ -159,17 +160,15 @@ lint@integration:
 ########
 # Test #
 ########
-# ...
 
-test@integration: export SYMFONY_ENV = test
+...
+
+test@integration: export APP_ENV = test
 test@integration:
-	# Update DB if schema differs:
-	APP_DEBUG=1 bin/console doctrine:schema:update -q 2> /dev/null || \
-	(\
-		(bin/console doctrine:database:drop --ansi --force --if-exists 2> /dev/null || true) && \
-		bin/console doctrine:database:create --ansi --if-not-exists && \
-		bin/console doctrine:schema:update --ansi --force \
-	)
+	# Db
+	bin/console doctrine:database:drop --ansi --if-exists --force
+	bin/console doctrine:database:create --ansi
+	bin/console doctrine:schema:create --ansi
 	# PHPUnit
 	mkdir --parents report/junit
 	bin/phpunit --log-junit report/junit/phpunit.xml
@@ -350,11 +349,9 @@ This task is useful for example to apply `php-cs`, `php-cs-fix` or `PHPStan` che
 Usage (in your `Makefile`):
 
 ```shell
-## Show code style errors in updated PHP files
-cs:
-ifeq ($(call git_diff, php, src tests),)
-    echo "You have made no change in PHP files"
-else
-    vendor/bin/php-cs-fixer fix --config=.php_cs.dist --path-mode=intersection --dry-run --diff $(call git_diff, php, src tests)
-endif
+lint:
+	$(if $(call git_diff, php, src tests), \
+		vendor/bin/php-cs-fixer fix --config=.php_cs.dist --path-mode=intersection --diff --dry-run $(call git_diff, php, src tests), \
+		printf "You have made no change in PHP files\n" \
+	)
 ```
