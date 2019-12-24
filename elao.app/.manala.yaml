@@ -34,7 +34,7 @@ system:
 ###############
 
 integration:
-    stages: []
+    tasks: []
 
 ############
 # Releases #
