@@ -32,7 +32,7 @@ RUN \
         git \
         rsync \
     # Srv
-    && mkdir --parents /srv \
+    && mkdir -p /srv \
     && chmod 777 /srv \
     # User
     && adduser --disabled-password --gecos "" docker \

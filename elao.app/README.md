@@ -170,7 +170,7 @@ test@integration:
 	bin/console doctrine:database:create --ansi
 	bin/console doctrine:schema:create --ansi
 	# PHPUnit
-	mkdir --parents report/junit
+	mkdir -p report/junit
 	bin/phpunit --log-junit report/junit/phpunit.xml
 ```
 
@@ -324,7 +324,7 @@ Sync
 ```
 sync@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
 sync@staging:
-	mkdir --parents var
+	mkdir -p var
 	rsync --archive --compress --verbose --delete-after \
 		app@foo.staging.elao.run:/srv/app/current/var/files/ \
 		var/files/

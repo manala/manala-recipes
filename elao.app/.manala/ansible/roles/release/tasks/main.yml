@@ -19,7 +19,7 @@
 - name: Release directory "{{ release_dir }}"
   shell: >
     rm --recursive --force {{ release_dir }}
-    && mkdir --parents {{ release_dir }}
+    && mkdir -p {{ release_dir }}
   args:
     warn: false
   tags: log_failed
