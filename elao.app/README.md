@@ -129,7 +129,7 @@ integration:
               - shell: make test@integration
 ```
 
-Add in your `api/Makefile`:
+Add in your `Makefile`:
 
 ```makefile
 ###########
@@ -142,10 +142,21 @@ install@integration: export APP_ENV = test
 install@integration:
 	# Composer
 	composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
-  # Npm
+	#composer run-script symfony-scripts --ansi --verbose --no-interaction
+	# Npm
 	npm install --no-progress --color=always
-  # Yarn
+	# Yarn
 	yarn install --no-progress --color=always
+
+###########
+# Build #
+###########
+
+...
+
+build@integration:
+	# Webpack Encore
+	npx encore production --no-progress --color=always
 
 ########
 # Lint #
@@ -153,9 +164,30 @@ install@integration:
 
 ...
 
-lint@integration:
-	mkdir --parents report/junit
+lint.php-cs-fixer@integration:
+	mkdir -p report/junit
 	vendor/bin/php-cs-fixer fix --dry-run --diff --format=junit > report/junit/php-cs-fixer.xml
+
+lint.twig@integration:
+	bin/console lint:twig templates --ansi --no-interaction
+
+lint.yaml@integration:
+	bin/console lint:yaml translations config --ansi --no-interaction
+
+lint.eslint@integration: export ESLINT_JUNIT_OUTPUT=report/junit/eslint.xml
+lint.eslint@integration:
+	npx eslint src/* --ext .js,.json -f ./node_modules/eslint-junit/index.js
+
+lint.stylelint@integration:
+	mkdir -p report/junit
+	npx stylelint "assets/styles/**/*.scss" \
+		--syntax scss \
+		--custom-formatter "node_modules/stylelint-junit-formatter" \
+		> report/junit/stylelint.xml
+
+lint.flow@integration:
+	mkdir -p report/junit
+	npx flow check --json | npx flow-junit-transformer > report/junit/flow.xml
 
 ########
 # Test #
@@ -163,8 +195,8 @@ lint@integration:
 
 ...
 
-test@integration: export APP_ENV = test
-test@integration:
+test.phpunit@integration: export APP_ENV = test
+test.phpunit@integration:
 	# Db
 	bin/console doctrine:database:drop --ansi --if-exists --force
 	bin/console doctrine:database:create --ansi
@@ -172,41 +204,13 @@ test@integration:
 	# PHPUnit
 	mkdir -p report/junit
 	bin/phpunit --log-junit report/junit/phpunit.xml
-```
 
-Add in your `mobile/Makefile`:
-
-```makefile
-###########
-# Install #
-###########
-#...
-
-install@integration: export NODE_ENV = development
-install@integration:
-	yarn install
-
-########
-# Lint #
-########
-# ...
-
-lint@integration: export ESLINT_JUNIT_OUTPUT=report/junit/eslint.xml
-lint@integration:
-	npx eslint src/* --ext .js,.json -f ./node_modules/eslint-junit/index.js
-
-########
-# Test #
-########
-# ...
-
-test@integration: export JEST_JUNIT_OUTPUT_DIR=report/junit
-test@integration: export JEST_JUNIT_OUTPUT_NAME=jest.xml
-test@integration:
+test.jest@integration: export JEST_JUNIT_OUTPUT_DIR=report/junit
+test.jest@integration: export JEST_JUNIT_OUTPUT_NAME=jest.xml
+test.jest@integration:
 	npx jest --ci --reporters=default --reporters=jest-junit
-```
 
-_Note:_ You'll need `jest-junit` and `eslint-junit` packages :  `yarn --dev add eslint-junit jest-junit`.
+```
 
 ## Releases
 
