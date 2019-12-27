@@ -177,7 +177,7 @@ podTemplate(
         def appContainerEnv = env.XDG_CACHE_HOME ? " --env XDG_CACHE_HOME=${XDG_CACHE_HOME}" : ''
         def hostContainerId
 
-        stage('Bootstrap') {
+        stage('Setup') {
             checkout scm
             // Build app image
             appImage = docker.build("${appImageTag}", '.manala/docker')
