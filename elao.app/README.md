@@ -170,7 +170,6 @@ lint.php-cs-fixer@integration:
 	
 lint.phpstan@integration:
 	mkdir -p report/junit
-	# Require mavimo/phpstan-junit
 	vendor/bin/phpstan --error-format=junit --no-progress --no-interaction analyse > report/junit/phpstan.xml
 
 lint.twig@integration:
