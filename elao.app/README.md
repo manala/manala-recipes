@@ -167,6 +167,10 @@ build@integration:
 lint.php-cs-fixer@integration:
 	mkdir -p report/junit
 	vendor/bin/php-cs-fixer fix --dry-run --diff --format=junit > report/junit/php-cs-fixer.xml
+	
+lint.phpstan@integration:
+	mkdir -p report/junit
+	vendor/bin/phpstan --error-format=junit --no-progress --no-interaction analyse > report/junit/phpstan.xml
 
 lint.twig@integration:
 	bin/console lint:twig templates --ansi --no-interaction
