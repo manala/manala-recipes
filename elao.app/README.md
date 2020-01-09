@@ -357,9 +357,10 @@ This task is useful for example to apply `php-cs`, `php-cs-fix` or `PHPStan` che
 Usage (in your `Makefile`):
 
 ```shell
-lint:
-	$(if $(call git_diff, php, src tests), \
-		vendor/bin/php-cs-fixer fix --config=.php_cs.dist --path-mode=intersection --diff --dry-run $(call git_diff, php, src tests), \
+lint.php-cs-fixer: DIFF = $(call git_diff, php, src tests)
+lint.php-cs-fixer:
+	$(if $(DIFF), \
+		vendor/bin/php-cs-fixer fix --config=.php_cs.dist --path-mode=intersection --diff --dry-run $(DIFF), \
 		printf "You have made no change in PHP files\n" \
 	)
 ```
