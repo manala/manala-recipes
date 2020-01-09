@@ -17,7 +17,7 @@ RUN \
     # Disable all debian user interaction
     && export DEBIAN_FRONTEND="noninteractive" \
     && apt-get update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install --yes --no-install-recommends \
         bash bash-completion \
         apt-utils apt-transport-https \
         ca-certificates \
@@ -44,7 +44,7 @@ RUN \
     && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu {{ include "ubuntu_release" .Vars.system }} main" > /etc/apt/sources.list.d/ansible.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
     && apt-get update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install --yes --no-install-recommends \
         ansible
 
 COPY etc/ssh_config /etc/ssh/ssh_config
@@ -62,58 +62,70 @@ ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 WORKDIR /srv/app
 
-{{ if .Vars.system.php.version -}}
-{{- $php := .Vars.system.php -}}
+{{- if .Vars.system.php.version }}
+{{- $php := .Vars.system.php }}
+
 #######
 # Php #
 #######
 
 RUN \
-    echo "deb https://packages.sury.org/php/ {{ include "debian_release" .Vars.system }} main" > /etc/apt/sources.list.d/php.list \
-    && curl -sSL https://packages.sury.org/php/apt.gpg --output /etc/apt/trusted.gpg.d/php.gpg \
     # Disable irrelevants apt-key warnings
-    && export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
+    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
     && export DEBIAN_FRONTEND="noninteractive" \
+    && echo "deb https://packages.sury.org/php/ {{ include "debian_release" .Vars.system }} main" > /etc/apt/sources.list.d/php.list \
+    && curl -sSL https://packages.sury.org/php/apt.gpg --output /etc/apt/trusted.gpg.d/php.gpg \
     && apt-get update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install --yes --no-install-recommends \
         php{{ $php.version }}-cli \
         {{- range $extension := $php.extensions }}
         php{{ $php.version }}-{{ $extension }} \
         {{- end }}
     # Composer
-    && apt-get install -y --no-install-recommends \
+    && apt-get install --yes --no-install-recommends \
         unzip \
     && curl -sSL https://getcomposer.org/installer | php -- --install-dir /usr/local/bin --filename composer
 
 {{- end }}
 
-{{ if .Vars.system.nodejs.version -}}
-{{- $nodejs := .Vars.system.nodejs -}}
+{{- if .Vars.system.nodejs.version }}
+{{- $nodejs := .Vars.system.nodejs }}
+
 ##########
 # NodeJs #
 ##########
 
 RUN \
-    echo "deb https://deb.nodesource.com/node_{{ $nodejs.version }}.x {{ include "debian_release" .Vars.system }} main" > /etc/apt/sources.list.d/node.list \
+    # Disable irrelevants apt-key warnings
+    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
+    # Disable all debian user interaction
+    && export DEBIAN_FRONTEND="noninteractive" \
+    && echo "deb https://deb.nodesource.com/node_{{ $nodejs.version }}.x {{ include "debian_release" .Vars.system }} main" > /etc/apt/sources.list.d/node.list \
     && curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
         | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
     && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg \
         | apt-key add - \
-    # Disable irrelevants apt-key warnings
-    && export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
-    # Disable all debian user interaction
-    && export DEBIAN_FRONTEND="noninteractive" \
     && apt-get update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install --yes --no-install-recommends \
         nodejs \
         yarn
 
 {{- end }}
 
-{{ if .Vars.system.apt.packages -}}
-{{- $apt := .Vars.system.apt -}}
+{{- if .Vars.system.apt.packages }}
+{{- $apt := .Vars.system.apt }}
+{{- $apt_packages := list }}
+{{- $apt_debs := list }}
+{{- range $package := $apt.packages }}
+    {{- if hasSuffix ".deb" $package }}
+      {{- $apt_debs = append $apt_debs $package }}
+    {{- else }}
+      {{- $apt_packages = append $apt_packages $package }}
+    {{- end }}
+{{- end }}
+
 #######
 # Apt #
 #######
@@ -123,9 +135,25 @@ RUN \
     export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
     && export DEBIAN_FRONTEND="noninteractive" \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends \
-        {{ $apt.packages | join " " }}
+    && apt-get update
+
+    {{- if $apt_packages }} \
+    && apt-get install --yes --no-install-recommends \
+      {{- $apt_packages | join " \\\n" | nindent 8 }}
+    {{- end }}
+
+    {{- if $apt_debs }} \
+    && mkdir -p /tmp/_apt \
+    {{- $apt_package := "" }}
+    {{- range $deb := $apt_debs }}
+    {{- $apt_package = printf "%s/%s" "/tmp/_apt" (base $deb) }}
+    && curl -sSL {{ $deb }} \
+        --output {{ $apt_package }} \
+    && dpkg --install --force-depends {{ $apt_package }} \
+    && apt-get install --yes --fix-broken \
+    {{- end }}
+    && rm -Rf /tmp/_apt
+    {{- end }}
 
 {{- end }}
 

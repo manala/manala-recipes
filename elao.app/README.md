@@ -85,6 +85,7 @@ system:
     apt:
         packages:
           - pdftk
+          - https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb
     ssh:
         config: |
             Host *.elao.run
@@ -167,7 +168,7 @@ build@integration:
 lint.php-cs-fixer@integration:
 	mkdir -p report/junit
 	vendor/bin/php-cs-fixer fix --dry-run --diff --format=junit > report/junit/php-cs-fixer.xml
-	
+
 lint.phpstan@integration:
 	mkdir -p report/junit
 	vendor/bin/phpstan --error-format=junit --no-progress --no-interaction analyse > report/junit/phpstan.xml
