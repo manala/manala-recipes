@@ -123,6 +123,7 @@ integration:
               - shell: make install@integration
               - shell: make lint@integration
               - shell: make test@integration
+                warn: true # Errors will be treated as warnings
                 env:
                     DATABASE_URL: mysql://root@127.0.0.1:3306/app
           - app: mobile
@@ -130,6 +131,7 @@ integration:
               - shell: make install@integration  
               - shell: make lint@integration
               - shell: make test@integration
+                warn: true
 ```
 
 Add in your `Makefile`:
