@@ -74,6 +74,8 @@ system:
           - xml
           # App
           - mysql
+    symfony:
+        version: "*"
     nodejs:
         version: 12
     # MySQL...
@@ -193,6 +195,15 @@ lint.stylelint@integration:
 lint.flow@integration:
 	mkdir -p report/junit
 	npx flow check --json | npx flow-junit-transformer > report/junit/flow.xml
+
+############
+# Security #
+############
+
+...
+
+security.symfony@integration:
+	symfony check:security
 
 ########
 # Test #

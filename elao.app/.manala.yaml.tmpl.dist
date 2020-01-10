@@ -23,5 +23,7 @@ system:
     #       - xml
     #       # App
     #       - mysql
+    # symfony:
+    #     version: "*"
     # nodejs:
     #     version: 12
