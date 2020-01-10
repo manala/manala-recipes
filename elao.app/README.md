@@ -378,3 +378,20 @@ lint.php-cs-fixer:
 		printf "You have made no change in PHP files\n" \
 	)
 ```
+
+### Try tools
+
+This recipe contains some try helpers such as the [`try_finally`](./make/make.try.mk) function.
+
+This function is useful for example to run `phpunit` tests needing a started symfony server, and to stop this server regardless of the tests retur code.
+
+Usage (in your `Makefile`):
+
+```shell
+test.phpunit@integration:
+	symfony server:start --ansi --no-humanize --daemon --no-tls --port=8000
+	$(call try_finally, \
+		bin/phpunit --colors=always --log-junit report/junit/phpunit.xml, \
+		symfony server:stop --ansi \
+	)
+```
