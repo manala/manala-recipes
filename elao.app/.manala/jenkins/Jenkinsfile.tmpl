@@ -118,9 +118,17 @@ stage('{{- include "node_label" $node -}}') {
 {{- define "node_shell" -}}
     {{- $node := . -}}
 stage('{{- include "node_label" $node -}}') {
+    {{- if get $node "warn" }}
+    warnError('{{- include "node_label" $node -}}') {
+        sh '''
+            {{ $node.shell }}
+        '''
+    }
+    {{- else }}
     sh '''
         {{ $node.shell }}
     '''
+    {{- end }}
 }
 {{- end -}}
 
