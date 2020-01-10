@@ -75,7 +75,8 @@ RUN \
     # Disable all debian user interaction
     && export DEBIAN_FRONTEND="noninteractive" \
     && echo "deb https://packages.sury.org/php/ {{ include "debian_release" .Vars.system }} main" > /etc/apt/sources.list.d/php.list \
-    && curl -sSL https://packages.sury.org/php/apt.gpg --output /etc/apt/trusted.gpg.d/php.gpg \
+    && curl --silent --location --show-error https://packages.sury.org/php/apt.gpg \
+        --output /etc/apt/trusted.gpg.d/php.gpg \
     && apt-get update \
     && apt-get install --yes --no-install-recommends \
         php{{ $php.version }}-cli \
@@ -85,7 +86,24 @@ RUN \
     # Composer
     && apt-get install --yes --no-install-recommends \
         unzip \
-    && curl -sSL https://getcomposer.org/installer | php -- --install-dir /usr/local/bin --filename composer
+    && curl --silent --location --show-error https://getcomposer.org/installer \
+        | php -- --install-dir /usr/local/bin --filename composer
+
+{{- end }}
+
+{{- if .Vars.system.symfony.version }}
+{{- $symfony := .Vars.system.symfony }}
+
+###########
+# Symfony #
+###########
+
+RUN \
+    # Get latest version
+    VERSION=`curl --silent --location --fail https://get.symfony.com/cli/LATEST` \
+    && curl --silent --location --show-error https://github.com/symfony/cli/releases/download/v${VERSION}/symfony_linux_amd64.gz \
+        --output - | gunzip > /usr/local/bin/symfony \
+    && chmod +x /usr/local/bin/symfony
 
 {{- end }}
 
@@ -102,10 +120,10 @@ RUN \
     # Disable all debian user interaction
     && export DEBIAN_FRONTEND="noninteractive" \
     && echo "deb https://deb.nodesource.com/node_{{ $nodejs.version }}.x {{ include "debian_release" .Vars.system }} main" > /etc/apt/sources.list.d/node.list \
-    && curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
+    && curl --silent --location --show-error https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
         | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
-    && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg \
+    && curl --silent --location --show-error https://dl.yarnpkg.com/debian/pubkey.gpg \
         | apt-key add - \
     && apt-get update \
     && apt-get install --yes --no-install-recommends \
@@ -134,8 +152,7 @@ RUN \
     # Disable irrelevants apt-key warnings
     export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
-    && export DEBIAN_FRONTEND="noninteractive" \
-    && apt-get update
+    && export DEBIAN_FRONTEND="noninteractive"
 
     {{- if $apt_packages }} \
     && apt-get install --yes --no-install-recommends \
@@ -147,7 +164,7 @@ RUN \
     {{- $apt_package := "" }}
     {{- range $deb := $apt_debs }}
     {{- $apt_package = printf "%s/%s" "/tmp/_apt" (base $deb) }}
-    && curl -sSL {{ $deb }} \
+    && curl --silent --location --show-error {{ $deb }} \
         --output {{ $apt_package }} \
     && dpkg --install --force-depends {{ $apt_package }} \
     && apt-get install --yes --fix-broken \
