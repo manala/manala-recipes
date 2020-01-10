@@ -104,8 +104,7 @@ system:
 
 Here is an example of an integration configuration in `.manala.yaml`:
 
-In this example we have two tracks : `/api` and `/mobile`, corresponding to two different sub-projects.
-On each sub-project we have _install_, _lint_ and _test_ stages.
+In this example we have two parallel stages: `api` and `mobile`, corresponding to two different sub-apps.
 
 ```yaml
 ###############
@@ -121,16 +120,19 @@ integration:
           - app: api # Optionnal
             tasks:
               - shell: make install@integration
-              - shell: make lint@integration
-              - shell: make test@integration
+              - shell: make build@integration
+              - shell: make lint.php-cs@integration
+              - shell: make security.symfony@integration
+              - shell: make test.phpunit@integration
                 warn: true # Errors will be treated as warnings
                 env:
                     DATABASE_URL: mysql://root@127.0.0.1:3306/app
           - app: mobile
             tasks:
-              - shell: make install@integration  
-              - shell: make lint@integration
-              - shell: make test@integration
+              - shell: make install@integration
+              - shell: make build@integration
+              - shell: make lint.eslint@integration
+              - shell: make test.jest@integration
                 warn: true
 ```
 
@@ -220,13 +222,12 @@ test.phpunit@integration:
 	bin/console doctrine:database:create --ansi
 	bin/console doctrine:schema:create --ansi
 	# PHPUnit
-	mkdir -p report/junit
-	bin/phpunit --log-junit report/junit/phpunit.xml
+	bin/phpunit --colors=always --log-junit report/junit/phpunit.xml
 
-test.jest@integration: export JEST_JUNIT_OUTPUT_DIR=report/junit
-test.jest@integration: export JEST_JUNIT_OUTPUT_NAME=jest.xml
+test.jest@integration: export JEST_JUNIT_OUTPUT_DIR = report/junit
+test.jest@integration: export JEST_JUNIT_OUTPUT_NAME = jest.xml
 test.jest@integration:
-	npx jest --ci --reporters=default --reporters=jest-junit
+	npx jest --ci --color --reporters=default --reporters=jest-junit
 
 ```
 
@@ -362,11 +363,11 @@ sync.api-uploads@staging:
   ...
 ```
 
-## Git tools
+### Git tools
 
-The `elao.app` recipe contains some git helpers such as the [`git_diff`](./make/make.git.mk) task.
+This recipe contains some git helpers such as the [`git_diff`](./make/make.git.mk) function.
 
-This task is useful for example to apply `php-cs`, `php-cs-fix` or `PHPStan` checks only on the subset of updated PHP files and not on any PHP file of your project.
+This function is useful for example to apply `php-cs`, `php-cs-fix` or `PHPStan` checks only on the subset of updated PHP files and not on any PHP file of your project.
 
 Usage (in your `Makefile`):
 
