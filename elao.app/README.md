@@ -121,10 +121,10 @@ integration:
             tasks:
               - shell: make install@integration
               - shell: make build@integration
-              - shell: make lint.php-cs@integration
+              - shell: make lint.php-cs-fixer@integration
               - shell: make security.symfony@integration
               - shell: make test.phpunit@integration
-                warn: true # Errors will be treated as warnings
+                warn: true # Turn errors into warnings
                 env:
                     DATABASE_URL: mysql://root@127.0.0.1:3306/app
           - app: mobile
@@ -183,7 +183,7 @@ lint.twig@integration:
 	bin/console lint:twig templates --ansi --no-interaction
 
 lint.yaml@integration:
-	bin/console lint:yaml translations config --ansi --no-interaction
+	bin/console lint:yaml config translations --ansi --no-interaction
 
 lint.eslint@integration: export ESLINT_JUNIT_OUTPUT=report/junit/eslint.xml
 lint.eslint@integration:
@@ -218,7 +218,6 @@ security.symfony@integration:
 test.phpunit@integration: export APP_ENV = test
 test.phpunit@integration:
 	# Db
-	bin/console doctrine:database:drop --ansi --if-exists --force
 	bin/console doctrine:database:create --ansi
 	bin/console doctrine:schema:create --ansi
 	# PHPUnit
