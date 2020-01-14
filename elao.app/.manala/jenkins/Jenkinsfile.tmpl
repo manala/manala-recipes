@@ -151,6 +151,13 @@ podTemplate(
     inheritFrom: 'integration',
     label: '{{- include "pod_label" .Vars.system }}',
     containers: [
+        containerTemplate(
+            name: 'debug',
+            image: 'debian:{{ include "debian_release" .Vars.system }}-slim',
+            alwaysPullImage: false,
+            ttyEnabled: true,
+            command: 'cat'
+        ),
         {{- if .Vars.system.mysql.version -}}
         {{- $mysql := .Vars.system.mysql }}
         containerTemplate(
