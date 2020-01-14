@@ -84,6 +84,10 @@ system:
     # ...*OR* MariaDB
     mariadb:
         version: 10.3
+    elasticsearch:
+        version: 7
+        plugins:
+          - analysis-icu
     apt:
         packages:
           - pdftk

@@ -26,6 +26,9 @@ system:
         version: ~
     mariadb:
         version: ~
+    elasticsearch:
+        version: ~
+        plugins: []
     apt:
         packages: []
     ssh:
