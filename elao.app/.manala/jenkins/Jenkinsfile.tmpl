@@ -196,12 +196,24 @@ podTemplate(
             checkout scm
             // Build app image
             appImage = docker.build("${appImageTag}", '.manala/docker')
-            // Get host container id
-            hostContainerId = sh returnStdout: true, script: 'cat /proc/self/cgroup | head -1  | awk -F/ \'{print $NF}\''
+            // Get host docker container id
+            hostContainerId = sh label: 'Get host docker container id', script: 'cat /proc/self/cgroup | head -1 | awk -F/ \'{print $NF}\'', returnStdout: true
             {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
-            // Wait until service is up
+            // MySQL/MariaDB service
             container('{{ if .Vars.system.mysql.version }}mysql{{ else }}mariadb{{ end }}') {
-                sh 'while ! mysqladmin ping --host 0.0.0.0 --silent; do sleep 0.25; done'
+                sh label: 'MySQL/MariaDB service', script: '''
+                    printf "\033[32mWait until service is up...\033[0m\n"
+                    while ! mysqladmin ping --host 0.0.0.0 --silent; do
+                        sleep 0.25
+                    done
+                    printf "\033[32mDrop databases...\033[0m\n"
+                    for database in $(mysql --execute "SHOW DATABASES" | egrep --invert-match "Database|mysql|information_schema|performance_schema"); do
+                      printf "\033[36m${database}\033[0m\n"
+                      mysql --execute "DROP DATABASE ${database}"
+                    done
+                '''
+            }
+            {{- end }}
             }
             {{- end }}
         }
@@ -211,8 +223,8 @@ podTemplate(
                 {{- include "node" .Vars.integration | trim | nindent 16 }}
             }
         } finally {
-            // Remove app image
-            sh "docker rmi --no-prune ${appImageTag}"
+            // Remove app docker image
+            sh label: 'Remove app docker image', script: "docker rmi --no-prune ${appImageTag}"
         }
         {{- end }}
     }
