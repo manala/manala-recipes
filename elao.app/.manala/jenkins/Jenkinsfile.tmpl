@@ -10,7 +10,7 @@
 {{- end -}}
 
 {{- define "node" -}}
-    {{- $node := . -}}
+    {{- $node := mergeOverwrite (dict "warn" false) . -}}
     {{- $indent := 0 -}}
     {{- $indent_env := 0 -}}
     {{- $indent_dir := 0 -}}
@@ -104,13 +104,13 @@ stage('{{- include "node_label" $node -}}') {
     parallel(
         {{- range $i, $task := $node.tasks }}{{ if $i }},{{ end }}
         '{{- include "node_label" $task -}}': {
-            {{- include "node" $task | trim | nindent 12 }}
+            {{- include "node" (mergeOverwrite (dict "warn" $node.warn) $task) | trim | nindent 12 }}
         }{{ end }}
     )
 }
 {{- else -}}
     {{- range $i, $task := $node.tasks }}
-        {{- include "node" $task -}}
+        {{- include "node" (mergeOverwrite (dict "warn" $node.warn) $task) -}}
     {{- end -}}
 {{- end -}}
 {{- end -}}
