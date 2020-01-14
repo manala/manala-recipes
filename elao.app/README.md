@@ -116,6 +116,7 @@ integration:
       - label: Integration # Optionnal
         parallel: true # ! Careful ! Could *NOT* be nested !
         junit: report/junit/*.xml # Optionnal
+        warn: true # Turn errors into warnings (recursively applied)
         tasks:
           - app: api # Optionnal
             tasks:
@@ -124,7 +125,6 @@ integration:
               - shell: make lint.php-cs-fixer@integration
               - shell: make security.symfony@integration
               - shell: make test.phpunit@integration
-                warn: true # Turn errors into warnings
                 env:
                     DATABASE_URL: mysql://root@127.0.0.1:3306/app
           - app: mobile
@@ -133,7 +133,6 @@ integration:
               - shell: make build@integration
               - shell: make lint.eslint@integration
               - shell: make test.jest@integration
-                warn: true
 ```
 
 Add in your `Makefile`:
