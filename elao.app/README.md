@@ -102,7 +102,37 @@ system:
 
 ## Integration
 
-Here is an example of an integration configuration in `.manala.yaml`:
+Here are some examples of integration configurations in `.manala.yaml`:
+
+```yaml
+###############
+# Integration #
+###############
+
+integration:
+    tasks:
+      - shell: make install@integration
+      - label: Integration
+        junit: report/junit/*.xml
+        parallel: true
+        warn: true
+        tasks:
+          - label: Lint
+            tasks:
+              - shell: make lint.php-cs-fixer@integration
+              - shell: make lint.twig@integration
+              - shell: make lint.yaml@integration
+              - shell: make lint.eslint@integration
+          - label: Security
+            tasks:
+              - shell: make security.symfony@integration
+              - shell: make security.yarn@integration
+          - label: Test
+            tasks:
+              - shell: make test.phpunit@integration
+                env:
+                    DATABASE_URL: mysql://root@127.0.0.1:3306/app
+```
 
 In this example we have two parallel stages: `api` and `mobile`, corresponding to two different sub-apps.
 
@@ -184,9 +214,8 @@ lint.twig@integration:
 lint.yaml@integration:
 	bin/console lint:yaml config translations --ansi --no-interaction
 
-lint.eslint@integration: export ESLINT_JUNIT_OUTPUT=report/junit/eslint.xml
 lint.eslint@integration:
-	npx eslint src/* --ext .js,.json -f ./node_modules/eslint-junit/index.js
+	npx eslint src --format junit --output-file report/junit/eslint.xml
 
 lint.stylelint@integration:
 	mkdir -p report/junit
@@ -207,6 +236,12 @@ lint.flow@integration:
 
 security.symfony@integration:
 	symfony check:security
+
+security.yarn@integration:
+	yarn audit ; RC=$${?} ; [ $${RC} -gt 2 ] && exit $${RC} || exit 0
+
+security.npm@integration:
+	npm audit --audit-level moderate
 
 ########
 # Test #
