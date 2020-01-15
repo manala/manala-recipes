@@ -130,6 +130,7 @@ integration:
           - label: Test
             tasks:
               - shell: make test.phpunit@integration
+                artifacts: var/log/*.log
                 env:
                     DATABASE_URL: mysql://root@127.0.0.1:3306/app
 ```
@@ -145,7 +146,8 @@ integration:
     tasks:
       - label: Integration # Optionnal
         parallel: true # ! Careful ! Could *NOT* be nested !
-        junit: report/junit/*.xml # Optionnal
+        junit: report/junit/*.xml
+        artifacts: var/log/*.log
         warn: true # Turn errors into warnings (recursively applied)
         tasks:
           - app: api # Optionnal
@@ -155,6 +157,7 @@ integration:
               - shell: make lint.php-cs-fixer@integration
               - shell: make security.symfony@integration
               - shell: make test.phpunit@integration
+                artifacts: var/log/*.log
                 env:
                     DATABASE_URL: mysql://root@127.0.0.1:3306/app
           - app: mobile
