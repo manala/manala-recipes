@@ -14,7 +14,7 @@
     {{- $indent := 0 -}}
     {{- $indent_env := 0 -}}
     {{- $indent_dir := 0 -}}
-    {{- $indent_junit := 0 -}}
+    {{- $indent_try := 0 -}}
 
     {{- /* --- Env / Open --- */ -}}
     {{- if hasKey $node "env" -}}
@@ -30,11 +30,11 @@
           {{- include "node_dir_open" $node | nindent $indent_dir -}}
         {{- end -}}
 
-            {{- /* --- Junit / Open --- */ -}}
-            {{- if hasKey $node "junit" -}}
-              {{- $indent_junit = $indent -}}
+            {{- /* --- Try / Open --- */ -}}
+            {{- if or (hasKey $node "junit") (hasKey $node "artifacts") -}}
+              {{- $indent_try = $indent -}}
               {{- $indent = (add $indent 4 | int) -}}
-              {{- include "node_junit_open" $node | nindent $indent_junit -}}
+              {{- include "node_try_open" $node | nindent $indent_try -}}
             {{- end -}}
 
                 {{- if hasKey $node "tasks" -}}
@@ -43,9 +43,9 @@
                     {{- include "node_shell" $node | nindent $indent -}}
                 {{- end -}}
 
-            {{- /* --- Junit / Close --- */ -}}
-            {{- if hasKey $node "junit" }}
-              {{- include "node_junit_close" $node | nindent $indent_junit }}
+            {{- /* --- Try / Close --- */ -}}
+            {{- if or (hasKey $node "junit") (hasKey $node "artifacts") }}
+              {{- include "node_try_close" $node | nindent $indent_try }}
             {{- end -}}
 
         {{- /* --- Dir / Close --- */ -}}
@@ -77,14 +77,19 @@ withEnv([
 }
 {{- end -}}
 
-{{- define "node_junit_open" -}}
+{{- define "node_try_open" -}}
 try {
 {{- end -}}
 
-{{- define "node_junit_close" -}}
+{{- define "node_try_close" -}}
     {{- $node := . -}}
 } finally {
+    {{- if hasKey $node "junit" }}
     junit allowEmptyResults: true, testResults: '{{ $node.junit }}'
+    {{- end }}
+    {{- if hasKey $node "artifacts" }}
+    archiveArtifacts allowEmptyArchive: true, artifacts: '{{ $node.artifacts }}'
+    {{- end }}
 }
 {{- end -}}
 
