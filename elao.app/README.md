@@ -267,6 +267,15 @@ test.jest@integration:
 
 ```
 
+> :bulb: If you're using Webpack Encore and your Symfony functional test suite fails due to missing `manifest.json`, you're likely to require building your assets before exexcuting the test suite. Hopefully, as this is not an idealistic situation, an option exists to solve this issue:
+
+  ```yaml
+  # config/packages/test/webpack_encore.yaml
+  webpack_encore:
+      # Suppresses all the exceptions thrown because of missing builds in test env
+      strict_mode: false
+  ```
+
 ## Releases
 
 Here is an example of a production/staging release configuration in `.manala.yaml`:
