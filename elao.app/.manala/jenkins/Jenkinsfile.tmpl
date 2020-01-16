@@ -10,54 +10,83 @@
 {{- end -}}
 
 {{- define "node" -}}
-    {{- $node := mergeOverwrite (dict "warn" false) . -}}
+    {{- $node := mergeOverwrite (dict "label" "" "env" dict "app" "" "junit" "" "artifacts" "" "tasks" list "parallel" false "shell" "" "warn" false) .node -}}
+    {{- $parallel_task := get . "parallel_task" -}}
+
+    {{- /* --- Cache dir by app --- */ -}}
+    {{- if not (empty $node.app) -}}
+      {{- $node = mergeOverwrite $node (dict "env" (set $node.env "XDG_CACHE_HOME" (printf "${appCacheHome}/%s" $node.app))) -}}
+    {{- end -}}
+
     {{- $indent := 0 -}}
+    {{- $indent_parallel_task := 0 -}}
     {{- $indent_env := 0 -}}
     {{- $indent_dir := 0 -}}
     {{- $indent_try := 0 -}}
 
-    {{- /* --- Env / Open --- */ -}}
-    {{- if hasKey $node "env" -}}
-      {{- $indent_env = $indent -}}
+    {{- /* --- Parallel Task / Open --- */ -}}
+    {{- if not (empty $parallel_task) -}}
+      {{- $indent_parallel_task = $indent -}}
       {{- $indent = (add $indent 4 | int) -}}
-      {{- include "node_env_open" $node | nindent $indent_env -}}
+      {{- include "node_parallel_task_open" $node | nindent $indent_parallel_task -}}
     {{- end -}}
 
-        {{- /* --- Dir / Open --- */ -}}
-        {{- if hasKey $node "app" -}}
-          {{- $indent_dir = $indent -}}
+        {{- /* --- Env / Open --- */ -}}
+        {{- if not (empty $node.env) -}}
+          {{- $indent_env = $indent -}}
           {{- $indent = (add $indent 4 | int) -}}
-          {{- include "node_dir_open" $node | nindent $indent_dir -}}
+          {{- include "node_env_open" $node | nindent $indent_env -}}
         {{- end -}}
 
-            {{- /* --- Try / Open --- */ -}}
-            {{- if or (hasKey $node "junit") (hasKey $node "artifacts") -}}
-              {{- $indent_try = $indent -}}
+            {{- /* --- Dir / Open --- */ -}}
+            {{- if not (empty $node.app) -}}
+              {{- $indent_dir = $indent -}}
               {{- $indent = (add $indent 4 | int) -}}
-              {{- include "node_try_open" $node | nindent $indent_try -}}
+              {{- include "node_dir_open" $node | nindent $indent_dir -}}
             {{- end -}}
 
-                {{- if hasKey $node "tasks" -}}
-                    {{- include "node_tasks" $node | trim | nindent $indent -}}
-                {{- else if hasKey $node "shell" -}}
-                    {{- include "node_shell" $node | nindent $indent -}}
+                {{- /* --- Try / Open --- */ -}}
+                {{- if or (not (empty $node.junit)) (not (empty $node.artifacts)) -}}
+                  {{- $indent_try = $indent -}}
+                  {{- $indent = (add $indent 4 | int) -}}
+                  {{- include "node_try_open" $node | nindent $indent_try -}}
                 {{- end -}}
 
-            {{- /* --- Try / Close --- */ -}}
-            {{- if or (hasKey $node "junit") (hasKey $node "artifacts") }}
-              {{- include "node_try_close" $node | nindent $indent_try }}
+                    {{- if not (empty $node.tasks) -}}
+                        {{- include "node_tasks" $node | trim | nindent $indent -}}
+                    {{- else if not (empty $node.shell) -}}
+                        {{- include "node_shell" $node | nindent $indent -}}
+                    {{- end -}}
+
+                {{- /* --- Try / Close --- */ -}}
+                {{- if or (not (empty $node.junit)) (not (empty $node.artifacts)) }}
+                  {{- include "node_try_close" $node | nindent $indent_try }}
+                {{- end -}}
+
+            {{- /* --- Dir / Close --- */ -}}
+            {{- if not (empty $node.app) }}
+              {{- include "node_dir_close" $node | nindent $indent_dir }}
             {{- end -}}
 
-        {{- /* --- Dir / Close --- */ -}}
-        {{- if hasKey $node "app" }}
-          {{- include "node_dir_close" $node | nindent $indent_dir }}
+        {{- /* --- Env / Close --- */ -}}
+        {{- if not (empty $node.env) }}
+          {{- include "node_env_close" $node | nindent $indent_env }}
         {{- end -}}
 
-    {{- /* --- Env / Close --- */ -}}
-    {{- if hasKey $node "env" }}
-      {{- include "node_env_close" $node | nindent $indent_env }}
+    {{- /* --- Parallel Task / Close --- */ -}}
+    {{- if not (empty $parallel_task) }}
+      {{- include "node_parallel_task_close" $node | nindent $indent_parallel_task }}
     {{- end -}}
 
+{{- end -}}
+
+{{- define "node_parallel_task_open" -}}
+    {{- $node := . -}}
+'{{ include "node_label" $node }}': {
+{{- end -}}
+
+{{- define "node_parallel_task_close" -}}
+}
 {{- end -}}
 
 {{- define "node_env_open" -}}
@@ -66,7 +95,7 @@
 withEnv([
     {{- range $key, $value := $node.env -}}
         {{- if not (kindIs "invalid" $value) -}}
-            {{- $env = append $env (print "'" $key "=" ($value | toString) "'") -}}
+            {{- $env = append $env (print "\"" $key "=" ($value | toString) "\"") -}}
         {{- end -}}
     {{- end -}}
     {{- $env | join ", " -}}
@@ -74,22 +103,6 @@ withEnv([
 {{- end -}}
 
 {{- define "node_env_close" -}}
-}
-{{- end -}}
-
-{{- define "node_try_open" -}}
-try {
-{{- end -}}
-
-{{- define "node_try_close" -}}
-    {{- $node := . -}}
-} finally {
-    {{- if hasKey $node "junit" }}
-    junit allowEmptyResults: true, testResults: '{{ $node.junit }}'
-    {{- end }}
-    {{- if hasKey $node "artifacts" }}
-    archiveArtifacts allowEmptyArchive: true, artifacts: '{{ $node.artifacts }}'
-    {{- end }}
 }
 {{- end -}}
 
@@ -102,20 +115,35 @@ dir('{{ $node.app }}') {
 }
 {{- end -}}
 
+{{- define "node_try_open" -}}
+try {
+{{- end -}}
+
+{{- define "node_try_close" -}}
+    {{- $node := . -}}
+} finally {
+    {{- if not (empty $node.junit) }}
+    junit allowEmptyResults: true, testResults: '{{ $node.junit }}'
+    {{- end }}
+    {{- if not (empty $node.artifacts) }}
+    archiveArtifacts allowEmptyArchive: true, artifacts: '{{ $node.artifacts }}'
+    {{- end }}
+}
+{{- end -}}
+
 {{- define "node_tasks" -}}
     {{- $node := . -}}
-{{- if get $node "parallel" -}}
+{{- if $node.parallel -}}
 stage('{{- include "node_label" $node -}}') {
     parallel(
         {{- range $i, $task := $node.tasks }}{{ if $i }},{{ end }}
-        '{{- include "node_label" $task -}}': {
-            {{- include "node" (mergeOverwrite (dict "warn" $node.warn) $task) | trim | nindent 12 }}
-        }{{ end }}
+            {{- include "node" (dict "node" (mergeOverwrite (dict "warn" $node.warn) $task) "parallel_task" true) | trim | nindent 8 }}
+        {{- end }}
     )
 }
 {{- else -}}
     {{- range $i, $task := $node.tasks }}
-        {{- include "node" (mergeOverwrite (dict "warn" $node.warn) $task) -}}
+        {{- include "node" (dict "node" (mergeOverwrite (dict "warn" $node.warn) $task)) -}}
     {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -123,7 +151,7 @@ stage('{{- include "node_label" $node -}}') {
 {{- define "node_shell" -}}
     {{- $node := . -}}
 stage('{{- include "node_label" $node -}}') {
-    {{- if get $node "warn" }}
+    {{- if $node.warn }}
     warnError('{{- include "node_label" $node -}}') {
         sh '''
             {{ $node.shell }}
@@ -139,11 +167,11 @@ stage('{{- include "node_label" $node -}}') {
 
 {{- define "node_label" -}}
     {{- $node := . -}}
-    {{- if hasKey $node "label" -}}
+    {{- if not (empty $node.label) -}}
         {{- $node.label -}}
-    {{- else if hasKey $node "app" -}}
+    {{- else if not (empty $node.app) -}}
         {{- $node.app | title -}}
-    {{- else if and (hasKey $node "shell") (regexMatch "^make .+@integration$" (get $node "shell")) -}}
+    {{- else if and (not (empty $node.shell)) (regexMatch "^make .+@integration$" $node.shell) -}}
         {{- (regexReplaceAll "^make (.+)@integration$" $node.shell "${1}") | replace "." " - " | title -}}
     {{- else -}}
         Task
@@ -194,7 +222,7 @@ podTemplate(
         {{- else }}
         def appImage
         def appImageTag = 'integration:' + URLDecoder.decode("${BUILD_TAG}").replaceAll('[^\\w-]', '-')
-        def appContainerEnv = env.XDG_CACHE_HOME ? " --env XDG_CACHE_HOME=${XDG_CACHE_HOME}" : ''
+        def appCacheHome = env.XDG_CACHE_HOME ? "${XDG_CACHE_HOME}" : '/home/docker/.cache'
         def hostContainerId
 
         stage('Setup') {
@@ -221,8 +249,8 @@ podTemplate(
         }
 
         try {
-            appImage.inside("--network container:${hostContainerId}${appContainerEnv}") {
-                {{- include "node" .Vars.integration | trim | nindent 16 }}
+            appImage.inside("--network container:${hostContainerId} --env XDG_CACHE_HOME=${appCacheHome}/app") {
+                {{- include "node" (dict "node" .Vars.integration) | trim | nindent 16 }}
             }
         } finally {
             // Remove app docker image
