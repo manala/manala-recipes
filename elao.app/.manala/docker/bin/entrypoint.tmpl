@@ -8,10 +8,6 @@ if [ -n "${XDG_CACHE_HOME}" ]; then
     export HISTFILE="${XDG_CACHE_HOME}/.bash_history"
     # Ansible
     export ANSIBLE_CACHE_PLUGIN_CONNECTION="${XDG_CACHE_HOME}/ansible"
-    {{- if .Vars.system.nodejs.version }}
-    # Npm
-    export NPM_CONFIG_CACHE="${XDG_CACHE_HOME}/npm"
-    {{- end }}
 fi
 
 # Ssh key
