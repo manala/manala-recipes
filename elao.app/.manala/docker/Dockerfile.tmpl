@@ -128,7 +128,9 @@ RUN \
     && apt-get update \
     && apt-get install --yes --no-install-recommends \
         nodejs \
-        yarn
+        yarn \
+    && mkdir -p /usr/etc \
+    && echo "cache=\${XDG_CACHE_HOME}/npm" > /usr/etc/npmrc
 
 {{- end }}
 
