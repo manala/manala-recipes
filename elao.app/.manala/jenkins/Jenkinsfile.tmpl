@@ -134,7 +134,7 @@ try {
 {{- define "node_tasks" -}}
     {{- $node := . -}}
 {{- if $node.parallel -}}
-stage('{{- include "node_label" $node -}}') {
+stage('{{ include "node_label" $node }}') {
     parallel(
         {{- range $i, $task := $node.tasks }}{{ if $i }},{{ end }}
             {{- include "node" (dict "node" (mergeOverwrite (dict "warn" $node.warn) $task) "parallel_task" true) | trim | nindent 8 }}
@@ -150,9 +150,9 @@ stage('{{- include "node_label" $node -}}') {
 
 {{- define "node_shell" -}}
     {{- $node := . -}}
-stage('{{- include "node_label" $node -}}') {
+stage('{{ include "node_label" $node }}') {
     {{- if $node.warn }}
-    warnError('{{- include "node_label" $node -}}') {
+    warnError('{{ include "node_label" $node }}') {
         sh '''
             {{ $node.shell }}
         '''
@@ -182,7 +182,7 @@ stage('{{- include "node_label" $node -}}') {
 
 podTemplate(
     inheritFrom: 'integration',
-    label: '{{- include "pod_label" .Vars.system }}',
+    label: '{{ include "pod_label" .Vars.system }}',
     containers: [
         containerTemplate(
             name: 'debug',
@@ -214,7 +214,7 @@ podTemplate(
         {{- end }}
     ]
 ) {
-    node('{{- include "pod_label" .Vars.system }}') {
+    node('{{ include "pod_label" .Vars.system }}') {
         {{- if not .Vars.integration.tasks }}
         stage('¯\\_(ツ)_/¯') {
             echo 'Because testing is doubting...'
