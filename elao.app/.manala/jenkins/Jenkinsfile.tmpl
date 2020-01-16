@@ -204,16 +204,15 @@ podTemplate(
             // Get host docker container id
             hostContainerId = sh label: 'Get host docker container id', script: 'cat /proc/self/cgroup | head -1 | awk -F/ \'{print $NF}\'', returnStdout: true
             {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
-            // MySQL/MariaDB service
+            // Setup MySQL/MariaDB service
+            // - Wait until service is up
+            // - Drop databases
             container('{{ if .Vars.system.mysql.version }}mysql{{ else }}mariadb{{ end }}') {
-                sh label: 'MySQL/MariaDB service', script: '''
-                    printf "\033[32mWait until service is up...\033[0m\n"
+                sh label: 'Setup MySQL/MariaDB service', script: '''
                     while ! mysqladmin ping --host 0.0.0.0 --silent; do
                         sleep 0.25
                     done
-                    printf "\033[32mDrop databases...\033[0m\n"
                     for database in $(mysql --execute "SHOW DATABASES" | egrep --invert-match "Database|mysql|information_schema|performance_schema"); do
-                      printf "\033[36m${database}\033[0m\n"
                       mysql --execute "DROP DATABASE ${database}"
                     done
                 '''
