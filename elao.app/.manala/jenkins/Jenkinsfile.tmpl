@@ -6,6 +6,10 @@
     {{- else if $system.mariadb.version -}}
         {{- $label = concat $label (list "mariadb" $system.mariadb.version) -}}
     {{- end -}}
+    {{- if $system.elasticsearch.version -}}
+        {{- $elasticsearch := mergeOverwrite (dict "plugins" list) $system.elasticsearch -}}
+        {{- $label = concat $label (list "elasticsearch" $system.elasticsearch.version) $elasticsearch.plugins -}}
+    {{- end -}}
     {{- regexReplaceAll "[^[:alnum:]-]" ($label | join "-") "-" -}}
 {{- end -}}
 
@@ -212,6 +216,20 @@ podTemplate(
             ]
         ),
         {{- end }}
+        {{- if .Vars.system.elasticsearch.version -}}
+        {{- $elasticsearch := mergeOverwrite (dict "plugins" list) .Vars.system.elasticsearch }}
+        containerTemplate(
+            name: 'elasticsearch',
+            image: 'docker.elastic.co/elasticsearch/elasticsearch:{{ include "elasticsearch_version" $elasticsearch }}',
+            alwaysPullImage: false,
+            envVars: [
+                envVar(key: 'discovery.type', value: 'single-node')
+            ],
+            command: 'sh -c "
+                {{- range $plugin := $elasticsearch.plugins }}elasticsearch-plugin install --batch --verbose {{ $plugin }} && {{ end -}}
+                exec docker-entrypoint.sh"'
+        ),
+        {{- end }}
     ]
 ) {
     node('{{ include "pod_label" .Vars.system }}') {
@@ -243,6 +261,20 @@ podTemplate(
                     for database in $(mysql --execute "SHOW DATABASES" | egrep --invert-match "Database|mysql|information_schema|performance_schema"); do
                       mysql --execute "DROP DATABASE ${database}"
                     done
+                '''
+            }
+            {{- end }}
+            {{- if .Vars.system.elasticsearch.version }}
+            {{- $elasticsearch := .Vars.system.elasticsearch }}
+            // Setup Elasticsearch service
+            // - Wait until service is up
+            // - Delete indexes
+            container('elasticsearch') {
+                sh label: 'Setup Elasticsearch service', script: '''
+                    while ! [ $(curl --write-out %{http_code} --silent --output /dev/null http://127.0.0.1:9200/_cat/health?h=st) = 200 ]; do
+                        sleep 0.25
+                    done
+                    curl --silent --request DELETE http://127.0.0.1:9200/_all
                 '''
             }
             {{- end }}
