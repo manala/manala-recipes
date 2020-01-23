@@ -30,8 +30,12 @@ define docker_run
 		--mount type=bind,consistency=delegated,source=$(CURDIR),target=/srv/app \
 		--env XDG_CACHE_HOME=/srv/.cache \
 		--mount type=bind,consistency=delegated,source=$(CURDIR)/.manala/.cache/docker,target=/srv/.cache \
-		--env SSH_KEY=/home/docker/.ssh/id_rsa \
-		--mount type=bind,consistency=cached,source=$(HOME)/.ssh/id_rsa,target=/home/docker/.ssh/id_rsa \
+		$(if $(OS_DARWIN),\
+			--env SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
+			--mount type=bind$(,)consistency=cached$(,)source=/run/host-services/ssh-auth.sock$(,)target=/run/host-services/ssh-auth.sock, \
+			--env SSH_KEY=/home/docker/.ssh/id_rsa \
+			--mount type=bind$(,)consistency=cached$(,)source=$(HOME)/.ssh/id_rsa$(,)target=/home/docker/.ssh/id_rsa \
+		) \
 		--mount type=bind,consistency=cached,source=$(HOME)/.gitconfig,target=/home/docker/.gitconfig \
 		$${ID} \
 		$(if $(1),$(strip $(1)),bash)
