@@ -10,6 +10,11 @@ if [ -n "${XDG_CACHE_HOME}" ]; then
     export ANSIBLE_CACHE_PLUGIN_CONNECTION="${XDG_CACHE_HOME}/ansible"
 fi
 
+# Ssh authorization socket
+if [ -n "${SSH_AUTH_SOCK}" ]; then
+    sudo chmod 777 ${SSH_AUTH_SOCK}
+fi
+
 # Ssh key
 if [ -n "${SSH_KEY}" ]; then
     eval `ssh-agent` 1>/dev/null
