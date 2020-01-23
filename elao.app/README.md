@@ -1,12 +1,16 @@
 # Elao - App
 
-* [Overview](#overview)
+* [Requirements](#requirements)
 * [Quick start](#quick-start)
 * [System](#system)
 * [Integration](#integration)
 * [Releases](#releases)
 * [Makefile](#makefile)
 * [Git tools](#git-tools)
+
+## Requirements
+
+* Docker Desktop 2.2.0+
 
 ## Overview
 
