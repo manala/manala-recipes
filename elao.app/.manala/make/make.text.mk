@@ -9,6 +9,15 @@ COLOR_WARNING := \033[33m
 COLOR_COMMENT := \033[36m
 
 ###########
+# Helpers #
+###########
+
+# Usage:
+#   $(if $(FOO), Foo$(,) bar) = Foo, bar
+
+, := ,
+
+###########
 # Message #
 ###########
 
