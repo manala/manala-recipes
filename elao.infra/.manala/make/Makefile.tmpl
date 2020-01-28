@@ -1,0 +1,85 @@
+include \
+  .manala/make/make.text.mk \
+  .manala/make/make.help.mk
+
+.PHONY: up down exec
+
+# Vars
+HAS_DOCKER:=$(shell command -v docker-compose 2> /dev/null)
+ifdef HAS_DOCKER
+	EXEC=$(DOCKER_COMPOSE) exec ansible
+	EXEC_TF=$(DOCKER_COMPOSE) exec terraform
+else
+	EXEC=
+	EXEC_TF=
+endif
+
+# See: https://github.com/jhaals/ansible-vault/issues/60
+# and: https://github.com/ansible/ansible/issues/31869#issuecomment-337769174
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY = YES
+
+#############
+# Lifecycle #
+#############
+
+## Start compose stack
+up: up-docker-compose auth-ssh
+
+## Destroy compose stack
+down: down-docker-compose
+
+##################
+# Docker Compose #
+##################
+
+DOCKER_COMPOSE = docker-compose --file .manala/docker/docker-compose.yaml
+
+up-docker-compose:
+	$(DOCKER_COMPOSE) pull
+	$(DOCKER_COMPOSE) build --pull
+	$(DOCKER_COMPOSE) $(if $(DEV),--file .manala/docker/docker-compose.dev.yaml) up --detach
+
+down-docker-compose:
+	$(DOCKER_COMPOSE) down -t 1
+
+###########
+# Ansible #
+###########
+
+ANSIBLE          = $(EXEC) ansible
+ANSIBLE_GALAXY   = $(EXEC) ansible-galaxy
+ANSIBLE_PLAYBOOK = $(EXEC) ansible-playbook
+ALT_GALAXY       = $(EXEC) alt-galaxy
+
+## Run bash in the ansible container
+exec:
+	$(EXEC) /bin/bash
+
+#############
+# Terraform #
+#############
+
+TERRAFORM = $(EXEC_TF) terraform
+
+## Run zsh in the terraform container
+exec-terraform:
+	$(EXEC_TF) /bin/zsh
+
+#######
+# Ssh #
+#######
+
+auth-ssh:
+	$(DOCKER_COMPOSE) exec ssh-agent \
+		ssh-add -t 1d /root/.ssh/id_rsa
+
+###############
+# Inventories #
+###############
+
+## List inventories hosts (GRAPH|INVENTORY)
+hosts:
+	$(EXEC) $(if $(GRAPH),ansible-inventory, ansible) \
+		-i $(if $(INVENTORY),inventories/$(INVENTORY), inventories) all \
+		$(if $(GRAPH),--graph,--list-hosts) \
+	$(if $(GRAPH),,| tail -n +2 | sort)

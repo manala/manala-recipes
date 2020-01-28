@@ -1,0 +1,50 @@
+version: "3.7"
+
+services:
+  ssh-agent:
+    image: nardeas/ssh-agent
+    volumes:
+      - ssh-agent:/.ssh-agent
+    secrets:
+      - source: ssh_key
+        target: /root/.ssh/id_rsa
+
+  ansible:
+    image: elao/ansible:{{ .Vars.system.ansible.version }}
+    build:
+      context: .
+      dockerfile: Dockerfile.ansible
+    depends_on:
+      - ssh-agent
+    environment:
+      SSH_AUTH_SOCK: /.ssh-agent/socket
+    volumes:
+      - ../..:/srv:cached
+      - ssh-agent:/.ssh-agent
+
+  terraform:
+    image: elao/terraform:{{ .Vars.system.terraform.version }}
+    build:
+      context: .
+      dockerfile: Dockerfile.terraform
+    environment:
+      OVH_PC:
+      OS_TOKEN:
+      AWS_SESSION_TOKEN:
+      AWS_ACCESS_KEY_ID: AKIARXWTWAJ4KAGCSOR7
+      AWS_SECRET_ACCESS_KEY:
+      GANDI_KEY:
+      TERM: xterm-256color
+    entrypoint:
+      - tail
+      - -f
+      - /dev/null
+    volumes:
+      - ../../terraform:/srv
+
+volumes:
+  ssh-agent:
+
+secrets:
+  ssh_key:
+    file: ${SSH_KEY:-~/.ssh/id_rsa}
