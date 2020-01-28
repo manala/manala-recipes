@@ -109,6 +109,8 @@ system:
     docker:
         # @schema {"items": {"type": "object"}}
         containers: []
+        # @schema {"items": {"type": "object"}}
+        applications: []
 
 ###############
 # Integration #

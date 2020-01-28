@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+docker run \
+  --rm \
+  --user 1000 \
+  --volume /srv:/srv \
+  elao/audiowaveform:{{ item.version|mandatory }} \
+  "$@"

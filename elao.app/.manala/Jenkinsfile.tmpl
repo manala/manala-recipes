@@ -289,7 +289,7 @@ podTemplate(
         }
 
         try {
-            appImage.inside("--network container:${hostContainerId} --env XDG_CACHE_HOME=${appCacheHome}/app") {
+            appImage.inside("--privileged --network container:${hostContainerId} --env XDG_CACHE_HOME=${appCacheHome}/app") {
                 {{- include "node" (dict "node" $integration) | trim | nindent 16 }}
             }
         } finally {
