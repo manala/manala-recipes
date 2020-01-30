@@ -39,23 +39,13 @@ services:
       - tail
       - -f
       - /dev/null
-    volumes:
-      - ../../terraform:/srv
 
   openstack:
     image: manala/client-openstack:edge
-    build:
-      context: .
-      dockerfile: Dockerfile.openstack
-    environment:
-      USER_ID: id -u
-      GROUP_ID: id -g
     entrypoint:
       - tail
       - -f
       - /dev/null
-    volumes:
-      - ../..:/srv
 
 volumes:
   ssh-agent:
