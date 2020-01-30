@@ -9,6 +9,7 @@ HAS_DOCKER:=$(shell command -v docker-compose 2> /dev/null)
 ifdef HAS_DOCKER
 	EXEC=$(DOCKER_COMPOSE) exec ansible
 	EXEC_TF=$(DOCKER_COMPOSE) exec terraform
+	EXEC_OPENSTACK=$(DOCKER_COMPOSE) exec openstack
 else
 	EXEC=
 	EXEC_TF=
@@ -64,6 +65,15 @@ TERRAFORM = $(EXEC_TF) terraform
 ## Run zsh in the terraform container
 exec-terraform:
 	$(EXEC_TF) /bin/zsh
+
+#############
+# Openstack #
+#############
+
+SWIFT = $(EXEC_OPENSTACK) swift
+
+exec-openstack:
+	$(EXEC_OPENSTACK) /bin/bash
 
 #######
 # Ssh #
