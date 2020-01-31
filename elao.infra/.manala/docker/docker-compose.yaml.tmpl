@@ -3,6 +3,7 @@ version: "3.7"
 services:
   ssh-agent:
     image: nardeas/ssh-agent
+    container_name: {{ .Vars.system.name }}_ssh_agent
     volumes:
       - ssh-agent:/.ssh-agent
     secrets:
@@ -11,6 +12,7 @@ services:
 
   ansible:
     image: elao/ansible:{{ .Vars.system.ansible.version }}
+    container_name: {{ .Vars.system.name }}_ansible
     build:
       context: .
       dockerfile: Dockerfile.ansible
@@ -24,6 +26,7 @@ services:
 
   terraform:
     image: elao/terraform:{{ .Vars.system.terraform.version }}
+    container_name: {{ .Vars.system.name }}_terraform
     build:
       context: .
       dockerfile: Dockerfile.terraform
@@ -42,6 +45,7 @@ services:
 
   openstack:
     image: manala/client-openstack:edge
+    container_name: {{ .Vars.system.name }}_openstack
     entrypoint:
       - tail
       - -f
