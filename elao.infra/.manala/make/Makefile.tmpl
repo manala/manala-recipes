@@ -33,7 +33,7 @@ down: down-docker-compose
 # Docker Compose #
 ##################
 
-DOCKER_COMPOSE = docker-compose --file .manala/docker/docker-compose.yaml
+DOCKER_COMPOSE = docker-compose --project-name {{ .Vars.system.name }} --file .manala/docker/docker-compose.yaml
 
 up-docker-compose:
 	$(DOCKER_COMPOSE) pull
