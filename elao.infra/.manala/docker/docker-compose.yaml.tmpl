@@ -39,6 +39,8 @@ services:
       - tail
       - -f
       - /dev/null
+    volumes:
+      - ../../terraform:/srv
 
   openstack:
     image: manala/client-openstack:edge
