@@ -11,8 +11,8 @@ manala:
 ##########
 
 system:
-    version: {{ .Vars.system.version }}
-    hostname: {{ .Vars.system.hostname }}
+    version: {{ .Vars.system.version | toYaml }}
+    hostname: {{ .Vars.system.hostname | toYaml }}
     # php:
     #     version: 7.3
     #     extensions:

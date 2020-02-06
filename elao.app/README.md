@@ -340,11 +340,11 @@ releases:
       #- shell: make migration@production
       #  when: master | default # Conditions on custom host variables (jinja2 format)
     deploy_post_tasks:
-      - shell: sudo systemctl reload php7.3-fpm
+      - shell: sudo systemctl reload php7.4-fpm
 
   - << : *release
     mode: staging
-    tasks:
+    release_tasks:
       - shell: make install@staging
       - shell: make build@staging
     # Deploy

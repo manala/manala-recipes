@@ -18,6 +18,7 @@ system:
     hostname: app.vm
     php:
         version: ~
+        extensions: []
     symfony:
         version: ~
     nodejs:
