@@ -34,6 +34,42 @@
     {{- $tasks | toYaml }}
 {{- end -}}
 
+{{/* Delivery makefile target */}}
+{{ define "delivery_target" -}}
+    {{- $delivery := . -}}
+    {{ if hasKey $delivery "app" }}.{{ $delivery.app }}{{ end }}@{{ $delivery.mode }}
+{{- end -}}
+
+{{/* Delivery makefile help */}}
+{{- define "delivery_help" -}}
+    {{- $delivery := . -}}
+    {{ if hasKey $delivery "app" }}{{ $delivery.app }} {{ end }}in {{ $delivery.mode }}
+{{- end -}}
+
+{{/* Delivery ansible group */}}
+{{- define "delivery_group" -}}
+    {{- $delivery := . -}}
+    {{ if hasKey $delivery "app" }}{{ $delivery.app }}_{{ end }}{{ $delivery.mode }}
+{{- end -}}
+
+{{/* Delivery ansible host */}}
+{{- define "delivery_host" -}}
+    {{- $delivery := . -}}
+    {{ if hasKey $delivery "app" }}.{{ $delivery.app }}{{ end }}@{{ $delivery.mode }}
+{{- end -}}
+
+{{/* Delivery ansible tasks */}}
+{{- define "delivery_tasks" -}}
+    {{- $tasks := list -}}
+    {{- range $task := . -}}
+      {{- if hasKey $task "when" -}}
+        {{- $task := set $task "when" (cat "{{" $task.when "}}")  -}}
+      {{- end -}}
+      {{ $tasks = mustAppend $tasks $task -}}
+    {{- end -}}
+    {{- $tasks | toYaml }}
+{{- end -}}
+
 {{/* Debian release */}}
 {{- define "debian_release" -}}
     {{- $debian_releases := dict 8 "jessie" 9 "stretch" 10 "buster" -}}

@@ -25,3 +25,37 @@ all:
                 {{- $release | toYaml | nindent 16 }}
                 {{- end }}
     {{- end }}
+    {{- if .Vars.deliveries }}
+    {{- $deliveries := .Vars.deliveries }}
+
+    {{- range $delivery := $deliveries }}
+
+        {{ if hasKey $delivery "release" -}}
+        {{ $release := $delivery.release -}}
+        {{ include "delivery_group" $delivery }}:
+            hosts:
+                localhost{{ include "delivery_host" $delivery }}:
+                    ansible_connection: local
+            vars:
+                release_dir: /srv/release/{{ if hasKey $delivery "app" }}{{ $delivery.app }}/{{ end }}{{ $delivery.mode }}
+                release_git_dir: /srv/app
+                {{- if hasKey $delivery "app" }}
+                release_target_dir: {{ $delivery.app }}
+                {{- end }}
+                release_repo: {{ $delivery.repo }}
+                release_version: {{ if hasKey $delivery "app" }}{{ $delivery.app }}/{{ end }}{{ $delivery.mode }}
+                {{- if hasKey $release "tasks" }}
+                release_tasks:
+                    {{- include "delivery_tasks" $release.tasks | nindent 18 }}
+                {{- end }}
+                {{- if hasKey $release "include" }}
+                release_add:
+                    {{- $release.include | toYaml | nindent 18 }}
+                {{- end }}
+                {{- if hasKey $release "exclude" }}
+                release_removed:
+                    {{- $release.exclude | toYaml | nindent 18 }}
+                {{- end }}
+        {{- end }}
+    {{- end }}
+    {{- end }}

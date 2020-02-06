@@ -43,3 +43,57 @@ all:
                 {{- end }}
     {{- end -}}
     {{- end }}
+    {{- if .Vars.deliveries }}
+    {{- $deliveries := .Vars.deliveries }}
+
+    {{- range $delivery := $deliveries }}
+
+        {{ if hasKey $delivery "deploy" -}}
+        {{ $deploy := $delivery.deploy -}}
+        {{ include "delivery_group" $delivery }}:
+            hosts:
+            {{- range $index, $host := $deploy.hosts }}
+                {{ (add $index 1) | printf "%02d" }}{{ include "delivery_host" $delivery }}:
+                    # Ansible
+                    ansible_host: {{ $host.ssh_host }}
+                    {{- if hasKey $host "ssh_user" }}
+                    ansible_ssh_user: {{ $host.ssh_user }}
+                    {{- end }}
+                    {{- if hasKey $host "ssh_args" }}
+                    ansible_ssh_extra_args: {{ $host.ssh_args }}
+                    {{- end }}
+                    {{- $host = omit $host "ssh_host" "ssh_user" "ssh_args" -}}
+                    {{- if $host }}
+                    # Host
+                    {{- $host | toYaml | nindent 20 }}
+                    {{- end }}
+            {{- end }}
+            vars:
+                deploy_releases: {{ if hasKey $deploy "releases" }}{{ $deploy.releases }}{{ else }}3{{ end }}
+                deploy_strategy: git
+                deploy_strategy_git_repo: {{ $delivery.repo }}
+                deploy_strategy_git_version: {{ if hasKey $delivery "app" }}{{ $delivery.app }}/{{ end }}{{ $delivery.mode }}
+                deploy_dir: {{ $deploy.dir }}
+                {{- if hasKey $deploy "tasks" }}
+                deploy_tasks:
+                    {{- include "delivery_tasks" $deploy.tasks | nindent 18 }}
+                {{- end }}
+                {{- if hasKey $deploy "post_tasks" }}
+                deploy_post_tasks:
+                    {{- include "delivery_tasks" $deploy.post_tasks | nindent 18 }}
+                {{- end }}
+                {{- if hasKey $deploy "shared_files" }}
+                deploy_shared_files:
+                    {{- $deploy.shared_files | toYaml | nindent 18 }}
+                {{- end }}
+                {{- if hasKey $deploy "shared_dirs" }}
+                deploy_shared_dirs:
+                    {{- $deploy.shared_dirs | toYaml | nindent 18 }}
+                {{- end }}
+                {{- if hasKey $deploy "writable_dirs" }}
+                deploy_writable_dirs:
+                    {{- $deploy.writable_dirs | toYaml | nindent 18 }}
+                {{- end }}
+        {{- end }}
+    {{- end }}
+    {{- end }}

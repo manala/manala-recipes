@@ -6,6 +6,7 @@
 * [System](#system)
 * [Integration](#integration)
 * [Releases](#releases)
+* [Deliveries](#deliveries)
 * [Makefile](#makefile)
 * [Git tools](#git-tools)
 
@@ -35,7 +36,7 @@ Edit the `Makefile` at the root directory of your project and add the following 
 -include .manala/make/Makefile
 ```
 
-Then update the `.manala.yaml` file (see [the releases example](#releases) below) and then run the `manala up` command:
+Then update the `.manala.yaml` file (see [the deliveries example](#deliveries) below) and then run the `manala up` command:
 
 ```
     $ manala up
@@ -352,6 +353,66 @@ releases:
       - ssh_host: foo.bar.elao.ninja.local
     deploy_tasks:
       - shell: make warmup@staging
+```
+
+## Deliveries
+
+Here is an example of a production/staging delivery configuration in `.manala.yaml`:
+
+```yaml
+##############
+# Deliveries #
+##############
+
+deliveries:
+
+  - #app: api # Optionnal
+    mode: production
+    repo: git@git.elao.com:<vendor>/<app>-release.git
+    release:
+        tasks:
+          - shell: make install@production
+          - shell: make build@production
+        include:
+          - bin
+          - config
+          - public
+          - src
+          - templates
+          - translations
+          - vendor
+          - composer.* # Composer.json required by src/Kernel.php to determine project root dir
+                       # Composer.lock required by composer on post-install (warmup)
+          - Makefile
+        # exclude:
+        #   - ...
+    deploy:
+        hosts:
+          - ssh_host: foo-01.bar.elao.local
+            #master: true # Any custom variable are welcomed
+          - ssh_host: foo-02.bar.elao.local
+        dir: /srv/app
+        shared_files:
+          - config/parameters.yml
+        shared_dirs:
+          - var/log
+        tasks:
+          - shell: make warmup@production
+          #- shell: make migration@production
+          #  when: master | default # Conditions on custom host variables (jinja2 format)
+        post_tasks:
+          - shell: sudo systemctl reload php7.3-fpm
+
+  - mode: staging
+    release:
+        tasks:
+          - shell: make install@staging
+          - shell: make build@staging
+    deploy:
+        hosts:
+          - ssh_host: foo.bar.elao.ninja.local
+        tasks:
+          - shell: make warmup@staging
 ```
 
 ## Makefile

@@ -52,6 +52,48 @@ deploy{{ include "release_target" $release }}:
 HELP += \n
 
 {{ end -}}
+
+{{ if .Vars.deliveries -}}
+{{ $deliveries := .Vars.deliveries -}}
+
+##############
+# Deliveries #
+##############
+
+HELP += $(call help_section,Deliveries)
+
+{{ range $delivery := $deliveries -}}
+
+{{ $delivery_target := include "delivery_target" $delivery -}}
+{{ $delivery_help := include "delivery_help" $delivery -}}
+{{ $delivery_group := include "delivery_group" $delivery -}}
+
+{{ if hasKey $delivery "release" -}}
+HELP += $(call help,release{{ $delivery_target }},Release {{ $delivery_help }})
+release{{ $delivery_target }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+release{{ $delivery_target }}:
+		ansible-playbook .manala/ansible/release.yaml \
+			--inventory .manala/ansible/release.inventory.yaml \
+			--limit {{ $delivery_group }}
+
+{{ end -}}
+
+{{ if hasKey $delivery "deploy" -}}
+HELP += $(call help,deploy{{ $delivery_target }},Deploy {{ $delivery_help }})
+deploy{{ $delivery_target }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+deploy{{ $delivery_target }}:
+	ansible-playbook .manala/ansible/deploy.yaml \
+		--inventory .manala/ansible/deploy.inventory.yaml \
+		--limit {{ $delivery_group }}
+
+{{ end -}}
+
+{{ end -}}
+
+HELP += \n
+
+{{ end -}}
+
 #######
 # App #
 #######
