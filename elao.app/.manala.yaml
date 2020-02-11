@@ -87,6 +87,7 @@ integration: {}
 #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
 #                 "mode": {"enum": ["production", "staging"]},
 #                 "repo": {"type": "string", "format": "git-repo"},
+#                 "source_version": {"type": "string"},
 #                 "release_tasks": {"type": "array", "items": {"$ref": "#release_tasks"}},
 #                 "release_add": {"type": "array", "items": {"type": "string"}},
 #                 "release_removed": {"type": "array", "items": {"type": "string"}},

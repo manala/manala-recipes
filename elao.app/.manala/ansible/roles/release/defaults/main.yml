@@ -1,11 +1,16 @@
 ---
 
-# Dirs
-release_dir:        ~
-release_target_dir: ~
+# Where release process occurs
+release_dir: ~
+
+# Source
+release_source_repo: ~
+release_source_version: HEAD
+
+# Working directory
+release_working_dir: ~
 
 # Git
-release_git_dir: ~
 release_repo:    ~
 release_version: master
 

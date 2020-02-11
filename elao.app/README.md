@@ -291,6 +291,8 @@ releases:
     #app: api # Optionnal
     mode: production
     repo: git@git.elao.com:<vendor>/<app>-release.git
+    # Source
+    #source_version: production # Optionnal
     # Release
     release_tasks:
       - shell: make install@production

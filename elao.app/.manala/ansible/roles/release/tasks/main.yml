@@ -1,22 +1,6 @@
 ---
 
-- name: git > Get url
-  shell: >
-    git config --get remote.origin.url
-  args:
-    chdir: "{{ release_git_dir }}"
-  tags: log_failed
-  register: __release_git_url
-
-- name: git > Get informations
-  git:
-    repo: "{{ __release_git_url.stdout }}"
-    dest: "{{ release_git_dir }}"
-    clone: false
-    update: false
-  register: __release_git
-
-- name: Release directory "{{ release_dir }}"
+- name: release > Create directory "{{ release_dir }}"
   shell: >
     rm --recursive --force {{ release_dir }}
     && mkdir -p {{ release_dir }}
@@ -24,27 +8,82 @@
     warn: false
   tags: log_failed
 
-- name: git > Export repository
+################
+# Source - Git #
+################
+
+- name: git > Get "{{ release_source_repo }}" source repo url
   shell: >
-    git archive HEAD{{
-      ' ' ~ release_target_dir if (release_target_dir) else ''
+    git config --get remote.origin.url
+  args:
+    chdir: "{{ release_source_repo }}"
+  tags: log_failed
+  register: __release_source_repo_url
+
+- name: git > Get "{{ release_source_repo }}" source repo info
+  git:
+    repo: "{{ __release_source_repo_url.stdout }}"
+    dest: "{{ release_source_repo }}"
+    clone: false
+    update: false
+  register: __release_source_repo_info
+
+- name: git > Export "{{ release_source_repo }}" source repo on version "{{ release_source_version }}"
+  shell: >
+    git archive {{ release_source_version }}{{
+      ' ' ~ release_working_dir if (release_working_dir) else ''
     }}
     | tar -x -C {{ release_dir }}{{
-        ' ' ~ release_target_dir
-        ~ ' --strip-components=' ~ release_target_dir.split('/')|length
-          if (release_target_dir) else
+        ' ' ~ release_working_dir
+        ~ ' --strip-components=' ~ release_working_dir.split('/')|length
+          if (release_working_dir) else
         ''
     }}
   args:
-    chdir: "{{ release_git_dir }}"
+    chdir: "{{ release_source_repo }}"
   tags: log_failed
 
-- name: tasks
+- name: git > Set release message
+  set_fact:
+     __release_message: |
+       {{
+         ansible_date_time.year
+         ~ ansible_date_time.month
+         ~ ansible_date_time.day
+         ~ ansible_date_time.hour
+         ~ ansible_date_time.minute
+         ~ ansible_date_time.second
+       }}
+       Original commit: https://{{
+         __release_source_repo_url.stdout|regex_replace(release_git_url_regex, '\g<host>/\g<user>/\g<repository>')
+       }}/commit/{{ __release_source_repo_info.after }}
+
+#########
+# Tasks #
+#########
+
+- name: release > Execute tasks
   include_tasks: task/{{ item.task }}.yml
   loop: "{{ query('release_tasks', release_tasks) }}"
   when: item.when
 
-- name: git > Init "{{ release_repo }}" on branch "{{ release_version }}"
+##########
+# Remove #
+##########
+
+- name: release > Remove content
+  shell: >
+    rm --recursive --force {{ [release_dir, item]|join('/') }}
+  args:
+    warn: false
+  tags: log_failed
+  loop: "{{ release_removed }}"
+
+#####################
+# Destination - Git #
+#####################
+
+- name: git > Init "{{ release_repo }}" destination repo on version "{{ release_version }}"
   shell: >
     git init
     && git checkout -b {{ release_version }}
@@ -64,15 +103,7 @@
     chdir: "{{ release_dir }}"
   tags: log_failed
 
-- name: Remove
-  shell: >
-    rm --recursive --force {{ [release_dir, item]|join('/') }}
-  args:
-    warn: false
-  tags: log_failed
-  loop: "{{ release_removed }}"
-
-- name: git > Add all
+- name: git > Add all content
   shell: >
     git add --force --all
   args:
@@ -80,7 +111,7 @@
   when: release_add|length == 0
   tags: log_failed
 
-- name: git > Add
+- name: git > Add content
   shell: >
     git add --force {{ item }}
   args:
@@ -88,24 +119,14 @@
   loop: "{{ release_add }}"
   tags: log_failed
 
-- name: git > Commit
-  shell: |
-    git commit --allow-empty -m "{{
-      ansible_date_time.year
-      ~ ansible_date_time.month
-      ~ ansible_date_time.day
-      ~ ansible_date_time.hour
-      ~ ansible_date_time.minute
-      ~ ansible_date_time.second
-    }}
-    Original commit: https://{{
-      __release_git_url.stdout|regex_replace(release_git_url_regex, '\g<host>/\g<user>/\g<repository>')
-    }}/commit/{{ __release_git.after }}"
+- name: git > Commit release
+  shell: >
+    git commit -m "{{ __release_message }}" --allow-empty
   args:
     chdir: "{{ release_dir }}"
   tags: log_failed
 
-- name: git > Push "{{ release_version }}"
+- name: git > Push "{{ release_version }}" release
   shell: >
     git push --set-upstream origin {{ release_version }}
     && git push origin HEAD

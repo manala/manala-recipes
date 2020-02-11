@@ -8,9 +8,12 @@ all:
                     ansible_connection: local
             vars:
                 release_dir: /srv/release/{{ if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.mode }}
-                release_git_dir: /srv/app
+                release_source_repo: /srv/app
+                {{- if hasKey $release "source_version" }}
+                release_source_version: {{ $release.source_version }}
+                {{- end }}
                 {{- if hasKey $release "app" }}
-                release_target_dir: {{ $release.app }}
+                release_working_dir: {{ $release.app }}
                 {{- end }}
                 release_repo: {{ $release.repo }}
                 {{- if hasKey $release "mode" }}
