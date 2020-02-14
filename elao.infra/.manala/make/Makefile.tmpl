@@ -7,7 +7,7 @@ include \
 # Vars
 HAS_DOCKER:=$(shell command -v docker-compose 2> /dev/null)
 ifdef HAS_DOCKER
-	EXEC=$(DOCKER_COMPOSE) exec ansible
+	EXEC_ANSIBLE_ANSIBLE=$(DOCKER_COMPOSE) exec ansible
 	EXEC_TF=$(DOCKER_COMPOSE) exec terraform
 	EXEC_OPENSTACK=$(DOCKER_COMPOSE) exec openstack
 else
@@ -47,14 +47,14 @@ down-docker-compose:
 # Ansible #
 ###########
 
-ANSIBLE          = $(EXEC) ansible
-ANSIBLE_GALAXY   = $(EXEC) ansible-galaxy
-ANSIBLE_PLAYBOOK = $(EXEC) ansible-playbook
-ALT_GALAXY       = $(EXEC) alt-galaxy
+ANSIBLE          = $(EXEC_ANSIBLE) ansible
+ANSIBLE_GALAXY   = $(EXEC_ANSIBLE) ansible-galaxy
+ANSIBLE_PLAYBOOK = $(EXEC_ANSIBLE) ansible-playbook
+ALT_GALAXY       = $(EXEC_ANSIBLE) alt-galaxy
 
 ## Run bash in the ansible container
 exec:
-	$(EXEC) /bin/bash
+	$(EXEC_ANSIBLE) /bin/bash
 
 #############
 # Terraform #
@@ -89,7 +89,7 @@ auth-ssh:
 
 ## List inventories hosts (GRAPH|INVENTORY)
 hosts:
-	$(EXEC) $(if $(GRAPH),ansible-inventory, ansible) \
+	$(EXEC_ANSIBLE) $(if $(GRAPH),ansible-inventory, ansible) \
 		-i $(if $(INVENTORY),inventories/$(INVENTORY), inventories) all \
 		$(if $(GRAPH),--graph,--list-hosts) \
 	$(if $(GRAPH),,| tail -n +2 | sort)
