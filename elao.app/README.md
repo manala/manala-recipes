@@ -410,7 +410,7 @@ sync.api-uploads@staging:
 
 ### Git tools
 
-This recipe contains some git helpers such as the [`git_diff`](./make/make.git.mk) function.
+This recipe contains some git helpers such as the [`git_diff`](./make/_git.mk) function.
 
 This function is useful for example to apply `php-cs`, `php-cs-fix` or `PHPStan` checks only on the subset of updated PHP files and not on any PHP file of your project.
 
@@ -427,7 +427,7 @@ lint.php-cs-fixer:
 
 ### Try tools
 
-This recipe contains some try helpers such as the [`try_finally`](./make/make.try.mk) function.
+This recipe contains some try helpers such as the [`try_finally`](./make/_try.mk) function.
 
 This function is useful for example to run `phpunit` tests needing a started symfony server, and to stop this server regardless of the tests retur code.
 

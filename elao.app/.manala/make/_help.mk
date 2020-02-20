@@ -19,7 +19,7 @@ define help
 endef
 
 help:
-	@printf "$(HELP)"
+	@printf "$(HELP)$(HELP_SUFFIX)"
 	awk '/^[a-zA-Z\-\_0-9\.@%\/]+:/ { \
 		helpMessage = match(lastLine, /^## (.*)/); \
 		if (helpMessage) { \

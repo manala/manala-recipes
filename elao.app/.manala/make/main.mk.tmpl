@@ -1,16 +1,8 @@
-include \
-  .manala/make/make.text.mk \
-  .manala/make/make.help.mk \
-  .manala/make/make.os.mk \
-  .manala/make/make.try.mk \
-  .manala/make/make.git.mk \
-  .manala/make/make.semver.mk
-
 ##########
 # Docker #
 ##########
 
-include .manala/make/make.docker.mk
+include $(_MANALA_DIR)/make/_docker.mk
 
 ifneq ($(container),docker)
 HELP += $(call help_section,Docker)
@@ -52,8 +44,3 @@ deploy{{ include "release_target" $release }}:
 HELP += \n
 
 {{ end -}}
-#######
-# App #
-#######
-
-HELP += $(call help_section,App)
