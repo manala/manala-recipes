@@ -15,28 +15,36 @@ manala:
 
 system:
     # @schema {"enum": [9, 8]}
-    version: 9
+    # @option {"label": "System version"}
+    version: ~
     # @schema {"type": "string", "format": "domain"}
-    hostname: app.vm
+    # @option {"label": "Hostname"}
+    hostname: ~
     php:
         # @schema {"enum": [null, 7.4, 7.3, 7.2, 7.1, "7.0", 5.6]}
+        # @option {"label": "Php version"}
         version: ~
         # @schema {"items": {"type": "string"}}
         extensions: []
     symfony:
         # @schema {"enum": [null, "*"]}
+        # @option {"label": "Symfony version"}
         version: ~
     nodejs:
         # @schema {"enum": [null, 12, 10, 8, 6]}
+        # @option {"label": "Nodejs version"}
         version: ~
     mariadb:
         # @schema {"enum": [null, 10.4, 10.3, 10.2, 10.1, "10.0"]}
+        # @option {"label": "MariaDB version"}
         version: ~
     mysql:
         # @schema {"enum": [null, 5.7, 5.6]}
+        # @option {"label": "MySQL version"}
         version: ~
     elasticsearch:
         # @schema {"enum": [null, 7, 6, 5, 2, 1.7, 1.6, 1.5]}
+        # @option {"label": "Elasticsearch version"}
         version: ~
         # @schema {"items": {"type": "string"}}
         plugins: []
