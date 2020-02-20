@@ -233,11 +233,12 @@ podTemplate(
     ]
 ) {
     node('{{ include "pod_label" .Vars.system }}') {
-        {{- if not .Vars.integration.tasks }}
+        {{- if not .Vars.integration }}
         stage('¯\\_(ツ)_/¯') {
             echo 'Because testing is doubting...'
         }
         {{- else }}
+        {{- $integration := .Vars.integration }}
         def appImage
         def appImageTag = 'integration:' + URLDecoder.decode("${BUILD_TAG}").replaceAll('[^\\w-]', '-')
         def appCacheHome = env.XDG_CACHE_HOME ? "${XDG_CACHE_HOME}" : '/home/docker/.cache'
@@ -282,7 +283,7 @@ podTemplate(
 
         try {
             appImage.inside("--network container:${hostContainerId} --env XDG_CACHE_HOME=${appCacheHome}/app") {
-                {{- include "node" (dict "node" .Vars.integration) | trim | nindent 16 }}
+                {{- include "node" (dict "node" $integration) | trim | nindent 16 }}
             }
         } finally {
             // Remove app docker image
