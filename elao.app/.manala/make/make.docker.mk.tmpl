@@ -21,22 +21,22 @@ define docker_run
 			--quiet \
 			.manala/docker \
 	) \
-	&& mkdir -p $(CURDIR)/.manala/.cache/docker \
+	&& mkdir -p "$(CURDIR)/.manala/.cache/docker" \
 	&& docker run \
 		--rm \
 		--tty \
 		--interactive \
 		--hostname {{ .Vars.system.hostname }} \
-		--mount type=bind,consistency=delegated,source=$(CURDIR),target=/srv/app \
+		--mount 'type=bind,consistency=delegated,source=$(CURDIR),target=/srv/app' \
 		--env XDG_CACHE_HOME=/srv/.cache \
-		--mount type=bind,consistency=delegated,source=$(CURDIR)/.manala/.cache/docker,target=/srv/.cache \
+		--mount 'type=bind,consistency=delegated,source=$(CURDIR)/.manala/.cache/docker,target=/srv/.cache' \
 		$(if $(OS_DARWIN),\
 			--env SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
 			--volume /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock, \
 			--env SSH_KEY=/home/docker/.ssh/id_rsa \
-			--mount type=bind$(,)consistency=cached$(,)source=$(HOME)/.ssh/id_rsa$(,)target=/home/docker/.ssh/id_rsa \
+			--mount 'type=bind$(,)consistency=cached$(,)source=$(HOME)/.ssh/id_rsa$(,)target=/home/docker/.ssh/id_rsa' \
 		) \
-		--mount type=bind,consistency=cached,source=$(HOME)/.gitconfig,target=/home/docker/.gitconfig \
+		--mount 'type=bind,consistency=cached,source=$(HOME)/.gitconfig,target=/home/docker/.gitconfig' \
 		$${ID} \
 		$(if $(1),$(strip $(1)),bash)
 endef
