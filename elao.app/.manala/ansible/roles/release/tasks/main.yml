@@ -1,114 +1,122 @@
 ---
 
-- name: git > Get url
+- name: setup > Create directory "{{ release.dir }}"
   shell: >
-    git config --get remote.origin.url
-  args:
-    chdir: "{{ release_git_dir }}"
-  tags: log_failed
-  register: __release_git_url
-
-- name: git > Get informations
-  git:
-    repo: "{{ __release_git_url.stdout }}"
-    dest: "{{ release_git_dir }}"
-    clone: false
-    update: false
-  register: __release_git
-
-- name: Release directory "{{ release_dir }}"
-  shell: >
-    rm --recursive --force {{ release_dir }}
-    && mkdir -p {{ release_dir }}
+    rm --recursive --force {{ release.dir }}
+    && mkdir -p {{ release.dir }}
   args:
     warn: false
   tags: log_failed
 
-- name: git > Export repository
+################
+# Source - Git #
+################
+
+- name: git > Get "{{ release.source_repo }}" source repo url
   shell: >
-    git archive HEAD{{
-      ' ' ~ release_target_dir if (release_target_dir) else ''
-    }}
-    | tar -x -C {{ release_dir }}{{
-        ' ' ~ release_target_dir
-        ~ ' --strip-components=' ~ release_target_dir.split('/')|length
-          if (release_target_dir) else
-        ''
-    }}
+    git config --get remote.origin.url
   args:
-    chdir: "{{ release_git_dir }}"
+    chdir: "{{ release.source_repo }}"
+  tags: log_failed
+  register: __release_source_repo_url
+
+- name: git > Get "{{ release.source_repo }}" source repo info
+  git:
+    repo: "{{ __release_source_repo_url.stdout }}"
+    dest: "{{ release.source_repo }}"
+    clone: false
+    update: false
+  register: __release_source_repo_info
+
+- name: git > Export "{{ release.source_repo }}" source repo into "{{ release.dir }}"
+  shell: >
+    git archive HEAD
+    | tar -x -C {{ release.dir }}
+  args:
+    chdir: "{{ release.source_repo }}"
   tags: log_failed
 
-- name: tasks
+- name: Update release state
+  set_fact:
+    release: "{{ release | combine({
+      'message':
+        ansible_date_time.year ~ ansible_date_time.month ~ ansible_date_time.day ~ ansible_date_time.hour ~ ansible_date_time.minute ~ ansible_date_time.second
+        ~ '\n'
+        ~ 'Original commit: https://' ~ __release_source_repo_url.stdout | regex_replace(release_git_url_regex, '\\g<host>/\\g<user>/\\g<repository>') ~ '/commit/' ~ __release_source_repo_info.after
+    }) }}"
+
+#########
+# Tasks #
+#########
+
+- name: release > Execute tasks
   include_tasks: task/{{ item.task }}.yml
-  loop: "{{ query('release_tasks', release_tasks) }}"
+  loop: "{{ query('release_tasks', release.tasks) }}"
   when: item.when
 
-- name: git > Init "{{ release_repo }}" on branch "{{ release_version }}"
+###########
+# Exclude #
+###########
+
+- name: release > Exclude content
+  shell: >
+    rm --recursive --force {{ [release.working_dir, item] | join('/') }}
+  args:
+    warn: false
+  tags: log_failed
+  loop: "{{ release.exclude }}"
+
+#####################
+# Destination - Git #
+#####################
+
+- name: git > Initialize "{{ release.repo }}" destination repo on version "{{ release.version }}"
   shell: >
     git init
-    && git checkout -b {{ release_version }}
-    && git remote add origin {{ release_repo }}
+    && git checkout -b {{ release.version }}
+    && git remote add origin {{ release.repo }}
     && git fetch
     && (
-      git show-ref -q origin/{{ release_version }} ; rc=$? ;
+      git show-ref -q origin/{{ release.version }} ; rc=$? ;
       if [ $rc -eq 0 -o $rc -eq 1 ] ; then
         if [ $rc -eq 0 ] ; then
-          git update-ref HEAD origin/{{ release_version }} ;
+          git update-ref HEAD origin/{{ release.version }} ;
         fi ;
       else
         return $rc ;
       fi
     )
   args:
-    chdir: "{{ release_dir }}"
+    chdir: "{{ release.working_dir }}"
   tags: log_failed
 
-- name: Remove
-  shell: >
-    rm --recursive --force {{ [release_dir, item]|join('/') }}
-  args:
-    warn: false
-  tags: log_failed
-  loop: "{{ release_removed }}"
-
-- name: git > Add all
+- name: git > Include all content
   shell: >
     git add --force --all
   args:
-    chdir: "{{ release_dir }}"
-  when: release_add|length == 0
+    chdir: "{{ release.working_dir }}"
+  when: release.include | length == 0
   tags: log_failed
 
-- name: git > Add
+- name: git > Include content
   shell: >
-    git add --force {{ item }}
+    git add --force "{{ item }}"
   args:
-    chdir: "{{ release_dir }}"
-  loop: "{{ release_add }}"
+    chdir: "{{ release.working_dir }}"
+  loop: "{{ release.include }}"
   tags: log_failed
 
-- name: git > Commit
-  shell: |
-    git commit --allow-empty -m "{{
-      ansible_date_time.year
-      ~ ansible_date_time.month
-      ~ ansible_date_time.day
-      ~ ansible_date_time.hour
-      ~ ansible_date_time.minute
-      ~ ansible_date_time.second
-    }}
-    Original commit: https://{{
-      __release_git_url.stdout|regex_replace(release_git_url_regex, '\g<host>/\g<user>/\g<repository>')
-    }}/commit/{{ __release_git.after }}"
-  args:
-    chdir: "{{ release_dir }}"
-  tags: log_failed
-
-- name: git > Push "{{ release_version }}"
+- name: git > Commit release
   shell: >
-    git push --set-upstream origin {{ release_version }}
+    git commit -m "{{ release.message }}" --allow-empty
+  args:
+    chdir: "{{ release.working_dir }}"
+  tags: log_failed
+
+- name: git > Push "{{ release.version }}" release
+  shell: >
+    git push --set-upstream origin {{ release.version }}
     && git push origin HEAD
   args:
-    chdir: "{{ release_dir }}"
+    chdir: "{{ release.working_dir }}"
   tags: log_failed

@@ -8,9 +8,9 @@ all:
                     ansible_connection: local
             vars:
                 release_dir: /srv/release/{{ if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.mode }}
-                release_git_dir: /srv/app
+                release_source_repo: /srv/app
                 {{- if hasKey $release "app" }}
-                release_target_dir: {{ $release.app }}
+                release_working_dir: {{ $release.app }}
                 {{- end }}
                 release_repo: {{ $release.repo }}
                 {{- if hasKey $release "mode" }}
@@ -20,8 +20,12 @@ all:
                 release_tasks:
                     {{- include "release_tasks" $release.release_tasks | nindent 18 }}
                 {{- end }}
-                {{- $release = pick $release "release_removed" "release_add" -}}
-                {{- if $release }}
-                {{- $release | toYaml | nindent 16 }}
+                {{- if hasKey $release "release_removed" }}
+                release_exclude:
+                    {{- $release.release_removed | toYaml | nindent 18 }}
+                {{- end }}
+                {{- if hasKey $release "release_add" }}
+                release_include:
+                    {{- $release.release_add | toYaml | nindent 18 }}
                 {{- end }}
     {{- end }}

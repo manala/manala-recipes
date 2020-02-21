@@ -3,9 +3,9 @@
 - name: task/shell
   block:
 
-    - name: task/shell > "{{ item.options }}"
+    - name: task/shell > Execute "{{ item.options }}" into "{{ release.working_dir }}"
       shell: >
         {{ item.options }}
       args:
-        chdir: "{{ release_dir }}"
+        chdir: "{{ release.working_dir }}"
       tags: log

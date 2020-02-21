@@ -1,0 +1,14 @@
+# Regex (protocol|host|user|repository)
+release_git_url_regex: '^(?P<protocol>https|git)(:\/\/|@)(?P<host>[^\/:]+)[\/:](?P<user>[^\/:]+)\/(?P<repository>.+).git$'
+
+# State
+release:
+  dir:         "{{ release_dir }}"
+  source_repo: "{{ release_source_repo }}"
+  working_dir: "{{ [release_dir, release_working_dir] | select | list | join('/') }}"
+  repo:        "{{ release_repo }}"
+  version:     "{{ release_version }}"
+  tasks:       "{{ release_tasks }}"
+  exclude:     "{{ release_exclude }}"
+  include:     "{{ release_include }}"
+  message:     ~
