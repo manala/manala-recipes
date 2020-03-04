@@ -9,3 +9,4 @@ plugins=(git terraform)
 source $ZSH/oh-my-zsh.sh
 
 alias tf="/bin/terraform"
+PROMPT='%a${OVH_PROJECT:-"Unauthenticated"}@%F{yellow}terraform%f%b:%F{blue}%B%~%b%f '
