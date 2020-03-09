@@ -60,7 +60,7 @@ system:
 #                 "parallel": {"type": "boolean"},
 #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
 #                 "env": {"type": "object",
-#                     "additionalProperties": {"type": "string"},
+#                     "additionalProperties": {"type": ["string", "integer"]},
 #                     "propertyNames": {"pattern": "^[A-Z_]+$"}
 #                 },
 #                 "junit": {"type": "string"},
