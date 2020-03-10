@@ -47,7 +47,7 @@ RUN \
     && apt-get install --yes --no-install-recommends \
         ansible
 
-COPY etc/ssh_config /etc/ssh/ssh_config
+COPY ../ssh/ssh_config /etc/ssh/ssh_config
 
 ENV \
     ANSIBLE_GATHER_SUBSET="all,!hardware" \

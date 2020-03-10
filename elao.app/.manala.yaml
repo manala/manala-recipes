@@ -5,6 +5,7 @@ manala:
       - .manala/docker
       - .manala/jenkins
       - .manala/make
+      - .manala/ssh
       - .manala/.gitignore
       - README.md .manala/README.md
       - .manala.yaml.tmpl.dist
@@ -46,6 +47,27 @@ system:
     ssh:
         # @schema {"type": ["null", "string"]}
         config: ~
+
+#########
+# Hosts #
+#########
+
+# @schema {
+#     "definitions": {
+#         "host": {"type": "object", "$id": "#host",
+#             "properties": {
+#                 "host": { "type": "string", "format": "hostname" },
+#                 "port": { "type": "string", "pattern": "[0-9]+" },
+#                 "user": { "type": "string" }
+#             },
+#             "required": ["host"]
+#         }
+#     },
+#     "type": "object",
+#     "additionalProperties": { "$ref": "#host" },
+#     "propertyNames": {"pattern": "^[a-z0-9\\-]+$"}
+#}
+hosts: {}
 
 ###############
 # Integration #

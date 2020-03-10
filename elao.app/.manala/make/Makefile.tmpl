@@ -22,6 +22,16 @@ docker:
 HELP += \n
 endif
 
+{{ if .Vars.hosts -}}
+#######
+# Ssh #
+#######
+{{ range $alias, $host := .Vars.hosts }}
+## Ssh to {{ $alias }} server
+ssh@{{ $alias }}:
+	ssh {{ if hasKey $host "user" }}{{ $host.user }}@{{ end }}{{ $host.host }}{{ if hasKey $host "port" }}:{{ $host.port }}{{ end }} -F .manala/ssh/ssh_config
+{{ end }}
+{{ end -}}
 {{ if .Vars.releases -}}
 ############
 # Releases #
