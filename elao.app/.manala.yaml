@@ -69,6 +69,27 @@ system:
 #}
 hosts: {}
 
+########
+# Sync #
+########
+
+# @schema {
+#     "definitions": {
+#         "host": {"type": "object", "$id": "#sync",
+#             "properties": {
+#                 "src": { "type": "string", "pattern": "^[a-z0-9\\-]+$" },
+#                 "dest": { "type": "string", "pattern": "^[a-z0-9\\-]+$" },
+#                 "files": { "type": "array", "items": { "type": "string" } }
+#             },
+#             "required": ["src", "files"]
+#         }
+#     },
+#     "type": "object",
+#     "additionalProperties": { "$ref": "#host" },
+#     "propertyNames": {"pattern": "^[a-z0-9\\-@]+$"}
+#}
+sync: {}
+
 ###############
 # Integration #
 ###############
