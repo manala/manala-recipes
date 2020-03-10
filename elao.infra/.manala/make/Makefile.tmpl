@@ -7,7 +7,7 @@ include \
 # Vars
 HAS_DOCKER:=$(shell command -v docker-compose 2> /dev/null)
 ifdef HAS_DOCKER
-	EXEC_ANSIBLE_ANSIBLE=$(DOCKER_COMPOSE) exec ansible
+	EXEC_ANSIBLE=$(DOCKER_COMPOSE) exec ansible
 	EXEC_TF=$(DOCKER_COMPOSE) exec terraform
 	EXEC_OPENSTACK=$(DOCKER_COMPOSE) exec openstack
 else
