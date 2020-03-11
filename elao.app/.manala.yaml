@@ -107,7 +107,8 @@ integration: {}
 #         "release_tasks": {"type": "object", "$id": "#release_tasks",
 #             "additionalProperties": false,
 #             "properties": {
-#                 "shell": {"type": "string"}
+#                 "shell": {"type": "string"},
+#                 "when": {"type": "string"}
 #             }
 #         },
 #         "release_hosts": {"type": "object", "$id": "#release_hosts",
