@@ -352,6 +352,8 @@ releases:
       - ssh_host: foo.bar.elao.ninja.local
     deploy_tasks:
       - shell: make warmup@staging
+    deploy_post_tasks:
+      - shell: sudo systemctl reload php7.4-fpm
 ```
 
 ## Makefile
