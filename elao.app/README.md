@@ -83,12 +83,12 @@ system:
         version: "*"
     nodejs:
         version: 12
-    # MySQL...
+    # MariaDB
+    mariadb:
+        version: 10.4
+    # ...*OR* MySQL...
     mysql:
         version: 5.7
-    # ...*OR* MariaDB
-    mariadb:
-        version: 10.3
     elasticsearch:
         version: 7
         plugins:
