@@ -29,11 +29,11 @@ system:
     nodejs:
         # @schema {"enum": [null, 12, 10, 8, 6]}
         version: ~
+    mariadb:
+        # @schema {"enum": [null, 10.4, 10.3, 10.2, 10.1, "10.0"]}
+        version: ~
     mysql:
         # @schema {"enum": [null, 5.7, 5.6]}
-        version: ~
-    mariadb:
-        # @schema {"enum": [null, 10.3, 10.2, 10.1, "10.0"]}
         version: ~
     elasticsearch:
         # @schema {"enum": [null, 7, 6, 5, 2, 1.7, 1.6, 1.5]}
