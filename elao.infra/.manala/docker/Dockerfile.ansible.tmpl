@@ -10,6 +10,7 @@ COPY --from=alt-galaxy /go/bin/alt-galaxy /usr/local/bin
 
 RUN apk add --no-cache \
   bash \
+  git \
   ca-certificates \
   openssh-client \
   make \
