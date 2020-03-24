@@ -192,7 +192,7 @@ install@integration:
 	composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
 	#composer run-script symfony-scripts --ansi --verbose --no-interaction
 	# Npm
-	npm install --no-progress --color=always
+	npm install --no-audit --no-progress --color=always
 	# Yarn
 	yarn install --no-progress --color=always
 
