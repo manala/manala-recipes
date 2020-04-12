@@ -5,7 +5,7 @@
 HELP_INDENT ?= 20
 
 HELP = \
-	\nUsage: make [$(MANALA_COLOR_INFO)target$(MANALA_COLOR_RESET)]\n \
+	\nUsage: make [$(COLOR_INFO)target$(COLOR_RESET)]\n \
 	$(call help_section,Help) \
 	$(call help,help,This help) \
 	\n
@@ -20,7 +20,7 @@ endef
 
 help:
 	@printf "$(HELP)"
-	awk '/^[a-zA-Z\-\_0-9\.@%\/]+:/ { \
+	awk '/^[-a-zA-Z0-9_.@%\/]+:/ { \
 		helpMessage = match(lastLine, /^## (.*)/); \
 		if (helpMessage) { \
 			helpCommand = substr($$1, 0, index($$1, ":")); \
