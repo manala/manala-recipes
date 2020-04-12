@@ -42,3 +42,17 @@ endef
 define message_error
 	printf "$(COLOR_ERROR)(╯°□°)╯︵ ┻━┻ $(strip $(1))$(COLOR_RESET)\n"
 endef
+
+###########
+# Confirm #
+###########
+
+# Usage:
+#   $(call confirm, Foo bar) = ༼ つ ◕_◕ ༽つ Foo bar (y/N):
+
+define confirm
+	$(if $(CONFIRM),, \
+		printf "$(COLOR_INFO) ༼ つ ◕_◕ ༽つ $(COLOR_WARNING)$(strip $(1)) $(COLOR_RESET)$(COLOR_WARNING)(y/N)$(COLOR_RESET): "; \
+		read CONFIRM ; if [ "$$CONFIRM" != "y" ]; then printf "\n"; exit 1; fi; \
+	)
+endef
