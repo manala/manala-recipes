@@ -8,14 +8,25 @@ COLOR_INFO    := \033[32m
 COLOR_WARNING := \033[33m
 COLOR_COMMENT := \033[36m
 
-###########
-# Helpers #
-###########
+######################
+# Special Characters #
+######################
 
 # Usage:
-#   $(if $(FOO), Foo$(,) bar) = Foo, bar
+#   $(call message, Foo$(,) bar) = Foo, bar
 
 , := ,
+
+########
+# Time #
+########
+
+# Usage:
+#   $(call time) = 11:06:20
+
+define time
+`date -u +%T`
+endef
 
 ###########
 # Message #
@@ -55,4 +66,25 @@ define confirm
 		printf "$(COLOR_INFO) ༼ つ ◕_◕ ༽つ $(COLOR_WARNING)$(strip $(1)) $(COLOR_RESET)$(COLOR_WARNING)(y/N)$(COLOR_RESET): "; \
 		read CONFIRM ; if [ "$$CONFIRM" != "y" ]; then printf "\n"; exit 1; fi; \
 	)
+endef
+
+#######
+# Log #
+#######
+
+# Usage:
+#   $(call log, Foo bar)         = [11:06:20] [target] Foo bar
+#   $(call log_warning, Foo bar) = [11:06:20] [target] ¯\_(ツ)_/¯ Foo bar
+#   $(call log_error, Foo bar)   = [11:06:20] [target] (╯°□°)╯︵ ┻━┻ Foo bar
+
+define log
+	printf "[$(COLOR_COMMENT)$(call time)$(COLOR_RESET)] [$(COLOR_COMMENT)$(@)$(COLOR_RESET)] " ; $(call message, $(1))
+endef
+
+define log_warning
+	printf "[$(COLOR_COMMENT)$(call time)$(COLOR_RESET)] [$(COLOR_COMMENT)$(@)$(COLOR_RESET)] "  ; $(call message_warning, $(1))
+endef
+
+define log_error
+	printf "[$(COLOR_COMMENT)$(call time)$(COLOR_RESET)] [$(COLOR_COMMENT)$(@)$(COLOR_RESET)] " ;  $(call message_error, $(1))
 endef
