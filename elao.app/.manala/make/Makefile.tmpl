@@ -13,13 +13,12 @@ include \
 include .manala/make/make.docker.mk
 
 ifneq ($(container),docker)
-HELP += $(call help_section,Docker)
+HELP += $(call help_section, Docker)
 
 HELP += $(call help,docker,Run docker container)
 docker:
 	$(call docker_run)
 
-HELP += \n
 endif
 
 {{ if .Vars.releases -}}
@@ -27,7 +26,7 @@ endif
 # Releases #
 ############
 
-HELP += $(call help_section,Releases)
+HELP += $(call help_section, Releases)
 
 {{ range $release := .Vars.releases -}}
 HELP += $(call help,release{{ include "release_target" $release }},Release {{ include "release_help" $release }})
@@ -49,11 +48,9 @@ deploy{{ include "release_target" $release }}:
 
 {{ end -}}
 
-HELP += \n
-
 {{ end -}}
 #######
 # App #
 #######
 
-HELP += $(call help_section,App)
+HELP += $(call help_section, App)
