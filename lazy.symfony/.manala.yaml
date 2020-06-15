@@ -16,5 +16,5 @@ manala:
       - Makefile.dist
 
 # @option {"label": "App name"}
-# @schema {"type": ["string"], "pattern": "^[-a-zA-Z]+$"}
+# @schema {"type": "string", "pattern": "^[-a-zA-Z]+$"}
 app: ~
