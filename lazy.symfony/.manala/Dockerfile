@@ -64,6 +64,7 @@ RUN \
         unzip \
         make \
         git \
+        rsync \
         vim-tiny \
         less \
     # User
