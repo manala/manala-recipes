@@ -63,6 +63,7 @@ RUN \
         curl \
         unzip \
         make \
+        git \
         vim-tiny \
         less \
     # User
