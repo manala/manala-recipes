@@ -1,0 +1,20 @@
+manala:
+    description: Symfony environment, opiniated, docker based, for lazy people
+    sync:
+      - .manala/make
+      - .manala/mariadb
+      - .manala/nginx
+      - .manala/php
+      - .manala/starship
+      - .manala/.dockerignore
+      - .manala/.gitignore
+      - .manala/docker-compose.yaml.tmpl
+      - .manala/Dockerfile
+      - .manala/Makefile.tmpl
+      - README.md .manala/README.md
+      - .manala.yaml.tmpl.dist
+      - Makefile.dist
+
+# @option {"label": "App name"}
+# @schema {"type": ["string"], "pattern": "^[-a-zA-Z]+$"}
+app: ~
