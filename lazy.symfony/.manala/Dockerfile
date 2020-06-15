@@ -120,6 +120,7 @@ RUN \
         php${PHP_VERSION}-curl \
         php${PHP_VERSION}-mbstring \
         php${PHP_VERSION}-xml \
+        php${PHP_VERSION}-mysql \
         php-xdebug \
     && mkdir /run/php \
     # Composer
