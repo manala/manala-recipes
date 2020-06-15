@@ -1,0 +1,61 @@
+# Manala directory
+_MANALA_DIR := $(patsubst %/Makefile,%,$(filter %.manala/Makefile,$(MAKEFILE_LIST)))
+# Manala root
+_MANALA_ROOT := $(if $(basename $(_MANALA_DIR)),,1)
+
+include $(_MANALA_DIR)/make/text.mk
+include $(_MANALA_DIR)/make/help.mk
+include $(_MANALA_DIR)/make/os.mk
+
+###############
+# Environment #
+###############
+
+ifneq ($(container),docker)
+
+export COMPOSE_FILE         = $(_MANALA_DIR)/docker-compose.yaml
+export COMPOSE_PROJECT_NAME = {{ .Vars.app }}
+
+HELP += $(call help_section, Environment)
+
+HELP += $(call help,up,        Create and start environment (BUILD))
+up:
+	$(call message,Create and start environment...)
+	mkdir -p $(_MANALA_DIR)/.cache
+	OS=$(OS) docker-compose up \
+		$(if $(BUILD),--build --remove-orphans)
+
+HELP += $(call help,clean,     Clean environment)
+clean:
+	$(call confirm,Please$(,) confirm environment cleaning)
+	OS=$(OS) docker-compose down \
+		--rmi all \
+		--volumes \
+		--remove-orphans
+
+HELP += $(call help,sh,        Shell environment)
+sh:
+	docker-compose exec \
+		--user app \
+		app \
+		bash -l
+
+HELP += $(call help,sh.nginx,  Shell environment - Nginx)
+sh.nginx:
+	docker-compose exec \
+		nginx \
+		bash
+
+HELP += $(call help,sh.mariadb,Shell environment - MariaDB)
+sh.mariadb:
+	docker-compose exec \
+		mariadb \
+		bash
+
+endif
+
+#######
+# App #
+#######
+
+HELP += $(call help_section, App)

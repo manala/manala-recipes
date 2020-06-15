@@ -1,0 +1,90 @@
+version: '3.5'
+
+volumes:
+  mariadb:
+
+services:
+
+  #########
+  # Nginx #
+  #########
+
+  nginx:
+    hostname: nginx.{{ .Vars.app }}
+    build:
+      context: .
+      target: nginx
+    restart: always
+    ports:
+      - '8080:80'
+    volumes:
+      - ./nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
+      - ..:/srv:cached
+    links:
+      - app
+
+  ###########
+  # MariaDB #
+  ###########
+
+  mariadb:
+    hostname: mariadb.{{ .Vars.app }}
+    build:
+      context: .
+      target: mariadb
+    restart: always
+    ports:
+      - '8306:3306'
+    volumes:
+      - mariadb:/var/lib/mysql:delegated
+      - ./mariadb:/docker-entrypoint-initdb.d:ro
+
+  ##############
+  # PhpMyAdmin #
+  ##############
+
+  phpmyadmin:
+    hostname: phpmyadmin.{{ .Vars.app }}
+    build:
+      context: .
+      target: phpmyadmin
+    restart: always
+    ports:
+      - '8300:80'
+    links:
+      - mariadb
+
+  ###########
+  # MailDev #
+  ###########
+
+  maildev:
+    hostname: maildev.{{ .Vars.app }}
+    build:
+      context: .
+      target: maildev
+    restart: always
+    ports:
+      - '8025:80'
+
+  #######
+  # App #
+  #######
+
+  app:
+    hostname: app.{{ .Vars.app }}
+    build:
+      context: .
+      target: app
+    restart: always
+    volumes:
+      - ./php/app.ini:/etc/php/7.4/cli/conf.d/php.ini:ro
+      - ./php/app.ini:/etc/php/7.4/fpm/conf.d/php.ini:ro
+      - ./php/xdebug/${OS}.ini:/etc/php/7.4/fpm/conf.d/xdebug.ini:ro
+      - ./php/fpm.conf:/etc/php/7.4/fpm/pool.d/zz-www.conf:ro
+      - ./starship/config.toml:/etc/starship/config.toml:ro
+      - ..:/srv:cached
+    environment:
+      - STARSHIP_CONFIG=/etc/starship/config.toml
+      - XDG_CACHE_HOME=/srv/.manala/.cache
+      - HISTFILE=/srv/.manala/.cache/.bash_history

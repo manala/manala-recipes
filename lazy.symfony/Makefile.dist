@@ -1,0 +1,7 @@
+.SILENT:
+
+-include .manala/Makefile
+
+## Install
+install:
+	composer install
