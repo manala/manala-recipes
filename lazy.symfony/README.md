@@ -30,7 +30,7 @@ $ make sh
 Create the `foo` symfony demo application into `/tmp` and move files into your project (symfony can't create application in an non empty dir)
 ```
 $ symfony new /tmp/foo --no-git --demo
-$ rsync --remove-source-files -a /tmp/foo/ ./
+$ rsync -a /tmp/foo/ ./
 ```
 
 Brows to http://localhost:8080 and enjoy :)
