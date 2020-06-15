@@ -8,9 +8,29 @@
 
 ## Setup
 
+Ok, let's create a `foo` symfony demo application, based on demo skeleton.
+
+Create a `foo` directory and access it
+```
+$ mkdir -p foo
+$ cd foo
+```
+
+Init the `lazy.symfony` recipe
 ```
 $ manala init
+```
+
+Up the environment and shell into it into another terminal
+```
 $ make up
 $ make sh
-$ symfony new app --dir=/tmp/app && mv {/tmp/app/*,/tmp/app/.*} ./
 ```
+
+Create the `foo` symfony demo application into `/tmp` and move files into your project (symfony can't create application in an non empty dir)
+```
+$ symfony new /tmp/foo --no-git --demo
+$ rsync --remove-source-files -a /tmp/foo/ ./
+```
+
+Brows to http://localhost:8080 and enjoy :)
