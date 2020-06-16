@@ -1,7 +1,11 @@
 version: '3.5'
 
+{{- if .Vars.system.mariadb.version }}
+
 volumes:
   mariadb:
+
+{{- end }}
 
 services:
 
@@ -22,6 +26,8 @@ services:
       - ..:/srv:cached
     links:
       - app
+
+{{- if .Vars.system.mariadb.version }}
 
   ###########
   # MariaDB #
@@ -54,6 +60,8 @@ services:
     links:
       - mariadb
 
+{{- end }}
+
   ###########
   # MailDev #
   ###########
@@ -78,12 +86,17 @@ services:
       target: app
     restart: always
     volumes:
-      - ./php/app.ini:/etc/php/7.4/cli/conf.d/php.ini:ro
-      - ./php/app.ini:/etc/php/7.4/fpm/conf.d/php.ini:ro
-      - ./php/xdebug/${OS}.ini:/etc/php/7.4/fpm/conf.d/xdebug.ini:ro
-      - ./php/fpm.conf:/etc/php/7.4/fpm/pool.d/zz-www.conf:ro
+      - ./php/app.ini:/etc/php/{{ .Vars.system.php.version | toString }}/cli/conf.d/php.ini:ro
+      - ./php/app.ini:/etc/php/{{ .Vars.system.php.version | toString }}/fpm/conf.d/php.ini:ro
+      - ./php/xdebug/${OS}.ini:/etc/php/{{ .Vars.system.php.version | toString }}/fpm/conf.d/xdebug.ini:ro
+      - ./php/fpm.conf:/etc/php/{{ .Vars.system.php.version | toString }}/fpm/pool.d/zz-www.conf:ro
       - ./starship/config.toml:/etc/starship/config.toml:ro
       - ..:/srv:cached
+    links:
+      - maildev
+      {{- if .Vars.system.mariadb.version }}
+      - mariadb
+      {{- end }}
     environment:
       - STARSHIP_CONFIG=/etc/starship/config.toml
       - XDG_CACHE_HOME=/srv/.manala/.cache

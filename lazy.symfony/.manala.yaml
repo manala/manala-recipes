@@ -9,7 +9,7 @@ manala:
       - .manala/.dockerignore
       - .manala/.gitignore
       - .manala/docker-compose.yaml.tmpl
-      - .manala/Dockerfile
+      - .manala/Dockerfile.tmpl
       - .manala/Makefile.tmpl
       - README.md .manala/README.md
       - .manala.yaml.tmpl.dist

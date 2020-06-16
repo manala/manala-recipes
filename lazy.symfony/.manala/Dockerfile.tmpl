@@ -1,5 +1,7 @@
-ARG NGINX_VERSION=1.18
-ARG MARIADB_VERSION=10.4
+ARG NGINX_VERSION={{ .Vars.system.nginx.version | toString }}
+{{- if .Vars.system.mariadb.version }}
+ARG MARIADB_VERSION={{ .Vars.system.mariadb.version | toString }}
+{{- end }}
 ARG MAILDEV_VERSION=2.0.0-beta3
 
 #########
@@ -7,6 +9,8 @@ ARG MAILDEV_VERSION=2.0.0-beta3
 #########
 
 FROM nginx:${NGINX_VERSION}-alpine AS nginx
+
+{{- if .Vars.system.mariadb.version }}
 
 ###########
 # MariaDB #
@@ -25,6 +29,8 @@ FROM phpmyadmin/phpmyadmin:latest AS phpmyadmin
 ENV PMA_HOST mariadb
 ENV PMA_USER root
 ENV UPLOAD_LIMIT 64M
+
+{{- end }}
 
 ###########
 # MailDev #
@@ -63,7 +69,6 @@ RUN \
         curl \
         unzip \
         make \
-        git \
         rsync \
         vim-tiny \
         less \
@@ -75,8 +80,6 @@ RUN \
         | tar zx -C /usr/local/bin \
     && echo "eval \"\$(starship init bash)\"" > /etc/profile.d/starship.sh
 
-# Manque starship configuration et completions
-
 WORKDIR /srv
 
 #######
@@ -85,15 +88,17 @@ WORKDIR /srv
 
 FROM base AS app
 
-ARG PHP_VERSION=7.4
-ARG NODE_VERSION=12
+ARG PHP_VERSION={{ .Vars.system.php.version | toString }}
 
 # Disable irrelevants apt-key warnings
 ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 # Disable all debian user interaction
 ARG DEBIAN_FRONTEND=noninteractive
 
-# NodeJs
+{{- if .Vars.system.nodejs.version }}
+
+ARG NODE_VERSION={{ .Vars.system.nodejs.version | toString }}
+
 RUN \
     echo "deb https://deb.nodesource.com/node_${NODE_VERSION}.x buster main" > /etc/apt/sources.list.d/node.list \
     && curl --silent --location --show-error https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
@@ -109,6 +114,8 @@ RUN \
     && mkdir -p /usr/etc \
     && echo "cache=\${XDG_CACHE_HOME}/npm" > /usr/etc/npmrc
 
+{{- end }}
+
 # Php
 RUN \
     echo "deb https://packages.sury.org/php/ buster main" > /etc/apt/sources.list.d/php.list \
@@ -122,8 +129,10 @@ RUN \
         php${PHP_VERSION}-curl \
         php${PHP_VERSION}-mbstring \
         php${PHP_VERSION}-xml \
-        php{PHP_VERSION}-sqlite \
+        php${PHP_VERSION}-sqlite \
+        {{- if .Vars.system.mariadb.version }}
         php${PHP_VERSION}-mysql \
+        {{- end }}
         php-xdebug \
     && mkdir /run/php \
     # Composer
@@ -141,4 +150,4 @@ STOPSIGNAL SIGQUIT
 
 EXPOSE 9000
 
-CMD ["php-fpm7.4"]
+CMD ["php-fpm{{ .Vars.system.php.version | toString }}"]
