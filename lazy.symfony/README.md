@@ -33,4 +33,4 @@ $ symfony new /tmp/foo --no-git --demo
 $ rsync -a /tmp/foo/ ./
 ```
 
-Brows to http://localhost:8080 and enjoy :)
+Browse to http://localhost:8080 and enjoy :)
