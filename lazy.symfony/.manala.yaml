@@ -15,6 +15,32 @@ manala:
       - .manala.yaml.tmpl.dist
       - Makefile.dist
 
+#######
+# App #
+#######
+
 # @option {"label": "App name"}
 # @schema {"type": "string", "pattern": "^[-a-z]+$"}
 app: ~
+
+##########
+# System #
+##########
+
+system:
+    nginx:
+        # @option {"label": "Nginx version"}
+        # @schema {"enum": [1.18]}
+        version: ~
+    php:
+        # @option {"label": "Php version"}
+        # @schema {"enum": [7.4]}
+        version: ~
+    nodejs:
+        # @option {"label": "Nodejs version"}
+        # @schema {"enum": [null, 12]}
+        version: ~
+    mariadb:
+        # @option {"label": "MariaDB version"}
+        # @schema {"enum": [null, 10.4]}
+        version: ~
