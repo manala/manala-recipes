@@ -1,6 +1,0 @@
-version: "3.7"
-
-services:
-  ansible:
-    volumes:
-      - ${ANSIBLE_LOCAL_ROLES_PATH:-~/.ansible/roles}:/root/ansible/roles
