@@ -11,9 +11,9 @@ manala:
       - .manala/docker-compose.yaml.tmpl
       - .manala/Dockerfile.tmpl
       - .manala/Makefile.tmpl
-      - README.md .manala/README.md
       - .manala.yaml.tmpl.dist
       - Makefile.dist
+      - README.md .manala/README.md
 
 #######
 # App #
