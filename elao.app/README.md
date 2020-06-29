@@ -7,7 +7,7 @@
 * [Integration](#integration)
 * [Releases](#releases)
 * [Makefile](#makefile)
-* [Git tools](#git-tools)
+* [Secrets](#secrets)
 
 ## Requirements
 
@@ -441,3 +441,57 @@ test.phpunit@integration:
 		symfony server:stop --ansi \
 	)
 ```
+
+## Secrets
+
+In order to deploy secrets, you can use [Gomplate](https://docs.gomplate.ca), called by a make task.
+Gomplate takes a template, queries its values from a Vault server and renders a file.
+
+Add the following task in the `Makefile`:
+
+```
+###########
+# Secrets #
+###########
+
+secrets/%: _secrets
+  gomplate --config=secrets/$(*)
+_secrets:
+```
+
+Put templates in a `secrets` directory at the root of the project.
+
+Here is an example of template:
+
+```.env.prod
+%YAML 1.1
+---
+
+datasources:
+  vault:
+    url: vault+https://my-vault-server.com
+
+outputFiles:
+  - /path/to/rendered/file
+
+in: |
+  Loop on all values of the secret:
+    {{ range $key, $value := (datasource "vault" "MyApp/data/env").data -}}
+    {{ $key }} = {{ $value | quote }}
+    {{ end -}}
+
+  Query only one value of the secret:
+    {{ (datasource "vault" "MyApp/data/env").data.value1 -}}
+```
+
+/!\ Note that the path to the secret will slightly differ from what the Vault server will display \
+/!\ If the path is `MyApp/production/env` on the Vault server, it will become `MyApp/data/production/env` in the template
+
+Gomplate uses [Go Template syntax](https://docs.gomplate.ca/syntax/)
+
+To render the file, call the template with the `make secrets/%` task, where `%` is the name of the template.
+
+```shell
+make secrets/.env.prod
+```
+
