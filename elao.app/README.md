@@ -455,7 +455,7 @@ Add the following task in the `Makefile`:
 ###########
 
 secrets/%: _secrets
-  gomplate --config=secrets/$(*)
+	gomplate --config=secrets/$(*)
 _secrets:
 ```
 
@@ -494,4 +494,3 @@ To render the file, call the template with the `make secrets/%` task, where `%` 
 ```shell
 make secrets/.env.prod
 ```
-
