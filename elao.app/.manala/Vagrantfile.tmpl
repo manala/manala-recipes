@@ -1,9 +1,52 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# export PYTHONUNBUFFERED=1 && export ANSIBLE_FORCE_COLOR=1
+
+#toto = Vagrant::Environment.new(:cwd => File.expand_path('..', __FILE__))
+#env.cli('up')
+
+#puts YAML::dump(File.expand_path('..', __FILE__))
+#puts YAML::dump(@env.local_data_path)
+#puts YAML::dump(@envo)
+
 Vagrant.require_version '>= 2.2.9'
 
 Vagrant.configure('2') do |config|
+
+  #toto = Vagrant::Environment.new(File.expand_path('..', __FILE__))
+  #toto = Vagrant::Environment.new(:cwd => File.expand_path('..', __FILE__))
+  #puts YAML::dump(toto)
+
+  #config.trigger.after [:up] do |trigger|
+  #  trigger.name = "ssh-config"
+  #  trigger.run = {inline: 'sh -c "vagrant ssh-config > ssh-config"'}
+  #end
+
+  config.trigger.after [:up] do |trigger|
+    #trigger.info = "Trigger trigger"
+    trigger.ruby do |env, machine|
+      File.write(
+        File.join(env.local_data_path, 'ssh-config'),
+        Vagrant::Util::TemplateRenderer.render('commands/ssh_config/config', {
+          host_key: machine.name,
+          ssh_host: machine.ssh_info[:host],
+          ssh_port: machine.ssh_info[:port],
+          ssh_user: machine.ssh_info[:username],
+          keys_only: machine.ssh_info[:keys_only],
+          verify_host_key: machine.ssh_info[:verify_host_key],
+          private_key_path: machine.ssh_info[:private_key_path],
+          log_level: machine.ssh_info[:log_level],
+          forward_agent: machine.ssh_info[:forward_agent],
+          forward_x11:   machine.ssh_info[:forward_x11],
+          proxy_command: machine.ssh_info[:proxy_command],
+          ssh_command:   machine.ssh_info[:ssh_command],
+          forward_env:   machine.ssh_info[:forward_env],
+          config:        machine.ssh_info[:config]
+        })
+      )
+    end
+  end
 
   # Ssh
   config.ssh.forward_agent = true

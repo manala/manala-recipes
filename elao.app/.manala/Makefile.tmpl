@@ -41,9 +41,8 @@ halt:
 	vagrant halt
 
 HELP += $(call help,ssh,            Connect to the environment via SSH)
-ssh: export WORKDIR = /srv/app/$(_DIR)
 ssh:
-	vagrant ssh
+	$(call vagrant_ssh)
 
 HELP += $(call help,destroy,        Stop and delete environment)
 destroy:
