@@ -8,17 +8,10 @@
 
 ## Setup
 
-Ok, let's create a `foo` symfony demo application, based on demo skeleton.
-
-Create a `foo` directory and access it
+Ok, let's init a `foo` symfony demo application.
 ```
-$ mkdir -p foo
+$ manala init -i lazy.symfony foo
 $ cd foo
-```
-
-Init the `lazy.symfony` recipe
-```
-$ manala init
 ```
 
 Up the environment and shell into it into another terminal
