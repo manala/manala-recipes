@@ -1,11 +1,13 @@
-# Manala directory
-_MANALA_DIR := $(patsubst %/Makefile,%,$(filter %.manala/Makefile,$(MAKEFILE_LIST)))
-# Manala root
-_MANALA_ROOT := $(if $(basename $(_MANALA_DIR)),,1)
+# Relative root dir ("."|".."|"../.."|…)
+_ROOT_DIR := $(patsubst ./%,%,$(patsubst %/.manala/Makefile,%,./$(filter %.manala/Makefile,$(MAKEFILE_LIST))))
+# Is current dir root ? (""|"1")
+_ROOT := $(if $(filter .,$(_ROOT_DIR)),1)
+# Relative current dir ("."|"foo"|"foo/bar"|…)
+_DIR := $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_ROOT_DIR))%,%,$(CURDIR)))
 
-include $(_MANALA_DIR)/make/text.mk
-include $(_MANALA_DIR)/make/help.mk
-include $(_MANALA_DIR)/make/os.mk
+include $(_ROOT_DIR)/.manala/make/text.mk
+include $(_ROOT_DIR)/.manala/make/help.mk
+include $(_ROOT_DIR)/.manala/make/os.mk
 
 ###############
 # Environment #
@@ -13,7 +15,7 @@ include $(_MANALA_DIR)/make/os.mk
 
 ifneq ($(container),docker)
 
-export COMPOSE_FILE         = $(_MANALA_DIR)/docker-compose.yaml
+export COMPOSE_FILE         = $(_ROOT_DIR)/.manala/docker-compose.yaml
 export COMPOSE_PROJECT_NAME = {{ .Vars.app }}
 
 HELP += $(call help_section, Environment)
@@ -21,7 +23,7 @@ HELP += $(call help_section, Environment)
 HELP += $(call help,up,        Create and start environment (BUILD))
 up:
 	$(call message,Create and start environment...)
-	mkdir -p $(_MANALA_DIR)/.cache
+	mkdir -p $(_ROOT_DIR)/.manala/.cache
 	OS=$(OS) docker-compose up \
 		$(if $(BUILD),--build --remove-orphans)
 
