@@ -341,6 +341,7 @@ releases:
       #  when: master | default # Conditions on custom host variables (jinja2 format)
     deploy_post_tasks:
       - shell: sudo /bin/systemctl reload php7.4-fpm
+      #- shell: sudo /bin/systemctl restart supervisor
 
   - << : *release
     mode: staging
