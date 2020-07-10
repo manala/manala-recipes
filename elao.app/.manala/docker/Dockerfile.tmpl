@@ -157,6 +157,7 @@ RUN \
     && export DEBIAN_FRONTEND="noninteractive"
 
     {{- if $apt_packages }} \
+    && apt-get update \
     && apt-get install --yes --no-install-recommends \
       {{- $apt_packages | join " \\\n" | nindent 8 }}
     {{- end }}
