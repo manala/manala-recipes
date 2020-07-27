@@ -249,7 +249,7 @@ podTemplate(
             // Build app image
             appImage = docker.build("${appImageTag}", '.manala/docker')
             // Get host docker container id
-            hostContainerId = sh label: 'Get host docker container id', script: 'cat /proc/self/cgroup | head -1 | awk -F/ \'{print $NF}\'', returnStdout: true
+            hostContainerId = sh label: 'Get host docker container id', script: 'cat /proc/self/cpuset | head -1 | awk -F/ \'{print $NF}\'', returnStdout: true
             {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
             // Setup MySQL/MariaDB service
             // - Wait until service is up
