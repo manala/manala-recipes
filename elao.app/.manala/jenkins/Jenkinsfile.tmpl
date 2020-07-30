@@ -130,7 +130,13 @@ try {
     junit allowEmptyResults: true, testResults: '{{ $node.junit }}'
     {{- end }}
     {{- if not (empty $node.artifacts) }}
-    archiveArtifacts allowEmptyArchive: true, artifacts: '{{ $node.artifacts }}'
+    archiveArtifacts allowEmptyArchive: true, artifacts: '
+      {{- if kindIs "slice" $node.artifacts -}}
+        {{ $node.artifacts | join "," }}
+      {{- else -}}
+        {{ $node.artifacts }}
+      {{- end -}}
+    '
     {{- end }}
 }
 {{- end -}}
