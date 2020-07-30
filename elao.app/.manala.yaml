@@ -72,7 +72,7 @@ system:
 #                     "propertyNames": {"pattern": "^[A-Z_]+$"}
 #                 },
 #                 "junit": {"type": "string"},
-#                 "artifacts": {"type": "string"},
+#                 "artifacts": {"type": ["string", "array"]},
 #                 "shell": {"type": "string"},
 #                 "warn": {"type": "boolean"},
 #                 "tasks": {"type": "array", "items": {"$ref": "#integration"}}
