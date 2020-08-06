@@ -7,7 +7,7 @@
       git:
         repo:           "{{ deploy_strategy_git_repo }}"
         dest:           "{{ deploy_dir ~ '/repo' }}"
-        version:        "{{ deploy_strategy_git_version }}"
+        version:        "{{ deploy_strategy_git_ref }}"
         accept_hostkey: true
         update:         true
 

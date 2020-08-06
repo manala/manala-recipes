@@ -37,12 +37,13 @@ release{{ include "release_target" $release }}:
 			--limit {{ include "release_group" $release }}
 
 {{ if hasKey $release "deploy_hosts" -}}
-HELP += $(call help,deploy{{ include "release_target" $release }},Deploy {{ include "release_help" $release }})
+HELP += $(call help,deploy{{ include "release_target" $release }},Deploy {{ include "release_help" $release }} (REF))
 deploy{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
 deploy{{ include "release_target" $release }}:
 	ansible-playbook .manala/ansible/deploy.yaml \
 		--inventory .manala/ansible/deploy.inventory.yaml \
-		--limit {{ include "release_group" $release }}
+		--limit {{ include "release_group" $release }} \
+		$(if $(REF),--extra-vars '{"deploy_strategy_git_ref": "$(REF)"}')
 
 {{ end -}}
 
