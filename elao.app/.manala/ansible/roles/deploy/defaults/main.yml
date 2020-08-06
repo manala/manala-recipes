@@ -14,7 +14,7 @@ deploy_strategy: git
 
 # Strategy - Git
 deploy_strategy_git_repo:    ~
-deploy_strategy_git_version: master
+deploy_strategy_git_ref: master
 
 # [READ-ONLY] This variable will be filled with the head commit hash
 deploy_strategy_git_head: ~
