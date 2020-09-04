@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
+
 set -e
 
 # Cache (Composer and Yarn both follows XDG Base Directory Specification. For
 # the others, related environment variables must be expanded at runtime)
 if [ -n "${XDG_CACHE_HOME}" ]; then
+    mkdir -p ${XDG_CACHE_HOME}
     # Bash
     export HISTFILE="${XDG_CACHE_HOME}/.bash_history"
     # Ansible
