@@ -34,20 +34,6 @@
     {{- $tasks | toYaml }}
 {{- end -}}
 
-{{/* Debian release */}}
-{{- define "debian_release" -}}
-    {{- $debian_releases := dict 8 "jessie" 9 "stretch" 10 "buster" -}}
-    {{- $version := .version -}}
-    {{- index $debian_releases ($version | toString) -}}
-{{- end -}}
-
-{{/* Ubuntu release */}}
-{{- define "ubuntu_release" -}}
-    {{- $ubuntu_releases := dict 8 "trusty" 9 "xenial" 10 "bionic" -}}
-    {{- $version := .version -}}
-    {{- index $ubuntu_releases ($version | toString) -}}
-{{- end -}}
-
 {{/* Elasticsearch version */}}
 {{- define "elasticsearch_version" -}}
     {{- $elasticsearch_versions := dict 1.5 "1.5" 1.6 "1.6" 1.7 "1.7" 2 "2" 5 "5" 6 "6.8.6" 7 "7.5.1" -}}

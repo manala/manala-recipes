@@ -1,0 +1,18 @@
+{%- import '_macros.j2' as macros with context -%}
+
+{%- set programs = item.programs|default({}) -%}
+
+{% for program, parameters in programs|dictsort %}
+[program:{{ program }}]
+{{- macros.config_parameters({
+  'command': parameters.command|mandatory,
+  'autostart': false,
+  'startretries': 20,
+  'autorestart': true,
+  'user': 'vagrant',
+  'redirect_stderr': true,
+  'stdout_logfile_maxbytes': 0,
+  'stderr_logfile_maxbytes': 0,
+} | combine(parameters)) }}
+
+{% endfor %}
