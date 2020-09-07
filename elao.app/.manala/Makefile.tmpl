@@ -41,6 +41,10 @@ HELP += $(call help,halt,           Stop the environment)
 halt:
 	vagrant halt
 
+HELP += $(call help,reload,         Restart the environment)
+reload:
+	vagrant reload
+
 HELP += $(call help,ssh,            Connect to the environment via SSH)
 ssh: export WORKDIR = /srv/app/$(_DIR)
 ssh:
