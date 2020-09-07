@@ -30,6 +30,8 @@ app: ~
 ##########
 
 system:
+    # @schema {"enum": [8000, 9000, 10000]}
+    ports: 8000
     nginx:
         # @option {"label": "Nginx version"}
         # @schema {"enum": [1.18]}
