@@ -24,16 +24,19 @@ HELP += $(call help,up,        Create and start environment (BUILD))
 up:
 	$(call message,Create and start environment...)
 	mkdir -p $(_ROOT_DIR)/.manala/.cache
-	OS=$(OS) docker-compose up \
-		$(if $(BUILD),--build --remove-orphans)
+	OS=$(OS) \
+	$(if $(OS_DARWIN),SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock) \
+		docker-compose up \
+			$(if $(BUILD),--build --remove-orphans)
 
 HELP += $(call help,clean,     Clean environment)
 clean:
 	$(call confirm,Please$(,) confirm environment cleaning)
-	OS=$(OS) docker-compose down \
-		--rmi all \
-		--volumes \
-		--remove-orphans
+	OS=$(OS) \
+		docker-compose down \
+			--rmi all \
+			--volumes \
+			--remove-orphans
 
 HELP += $(call help,sh,        Shell environment)
 sh:
@@ -48,13 +51,47 @@ sh.nginx:
 		nginx \
 		bash
 
+{{- if .Vars.system.mariadb.version }}
+
 HELP += $(call help,sh.mariadb,Shell environment - MariaDB)
 sh.mariadb:
 	docker-compose exec \
 		mariadb \
 		bash
 
+{{- end }}
+
 endif
+
+{{- if .Vars.deploy.inventory }}
+
+##########
+# Deploy #
+##########
+
+HELP += $(call help_section, Deploy)
+
+{{- range $group, $hosts := .Vars.deploy.inventory }}
+{{- range $host, $vars := $hosts }}
+
+HELP += $(call help,ssh@{{ $host }}, Ssh to {{ $host }})
+ssh@{{ $host }}:
+	ssh {{ $vars.user }}@{{ $vars.host }}
+
+{{- end }}
+{{- end }}
+
+{{- range $group, $hosts := .Vars.deploy.inventory }}
+
+HELP += $(call help,deploy@{{ $group }}, Deploy to {{ $group }})
+deploy@{{ $group }}:
+	ansible-playbook $(_ROOT_DIR)/.manala/ansistrano/playbook.yaml \
+		--inventory $(_ROOT_DIR)/.manala/ansistrano/inventory.yaml \
+		--limit {{ $group}}
+
+{{- end }}
+
+{{- end }}
 
 #######
 # App #

@@ -1,6 +1,8 @@
 manala:
     description: Symfony environment, opiniated, docker based, for lazy people
     sync:
+      - .manala/ansistrano
+      - .manala/docker
       - .manala/make
       - .manala/mariadb
       - .manala/nginx
@@ -44,3 +46,14 @@ system:
         # @option {"label": "MariaDB version"}
         # @schema {"enum": [null, 10.4]}
         version: ~
+
+##########
+# Deploy #
+##########
+
+deploy:
+    inventory: {}
+    shared_paths: []
+    shared_files: []
+    hooks:
+      before_symlink: []
