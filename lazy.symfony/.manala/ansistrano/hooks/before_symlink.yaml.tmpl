@@ -1,0 +1,10 @@
+{{- with .Vars.deploy -}}
+
+---
+
+{{- if .hooks.before_symlink }}
+
+{{ .hooks.before_symlink | toYaml }}
+{{- end }}
+
+{{- end }}
