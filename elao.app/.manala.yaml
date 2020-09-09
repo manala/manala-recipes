@@ -38,7 +38,7 @@ system:
         message:
           - A curl vaillant, rien d'impossible !
           - --force et owner !
-          - Il n'y pas de question cron, juste des réponses mal timé !
+          - Il n'y pas de question cron, juste des réponses mal timé ! — Cronfucius
     # @schema {"type": ["string"], "pattern": "^[a-zA-Z]+/[a-zA-Z]+$"}
     timezone: Etc/UTC
     locales:
