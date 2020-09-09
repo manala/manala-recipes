@@ -162,6 +162,12 @@
   when: manala_elasticsearch_enabled
   tags: [elasticsearch]
 
+# InfluxDB
+- import_role:
+      name: influxdb
+  when: manala_influxdb_enabled
+  tags: [influxdb]
+
 # Docker
 - import_role:
       name: docker

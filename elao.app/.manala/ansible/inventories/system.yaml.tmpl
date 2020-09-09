@@ -72,6 +72,8 @@ system:
             manala_redis_enabled: {{ not (empty .redis.version) | ternary "true" "false" }}
             # Elasticsearch
             manala_elasticsearch_enabled: {{ not (empty .elasticsearch.version) | ternary "true" "false" }}
+            # InfluxDB
+            manala_influxdb_enabled: {{ not (empty .influxdb.version) | ternary "true" "false" }}
             # Docker
             manala_docker_enabled: true
             # Gomplate
@@ -211,6 +213,8 @@ system:
             state: {{ `"{{ manala_redis_enabled and (ansible_distribution_release in ['stretch']) | ternary('present', 'absent') }}"` }}
           - preference: elasticsearch@{{ not (empty .elasticsearch.version) | ternary (print "elasticsearch_" .elasticsearch.version | replace "." "_") "default" }}
             state: {{ `"{{ manala_elasticsearch_enabled | ternary('present', 'absent') }}"` }}
+          - preference: influxdb@{{ not (empty .influxdb.version) | ternary "influxdata" "default" }}
+            state: {{ `"{{ manala_influxdb_enabled | ternary('present', 'absent') }}"` }}
         {{- if .apt.preferences }}
           # App
           {{- .apt.preferences | toYaml | nindent 10 }}
@@ -420,6 +424,30 @@ system:
         manala_elasticsearch_plugins:
           # App
           {{- .elasticsearch.plugins | toYaml | nindent 10 }}
+        {{- end }}
+
+        {{- if .influxdb.version }}
+        # InfluxDB
+        {{- if .influxdb.databases }}
+        manala_influxdb_databases:
+          # App
+          {{- .influxdb.databases | toYaml | nindent 10 }}
+        {{- end }}
+        {{- if .influxdb.users }}
+        manala_influxdb_users:
+          # App
+          {{- .influxdb.users | toYaml | nindent 10 }}
+        {{- end }}
+        {{- if .influxdb.privileges }}
+        manala_influxdb_privileges:
+          # App
+          {{- .influxdb.privileges | toYaml | nindent 10 }}
+        {{- end }}
+        {{- if .influxdb.databases }}
+        manala_influxdb_config:
+          # App
+          {{- .influxdb.config | toYaml | nindent 10 }}
+        {{- end }}
         {{- end }}
 
         # Docker
