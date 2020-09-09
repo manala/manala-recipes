@@ -13,7 +13,7 @@ LABEL maintainer="Elao <contact@elao.com>"
 # It's also internally used for checking we're running inside a container too.
 ENV \
   container="docker" \
-  {{- if eq .version 8 }}
+  {{- if eq (.version|int) 8 }}
   ANSIBLE_PYTHON_INTERPRETER="/usr/bin/python"
   {{- else }}
   ANSIBLE_PYTHON_INTERPRETER="/usr/bin/python3"
@@ -42,18 +42,18 @@ RUN \
     && echo "docker ALL=(ALL) NOPASSWD:ALL" \
         > /etc/sudoers.d/docker \
     # Ansible
-    {{- if eq .version 8 }}
+    {{- if eq (.version|int) 8 }}
     && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" \
-    {{- else if eq .version 9 }}
+    {{- else if eq (.version|int) 9 }}
     && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu xenial main" \
-    {{- else if eq .version 10 }}
+    {{- else if eq (.version|int) 10 }}
     && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu bionic main" \
     {{- end }}
         > /etc/apt/sources.list.d/ppa_launchpad_net_ansible_ansible_ubuntu.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
     && apt-get update \
     && apt-get install --yes --no-install-recommends \
-    {{- if eq .version 8 }}
+    {{- if eq (.version|int) 8 }}
         ansible python python-apt
     {{- else }}
         ansible python3 python3-apt
