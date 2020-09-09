@@ -25,6 +25,7 @@ define docker_run
 		--rm \
 		--tty \
 		--interactive \
+		--privileged \
 		--hostname {{ .Vars.system.hostname }} \
 		--mount 'type=bind,consistency=delegated,source=$(realpath $(_ROOT_DIR)),target=/srv/app' \
 		--workdir /srv/app/$(_DIR) \

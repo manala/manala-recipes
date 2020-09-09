@@ -8,10 +8,19 @@ system:
         ###############
 
         development:
+
             # Ansible
             ansible_connection: local
+
             # Accounts
             manala_accounts_enabled: true
+            manala_accounts_groups:
+              - group: docker
+                system: true
+            manala_accounts_users:
+              - user: vagrant
+                group: vagrant
+                groups: ['docker']
             # Motd
             manala_motd_enabled: true
             # Timezone
@@ -73,7 +82,38 @@ system:
             # Elasticsearch
             manala_elasticsearch_enabled: {{ not (empty .elasticsearch.version) | ternary "true" "false" }}
             # Docker
-            manala_docker_enabled: true
+            manala_docker_containers:
+              - name: mailhog
+                image: mailhog/mailhog:v1.0.1
+                state: started
+                restart_policy: unless-stopped
+                ports:
+                  - 25:1025
+                  - 8025:8025
+              - name: phpmyadmin
+                image: phpmyadmin/phpmyadmin
+                state: {{ or (not (empty .mysql.version)) (not (empty .mariadb.version)) | ternary "started" "absent" }}
+                restart_policy: unless-stopped
+                env:
+                  PMA_USER: root
+                  # Default docker host ip
+                  PMA_HOST: 172.17.0.1
+                  UPLOAD_LIMIT: 64M
+                ports:
+                  - 1979:80
+              - name: phpredisadmin
+                image: erikdubbelboer/phpredisadmin
+                state: {{ not (empty .redis.version) | ternary "started" "absent" }}
+                restart_policy: unless-stopped
+                env:
+                  # Default docker host ip
+                  REDIS_1_HOST: 172.17.0.1
+                ports:
+                  - 1981:80
+            {{- if .docker.containers }}
+              # App
+              {{- .docker.containers | toYaml | nindent 10 }}
+            {{- end }}
             # Gomplate
             manala_gomplate_enabled: true
 
@@ -82,8 +122,10 @@ system:
         ###############
 
         integration:
+
             # Ansible
             ansible_connection: local
+
             # Apt
             manala_apt_enabled: true
             manala_apt_packages:
@@ -119,15 +161,6 @@ system:
         #######
         # All #
         #######
-
-        # Accounts
-        manala_accounts_groups:
-          - group: docker
-            system: true
-        manala_accounts_users:
-          - user: vagrant
-            group: vagrant
-            groups: ['docker']
 
         # Motd
         manala_motd_scripts_exclusive: true
@@ -423,37 +456,11 @@ system:
         {{- end }}
 
         # Docker
-        manala_docker_containers:
-          - name: mailhog
-            image: mailhog/mailhog:v1.0.1
-            state: started
-            restart_policy: unless-stopped
-            ports:
-              - 25:1025
-              - 8025:8025
-          - name: phpmyadmin
-            image: phpmyadmin/phpmyadmin
-            state: {{ or (not (empty .mysql.version)) (not (empty .mariadb.version)) | ternary "started" "absent" }}
-            restart_policy: unless-stopped
-            env:
-              PMA_USER: root
-              # Default docker host ip
-              PMA_HOST: 172.17.0.1
-              UPLOAD_LIMIT: 64M
-            ports:
-              - 1979:80
-          - name: phpredisadmin
-            image: erikdubbelboer/phpredisadmin
-            state: {{ not (empty .redis.version) | ternary "started" "absent" }}
-            restart_policy: unless-stopped
-            env:
-              # Default docker host ip
-              REDIS_1_HOST: 172.17.0.1
-            ports:
-              - 1981:80
-        {{- if .docker.containers }}
+        manala_docker_enabled: true
+        {{- if .docker.applications }}
+        manala_docker_applications:
           # App
-          {{- .docker.containers | toYaml | nindent 10 }}
+          {{- .docker.applications | toYaml | nindent 10 }}
         {{- end }}
 
 {{- end }}

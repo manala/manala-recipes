@@ -34,7 +34,8 @@ RUN \
     && mkdir -p /srv \
     && chmod 777 /srv \
     # User
-    && adduser --disabled-password --gecos "" docker \
+    && addgroup --system docker \
+    && adduser --disabled-password --ingroup docker --gecos docker docker \
     # Bash
     && sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' \
         /home/docker/.bashrc \
@@ -59,10 +60,6 @@ RUN \
         ansible python3 python3-apt
     {{- end }}
 
-COPY docker/bin/entrypoint.sh /usr/local/bin/entrypoint.sh
-
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
 ##########
 # System #
 ##########
@@ -73,6 +70,7 @@ COPY ansible/templates                       /tmp/ansible/templates/
 COPY ansible/ansible.cfg ansible/system.yaml /tmp/ansible/
 
 RUN \
+    # Ansible
     cd /tmp/ansible \
     && ansible-galaxy collection install \
       --requirements-file roles/system/requirements.yaml \
@@ -80,12 +78,16 @@ RUN \
     && ansible-playbook system.yaml \
       --inventory-file inventories \
       --limit integration \
-    && rm -Rf /tmp/ansible
-
-RUN \
+    && rm -Rf /tmp/ansible \
+    # Cleanup docker
+    && rm -Rf /var/lib/docker \
     # NodeJs
-    mkdir -p /usr/etc \
+    && mkdir -p /usr/etc \
     && echo "cache=\${XDG_CACHE_HOME}/npm" > /usr/etc/npmrc
+
+COPY docker/bin/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 WORKDIR /srv/app
 

@@ -2,6 +2,9 @@
 
 set -e
 
+# Docker
+sudo /etc/init.d/docker start
+
 # Cache (Composer and Yarn both follows XDG Base Directory Specification. For
 # the others, related environment variables must be expanded at runtime)
 if [ -n "${XDG_CACHE_HOME}" ]; then
