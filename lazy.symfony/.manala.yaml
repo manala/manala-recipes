@@ -54,8 +54,12 @@ system:
 ##########
 
 deploy:
+    # @schema {"items": {"type": "object"}}
     inventory: {}
+    # @schema {"items": {"type": "string"}}
     shared_paths: []
+    # @schema {"items": {"type": "string"}}
     shared_files: []
     hooks:
+      # @schema {"items": {"type": "object"}}
       before_symlink: []
