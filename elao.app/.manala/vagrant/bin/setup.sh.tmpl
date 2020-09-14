@@ -17,11 +17,6 @@ printf "[\033[36mEnvironment\033[0m] \033[32mSetup...\033[0m\n"
 # - set `container` environment variable for environment checks
 cat <<EOF > /etc/environment
 container="vagrant"
-{{- if eq (.version|int) 8 }}
-ANSIBLE_PYTHON_INTERPRETER="/usr/bin/python"
-{{- else }}
-ANSIBLE_PYTHON_INTERPRETER="/usr/bin/python3"
-{{- end }}
 EOF
 
 #########
