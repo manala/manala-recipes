@@ -103,6 +103,18 @@ system:
         version: ~
         # @schema {"items": {"type": "string"}}
         plugins: []
+    influxdb:
+        # @option {"label": "InfluxDB version"}
+        # @schema {"enum": [null, "*"]}
+        version: ~
+        # @schema {"items": {"type": "string"}}
+        databases: []
+        # @schema {"items": {"type": "object"}}
+        users: []
+        # @schema {"items": {"type": "object"}}
+        privileges: []
+        # @schema {"items": {"type": "object"}}
+        config: []
     ssh:
         client:
             # @schema {"items": {"type": "object"}}

@@ -169,6 +169,20 @@ system:
         version: 7
         plugins:
           - analysis-icu
+    # influxdb:
+    #     version: "*"
+    #     databases:
+    #       - app
+    #     users:
+    #       - database: app
+    #         name: app
+    #         password: app
+    #     privileges:
+    #       - database: app
+    #         user: app
+    #         grant: ALL
+    #     config:
+    #       - reporting-disabled: true
     ssh:
         config: |
             Host *.elao.run

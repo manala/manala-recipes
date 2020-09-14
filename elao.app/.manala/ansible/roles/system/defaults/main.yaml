@@ -27,5 +27,6 @@ manala_cron_enabled: false
 manala_mysql_enabled: false
 manala_redis_enabled: false
 manala_elasticsearch_enabled: false
+manala_influxdb_enabled: false
 manala_docker_enabled: false
 manala_gomplate_enabled: false

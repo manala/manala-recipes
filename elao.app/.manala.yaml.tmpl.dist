@@ -88,6 +88,16 @@ system:
         version: {{ .elasticsearch.version | toYaml }}
         plugins: []
     {{- end }}
+
+    {{- if .influxdb.version }}
+    influxdb:
+        version: {{ .influxdb.version | toYaml }}
+        databases: []
+        users: []
+        privileges: []
+        config: []
+    {{- end }}
+
     # files:
     #   # Single symfony app
     #   # ------------------
