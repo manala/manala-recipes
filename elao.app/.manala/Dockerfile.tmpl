@@ -12,12 +12,7 @@ LABEL maintainer="Elao <contact@elao.com>"
 # Docker container environment.
 # It's also internally used for checking we're running inside a container too.
 ENV \
-  container="docker" \
-  {{- if eq (.version|int) 8 }}
-  ANSIBLE_PYTHON_INTERPRETER="/usr/bin/python"
-  {{- else }}
-  ANSIBLE_PYTHON_INTERPRETER="/usr/bin/python3"
-  {{- end }}
+  container="docker"
 
 RUN \
     # Disable irrelevants apt-key warnings

@@ -6,6 +6,11 @@ release:
             hosts:
                 localhost{{ include "release_host" $release }}:
                     ansible_connection: local
+                    {{- if eq ($.Vars.system.version|int) 8 }}
+                    ansible_python_interpreter: /usr/bin/python
+                    {{- else }}
+                    ansible_python_interpreter: /usr/bin/python3
+                    {{- end }}
             vars:
                 release_dir: /srv/release/{{ if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.mode }}
                 release_git_dir: /srv/app

@@ -15,6 +15,7 @@ deploy:
                     {{- if hasKey $host "ssh_args" }}
                     ansible_ssh_extra_args: {{ $host.ssh_args }}
                     {{- end }}
+                    ansible_python_interpreter: auto_silent
                     {{- $host = omit $host "ssh_host" "ssh_user" "ssh_args" -}}
                     {{- if $host }}
                     # Host

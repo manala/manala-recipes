@@ -10,6 +10,11 @@ system:
         development:
             # Ansible
             ansible_connection: local
+            {{- if eq (.version|int) 8 }}
+            ansible_python_interpreter: /usr/bin/python
+            {{- else }}
+            ansible_python_interpreter: /usr/bin/python3
+            {{- end }}
             # Accounts
             manala_accounts_enabled: true
             # Motd
@@ -84,6 +89,11 @@ system:
         integration:
             # Ansible
             ansible_connection: local
+            {{- if eq (.version|int) 8 }}
+            ansible_python_interpreter: /usr/bin/python
+            {{- else }}
+            ansible_python_interpreter: /usr/bin/python3
+            {{- end }}
             # Apt
             manala_apt_enabled: true
             manala_apt_packages:
