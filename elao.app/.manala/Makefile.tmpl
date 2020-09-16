@@ -140,6 +140,31 @@ deploy{{ include "release_target" $release }}:
 
 {{ end -}}
 
+
+########
+# Audit #
+########
+
+HELP += $(call help_section, Audit)
+
+ifneq ($(wildcard composer.lock),)
+HELP += $(call help,audit.composer, Checks for known security issues with composer.)
+audit.composer:
+	symfony check:security
+endif
+
+ifneq ($(wildcard package-lock.json),)
+HELP += $(call help,audit.npm, Checks for known security issues with npm.)
+audit.npm:
+	npm audit ; RC=$${?} ; [ $${RC} -gt 2 ] && exit $${RC} || exit 0
+endif
+
+ifneq ($(wildcard yarn.lock),)
+HELP += $(call help,audit.yarn, Checks for known security issues with yarn.)
+audit.yarn:
+	yarn audit ; RC=$${?} ; [ $${RC} -gt 2 ] && exit $${RC} || exit 0
+endif
+
 #######
 # App #
 #######
