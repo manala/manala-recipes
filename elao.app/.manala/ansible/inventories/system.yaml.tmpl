@@ -177,7 +177,7 @@ system:
         manala_apt_configs:
           - file: archive
             template: configs/check_valid_until_false.j2
-            state: {{ `"{{ (ansible_distribution_release in ['jessie'])|ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
         manala_apt_repositories_exclusive: true
         {{- if .apt.repositories }}
         manala_apt_repositories:
@@ -202,29 +202,29 @@ system:
           - preference: htop@backports
             state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
           - preference: docker@docker
-            state: {{ `"{{ manala_docker_enabled | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_docker_enabled) | ternary('present', 'absent') }}"` }}
           - preference: git@backports
-            state: {{ `"{{ manala_git_enabled and (ansible_distribution_release in ['jessie', 'stretch']) | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_git_enabled and (ansible_distribution_release in ['jessie', 'stretch'])) | ternary('present', 'absent') }}"` }}
           - preference: supervisor@{{ `{{ (ansible_distribution_release in ['jessie']) | ternary('manala', 'backports') }}` }}
-            state: {{ `"{{ manala_supervisor_enabled and (ansible_distribution_release in ['jessie', 'stretch']) | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_supervisor_enabled and (ansible_distribution_release in ['jessie', 'stretch'])) | ternary('present', 'absent') }}"` }}
           - preference: php@sury_php
-            state: {{ `"{{ manala_php_enabled | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_php_enabled) | ternary('present', 'absent') }}"` }}
           - preference: nginx@nginx
-            state: {{ `"{{ manala_nginx_enabled | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_nginx_enabled) | ternary('present', 'absent') }}"` }}
           - preference: nodejs@{{ not (empty .nodejs.version) | ternary (print "nodesource_" .nodejs.version | replace "." "_") "default" }}
-            state: {{ `"{{ manala_nodejs_enabled | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_nodejs_enabled) | ternary('present', 'absent') }}"` }}
           - preference: yarn@yarn
-            state: {{ `"{{ manala_yarn_enabled | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_yarn_enabled) | ternary('present', 'absent') }}"` }}
           - preference: mysql@{{ not (empty .mysql.version) | ternary (print "mysql_" .mysql.version | replace "." "_") "default" }}
             state: {{ not (empty .mysql.version) | ternary "present" "absent" }}
           - preference: mariadb@{{ not (empty .mariadb.version) | ternary (print "mariadb_" .mariadb.version | replace "." "_") "default" }}
             state: {{ not (empty .mariadb.version) | ternary "present" "absent" }}
           - preference: redis@{{ `{{ (ansible_distribution_release in ['stretch']) | ternary('backports', 'default') }}` }}
-            state: {{ `"{{ manala_redis_enabled and (ansible_distribution_release in ['stretch']) | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_redis_enabled and (ansible_distribution_release in ['stretch'])) | ternary('present', 'absent') }}"` }}
           - preference: elasticsearch@{{ not (empty .elasticsearch.version) | ternary (print "elasticsearch_" .elasticsearch.version | replace "." "_") "default" }}
-            state: {{ `"{{ manala_elasticsearch_enabled | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_elasticsearch_enabled) | ternary('present', 'absent') }}"` }}
           - preference: influxdb@{{ not (empty .influxdb.version) | ternary "influxdata" "default" }}
-            state: {{ `"{{ manala_influxdb_enabled | ternary('present', 'absent') }}"` }}
+            state: {{ `"{{ (manala_influxdb_enabled) | ternary('present', 'absent') }}"` }}
         {{- if .apt.preferences }}
           # App
           {{- .apt.preferences | toYaml | nindent 10 }}
