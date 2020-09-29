@@ -85,7 +85,7 @@ system:
         packages: []
     mariadb:
         # @option {"label": "MariaDB version"}
-        # @schema {"enum": [null, 10.4, 10.3, 10.2, 10.1, "10.0"]}
+        # @schema {"enum": [null, 10.5, 10.4, 10.3, 10.2, 10.1, "10.0"]}
         version: ~
     mysql:
         # @option {"label": "MySQL version"}

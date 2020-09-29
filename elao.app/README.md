@@ -121,7 +121,7 @@ system:
         #       template: nginx/app_cors.j2
         #     # No index
         #     - file: app_no_index
-        #       template: nginx/app_no_index.j2        
+        #       template: nginx/app_no_index.j2
     php:
         version: 7.4
         extensions:
@@ -157,7 +157,7 @@ system:
     #                   stdout_logfile: /srv/log/supervisor.foo-bar.log
     # MariaDB
     mariadb:
-        version: 10.4
+        version: 10.5
     # ...*OR* MySQL...
     mysql:
         version: 5.7
