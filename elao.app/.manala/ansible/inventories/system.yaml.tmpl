@@ -397,6 +397,8 @@ system:
         # MySQL / MariaDB
         {{- if .mysql.version }}
         manala_mysql_configs_dir: /etc/mysql/mysql.conf.d
+        {{- else if gt (.mariadb.version|float64) 10.4 }}
+        manala_mysql_configs_dir: /etc/mysql/mariadb.conf.d
         {{- end }}
         manala_mysql_configs:
           - file: zz-mysqld.cnf
