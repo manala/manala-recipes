@@ -79,6 +79,8 @@ system:
             manala_elasticsearch_enabled: {{ not (empty .elasticsearch.version) | ternary "true" "false" }}
             # InfluxDB
             manala_influxdb_enabled: {{ not (empty .influxdb.version) | ternary "true" "false" }}
+            # MongoDB
+            manala_mongodb_enabled: {{ not (empty .mongodb.version) | ternary "true" "false" }}
             # Docker
             manala_docker_enabled: true
             # Gomplate
@@ -225,6 +227,8 @@ system:
             state: {{ `"{{ (manala_elasticsearch_enabled) | ternary('present', 'absent') }}"` }}
           - preference: influxdb@{{ not (empty .influxdb.version) | ternary "influxdata" "default" }}
             state: {{ `"{{ (manala_influxdb_enabled) | ternary('present', 'absent') }}"` }}
+          - preference: mongodb@{{ not (empty .mongodb.version) | ternary (print "mongodb_" .mongodb.version | replace "." "_") "default" }}
+            state: {{ `"{{ (manala_mongodb_enabled) | ternary('present', 'absent') }}"` }}
         {{- if .apt.preferences }}
           # App
           {{- .apt.preferences | toYaml | nindent 10 }}
@@ -462,6 +466,11 @@ system:
         {{- end }}
         {{- end }}
 
+        {{- if .mongodb.version }}
+        # MongoDB
+        manala_mongodb_config_template: mongodb/mongod.conf.j2
+        {{- end }}
+
         # Docker
         manala_docker_containers:
           - name: mailhog
@@ -491,6 +500,15 @@ system:
               REDIS_1_HOST: 172.17.0.1
             ports:
               - 1981:80
+          - name: mongo-express
+            image: mongo-express
+            state: {{ not (empty .mongodb.version) | ternary "started" "absent" }}
+            restart_policy: unless-stopped
+            env:
+              # Default docker host ip
+              ME_CONFIG_MONGODB_SERVER: 172.17.0.1
+            ports:
+              - 1982:8081
         {{- if .docker.containers }}
           # App
           {{- .docker.containers | toYaml | nindent 10 }}

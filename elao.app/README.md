@@ -183,6 +183,8 @@ system:
     #         grant: ALL
     #     config:
     #       - reporting-disabled: true
+    # mongodb:
+    #     version: 4.4
     ssh:
         config: |
             Host *.elao.run
