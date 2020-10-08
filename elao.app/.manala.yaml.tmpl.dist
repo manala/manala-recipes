@@ -98,6 +98,11 @@ system:
         config: []
     {{- end }}
 
+    {{- if .mongodb.version }}
+    mongodb:
+        version: {{ .mongodb.version | toYaml }}
+    {{- end }}
+
     # files:
     #   # Single symfony app
     #   # ------------------

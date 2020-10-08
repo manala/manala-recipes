@@ -168,6 +168,12 @@
   when: manala_influxdb_enabled
   tags: [influxdb]
 
+# MongoDB
+- import_role:
+      name: mongodb
+  when: manala_mongodb_enabled
+  tags: [mongodb]
+
 # Docker
 - import_role:
       name: docker

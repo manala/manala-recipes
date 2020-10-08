@@ -73,7 +73,7 @@ Vagrant.configure('2') do |config|
       puts "\e[32m`.\e[0m \e[33m__/ \\__\e[0m \e[32m.'\e[0m{{ if or .Vars.system.mysql.version .Vars.system.mariadb.version }}  PhpMyAdmin: http://{{ .Vars.system.hostname }}:1979{{ end }}"
       puts "\e[31m_ _\e[0m\e[33m\\     /\e[0m\e[31m_ _\e[0m{{ if .Vars.system.supervisor.configs }}  Supervisor: http://{{ .Vars.system.hostname }}:9001{{ end }}"
       puts "   \e[33m/_   _\\\e[0m{{ if .Vars.system.redis.version }}     PhpRedisAdmin: http://{{ .Vars.system.hostname }}:1981{{ end }}"
-      puts " \e[32m.'\e[0m  \e[33m\\ /\e[0m  \e[32m`.\e[0m"
+      puts " \e[32m.'\e[0m  \e[33m\\ /\e[0m  \e[32m`.\e[0m{{ if .Vars.system.mongodb.version }}   Mongo Express: http://{{ .Vars.system.hostname }}:1982{{ end }}"
       puts "   \e[31m/\e[0m  \e[32m:\e[0m  \e[31m\\\e[0m"
       puts "      \e[32m'\e[0m"
     end
