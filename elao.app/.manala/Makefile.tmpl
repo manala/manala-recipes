@@ -110,6 +110,25 @@ docker:
 
 endif
 
+#########
+# Vault #
+#########
+
+include $(_ROOT_DIR)/.manala/make/vault.mk
+
+ifdef VAULT_ADDR
+HELP += $(call help_section, Vault)
+
+HELP += $(call help,vault.login,Vault login)
+vault.login:
+	$(call vault_login)
+
+else
+vault.login:
+	$(call message_warning, \"VAULT_ADDR\" environment variable has not been set)
+
+endif
+
 {{ if .Vars.releases -}}
 ############
 # Releases #

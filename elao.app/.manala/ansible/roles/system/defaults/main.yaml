@@ -31,3 +31,4 @@ manala_influxdb_enabled: false
 manala_mongodb_enabled: false
 manala_docker_enabled: false
 manala_gomplate_enabled: false
+manala_vault_cli_enabled: false
