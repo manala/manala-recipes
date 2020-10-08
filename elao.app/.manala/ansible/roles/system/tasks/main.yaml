@@ -179,3 +179,9 @@
       name: gomplate
   when: manala_gomplate_enabled
   tags: [gomplate]
+
+# Vault Cli
+- import_role:
+      name: vault_cli
+  when: manala_vault_cli_enabled
+  tags: [vault]

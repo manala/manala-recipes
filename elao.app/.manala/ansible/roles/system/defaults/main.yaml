@@ -30,3 +30,4 @@ manala_elasticsearch_enabled: false
 manala_influxdb_enabled: false
 manala_docker_enabled: false
 manala_gomplate_enabled: false
+manala_vault_cli_enabled: false

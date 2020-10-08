@@ -496,4 +496,7 @@ system:
           {{- .docker.containers | toYaml | nindent 10 }}
         {{- end }}
 
+        # Vault Cli
+        manala_vault_cli_enabled: true
+
 {{- end }}

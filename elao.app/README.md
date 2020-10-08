@@ -537,16 +537,20 @@ test.phpunit@integration:
 In order to deploy secrets, you can use [Gomplate](https://docs.gomplate.ca), called by a make task.
 Gomplate takes a template, queries its values from a Vault server and renders a file.
 
-Add the following task in the `Makefile`:
+Add the following tasks in the `Makefile`:
 
 ```
 ###########
 # Secrets #
 ###########
 
-secrets/%: _secrets
-	gomplate --config=secrets/$(*)
-_secrets:
+secrets@production:
+	gomplate --config=secrets/env.production.yml
+	gomplate --config=secrets/parameters.production.yml
+
+secrets@staging:
+	gomplate --config=secrets/env.staging.yml
+	gomplate --config=secrets/parameters.staging.yml
 ```
 
 Put templates in a `secrets` directory at the root of the project.
@@ -557,21 +561,17 @@ Here is an example of template:
 %YAML 1.1
 ---
 
-datasources:
-  vault:
-    url: vault+https://my-vault-server.com
-
 outputFiles:
   - /path/to/rendered/file
 
 in: |
   Loop on all values of the secret:
-    {{ range $key, $value := (datasource "vault" "MyApp/data/env").data -}}
+    {{ range $key, $value := (datasource "vault:///MyApp/data/env").data -}}
     {{ $key }} = {{ $value | quote }}
     {{ end -}}
 
   Query only one value of the secret:
-    {{ (datasource "vault" "MyApp/data/env").data.value1 -}}
+    {{ (datasource "vault:///MyApp/data/env").data.value1 -}}
 ```
 
 /!\ Note that the path to the secret will slightly differ from what the Vault server will display \
@@ -579,10 +579,12 @@ in: |
 
 Gomplate uses [Go Template syntax](https://docs.gomplate.ca/syntax/)
 
-To render the file, call the template with the `make secrets/%` task, where `%` is the name of the template.
+In order to use secrets in development or integration environment, a `VAULT_ADDR` environment variable must be set,
+defining the Vault server address expressed as an URL, for example: `https://127.0.0.1:8200`
+Login to the vaut server using:
 
-```shell
-make secrets/.env.prod
+```
+$ make vault.login
 ```
 
 ## Tips, Tricks, and Tweaks
