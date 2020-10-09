@@ -1,5 +1,10 @@
 {
-  "build/app.css": "/manala-recipes/build/app.dd4df6b8.css",
+  "build/app.css": "/manala-recipes/build/app.a4ca280d.css",
   "build/app.js": "/manala-recipes/build/app.31659c40.js",
-  "build/runtime.js": "/manala-recipes/build/runtime.1850121c.js"
+  "build/runtime.js": "/manala-recipes/build/runtime.1850121c.js",
+  "build/images/arms.svg": "/manala-recipes/build/images/arms.b7d6de72.svg",
+  "build/images/elao.svg": "/manala-recipes/build/images/elao.da8c7b3a.svg",
+  "build/images/github.svg": "/manala-recipes/build/images/github.04ed74f3.svg",
+  "build/images/header-background.png": "/manala-recipes/build/images/header-background.3e0b9fb4.png",
+  "build/images/manala.svg": "/manala-recipes/build/images/manala.053e7ef8.svg"
 }
