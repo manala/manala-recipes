@@ -20,6 +20,7 @@
         <a href="/manala-recipes/" class="logo">Manala recipes</a>
         <nav>
             <ul>
+                <li><a href="https://github.com/manala/manala-recipes">Github</a></li>
                 <li>
                     <div class="dropdown">
                         <a class="dropdown-toggle" href="/manala-recipes/">Recipes</a>
@@ -505,7 +506,7 @@ sync.api-uploads@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
 sync.api-uploads@staging:
   ...</code></pre>
 <h3 id="git-tools">Git tools<a href="#git-tools" class="anchor"></a></h3>
-<p>This recipe contains some git helpers such as the <a href="./make/make.git.mk"><code class="code-inline" id="e6c58e1556cef6518971d204931757e6">git_diff</code></a> function.</p>
+<p>This recipe contains some git helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app/.manala/make/git.mk" target="_blank"><code class="code-inline" id="e6c58e1556cef6518971d204931757e6">git_diff</code></a> function.</p>
 <p>This function is useful for example to apply <code class="code-inline" id="bb7790bfaa80da52ecba1a151b299b55">php-cs</code>, <code class="code-inline" id="84a40fcfe7ec43f029d5956efb08d1c2">php-cs-fix</code> or <code class="code-inline" id="b098e670cdbfc421583801f6038ae38d">PHPStan</code> checks only on the subset of updated PHP files and not on any PHP file of your project.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="e9821a313f802ec649b58e33a335fc7e">lint.php-cs-fixer: DIFF <span class="token operator">=</span> <span class="token variable"><span class="token variable">$(</span>call git_diff, php, src tests<span class="token variable">)</span></span>
@@ -515,7 +516,7 @@ lint.php-cs-fixer:
         <span class="token builtin class-name">printf</span> <span class="token string">"You have made no change in PHP files<span class="token entity" title="\n">\n</span>"</span> <span class="token punctuation">\</span>
     <span class="token variable">)</span></span></code></pre>
 <h3 id="try-tools">Try tools<a href="#try-tools" class="anchor"></a></h3>
-<p>This recipe contains some try helpers such as the <a href="./make/make.try.mk"><code class="code-inline" id="73691059dcea540103db82ad2b3c40f7">try_finally</code></a> function.</p>
+<p>This recipe contains some try helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app/.manala/make/try.mk" target="_blank"><code class="code-inline" id="73691059dcea540103db82ad2b3c40f7">try_finally</code></a> function.</p>
 <p>This function is useful for example to run <code class="code-inline" id="85af727fd022d3a13e7972fd6a418582">phpunit</code> tests needing a started symfony server, and to stop this server regardless of the tests retur code.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="e0f9aa14ca8d2939a55c0be70ca37768">test.phpunit@integration:
@@ -578,7 +579,7 @@ in: <span class="token operator">|</span>
         </article>
     </section>
 
-    <time datetime="2020-10-12UTC13:24:20+00:00">Last modified: October 12, 2020 13:24</time>
+    <time datetime="2020-10-12UTC14:12:23+00:00">Last modified: October 12, 2020 14:12</time>
         </div>
 
         <footer class="footer">
@@ -592,7 +593,7 @@ in: <span class="token operator">|</span>
                     </div>
                     <div class="col-sm-4 no-pb elao">
                         Made with love by <a href="https://www.elao.com" target="_blank"><img src="/manala-recipes/build/images/elao.91d6ac3c.svg" width="64" height="23" title="élao" alt="élao"></a>
-                        <small>(and <a href="https://www.rix.fr/"><strong>Rix</strong></a> !)</small>
+                        <small>(and <a target="_blank" href="https://www.rix.fr/"><strong>Rix</strong></a> !)</small>
                     </div>
                 </div>
             </div>
