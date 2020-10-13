@@ -1,3 +1,5 @@
 # Manala - Recipes
 
-Read the [documentation](https://manala.github.io/manala-recipes)
+## Documentation
+
+* [Elao - App](./elao.app/README.md)
