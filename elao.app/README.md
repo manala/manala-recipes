@@ -27,9 +27,9 @@ This recipe contains some helpful scripts in the context of a php/nodejs app, su
 In a shell terminal, change directory to your app, and run the following commands:
 
 ```shell
-cd /path/to/my/app
-manala init
-Select the "elao.app" recipe
+    $ cd /path/to/my/app
+    $ manala init
+    # Select the "elao.app" recipe
 ```
 
 Edit the `Makefile` at the root directory of your project and add the following lines at the beginning of the file:
@@ -43,12 +43,10 @@ Edit the `Makefile` at the root directory of your project and add the following 
 Then update the `.manala.yaml` file (see [the releases example](#releases) below) and then run the `manala up` command:
 
 ```
-manala up
+    $ manala up
 ```
 
-!!! Warning
-    Don't forget to run the `manala up` command each time you update the 
-    `.manala.yaml` file to actually apply your changes !!!
+> :warning: don't forget to run the `manala up` command each time you update the `.manala.yaml` file to actually apply your changes !!!
 
 From now on, if you execute the `make help` command in your console, you should obtain the following output:
 
@@ -504,7 +502,7 @@ sync.api-uploads@staging:
 
 ### Git tools
 
-This recipe contains some git helpers such as the [`git_diff`](./.manala/make/git.mk) function.
+This recipe contains some git helpers such as the [`git_diff`](./make/make.git.mk) function.
 
 This function is useful for example to apply `php-cs`, `php-cs-fix` or `PHPStan` checks only on the subset of updated PHP files and not on any PHP file of your project.
 
@@ -521,7 +519,7 @@ lint.php-cs-fixer:
 
 ### Try tools
 
-This recipe contains some try helpers such as the [`try_finally`](./.manala/make/try.mk) function.
+This recipe contains some try helpers such as the [`try_finally`](./make/make.try.mk) function.
 
 This function is useful for example to run `phpunit` tests needing a started symfony server, and to stop this server regardless of the tests retur code.
 
@@ -557,9 +555,7 @@ Put templates in a `secrets` directory at the root of the project.
 
 Here is an example of template:
 
-```shell
-# .env.prod
-
+```.env.prod
 %YAML 1.1
 ---
 
@@ -580,12 +576,10 @@ in: |
     {{ (datasource "vault" "MyApp/data/env").data.value1 -}}
 ```
 
-!!! Note
-    Note that the path to the secret will slightly differ from what the Vault server will display:    
-    if the path is `MyApp/production/env` on the Vault server, 
-    it will become `MyApp/data/production/env` in the template
+/!\ Note that the path to the secret will slightly differ from what the Vault server will display \
+/!\ If the path is `MyApp/production/env` on the Vault server, it will become `MyApp/data/production/env` in the template
 
-See [Go Template syntax](https://docs.gomplate.ca/syntax/) for more info.
+Gomplate uses [Go Template syntax](https://docs.gomplate.ca/syntax/)
 
 To render the file, call the template with the `make secrets/%` task, where `%` is the name of the template.
 
@@ -595,9 +589,9 @@ make secrets/.env.prod
 
 ## Tips, Tricks, and Tweaks
 
-* [Vagrant root privilege requirement](https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement)
-* Debug ansible provisioning:
-
+* Vagrant root privilege requirement
+  https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement
+* Debug ansible provisionning
   ```
   ansible-galaxy collection install manala.roles --collections-path /vagrant/ansible/collections
   ```
