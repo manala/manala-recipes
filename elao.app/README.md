@@ -590,13 +590,6 @@ parameters:
 /!\ Note that the path to the secret will slightly differ from what the Vault server will display \
 /!\ If the path is `foo_bar/env` on the Vault server, it will become `foo_bar/data/env` in the template
 
-
-To render the file, call the template with the `make secrets/%` task, where `%` is the name of the template.
-
-```shell
-make secrets/.env.prod
-```
-
 ## Tips, Tricks, and Tweaks
 
 * Vagrant root privilege requirement
