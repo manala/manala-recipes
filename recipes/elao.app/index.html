@@ -542,11 +542,11 @@ Gomplate takes a template, queries its values from a Vault server and renders a 
     gomplate --input-dir<span class="token operator">=</span>secrets/staging --output-map<span class="token operator">=</span><span class="token string">'{{ .in | replaceAll ".gohtml" "" }}'</span></code></pre>
 <p>Put your templates in <code class="code-inline" id="1ca4b42ca90e819f64f33c96b270e1c1">.gohtml</code> files inside a <code class="code-inline" id="df9fb49a2fc451d46b4f322d61a159d5">secrets/[production|staging]</code> directory at the root of the project.<br>
 Respect destination file names, extensions, and paths:</p>
-<pre class="code-multiline language-treeview"><code class="language-treeview" id="98b0e360785a426ad74af666683ec8a2"><span class="token treeview-part"><span class="token entry-name dir">secrets</span></span>
+<pre class="code-multiline language-treeview"><code class="language-treeview" id="e677d579d06fde32d814f6be1f3d6881"><span class="token treeview-part"><span class="token entry-name dir">secrets</span></span>
 <span class="token treeview-part"><span class="token entry-line line-h">├── </span><span class="token entry-name dir">production</span></span>
-<span class="token treeview-part"><span class="token entry-name">│   </span><span class="token entry-line line-h">├── </span><span class="token entry-name ext-env-gohtml ext-gohtml dotfile">.env.gohtml</span></span>
-<span class="token treeview-part"><span class="token entry-name">│   </span><span class="token entry-line line-v-last">└── </span><span class="token entry-name dir">config</span></span>
-<span class="token treeview-part"><span class="token entry-name">│  </span><span class="token entry-line line-v-gap">    </span> <span class="token entry-line line-v-last">└── </span><span class="token entry-name ext-yaml-gohtml ext-gohtml">parameters.yaml.gohtml</span></span>
+<span class="token treeview-part"><span class="token entry-line line-v">|   </span><span class="token entry-line line-h">├── </span><span class="token entry-name ext-env-gohtml ext-gohtml dotfile">.env.gohtml</span></span>
+<span class="token treeview-part"><span class="token entry-line line-v">|   </span><span class="token entry-line line-v-last">└── </span><span class="token entry-name dir">config</span></span>
+<span class="token treeview-part"><span class="token entry-line line-v">|   </span><span class="token entry-line line-v-gap">    </span><span class="token entry-line line-v-last">└── </span><span class="token entry-name ext-yaml-gohtml ext-gohtml">parameters.yaml.gohtml</span></span>
 <span class="token treeview-part"><span class="token entry-line line-v-last">└── </span><span class="token entry-name dir">staging</span></span>
 <span class="token treeview-part"><span class="token entry-line line-v-gap">    </span><span class="token entry-line line-h">├── </span><span class="token entry-name ext-env-gohtml ext-gohtml dotfile">.env.gohtml</span></span>
 <span class="token treeview-part"><span class="token entry-line line-v-gap">    </span><span class="token entry-line line-v-last">└── </span><span class="token entry-name dir">config</span></span>
@@ -580,7 +580,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2020-10-15UTC16:18:58+00:00">Last modified: October 15, 2020 16:18</time>
+    <time datetime="2020-10-15UTC16:32:11+00:00">Last modified: October 15, 2020 16:32</time>
         </div>
 
         <footer class="footer">
