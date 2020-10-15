@@ -1,0 +1,82 @@
+// Colors
+$color-brand: #e9644a;
+$color-primary: #F66C51;
+$color-primary-light: lighten($color-primary, 32);
+$color-secondary: #D69D57;
+$color-tertiary: #f4756d;
+$color-dark: #0d3a5a;
+$color-light: #2ecccb;
+$color-info: #55a8bf;
+$color-warning: #f69651;
+
+// Code highlighting
+$code-font: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+$code-background: #333;
+$code-red: #ff6188;
+$code-green: #a9dc76;
+$code-yellow: #ffd866;
+$code-orange: #fc9867;
+$code-purple: #ab9df2;
+$code-blue: #78dce8;
+$code-white: #eee;
+$code-grey: #ccc;
+$code-mutted: #888;
+
+$background-color: #FFF;
+$base-font-family: "Open Sans", "Helvetica Neue", "Helvetica";
+$base-font-size:   16px;
+$base-line-height: $base-font-size * 1.8;
+$text-color:       #767572;
+
+$manala-font: "Sacramento";
+
+$headings-font-family:    "Open Sans", "Helvetica Neue", "Helvetica";
+$headings-font-weight:    600;
+$headings-line-height:    1.4;
+$headings-letter-spacing: 0;
+$headings-text-transform: none;
+$headings-color:          $color-secondary;
+$headings-small-color:    lighten($text-color, 30%);
+$headings-margin:         20px;
+
+$font-size-h1: 36px;
+$font-size-h2: 30px;
+$font-size-h3: 26px;
+$font-size-h4: 22px;
+
+// grid
+$grid-columns:      12 !default;
+$grid-gutter-width: 30px !default;
+
+//// Breakpoints
+//$screen-lg: 1280px; // desktop
+//$screen-md: 1220px; // laptop
+//$screen-sm: 995px;  // tablet
+//$screen-xs: 760px;  // phone
+
+$screen-lg: 1140px !default; // desktop
+$screen-md: 992px !default; // laptop
+$screen-sm: 768px !default; // tablet
+$screen-xs: 480px !default; // phone
+
+$screen-xs-min:              $screen-xs !default;
+$screen-phone:               $screen-xs-min !default;
+
+$screen-sm-min:              $screen-sm !default;
+$screen-tablet:              $screen-sm-min !default;
+
+$screen-md-min:              $screen-md !default;
+$screen-desktop:             $screen-md-min !default;
+
+$screen-lg-min:              $screen-lg !default;
+$screen-lg-desktop:          $screen-lg-min !default;
+
+$screen-xs-max:              ($screen-sm-min - 1) !default;
+$screen-sm-max:              ($screen-md-min - 1) !default;
+$screen-md-max:              ($screen-lg-min - 1) !default;
+
+$container-tablet:           ((720px + $grid-gutter-width)) !default;
+$container-desktop:          ((940px + $grid-gutter-width)) !default;
+$container-lg-desktop:       ((1140px + $grid-gutter-width)) !default;
+
+$container-max-width:        $screen-lg !default;

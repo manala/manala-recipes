@@ -1,0 +1,35 @@
+.admonition {
+  margin: 15px 0;
+
+  p {
+    padding: 10px;
+    margin: 0;
+    color: transparentize($text-color, 0.3);
+  }
+
+  &.warning {
+    background-color: lighten($color-warning, 30);
+    .admonition-title {
+      color: $color-warning;
+      background-color: lighten($color-warning, 25);
+    }
+  }
+
+  &.note {
+    background-color: lighten($color-info, 40);
+    .admonition-title {
+      color: $color-info;
+      background-color: lighten($color-info, 35);
+    }
+    p {
+      color: $color-info;
+    }
+  }
+
+  .admonition-title {
+    padding: 10px;
+    text-transform: capitalize;
+    font-weight: bold;
+    margin: 0;
+  }
+}
