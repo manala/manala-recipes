@@ -67,17 +67,17 @@
 <p>Ok, let's init a <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="69c12abcfaed39a59514c2ea971375df">manala init -i lazy.symfony foo
 <span class="token builtin class-name">cd</span> foo</code></pre>
-<p>Up the environment and shell into it into another terminal</p>
+<p>Up the environment and shell into it into another terminal:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="e3bf9cd354412ccf8475b26f1132a3f8"><span class="token function">make</span> up
 <span class="token function">make</span> <span class="token function">sh</span></code></pre>
-<p>Create the <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application into <code class="code-inline" id="d42b9c57d24cf5db3bd8d332dc35437f">/tmp</code> and move files into your project (symfony can't create application in a non-empty dir)</p>
+<p>Create the <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application into <code class="code-inline" id="d42b9c57d24cf5db3bd8d332dc35437f">/tmp</code> and move files into your project (<em>symfony can't create application in a non-empty dir</em>):</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="55951e413e5515e83a1357c3fa2e7142">symfony new /tmp/foo --no-git --demo
 <span class="token function">rsync</span> -a /tmp/foo/ ./</code></pre>
-<p>Browse to <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> and enjoy :)</p></body>
+<p>Browse <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> and enjoy :)</p></body>
         </article>
     </section>
 
-    <time datetime="2020-10-15UTC17:07:44+00:00">Last modified: October 15, 2020 17:07</time>
+    <time datetime="2020-10-15UTC17:11:01+00:00">Last modified: October 15, 2020 17:11</time>
         </div>
 
         <footer class="footer">
