@@ -107,7 +107,7 @@ Docker:
 App:</code></pre>
 <h2 id="system">System<a href="#system" class="anchor"></a></h2>
 <p>Here is an example of a system configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="59fcd8a366df3cd6f1d5690777c5748d"><span class="token comment">##########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="f73756af811c358dfa6977d8ab54f892"><span class="token comment">##########</span>
 <span class="token comment"># System #</span>
 <span class="token comment">##########</span>
 
@@ -226,14 +226,15 @@ App:</code></pre>
     <span class="token comment"># mongodb:</span>
     <span class="token comment">#     version: 4.4</span>
     <span class="token key atrule">ssh</span><span class="token punctuation">:</span>
-        <span class="token key atrule">config</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">
-            Host *.elao.run
-                User         app
-                ForwardAgent yes
-            Host *.elao.local
-                User         app
-                ForwardAgent yes
-                ProxyCommand ssh gateway@bastion.elao.com -W %h:%p</span></code></pre>
+        <span class="token key atrule">client</span><span class="token punctuation">:</span>
+            <span class="token key atrule">config</span><span class="token punctuation">:</span>
+                <span class="token punctuation">-</span> <span class="token key atrule">Host *.elao.run</span><span class="token punctuation">:</span>
+                    <span class="token punctuation">-</span> <span class="token key atrule">User</span><span class="token punctuation">:</span> app
+                    <span class="token punctuation">-</span> <span class="token key atrule">ForwardAgent</span><span class="token punctuation">:</span> yes
+                <span class="token punctuation">-</span> <span class="token key atrule">Host *.elao.local</span><span class="token punctuation">:</span>
+                    <span class="token punctuation">-</span> <span class="token key atrule">User</span><span class="token punctuation">:</span> app
+                    <span class="token punctuation">-</span> <span class="token key atrule">ForwardAgent</span><span class="token punctuation">:</span> yes
+                    <span class="token punctuation">-</span> <span class="token key atrule">ProxyCommand</span><span class="token punctuation">:</span> ssh gateway@bastion.elao.com <span class="token punctuation">-</span>W %h<span class="token punctuation">:</span>%p</code></pre>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
 <p>Here are some examples of integration configurations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
 <pre class="code-multiline language-yaml"><code class="language-yaml" id="ac20e7dd52ce8d45320e8fa8aa1d3bfa"><span class="token comment">###############</span>
@@ -586,7 +587,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2020-10-19UTC14:26:30+00:00">Last modified: October 19, 2020 14:26</time>
+    <time datetime="2020-10-19UTC15:23:30+00:00">Last modified: October 19, 2020 15:23</time>
         </div>
 
         <footer class="footer">
