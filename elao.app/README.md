@@ -186,14 +186,15 @@ system:
     # mongodb:
     #     version: 4.4
     ssh:
-        config: |
-            Host *.elao.run
-                User         app
-                ForwardAgent yes
-            Host *.elao.local
-                User         app
-                ForwardAgent yes
-                ProxyCommand ssh gateway@bastion.elao.com -W %h:%p
+        client:
+            config:
+                - Host *.elao.run:
+                    - User: app
+                    - ForwardAgent: yes
+                - Host *.elao.local:
+                    - User: app
+                    - ForwardAgent: yes
+                    - ProxyCommand: ssh gateway@bastion.elao.com -W %h:%p
 ```
 
 
