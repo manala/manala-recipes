@@ -1,4 +1,4 @@
-content:
+stenope:
   providers:
     App\Model\DefaultPage: '%kernel.project_dir%/../content/pages'
 

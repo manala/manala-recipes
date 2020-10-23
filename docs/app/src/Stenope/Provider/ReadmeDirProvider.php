@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Content\Provider;
+namespace App\Stenope\Provider;
 
-use Content\Content;
-use Content\Provider\ContentProviderInterface;
-use Content\Provider\LocalFilesystemProvider;
+use Stenope\Bundle\Content;
+use Stenope\Bundle\Provider\ContentProviderInterface;
+use Stenope\Bundle\Provider\LocalFilesystemProvider;
 
 /**
  * Extract contents from directories with a README.md file inside.

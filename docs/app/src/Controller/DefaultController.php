@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Model\DefaultPage;
-use Content\ContentManager;
+use Stenope\Bundle\ContentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 

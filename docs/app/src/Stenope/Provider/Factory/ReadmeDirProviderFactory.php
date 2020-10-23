@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Content\Provider\Factory;
+namespace App\Stenope\Provider\Factory;
 
-use App\Content\Provider\ReadmeDirProvider;
-use Content\Provider\ContentProviderInterface;
-use Content\Provider\Factory\ContentProviderFactoryInterface;
+use App\Stenope\Provider\ReadmeDirProvider;
+use Stenope\Bundle\Provider\ContentProviderInterface;
+use Stenope\Bundle\Provider\Factory\ContentProviderFactoryInterface;
 
 class ReadmeDirProviderFactory implements ContentProviderFactoryInterface
 {

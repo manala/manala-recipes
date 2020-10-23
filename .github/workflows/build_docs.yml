@@ -1,4 +1,4 @@
-name: Build static
+name: Build Documentation
 
 on:
   push:
@@ -8,9 +8,16 @@ on:
 
 jobs:
 
-  build:
+  docs:
     name: 🚧  Build & Deploy  🚀
     runs-on: ubuntu-latest
+
+    env:
+      working-directory: ./docs/app
+    defaults:
+      run:
+        # https://github.community/t/use-working-directory-for-entire-job/16747/9
+        working-directory: ${{ env.working-directory }}
 
     steps:
       - name: Checkout
@@ -30,7 +37,6 @@ jobs:
 
       - name: Determine composer cache directory
         id: composer-cache
-        working-directory: ./docs/app
         run: echo "::set-output name=directory::$(composer config cache-dir)"
 
       - name: Cache composer dependencies
@@ -41,7 +47,6 @@ jobs:
           restore-keys: composer-
 
       - name: Install dependencies
-        working-directory: ./docs/app
         run: |
           echo "::group::composer install"
           composer install --no-progress --no-suggest --ansi
@@ -51,7 +56,6 @@ jobs:
           echo "::endgroup::"
 
       - name: Warmup
-        working-directory: ./docs/app
         run: |
           echo "::group::warmup production env"
           npx encore production --color=always --no-progress
@@ -63,8 +67,7 @@ jobs:
           WEBPACK_PUBLIC_PATH: /manala-recipes/build
 
       - name: Build static site
-        working-directory: ./docs/app
-        run: bin/console content:build --no-interaction -vv --ansi
+        run: bin/console stenope:build --no-interaction -vv --ansi
         env:
           APP_ENV: prod
           ROUTER_DEFAULT_URI: https://manala.github.io/manala-recipes

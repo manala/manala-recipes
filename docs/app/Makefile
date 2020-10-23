@@ -34,11 +34,11 @@ build:
 	npm run build
 
 ## Build static site
-build-docs: export APP_ENV = prod
-build-docs:
+build-static: export APP_ENV = prod
+build-static:
 	bin/console cache:clear
-	bin/console content:build
+	bin/console stenope:build
 
-serve-docs:
+serve-static:
 	open http://localhost:8001
 	php -S localhost:8001 -t build

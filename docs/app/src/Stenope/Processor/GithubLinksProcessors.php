@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Content\Processor;
+namespace App\Stenope\Processor;
 
 use App\Model\Recipe;
-use Content\Behaviour\ProcessorInterface;
-use Content\Content;
+use Stenope\Bundle\Behaviour\ProcessorInterface;
+use Stenope\Bundle\Content;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
