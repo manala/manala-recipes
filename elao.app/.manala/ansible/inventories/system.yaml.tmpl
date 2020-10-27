@@ -360,13 +360,12 @@ system:
         {{- end }}
 
         # Supervisor
-        manala_supervisor_config_template: config/debian.j2
+        manala_supervisor_config_template: config/debian/supervisord.conf.j2
         manala_supervisor_configs_exclusive: true
         manala_supervisor_configs_defaults:
           template: supervisor/app.conf.j2
         manala_supervisor_configs:
-          - file: inet-http-server.conf
-            template: configs/inet_http_server.j2
+          - template: configs/inet_http_server.conf.j2
             config:
               port: "*:9001"
         {{- if .supervisor.configs }}
