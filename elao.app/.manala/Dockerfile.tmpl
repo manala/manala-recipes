@@ -4,6 +4,9 @@ FROM debian:{{ .version }}-slim
 
 LABEL maintainer="Elao <contact@elao.com>"
 
+ARG UID=1000
+ARG GID=1000
+
 #########
 # Setup #
 #########
@@ -29,7 +32,8 @@ RUN \
     && mkdir -p /srv \
     && chmod 777 /srv \
     # User
-    && adduser --disabled-password --gecos "" docker \
+    && addgroup --gid ${GID} docker \
+    && adduser --disabled-password --gecos "" docker --uid ${UID} --ingroup docker \
     # Bash
     && sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' \
         /home/docker/.bashrc \
