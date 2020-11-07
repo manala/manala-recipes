@@ -90,6 +90,10 @@ HELP += $(call help,provision.nginx,Provision the environment - Nginx (DIFF|VERB
 provision.nginx: export TAGS = nginx
 provision.nginx: provision
 
+HELP += $(call help,provision.supervisor,Provision the environment - Supervisor (DIFF|VERBOSE))
+provision.supervisor: export TAGS = supervisor
+provision.supervisor: provision
+
 HELP += $(call help,provision.php,  Provision the environment - Php (DIFF|VERBOSE))
 provision.php: export TAGS = php
 provision.php: provision
