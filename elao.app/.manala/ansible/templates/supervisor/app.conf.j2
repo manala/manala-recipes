@@ -1,14 +1,15 @@
-{%- set programs = item.programs|default({}) -%}
 {%- set groups = item.groups|default({}) -%}
 
 {% for group, parameters in groups|dictsort %}
 [group:{{ group }}]
 {{- {
-  'programs': (parameters.programs|mandatory)|join(', '),
-  'priority': parameters.priority|default(999, true),
+  'programs': parameters.programs|mandatory,
 } | combine(parameters) | manala.roles.supervisor_config_parameters }}
 
 {% endfor %}
+
+{%- set programs = item.programs|default({}) -%}
+
 {% for program, parameters in programs|dictsort %}
 [program:{{ program }}]
 {{- {
