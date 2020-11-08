@@ -150,11 +150,20 @@ system:
     # supervisor:
     #     configs:
     #         - file: app.conf
+    #           groups:
+    #               acme:
+    #                   programs:
+    #                       - foo
+    #                       - bar
     #           programs:
-    #               foo-bar:
-    #                   command: zsh -c "bin/console app:foo:bar --no-interaction -vv"
+    #               foo:
+    #                   command: zsh -c "bin/console app:acme:foo --no-interaction -vv"
     #                   directory: /srv/app
-    #                   stdout_logfile: /srv/log/supervisor.foo-bar.log
+    #                   stdout_logfile: /srv/log/supervisor.acme-foo.log
+    #               bar:
+    #                   command: zsh -c "bin/console app:acme:bar --no-interaction -vv"
+    #                   directory: /srv/app
+    #                   stdout_logfile: /srv/log/supervisor.acme-bar.log
     # MariaDB
     mariadb:
         version: 10.5
@@ -554,7 +563,7 @@ secrets@staging:
 	gomplate --input-dir=secrets/staging --output-map='{{ .in | replaceAll ".gohtml" "" }}'
 ```
 
-Put your templates in `.gohtml` files inside a `secrets/[production|staging]` directory at the root of the project.  
+Put your templates in `.gohtml` files inside a `secrets/[production|staging]` directory at the root of the project.
 Respect destination file names, extensions, and paths:
 
 ```
@@ -568,7 +577,7 @@ secrets
     └── config
         └── parameters.yaml.gohtml
 ```
-	
+
 Here are some template examples:
 
 `.env.gohtml`:
