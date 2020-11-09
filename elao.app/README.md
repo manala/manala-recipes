@@ -567,7 +567,7 @@ secrets@staging:
 	gomplate --input-dir=secrets/staging --output-map='{{ .in | replaceAll ".gohtml" "" }}'
 ```
 
-Put your templates in `.gohtml` files inside a `secrets/[production|staging]` directory at the root of the project.
+Put your templates in `.gohtml` files inside a `secrets/[production|staging]` directory at the root of the project.  
 Respect destination file names, extensions, and paths:
 
 ```
