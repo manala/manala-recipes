@@ -164,6 +164,10 @@ system:
     #                   command: zsh -c "bin/console app:acme:bar --no-interaction -vv"
     #                   directory: /srv/app
     #                   stdout_logfile: /srv/log/supervisor.acme-bar.log
+    #               foo-bar:
+    #                   command: zsh -c "bin/console app:foo:bar --no-interaction -vv"
+    #                   directory: /srv/app
+    #                   stdout_logfile: /srv/log/supervisor.foo-bar.log
     # MariaDB
     mariadb:
         version: 10.5
