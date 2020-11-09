@@ -150,7 +150,20 @@ system:
     # supervisor:
     #     configs:
     #         - file: app.conf
+    #           groups:
+    #               acme:
+    #                   programs:
+    #                       - foo
+    #                       - bar
     #           programs:
+    #               foo:
+    #                   command: zsh -c "bin/console app:acme:foo --no-interaction -vv"
+    #                   directory: /srv/app
+    #                   stdout_logfile: /srv/log/supervisor.acme-foo.log
+    #               bar:
+    #                   command: zsh -c "bin/console app:acme:bar --no-interaction -vv"
+    #                   directory: /srv/app
+    #                   stdout_logfile: /srv/log/supervisor.acme-bar.log
     #               foo-bar:
     #                   command: zsh -c "bin/console app:foo:bar --no-interaction -vv"
     #                   directory: /srv/app
@@ -568,7 +581,7 @@ secrets
     └── config
         └── parameters.yaml.gohtml
 ```
-	
+
 Here are some template examples:
 
 `.env.gohtml`:
