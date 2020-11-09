@@ -1,3 +1,11 @@
+{%- set config = item.config|default('') -%}
+
+{%- if config -%}
+
+{{ config }}
+
+{%- else -%}
+
 {%- set groups = item.groups|default({}) -%}
 
 {% for group, parameters in groups|dictsort %}
@@ -24,3 +32,5 @@
 } | combine(parameters) | manala.roles.supervisor_config_parameters }}
 
 {% endfor %}
+
+{%- endif -%}
