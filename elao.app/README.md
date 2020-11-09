@@ -168,6 +168,10 @@ system:
     #                   command: zsh -c "bin/console app:foo:bar --no-interaction -vv"
     #                   directory: /srv/app
     #                   stdout_logfile: /srv/log/supervisor.foo-bar.log
+    #         - file: app_foo.conf
+    #           config: |
+    #               [program:foo]
+    #               command=/bin/foo
     # MariaDB
     mariadb:
         version: 10.5
