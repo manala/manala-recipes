@@ -62,6 +62,31 @@ Docker:
 App:
 ```
 
+## VM interaction
+
+In your app directory.
+
+Initialise your app:
+```bash
+make setup
+```
+
+Start VM:
+```bash
+make up
+```
+
+Stop VM:
+```bash
+make halt
+```
+
+VM shell:
+```bash
+make ssh
+```
+
+
 ## System
 
 Here is an example of a system configuration in `.manala.yaml`:
