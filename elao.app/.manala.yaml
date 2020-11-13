@@ -166,7 +166,7 @@ integration: {}
 #             "additionalProperties": false,
 #             "properties": {
 #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
-#                 "mode": {"enum": ["production", "staging"]},
+#                 "mode": {"type": "string", "pattern": "^[a-z]+$"},
 #                 "repo": {"type": "string", "format": "git-repo"},
 #                 "release_tasks": {"type": "array", "items": {"$ref": "#release_tasks"}},
 #                 "release_add": {"type": "array", "items": {"type": "string"}},
