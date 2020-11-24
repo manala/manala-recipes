@@ -114,6 +114,12 @@
   when: manala_symfony_cli_enabled
   tags: [symfony]
 
+# Certificates
+- import_role:
+      name: certificates
+  when: system_certificates
+  tags: [certificates, nginx]
+
 # Nginx
 - import_role:
       name: nginx

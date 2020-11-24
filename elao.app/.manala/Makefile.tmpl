@@ -60,7 +60,7 @@ provision:
 
 else
 
-HELP += $(call help,provision,      Provision the environment (TAGS|DIFF|VERBOSE))
+HELP += $(call help,provision,             Provision the environment (TAGS|DIFF|VERBOSE))
 provision:
 	$(call log, Install ansible galaxy collection)
 	ansible-galaxy collection install \
@@ -73,30 +73,50 @@ provision:
 	    --inventory-file inventories \
 	    --become \
 			$(if $(TAGS),--tags $(TAGS)) \
+			$(if $(VARS),--extra-vars '$(VARS)') \
 			$(if $(VERBOSE),-vvv) \
 			$(if $(DIFF),--check --diff) \
 
 endif
 
-HELP += $(call help,provision.apt,  Provision the environment - Apt (DIFF|VERBOSE))
+HELP += $(call help,provision.apt,         Provision the environment - Apt (DIFF|VERBOSE))
 provision.apt: export TAGS = apt
 provision.apt: provision
 
-HELP += $(call help,provision.files,Provision the environment - Files (DIFF|VERBOSE))
+HELP += $(call help,provision.files,       Provision the environment - Files (DIFF|VERBOSE))
 provision.files: export TAGS = files
 provision.files: provision
 
-HELP += $(call help,provision.nginx,Provision the environment - Nginx (DIFF|VERBOSE))
+HELP += $(call help,provision.nginx,       Provision the environment - Nginx (DIFF|VERBOSE))
 provision.nginx: export TAGS = nginx
 provision.nginx: provision
 
-HELP += $(call help,provision.supervisor,Provision the environment - Supervisor (DIFF|VERBOSE))
+HELP += $(call help,provision.supervisor,  Provision the environment - Supervisor (DIFF|VERBOSE))
 provision.supervisor: export TAGS = supervisor
 provision.supervisor: provision
 
-HELP += $(call help,provision.php,  Provision the environment - Php (DIFF|VERBOSE))
+HELP += $(call help,provision.php,         Provision the environment - Php (DIFF|VERBOSE))
 provision.php: export TAGS = php
 provision.php: provision
+
+################
+# Certificates #
+################
+
+HELP += $(call help_section, Certificates)
+
+HELP += $(call help,certificates,Generate certificates)
+ifeq ($(container),vagrant)
+certificates:
+	$(call log, Run ansible playbook)
+	ansible-playbook $(_ROOT_DIR)/.manala/ansible/certificates.yaml \
+		--inventory $(_ROOT_DIR)/.manala/ansible/inventories \
+		--limit development \
+		--become
+else
+certificates:
+	$(call message_error, Command only available *INSIDE* vagrant environment)
+endif
 
 ##########
 # Docker #

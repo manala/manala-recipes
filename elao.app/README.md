@@ -2,6 +2,7 @@
 
 * [Requirements](#requirements)
 * [Overview](#overview)
+* [Breaking changes](#breaking-changes)
 * [Quick start](#quick-start)
 * [System](#system)
 * [Integration](#integration)
@@ -11,6 +12,8 @@
 * [Releases](#releases)
 * [Makefile](#makefile)
 * [Secrets](#secrets)
+* [TLS support](#tls)
+* [Https](#https)
 * [Tips, Tricks, and Tweaks](#tips-tricks-and-tweaks)
 
 ## Requirements
@@ -24,6 +27,15 @@
 ## Overview
 
 This recipe contains some helpful scripts in the context of a php/nodejs app, such as Makefile tasks in order to release and deploy your app.
+
+## Breaking changes
+
+```yaml
+# Ssl
+- file: app_ssl.conf
+  template: configs/app_ssl_offloading.dev.j2
+  # ou son copain dans nginx/app_ssl_offloading.conf.j2
+```
 
 ## Quick start
 
@@ -143,9 +155,6 @@ system:
         #     # Gzip
         #     - file: app_gzip
         #       template: nginx/app_gzip.j2
-        #     # Ssl
-        #     - file: app_ssl.conf
-        #       template: nginx/app_ssl_offloading.conf.j2
         #     # Cors
         #     - file: app_cors
         #       template: nginx/app_cors.j2
@@ -657,6 +666,18 @@ See [Go Template syntax](https://docs.gomplate.ca/syntax/) for more info.
 
 !!! Warning
     Make sure to include the `secrets` directory into your release, using the `release_add` entry.
+
+## Https
+
+```
+
+### [OSX] - Adding trusted root certificate to keychain
+
+```
+sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" .manala/certificates/ca.crt
+```
+
+You're good to go !
 
 ## Tips, Tricks, and Tweaks
 

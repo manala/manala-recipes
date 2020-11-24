@@ -61,6 +61,8 @@ system:
             manala_npm_enabled: {{ and (not (empty .nodejs.version)) (not (empty .nodejs.packages)) | ternary "true" "false" }}
             # Php
             manala_php_enabled: {{ not (empty .php.version) | ternary "true" "false" }}
+            # Certificates
+            system_certificates: true
             # Nginx
             manala_nginx_enabled: {{ not (empty .nginx.configs) | ternary "true" "false" }}
             # Supervisor
@@ -199,6 +201,16 @@ system:
             state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
           - preference: python-websocket@manala
             state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
+          # Python Cryptography
+          - preference: python-cryptography@backports
+            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
+          - preference: python-pyasn1@backports
+            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
+          - preference: python-setuptools@backports
+            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
+          - preference: python-pkg-resources@backports
+            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
+          # Htop
           - preference: htop@backports
             state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
           - preference: docker@docker
@@ -338,6 +350,9 @@ system:
         # Symfony Cli
         manala_symfony_cli_enabled: {{ `"{{ manala_php_enabled }}"` }}
 
+        # Certificates
+        certificates_name: {{ .hostname | toYaml }}
+
         # Nginx
         manala_nginx_config_template: config/http.dev.j2
         manala_nginx_configs_exclusive: true
@@ -350,6 +365,8 @@ system:
                 - location /404.html:
                   - root: /usr/share/nginx/html
                   - internal;
+          - file: ssl.conf
+            template: nginx/ssl.conf.j2
         {{- if .nginx.configs }}
           # App
           {{- .nginx.configs | toYaml | nindent 10 }}

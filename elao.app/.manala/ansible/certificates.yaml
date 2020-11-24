@@ -1,0 +1,19 @@
+---
+
+- hosts: system
+  collections:
+    - manala.roles
+  vars_prompt:
+    - name: certificates_ca_key_pass_phrase
+      prompt: Enter ca key pass phrase
+      private: true
+      unsafe: true
+  tasks:
+    # Certificates
+    - import_role:
+        name: certificates
+      when: system_certificates|default(False)
+    # Nginx
+    - import_role:
+        name: nginx
+      when: manala_nginx_enabled|default(False)

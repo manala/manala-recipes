@@ -2,6 +2,8 @@ manala:
     description: Elao - Generic application with PHP and Node.js support
     sync:
       - .manala/ansible
+      - .manala/certificates/ca.crt
+      - .manala/certificates/ca.key
       - .manala/docker
       - .manala/github
       - .manala/jenkins

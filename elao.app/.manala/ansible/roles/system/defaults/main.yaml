@@ -19,6 +19,7 @@ manala_yarn_enabled: false
 manala_php_enabled: false
 manala_composer_enabled: false
 manala_symfony_cli_enabled: false
+system_certificates: false
 manala_nginx_enabled: false
 manala_supervisor_enabled: false
 manala_ngrok_enabled: false
