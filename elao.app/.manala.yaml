@@ -3,6 +3,8 @@ manala:
     template: .manala.yaml.tmpl
     sync:
       - .manala/ansible
+      - .manala/certificates/ca.crt
+      - .manala/certificates/ca.key
       - .manala/docker
       - .manala/github
       - .manala/make

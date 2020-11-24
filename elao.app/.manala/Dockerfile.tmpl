@@ -68,6 +68,7 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 COPY ansible/collections                     /tmp/ansible/collections/
 COPY ansible/inventories/system.yaml         /tmp/ansible/inventories/
+COPY ansible/roles/certificates              /tmp/ansible/roles/certificates/
 COPY ansible/templates                       /tmp/ansible/templates/
 COPY ansible/ansible.cfg ansible/system.yaml /tmp/ansible/
 

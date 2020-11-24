@@ -23,6 +23,9 @@ system:
         {{- dict "system_apt_repositories" .apt.repositories | toYaml | nindent 8 }}
         {{- dict "system_apt_preferences" .apt.preferences | toYaml | nindent 8 }}
         {{- dict "system_apt_holds" .apt.holds | toYaml | nindent 8 }}
+        # Certificates
+        system_certificates: false
+        system_certificates_name: {{ .hostname | toYaml }}
         # Cron
         system_cron: false
         {{- dict "system_cron_files" .cron.files | toYaml | nindent 8 }}
@@ -152,6 +155,8 @@ system:
                 # App
                 {{- .apt.packages | toYaml | nindent 16 }}
             {{- end }}
+            # Certificates
+            system_certificates: true
             # Cron
             system_cron: {{ not (empty .cron.files) | ternary "true" "false" }}
             # Docker

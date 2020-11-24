@@ -42,6 +42,8 @@ define docker_run
 		$(if $(1),$(strip $(1)),bash)
 endef
 
-ifneq ($(container),docker)
+ifeq ($(container),docker)
+DOCKER = 1
+else
 DOCKER_SHELL = $(call docker_run,$(SHELL))
 endif

@@ -70,6 +70,15 @@
         state: "{{ 'present' if (ansible_distribution_release in ['jessie']) else 'ignore' }}"
       - preference: python-jinja2@manala
         state: "{{ 'present' if (ansible_distribution_release in ['jessie']) else 'ignore' }}"
+      # Jessie - Python Cryptography
+      - preference: python-cryptography@backports
+        state: "{{ 'present' if (ansible_distribution_release in ['jessie']) else 'ignore' }}"
+      - preference: python-pyasn1@backports
+        state: "{{ 'present' if (ansible_distribution_release in ['jessie']) else 'ignore' }}"
+      - preference: python-setuptools@backports
+        state: "{{ 'present' if (ansible_distribution_release in ['jessie']) else 'ignore' }}"
+      - preference: python-pkg-resources@backports
+        state: "{{ 'present' if (ansible_distribution_release in ['jessie']) else 'ignore' }}"
       # Ansible
       - ansible@ansible
       # NodeJS
@@ -132,6 +141,12 @@
 
     manala_apt_packages:
       - "{{ system_apt_packages }}"
+
+    ################
+    # Certificates #
+    ################
+
+    certificates_name: "{{ system_certificates_name }}"
 
     ############
     # Composer #
@@ -558,9 +573,14 @@
       tags: [symfony]
 
     - import_role:
+        name: certificates
+      when: system_certificates
+      tags: [certificates, nginx]
+
+    - import_role:
         name: nginx
       when: system_nginx
-      tags: [nginx]
+      tags: [nginx, certificates]
 
     - import_role:
         name: redis

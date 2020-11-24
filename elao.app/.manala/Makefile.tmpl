@@ -21,7 +21,7 @@ include $(_DIR)/.manala/make/semver.mk
 include $(_DIR)/.manala/vagrant/make.mk
 
 # Vagrant commands only available *OUTSIDE* vagrant environment
-ifneq ($(container),vagrant)
+ifndef VAGRANT
 
 export VAGRANT_CWD = $(_DIR)/.manala
 
@@ -64,7 +64,7 @@ else
 
 HELP += $(call help_section, Environment)
 
-HELP += $(call help,provision,           Provision the environment (TAGS|DIFF|VERBOSE))
+HELP += $(call help,provision,             Provision the environment (TAGS|DIFF|VERBOSE))
 provision:
 	$(call log, Install ansible galaxy collection)
 	cd $(_DIR)/.manala/ansible \
@@ -78,30 +78,41 @@ provision:
 			--limit development \
 			--become \
 			$(if $(TAGS),--tags $(TAGS)) \
+			$(if $(VARS),--extra-vars '$(VARS)') \
 			$(if $(VERBOSE),-vvv) \
 			$(if $(DIFF),--check --diff)
 
 endif
 
-HELP += $(call help,provision.apt,       Provision the environment - Apt (DIFF|VERBOSE))
+HELP += $(call help,provision.apt,         Provision the environment - Apt (DIFF|VERBOSE))
 provision.apt: export TAGS = apt
 provision.apt: provision
 
-HELP += $(call help,provision.files,     Provision the environment - Files (DIFF|VERBOSE))
+HELP += $(call help,provision.files,       Provision the environment - Files (DIFF|VERBOSE))
 provision.files: export TAGS = files
 provision.files: provision
 
-HELP += $(call help,provision.nginx,     Provision the environment - Nginx (DIFF|VERBOSE))
+HELP += $(call help,provision.nginx,       Provision the environment - Nginx (DIFF|VERBOSE))
 provision.nginx: export TAGS = nginx
 provision.nginx: provision
 
-HELP += $(call help,provision.supervisor,Provision the environment - Supervisor (DIFF|VERBOSE))
+HELP += $(call help,provision.supervisor,  Provision the environment - Supervisor (DIFF|VERBOSE))
 provision.supervisor: export TAGS = supervisor
 provision.supervisor: provision
 
-HELP += $(call help,provision.php,       Provision the environment - Php (DIFF|VERBOSE))
+HELP += $(call help,provision.php,         Provision the environment - Php (DIFF|VERBOSE))
 provision.php: export TAGS = php
 provision.php: provision
+
+HELP += $(call help,provision.certificates,Provision the environment - Certificates (DIFF|VERBOSE))
+ifdef VAGRANT
+provision.certificates: export TAGS = certificates
+provision.certificates: export VARS = certificates_prompt=true
+provision.certificates: provision
+else
+provision.certificates:
+	$(call message_warning, Command only available *INSIDE* vagrant environment)
+endif
 
 ##########
 # Docker #
@@ -110,7 +121,7 @@ provision.php: provision
 include $(_DIR)/.manala/docker/make.mk
 
 # Docker commands only available *OUTSIDE* docker environment
-ifneq ($(container),docker)
+ifndef DOCKER
 
 HELP += $(call help_section, Docker)
 

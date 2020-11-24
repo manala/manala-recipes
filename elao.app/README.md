@@ -12,6 +12,7 @@
 * [Releases](#releases)
 * [Makefile](#makefile)
 * [Secrets](#secrets)
+* [Https](#https)
 * [Tips, Tricks, and Tweaks](#tips-tricks-and-tweaks)
 
 ## Requirements
@@ -25,7 +26,6 @@
 ## Overview
 
 This recipe contains some helpful scripts in the context of a php/nodejs app, such as Makefile tasks in order to release and deploy your app.
-
 
 ## Init
 
@@ -703,6 +703,19 @@ See [Go Template syntax](https://docs.gomplate.ca/syntax/) for more info.
 
 !!! Warning
     Make sure to include the `secrets` directory into your release, using the `release_add` entry.
+
+## Https
+
+In  order for https to work properly, you must:
+1) ensure elao ca certificate has been added to your local keychain (one time for *all* projects)
+```
+$ sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" .manala/certificates/ca.crt
+```
+2) generate a project certificate (one time *by* project, inside vagrant, remember to commit them right after)
+```
+⇒  make provision.certificates
+```
+3) For firefox only, browse to `about:config` and ensure `security.enterprise_roots.enabled` value is set to true
 
 ## Tips, Tricks, and Tweaks
 

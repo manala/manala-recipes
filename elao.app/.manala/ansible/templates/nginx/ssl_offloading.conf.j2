@@ -3,9 +3,8 @@ server {
     listen 443 ssl;
     server_name _;
 
-    ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
-    ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
-
+    ssl_certificate /etc/ssl/certs/ssl.pem;
+    ssl_certificate_key /etc/ssl/private/ssl.key;
 
     location / {
         proxy_set_header Host $host;
