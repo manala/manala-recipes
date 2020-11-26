@@ -1,0 +1,54 @@
+ARG ANSIBLE_VERSION={{ .Vars.system.ansible.version | toString }}
+
+########
+# Base #
+########
+
+FROM debian:buster-slim as base
+
+# The 'container' environment variable tells systemd that it's running inside a
+# Docker container environment.
+# It's also internally used for checking we're running inside a container.
+ENV container="docker"
+
+RUN \
+    apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        bash-completion \
+        apt-utils \
+        gnupg \
+        ca-certificates \
+        sudo \
+        curl \
+        unzip \
+        make \
+        rsync \
+        vim-tiny \
+        less \
+    # User
+    && adduser --disabled-password --gecos "" lazy \
+    && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
+    # Starship
+    && curl --location https://github.com/starship/starship/releases/latest/download/starship-x86_64-unknown-linux-gnu.tar.gz \
+        | tar zx -C /usr/local/bin \
+    && echo "eval \"\$(starship init bash)\"" > /etc/profile.d/starship.sh
+
+WORKDIR /srv
+
+###########
+# Ansible #
+###########
+
+FROM base AS ansible
+
+ARG ANSIBLE_VERSION
+
+RUN \
+    apt-get install --yes --no-install-recommends \
+        python3 \
+        python3-pip \
+        python3-setuptools \
+        python3-wheel \
+    && pip3 install ansible==${ANSIBLE_VERSION}
+
+CMD ["sleep", "infinity"]

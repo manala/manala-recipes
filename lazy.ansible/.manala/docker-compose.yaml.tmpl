@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+
+  ###########
+  # Ansible #
+  ###########
+
+  ansible:
+    hostname: ansible
+    build:
+      context: .
+      target: ansible
+    init: true
+    restart: always
+    volumes:
+      - ..:/srv:cached

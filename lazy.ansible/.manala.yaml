@@ -1,0 +1,21 @@
+manala:
+    description: Ansible environment, opiniated, docker based, for lazy people
+    sync:
+      - .manala/make
+      - .manala/starship
+      - .manala/docker-compose.yaml.tmpl
+      - .manala/Dockerfile.tmpl
+      - .manala/Makefile.tmpl
+      - .manala.yaml.tmpl.dist
+      - Makefile.dist
+      - README.md .manala/README.md
+
+##########
+# System #
+##########
+
+system:
+    ansible:
+        # @option {"label": "Ansible version"}
+        # @schema {"enum": ["2.10.4"]}
+        version: ~
