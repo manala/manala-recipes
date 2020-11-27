@@ -105,9 +105,19 @@ Docker:
   docker Run docker container
 
 App:</code></pre>
+<h2 id="vm-interaction">VM interaction<a href="#vm-interaction" class="anchor"></a></h2>
+<p>In your app directory.</p>
+<p>Initialise your app:</p>
+<pre class="code-multiline language-bash"><code class="language-bash" id="4fd2c64dcfff0125ebf36e5089c49f7c"><span class="token function">make</span> setup</code></pre>
+<p>Start VM:</p>
+<pre class="code-multiline language-bash"><code class="language-bash" id="2e9d335be8c5d384ed7b6df0a31c9696"><span class="token function">make</span> up</code></pre>
+<p>Stop VM:</p>
+<pre class="code-multiline language-bash"><code class="language-bash" id="18a4b187ddd402eeaff3210c41b411d9"><span class="token function">make</span> <span class="token function">halt</span></code></pre>
+<p>VM shell:</p>
+<pre class="code-multiline language-bash"><code class="language-bash" id="fb6dad9a920a0351eb8c4ff9a6284dfd"><span class="token function">make</span> <span class="token function">ssh</span></code></pre>
 <h2 id="system">System<a href="#system" class="anchor"></a></h2>
 <p>Here is an example of a system configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="f73756af811c358dfa6977d8ab54f892"><span class="token comment">##########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="3d5ab1261272edb419c0a4c4a3682bd5"><span class="token comment">##########</span>
 <span class="token comment"># System #</span>
 <span class="token comment">##########</span>
 
@@ -190,51 +200,68 @@ App:</code></pre>
     <span class="token comment"># supervisor:</span>
     <span class="token comment">#     configs:</span>
     <span class="token comment">#         - file: app.conf</span>
+    <span class="token comment">#           groups:</span>
+    <span class="token comment">#               acme:</span>
+    <span class="token comment">#                   programs:</span>
+    <span class="token comment">#                       - foo</span>
+    <span class="token comment">#                       - bar</span>
     <span class="token comment">#           programs:</span>
+    <span class="token comment">#               foo:</span>
+    <span class="token comment">#                   command: zsh -c "bin/console app:acme:foo --no-interaction -vv"</span>
+    <span class="token comment">#                   directory: /srv/app</span>
+    <span class="token comment">#                   stdout_logfile: /srv/log/supervisor.acme-foo.log</span>
+    <span class="token comment">#               bar:</span>
+    <span class="token comment">#                   command: zsh -c "bin/console app:acme:bar --no-interaction -vv"</span>
+    <span class="token comment">#                   directory: /srv/app</span>
+    <span class="token comment">#                   stdout_logfile: /srv/log/supervisor.acme-bar.log</span>
     <span class="token comment">#               foo-bar:</span>
     <span class="token comment">#                   command: zsh -c "bin/console app:foo:bar --no-interaction -vv"</span>
     <span class="token comment">#                   directory: /srv/app</span>
     <span class="token comment">#                   stdout_logfile: /srv/log/supervisor.foo-bar.log</span>
-    <span class="token comment"># MariaDB</span>
-    <span class="token key atrule">mariadb</span><span class="token punctuation">:</span>
-        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">10.5</span>
-    <span class="token comment"># ...*OR* MySQL...</span>
-    <span class="token key atrule">mysql</span><span class="token punctuation">:</span>
-        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">5.7</span>
-    <span class="token comment"># redis:</span>
-    <span class="token comment">#     version: "*"</span>
-    <span class="token comment">#     config:</span>
-    <span class="token comment">#       - save: '""' # Disable persistence</span>
-    <span class="token key atrule">elasticsearch</span><span class="token punctuation">:</span>
-        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">7</span>
-        <span class="token key atrule">plugins</span><span class="token punctuation">:</span>
-          <span class="token punctuation">-</span> analysis<span class="token punctuation">-</span>icu
-    <span class="token comment"># influxdb:</span>
-    <span class="token comment">#     version: "*"</span>
-    <span class="token comment">#     databases:</span>
-    <span class="token comment">#       - app</span>
-    <span class="token comment">#     users:</span>
-    <span class="token comment">#       - database: app</span>
-    <span class="token comment">#         name: app</span>
-    <span class="token comment">#         password: app</span>
-    <span class="token comment">#     privileges:</span>
-    <span class="token comment">#       - database: app</span>
-    <span class="token comment">#         user: app</span>
-    <span class="token comment">#         grant: ALL</span>
-    <span class="token comment">#     config:</span>
-    <span class="token comment">#       - reporting-disabled: true</span>
-    <span class="token comment"># mongodb:</span>
-    <span class="token comment">#     version: 4.4</span>
-    <span class="token key atrule">ssh</span><span class="token punctuation">:</span>
-        <span class="token key atrule">client</span><span class="token punctuation">:</span>
-            <span class="token key atrule">config</span><span class="token punctuation">:</span>
-                <span class="token punctuation">-</span> <span class="token key atrule">Host *.elao.run</span><span class="token punctuation">:</span>
-                    <span class="token punctuation">-</span> <span class="token key atrule">User</span><span class="token punctuation">:</span> app
-                    <span class="token punctuation">-</span> <span class="token key atrule">ForwardAgent</span><span class="token punctuation">:</span> yes
-                <span class="token punctuation">-</span> <span class="token key atrule">Host *.elao.local</span><span class="token punctuation">:</span>
-                    <span class="token punctuation">-</span> <span class="token key atrule">User</span><span class="token punctuation">:</span> app
-                    <span class="token punctuation">-</span> <span class="token key atrule">ForwardAgent</span><span class="token punctuation">:</span> yes
-                    <span class="token punctuation">-</span> <span class="token key atrule">ProxyCommand</span><span class="token punctuation">:</span> ssh gateway@bastion.elao.com <span class="token punctuation">-</span>W %h<span class="token punctuation">:</span>%p</code></pre>
+    <span class="token comment">#         - file: app_foo.conf</span>
+    <span class="token comment">#           config: |</span><span class="token scalar string">
+    #               [program:foo]
+    #               command=/bin/foo
+    # MariaDB
+    mariadb:
+        version: 10.5
+    # ...*OR* MySQL...
+    mysql:
+        version: 5.7
+    # redis:
+    #     version: "*"
+    #     config:
+    #       - save: '""' # Disable persistence
+    elasticsearch:
+        version: 7
+        plugins:
+          - analysis-icu
+    # influxdb:
+    #     version: "*"
+    #     databases:
+    #       - app
+    #     users:
+    #       - database: app
+    #         name: app
+    #         password: app
+    #     privileges:
+    #       - database: app
+    #         user: app
+    #         grant: ALL
+    #     config:
+    #       - reporting-disabled: true
+    # mongodb:
+    #     version: 4.4
+    ssh:
+        client:
+            config:
+                - Host *.elao.run:
+                    - User: app
+                    - ForwardAgent: yes
+                - Host *.elao.local:
+                    - User: app
+                    - ForwardAgent: yes
+                    - ProxyCommand: ssh gateway@bastion.elao.com -W %h:%p</span></code></pre>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
 <p>Here are some examples of integration configurations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
 <pre class="code-multiline language-yaml"><code class="language-yaml" id="ac20e7dd52ce8d45320e8fa8aa1d3bfa"><span class="token comment">###############</span>
@@ -587,7 +614,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2020-11-27UTC11:21:49+00:00">Last modified: November 27, 2020 11:21</time>
+    <time datetime="2020-11-27UTC11:27:14+00:00">Last modified: November 27, 2020 11:27</time>
         </div>
 
         <footer class="footer">
