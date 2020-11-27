@@ -64,7 +64,11 @@
 <li><a href="#overview">Overview</a></li>
 <li><a href="#quick-start">Quick start</a></li>
 <li><a href="#system">System</a></li>
-<li><a href="#integration">Integration</a></li>
+<li><a href="#integration">Integration</a>
+<ul><li><a href="#jenkins">Jenkins</a></li>
+<li><a href="#github-actions">Github Actions</a></li>
+<li><a href="#common-integration-tasks">Common Integration Tasks</a></li>
+</ul></li>
 <li><a href="#releases">Releases</a></li>
 <li><a href="#makefile">Makefile</a></li>
 <li><a href="#secrets">Secrets</a></li>
@@ -263,7 +267,8 @@ App:</code></pre>
                     - ForwardAgent: yes
                     - ProxyCommand: ssh gateway@bastion.elao.com -W %h:%p</span></code></pre>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
-<p>Here are some examples of integration configurations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<h3 id="jenkins">Jenkins<a href="#jenkins" class="anchor"></a></h3>
+<p>Here are some examples of integration configurations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> for Jenkins:</p>
 <pre class="code-multiline language-yaml"><code class="language-yaml" id="ac20e7dd52ce8d45320e8fa8aa1d3bfa"><span class="token comment">###############</span>
 <span class="token comment"># Integration #</span>
 <span class="token comment">###############</span>
@@ -324,6 +329,13 @@ App:</code></pre>
               <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@integration
               <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.eslint@integration
               <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.jest@integration</code></pre>
+<h3 id="github-actions">Github Actions<a href="#github-actions" class="anchor"></a></h3>
+<p>The recipes generates a <code class="code-inline" id="3254677a7917c6c01f55212f86c57fbf">Dockerfile</code> and a <code class="code-inline" id="eb672b1ddd3aa7dae5f2577f38daa271">docker-compose.yaml</code> file that can
+be used to provide a fully-fledged environnement according to your project needs.</p>
+<p>The <a href="https://github.com/Elao/manala-ci-action" target="_blank">Elao/manala-ci-action</a> rely on
+this to allow you running any CLI command in this environnement,
+using Github Action workflows.</p>
+<h3 id="common-integration-tasks">Common integration tasks<a href="#common-integration-tasks" class="anchor"></a></h3>
 <p>Add in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>:</p>
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="47b245d62a5a426fee968acfc64942da"><span class="token comment">###########</span>
 <span class="token comment"># Install #</span>
@@ -614,7 +626,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2020-11-27UTC11:27:14+00:00">Last modified: November 27, 2020 11:27</time>
+    <time datetime="2020-11-27UTC11:28:18+00:00">Last modified: November 27, 2020 11:28</time>
         </div>
 
         <footer class="footer">
