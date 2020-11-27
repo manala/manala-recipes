@@ -51,6 +51,7 @@ jobs:
           echo "::group::composer install"
           composer install --no-progress --no-suggest --ansi
           echo "::endgroup::"
+
           echo "::group::npm install"
           npm install --color=always --no-progress
           echo "::endgroup::"
@@ -74,7 +75,7 @@ jobs:
 
       # https://github.com/marketplace/actions/deploy-to-github-pages
       - name: 🚀 Deploy
-        uses: JamesIves/github-pages-deploy-action@3.6.1
+        uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           COMMIT_MESSAGE: "[AUTO] Static site update"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

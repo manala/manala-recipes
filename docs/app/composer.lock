@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7f51ab4132ab5668e19c21456ed2fde",
+    "content-hash": "b9f4ef8ab9ba470aa0fef92d3e84b30f",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -412,6 +412,93 @@
                 "source": "https://github.com/php-fig/log/tree/1.1.3"
             },
             "time": "2020-03-23T09:12:05+00:00"
+        },
+        {
+            "name": "stenope/stenope",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/StenopePHP/Stenope.git",
+                "reference": "a5b1a3d530bcbf31e3bcb6c734311ce3c4bf8dc6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/StenopePHP/Stenope/zipball/a5b1a3d530bcbf31e3bcb6c734311ce3c4bf8dc6",
+                "reference": "a5b1a3d530bcbf31e3bcb6c734311ce3c4bf8dc6",
+                "shasum": ""
+            },
+            "require": {
+                "erusev/parsedown": "^1.7.4",
+                "ext-dom": "*",
+                "php": "^7.4",
+                "symfony/asset": "^5.1",
+                "symfony/config": "^5.1",
+                "symfony/console": "^5.1",
+                "symfony/css-selector": "^5.1",
+                "symfony/dependency-injection": "^5.1",
+                "symfony/dom-crawler": "^5.1",
+                "symfony/event-dispatcher": "^5.1",
+                "symfony/filesystem": "^5.1",
+                "symfony/finder": "^5.1",
+                "symfony/http-foundation": "^5.1",
+                "symfony/http-kernel": "^5.1",
+                "symfony/process": "^5.1",
+                "symfony/property-access": "^5.1",
+                "symfony/routing": "^5.1",
+                "symfony/serializer": "^5.1",
+                "symfony/string": "^5.1",
+                "symfony/yaml": "^5.1",
+                "twig/twig": "^2.12|^3.0"
+            },
+            "require-dev": {
+                "ekino/phpstan-banned-code": "^0.3.1",
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "phpstan/phpstan": "^0.12.32",
+                "symfony/browser-kit": "^5.1",
+                "symfony/framework-bundle": "^5.1",
+                "symfony/phpunit-bridge": "^5.1",
+                "symfony/twig-bridge": "^5.1",
+                "symfony/twig-bundle": "^5.1"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stenope\\Bundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Jarrand",
+                    "email": "thomas.jarrand@gmail.com",
+                    "homepage": "https://thomas.jarrand.fr"
+                },
+                {
+                    "name": "Maxime Steinhausser",
+                    "email": "maxime.steinhausser@gmail.com",
+                    "homepage": "https://github.com/ogizanagi"
+                }
+            ],
+            "description": "Static site builder for Symfony",
+            "homepage": "https://github.com/StenopePHP/Stenope",
+            "keywords": [
+                "blog",
+                "static",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/StenopePHP/Stenope/issues",
+                "source": "https://github.com/StenopePHP/Stenope/tree/v0.1.0"
+            },
+            "time": "2020-11-27T11:04:17+00:00"
         },
         {
             "name": "symfony/asset",
@@ -3590,97 +3677,6 @@
             "time": "2020-10-24T12:03:25+00:00"
         },
         {
-            "name": "tom32i/content",
-            "version": "dev-stenope",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/StenopePHP/Stenope.git",
-                "reference": "21dbfe9b1035063c8b48d12d50732d1b05b28252"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/StenopePHP/Stenope/zipball/21dbfe9b1035063c8b48d12d50732d1b05b28252",
-                "reference": "21dbfe9b1035063c8b48d12d50732d1b05b28252",
-                "shasum": ""
-            },
-            "require": {
-                "erusev/parsedown": "^1.7.4",
-                "ext-dom": "*",
-                "php": "^7.4",
-                "symfony/asset": "^5.1",
-                "symfony/config": "^5.1",
-                "symfony/console": "^5.1",
-                "symfony/css-selector": "^5.1",
-                "symfony/dependency-injection": "^5.1",
-                "symfony/dom-crawler": "^5.1",
-                "symfony/event-dispatcher": "^5.1",
-                "symfony/filesystem": "^5.1",
-                "symfony/finder": "^5.1",
-                "symfony/http-foundation": "^5.1",
-                "symfony/http-kernel": "^5.1",
-                "symfony/process": "^5.1",
-                "symfony/property-access": "^5.1",
-                "symfony/routing": "^5.1",
-                "symfony/serializer": "^5.1",
-                "symfony/yaml": "^5.1",
-                "twig/twig": "^2.12|^3.0"
-            },
-            "require-dev": {
-                "ekino/phpstan-banned-code": "^0.3.1",
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "phpstan/phpstan": "^0.12.32",
-                "symfony/browser-kit": "^5.1",
-                "symfony/framework-bundle": "^5.1",
-                "symfony/phpunit-bridge": "^5.1",
-                "symfony/twig-bridge": "^5.1",
-                "symfony/twig-bundle": "^5.1"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Stenope\\Bundle\\": "src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Stenope\\Bundle\\Tests\\": "tests",
-                    "App\\": "tests/fixtures/app/src"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Thomas Jarrand",
-                    "email": "thomas.jarrand@gmail.com",
-                    "homepage": "https://thomas.jarrand.fr"
-                },
-                {
-                    "name": "Maxime Steinhausser",
-                    "email": "maxime.steinhausser@gmail.com",
-                    "homepage": "https://github.com/ogizanagi"
-                }
-            ],
-            "description": "Static site builder for Symfony",
-            "homepage": "https://github.com/StenopePHP/Stenope",
-            "keywords": [
-                "blog",
-                "static",
-                "symfony"
-            ],
-            "support": {
-                "source": "https://github.com/StenopePHP/Stenope/tree/stenope",
-                "issues": "https://github.com/StenopePHP/Stenope/issues"
-            },
-            "time": "2020-10-23T07:40:12+00:00"
-        },
-        {
             "name": "twig/extra-bundle",
             "version": "v3.1.1",
             "source": {
@@ -4307,9 +4303,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tom32i/content": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
