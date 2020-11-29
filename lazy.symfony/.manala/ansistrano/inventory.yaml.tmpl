@@ -25,7 +25,7 @@ all:
         {{- if .excludes }}
         ansistrano_rsync_extra_params: "{{ range $i, $exclude := .excludes -}}
           {{- if $i }} {{ end -}}
-          --exclude '{{ $exclude }}'
+          --exclude='{{ $exclude }}'
         {{- end }}"
         {{- end }}
 
