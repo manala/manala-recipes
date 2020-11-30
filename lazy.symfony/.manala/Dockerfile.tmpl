@@ -99,7 +99,7 @@ RUN \
         openssh-client \
         ansible \
     && ansible-galaxy install --roles-path /usr/share/ansible/roles \
-      ansistrano.deploy,3.6.0 \
+      ansistrano.deploy,3.7.0 \
       ansistrano.rollback,3.0.0
 
 COPY docker/etc/ssh_config /etc/ssh/ssh_config
