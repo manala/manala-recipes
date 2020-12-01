@@ -21,9 +21,12 @@ all:
         {{- if .hooks.before_symlink }}
         ansistrano_before_symlink_tasks_file: hooks/before_symlink.yaml
         {{- end }}
-        {{- if .excludes }}
-        # Excludes
+        {{- if or .excludes .includes }}
+        # Extra params
         ansistrano_rsync_extra_params:
+          {{- range $include := .includes }}
+          - --include={{ $include }}
+          {{- end }}
           {{- range $exclude := .excludes }}
           - --exclude={{ $exclude }}
           {{- end }}

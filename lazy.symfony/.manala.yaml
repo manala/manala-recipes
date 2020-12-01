@@ -57,6 +57,8 @@ deploy:
     # @schema {"items": {"type": "object"}}
     inventory: {}
     # @schema {"items": {"type": "string"}}
+    includes: []
+    # @schema {"items": {"type": "string"}}
     excludes: []
     # @schema {"items": {"type": "string"}}
     shared_paths: []
