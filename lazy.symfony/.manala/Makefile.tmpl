@@ -83,11 +83,12 @@ ssh@{{ $host }}:
 
 {{- range $group, $hosts := .Vars.deploy.inventory }}
 
-HELP += $(call help,deploy@{{ $group }}, Deploy to {{ $group }})
+HELP += $(call help,deploy@{{ $group }}, Deploy to {{ $group }} (VERBOSE))
 deploy@{{ $group }}:
 	ansible-playbook $(_ROOT_DIR)/.manala/ansistrano/playbook.yaml \
 		--inventory $(_ROOT_DIR)/.manala/ansistrano/inventory.yaml \
-		--limit {{ $group}}
+		--limit {{ $group}} \
+		$(if $(VERBOSE),-vvv)
 
 {{- end }}
 
