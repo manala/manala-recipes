@@ -24,6 +24,7 @@ all:
         {{- if or .excludes .includes }}
         # Extra params
         ansistrano_rsync_extra_params:
+          - --delete-excluded
           {{- range $include := .includes }}
           - --include={{ $include }}
           {{- end }}
