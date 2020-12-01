@@ -9,7 +9,7 @@ all:
     vars:
         ansistrano_allow_anonymous_stats: false
         ansistrano_deploy_via: rsync
-        ansistrano_deploy_from: ../..
+        ansistrano_deploy_from: {{ `"{{ playbook_dir }}/../../"` }}
         # Shared
         {{- if .shared_paths }}
         ansistrano_shared_paths: {{ .shared_paths | toYaml | nindent 10 }}
