@@ -1,0 +1,17 @@
+stenope:
+  providers:
+    App\Model\DefaultPage: '%kernel.project_dir%/../content/pages'
+
+    App\Model\Recipe:
+      type: readme_dir
+      path: '%kernel.project_dir%/../../'
+      excludes:
+        - docs/**
+
+  copy:
+    - src: '%kernel.project_dir%/public'
+      dest: .
+      fail_if_missing: true
+      ignore_dot_files: false
+      excludes:
+        - '*.php'

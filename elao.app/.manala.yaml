@@ -116,10 +116,6 @@ system:
         privileges: []
         # @schema {"items": {"type": "object"}}
         config: []
-    mongodb:
-        # @option {"label": "MongoDB version"}
-        # @schema {"enum": [null, 4.4, 4.2]}
-        version: ~
     ssh:
         client:
             # @schema {"items": {"type": "object"}}
