@@ -40,28 +40,35 @@ jobs:
         run: echo "::set-output name=directory::$(composer config cache-dir)"
 
       - name: Cache composer dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-${{ hashFiles('./docs/app/**/composer.lock') }}
+          key: composer-${{ hashFiles('docs/app/composer.lock') }}
           restore-keys: composer-
+
+      - name: Cache NPM dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: node-${{ hashFiles('docs/app/package-lock.json') }}
+          restore-keys: node-
 
       - name: Install dependencies
         run: |
           echo "::group::composer install"
-          composer install --no-progress --no-suggest --ansi
+            composer install --no-progress --no-suggest --ansi
           echo "::endgroup::"
 
           echo "::group::npm install"
-          npm install --color=always --no-progress
+            npm install --color=always --no-progress
           echo "::endgroup::"
 
       - name: Warmup
         run: |
           echo "::group::warmup production env"
-          npx encore production --color=always --no-progress
-          bin/console cache:clear --ansi
-          bin/console cache:warmup --ansi
+            npx encore production --color=always --no-progress
+            bin/console cache:clear --ansi
+            bin/console cache:warmup --ansi
           echo "::endgroup::"
         env:
           APP_ENV: prod
