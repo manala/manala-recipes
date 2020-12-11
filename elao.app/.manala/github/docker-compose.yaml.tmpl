@@ -1,18 +1,13 @@
 version: '3.8'
 services:
 
-  registry:
-    image: 'registry:2'
-    restart: always
-    ports:
-      - 5000:5000
-    volumes:
-      - type: bind
-        source: ${RUNNER_TEMP}/docker-registry
-        target: /var/lib/registry
-
   manala_ci:
     image: manala_ci
+    build:
+      context: ../
+      args:
+        UID: ${MANALA_CI_UID}
+        GID: ${MANALA_CI_GID}
     network_mode: 'host'
     command: 'tail -f /dev/null'
     environment:
