@@ -163,7 +163,7 @@ system:
           # App
           - mysql
     nodejs:
-        version: 12
+        version: 14
         # packages:
         #   - package: mjml
         #     version: 4.6.3
