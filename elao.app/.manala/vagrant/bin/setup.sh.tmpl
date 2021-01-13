@@ -81,7 +81,6 @@ apt-key adv --quiet --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 1394DE
 printf "[\033[36mApt\033[0m] \033[32mUpdate...\033[0m\n"
 
 apt-get --quiet update
-apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --purge --auto-remove dist-upgrade
 
 ##########
 # System #
@@ -93,7 +92,16 @@ apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versi
 {{- if eq (.version|int) 9 }}
   dirmngr \
 {{- end }}
-  linux-headers-amd64
+  make \
+  linux-image-amd64 linux-headers-amd64
+
+###########
+# Upgrade #
+###########
+
+printf "[\033[36mApt\033[0m] \033[32mUpgrade...\033[0m\n"
+
+apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --purge --auto-remove dist-upgrade
 
 ###########
 # Ansible #
