@@ -19,6 +19,14 @@ cat <<EOF > /etc/environment
 container="vagrant"
 EOF
 
+########
+# Root #
+########
+
+printf "[\033[36mRoot\033[0m] \033[32mPassword...\033[0m\n"
+
+echo "root:root" | chpasswd
+
 #########
 # Clean #
 #########
