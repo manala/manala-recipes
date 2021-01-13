@@ -27,28 +27,34 @@ printf "[\033[36mRoot\033[0m] \033[32mPassword...\033[0m\n"
 
 echo "root:root" | chpasswd
 
-#########
-# Clean #
-#########
+###########
+# Cleanup #
+###########
 
+PACKAGES=""
+
+# `exim4` package comes pre-installed on jessie bento debian vagrant images
 if dpkg -s exim4 > /dev/null 2>&1 ; then
-    printf "[\033[36mExim4\033[0m] \033[32mClean...\033[0m\n"
-
-    # Notes:
-    # - `exim4` is pre-installed in jessie/stretch bento debian vagrant images
-    apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --purge autoremove \
-      exim4 exim4-base exim4-config exim4-daemon-light
-    rm -Rf /var/mail/*
+    PACKAGES="$PACKAGES exim4 exim4-base exim4-config exim4-daemon-light"
 fi
 
+# `cryptsetup` package comes pre-installed in bento debian vagrant images
 if dpkg -s cryptsetup > /dev/null 2>&1 ; then
-    printf "[\033[36mCryptsetup\033[0m] \033[32mClean...\033[0m\n"
-
-    apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --purge autoremove \
-      cryptsetup
+    PACKAGES="$PACKAGES cryptsetup"
 fi
 
-printf "[\033[36mMotd\033[0m] \033[32mClean...\033[0m\n"
+if [ ! -z "$PACKAGES" ] ; then
+    printf "[\033[36mCleanup\033[0m] \033[32mPackages...\033[0m\n"
+
+    apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --purge autoremove \
+      $PACKAGES
+fi
+
+printf "[\033[36mCleanup\033[0m] \033[32mMails...\033[0m\n"
+
+rm -Rf /var/mail/*
+
+printf "[\033[36mCleanup\033[0m] \033[32mMotd...\033[0m\n"
 
 rm -Rf /etc/motd
 
