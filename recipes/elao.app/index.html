@@ -121,27 +121,27 @@ App:</code></pre>
 <pre class="code-multiline language-bash"><code class="language-bash" id="fb6dad9a920a0351eb8c4ff9a6284dfd"><span class="token function">make</span> <span class="token function">ssh</span></code></pre>
 <h2 id="system">System<a href="#system" class="anchor"></a></h2>
 <p>Here is an example of a system configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="e5d438386af5f7ff4dc7a8ef482084a2"><span class="token comment">##########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="4d6cf13b8025cc9c936a406a43e1656d"><span class="token comment">##########</span>
 <span class="token comment"># System #</span>
 <span class="token comment">##########</span>
 
 <span class="token key atrule">system</span><span class="token punctuation">:</span>
     <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">10</span>
     <span class="token key atrule">hostname</span><span class="token punctuation">:</span> app.vm
-    <span class="token comment">#memory: 2048 # Optionnal</span>
-    <span class="token comment">#cpus: 1 # Optionnal</span>
-    <span class="token comment">#motd: # Optionnal</span>
+    <span class="token comment">#memory: 2048 # Optional</span>
+    <span class="token comment">#cpus: 1 # Optional</span>
+    <span class="token comment">#motd: # Optional</span>
     <span class="token comment">#    template: template/elao.j2</span>
     <span class="token comment">#    message: App</span>
-    <span class="token comment">#timezone: Etc/UTC # Optionnal</span>
-    <span class="token comment">#locales: # Optionnal</span>
+    <span class="token comment">#timezone: Etc/UTC # Optional</span>
+    <span class="token comment">#locales: # Optional</span>
     <span class="token comment">#    default: C.UTF-8</span>
     <span class="token comment">#    codes: []</span>
-    <span class="token comment">#env: # Optionnal</span>
+    <span class="token comment">#env: # Optional</span>
     <span class="token comment">#    FOO: bar</span>
     <span class="token key atrule">apt</span><span class="token punctuation">:</span>
-        <span class="token comment">#repositories: [] # Optionnal</span>
-        <span class="token comment">#preferences: [] # Optionnal</span>
+        <span class="token comment">#repositories: [] # Optional</span>
+        <span class="token comment">#preferences: [] # Optional</span>
         <span class="token key atrule">packages</span><span class="token punctuation">:</span>
           <span class="token punctuation">-</span> pdftk
           <span class="token punctuation">-</span> https<span class="token punctuation">:</span>//github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5<span class="token punctuation">-</span>1.stretch_amd64.deb
@@ -301,19 +301,19 @@ App:</code></pre>
                 <span class="token comment"># env:</span>
                 <span class="token comment">#     DATABASE_URL: mysql://root@127.0.0.1:3306/app</span></code></pre>
 <p>In this example we have two parallel stages: <code class="code-inline" id="8a5da52ed126447d359e70c05721a8aa">api</code> and <code class="code-inline" id="532c28d5412dd75bf975fb951c740a30">mobile</code>, corresponding to two different sub-apps.</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="0c7b5430d01cc213104506ffe10637d0"><span class="token comment">###############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="e41f8490e6e309d6a46f5556bed8c19a"><span class="token comment">###############</span>
 <span class="token comment"># Integration #</span>
 <span class="token comment">###############</span>
 
 <span class="token key atrule">integration</span><span class="token punctuation">:</span>
     <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-      <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Integration <span class="token comment"># Optionnal</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Integration <span class="token comment"># Optional</span>
         <span class="token key atrule">parallel</span><span class="token punctuation">:</span> <span class="token boolean important">true</span> <span class="token comment"># ! Careful ! Could *NOT* be nested !</span>
         <span class="token key atrule">junit</span><span class="token punctuation">:</span> report/junit/<span class="token important">*.xml</span>
         <span class="token key atrule">artifacts</span><span class="token punctuation">:</span> var/log/<span class="token important">*.log</span>
         <span class="token key atrule">warn</span><span class="token punctuation">:</span> <span class="token boolean important">true</span> <span class="token comment"># Turn errors into warnings (recursively applied)</span>
         <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-          <span class="token punctuation">-</span> <span class="token key atrule">app</span><span class="token punctuation">:</span> api <span class="token comment"># Optionnal</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">app</span><span class="token punctuation">:</span> api <span class="token comment"># Optional</span>
             <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
               <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
               <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@integration
@@ -432,14 +432,14 @@ using Github Action workflows.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
 <p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="ea0ece5be829e8b29c60f50781f8bbfd"><span class="token comment">############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="7cbe1237acaf818d2970c382456d054d"><span class="token comment">############</span>
 <span class="token comment"># Releases #</span>
 <span class="token comment">############</span>
 
 <span class="token key atrule">releases</span><span class="token punctuation">:</span>
 
   <span class="token punctuation">-</span> <span class="token important">&amp;release</span>
-    <span class="token comment">#app: api # Optionnal</span>
+    <span class="token comment">#app: api # Optional</span>
     <span class="token key atrule">mode</span><span class="token punctuation">:</span> production
     <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@git.elao.com<span class="token punctuation">:</span>&lt;vendor<span class="token punctuation">&gt;</span>/&lt;app<span class="token punctuation">&gt;</span><span class="token punctuation">-</span>release.git
     <span class="token comment"># Release</span>
@@ -626,7 +626,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2021-01-13UTC09:50:00+00:00">Last modified: January 13, 2021 09:50</time>
+    <time datetime="2021-01-26UTC15:18:04+00:00">Last modified: January 26, 2021 15:18</time>
         </div>
 
         <footer class="footer">
