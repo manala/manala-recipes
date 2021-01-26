@@ -72,6 +72,9 @@ system:
         extensions: []
         # @schema {"items": {"type": "object"}}
         configs: []
+        composer:
+          # @schema {"enum": [null, 1]}
+          version: ~
     cron:
         # @schema {"items": {"type": "object"}}
         files: []
