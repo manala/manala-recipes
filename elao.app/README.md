@@ -162,6 +162,8 @@ system:
           - xml
           # App
           - mysql
+        # composer:
+        #   version: 1 # Optional
     nodejs:
         version: 14
         # packages:

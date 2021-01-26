@@ -334,6 +334,9 @@ system:
 
         # Composer
         manala_composer_enabled: {{ `"{{ manala_php_enabled }}"` }}
+        {{- if .php.composer.version }}
+        manala_composer_version: {{ .php.composer.version | toYaml }}
+        {{- end }}
 
         # Symfony Cli
         manala_symfony_cli_enabled: {{ `"{{ manala_php_enabled }}"` }}
