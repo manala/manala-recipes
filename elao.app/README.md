@@ -128,6 +128,10 @@ system:
       - path: /srv/app/var/cache
         src: /srv/cache
         state: link_directory
+      #- path: /srv/app/var/sessions
+      #  src: /srv/sessions
+      #  state: link_directory
+      ## Api
       #- path: /srv/app/api/var/log
       #  src: /srv/log/api
       #  state: link_directory
