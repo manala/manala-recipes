@@ -121,7 +121,7 @@ App:</code></pre>
 <pre class="code-multiline language-bash"><code class="language-bash" id="fb6dad9a920a0351eb8c4ff9a6284dfd"><span class="token function">make</span> <span class="token function">ssh</span></code></pre>
 <h2 id="system">System<a href="#system" class="anchor"></a></h2>
 <p>Here is an example of a system configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="4f036e616dbd4804389d184a3b11065d"><span class="token comment">##########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="6fafb3c81672bdd481eb796a5c52f569"><span class="token comment">##########</span>
 <span class="token comment"># System #</span>
 <span class="token comment">##########</span>
 
@@ -152,6 +152,10 @@ App:</code></pre>
       <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> /srv/app/var/cache
         <span class="token key atrule">src</span><span class="token punctuation">:</span> /srv/cache
         <span class="token key atrule">state</span><span class="token punctuation">:</span> link_directory
+      <span class="token comment">#- path: /srv/app/var/sessions</span>
+      <span class="token comment">#  src: /srv/sessions</span>
+      <span class="token comment">#  state: link_directory</span>
+      <span class="token comment">## Api</span>
       <span class="token comment">#- path: /srv/app/api/var/log</span>
       <span class="token comment">#  src: /srv/log/api</span>
       <span class="token comment">#  state: link_directory</span>
@@ -628,7 +632,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2021-01-26UTC15:55:57+00:00">Last modified: January 26, 2021 15:55</time>
+    <time datetime="2021-01-26UTC15:56:15+00:00">Last modified: January 26, 2021 15:56</time>
         </div>
 
         <footer class="footer">
