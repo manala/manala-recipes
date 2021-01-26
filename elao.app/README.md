@@ -104,20 +104,20 @@ Here is an example of a system configuration in `.manala.yaml`:
 system:
     version: 10
     hostname: app.vm
-    #memory: 2048 # Optionnal
-    #cpus: 1 # Optionnal
-    #motd: # Optionnal
+    #memory: 2048 # Optional
+    #cpus: 1 # Optional
+    #motd: # Optional
     #    template: template/elao.j2
     #    message: App
-    #timezone: Etc/UTC # Optionnal
-    #locales: # Optionnal
+    #timezone: Etc/UTC # Optional
+    #locales: # Optional
     #    default: C.UTF-8
     #    codes: []
-    #env: # Optionnal
+    #env: # Optional
     #    FOO: bar
     apt:
-        #repositories: [] # Optionnal
-        #preferences: [] # Optionnal
+        #repositories: [] # Optional
+        #preferences: [] # Optional
         packages:
           - pdftk
           - https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb
@@ -294,13 +294,13 @@ In this example we have two parallel stages: `api` and `mobile`, corresponding t
 
 integration:
     tasks:
-      - label: Integration # Optionnal
+      - label: Integration # Optional
         parallel: true # ! Careful ! Could *NOT* be nested !
         junit: report/junit/*.xml
         artifacts: var/log/*.log
         warn: true # Turn errors into warnings (recursively applied)
         tasks:
-          - app: api # Optionnal
+          - app: api # Optional
             tasks:
               - shell: make install@integration
               - shell: make build@integration
@@ -440,7 +440,7 @@ Here is an example of a production/staging release configuration in `.manala.yam
 releases:
 
   - &release
-    #app: api # Optionnal
+    #app: api # Optional
     mode: production
     repo: git@git.elao.com:<vendor>/<app>-release.git
     # Release
