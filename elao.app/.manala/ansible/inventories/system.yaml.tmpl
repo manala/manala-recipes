@@ -272,10 +272,15 @@ system:
           - path: "^/srv/cache"
             user: vagrant
             group: vagrant
+          - path: "^/srv/sessions"
+            user: vagrant
+            group: vagrant
         manala_files_attributes:
           - path: /srv/log
             state: directory
           - path: /srv/cache
+            state: directory
+          - path: /srv/sessions
             state: directory
           - path: /usr/share/nginx/html/404.html
             template: nginx/html/404.html.j2
