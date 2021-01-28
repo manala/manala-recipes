@@ -1,0 +1,6 @@
+[mysqld]
+bind-address = 0.0.0.0
+{{- if eq (.Vars.system.mysql.version|float64) 8.0 }}
+# Use native authentication plugin
+default-authentication-plugin = mysql_native_password
+{{- end }}

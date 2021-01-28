@@ -408,8 +408,7 @@ system:
         manala_mysql_configs_dir: /etc/mysql/mariadb.conf.d
         {{- end }}
         manala_mysql_configs:
-          - file: zz-mysqld.cnf
-            template: configs/default.dev.j2
+          - template: mysql/zz-mysqld.cnf.j2
         manala_mysql_users:
           # Create a password-less/any-host root user...
           - name: root
