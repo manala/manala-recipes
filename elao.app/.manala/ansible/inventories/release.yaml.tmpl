@@ -1,6 +1,7 @@
 release:
     children:
     {{- range $release := .Vars.releases }}
+    {{- if or (hasKey $release "release_tasks") (hasKey $release "release_add") (hasKey $release "release_removed") }}
 
         {{ include "release_group" $release }}:
             hosts:
@@ -29,4 +30,5 @@ release:
                 {{- if $release }}
                 {{- $release | toYaml | nindent 16 }}
                 {{- end }}
+    {{- end }}
     {{- end }}

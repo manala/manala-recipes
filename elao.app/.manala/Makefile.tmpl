@@ -122,12 +122,16 @@ endif
 HELP += $(call help_section, Releases)
 
 {{ range $release := .Vars.releases -}}
+
+{{ if or (hasKey $release "release_tasks") (hasKey $release "release_add") (hasKey $release "release_removed") -}}
 HELP += $(call help,release{{ include "release_target" $release }},Release {{ include "release_help" $release }})
 release{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
 release{{ include "release_target" $release }}:
 	ansible-playbook $(_ROOT_DIR)/.manala/ansible/release.yaml \
 		--inventory $(_ROOT_DIR)/.manala/ansible/inventories/release.yaml \
 		--limit {{ include "release_group" $release }}
+
+{{ end -}}
 
 {{ if hasKey $release "deploy_hosts" -}}
 HELP += $(call help,deploy{{ include "release_target" $release }},Deploy {{ include "release_help" $release }} (REF))
