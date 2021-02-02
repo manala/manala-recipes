@@ -3,9 +3,9 @@ release:
     {{- range $release := .Vars.releases }}
     {{- if or (hasKey $release "release_tasks") (hasKey $release "release_add") (hasKey $release "release_removed") }}
 
-        {{ include "release_group" $release }}:
+        {{ include "release_group" (dict "release" $release) }}:
             hosts:
-                localhost{{ include "release_host" $release }}:
+                localhost{{ include "release_host" (dict "release" $release) }}:
                     ansible_connection: local
                     {{- if eq ($.Vars.system.version|int) 8 }}
                     ansible_python_interpreter: /usr/bin/python

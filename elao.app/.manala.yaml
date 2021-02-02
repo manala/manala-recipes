@@ -171,7 +171,10 @@ integration: {}
 #                 "release_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
 #                 "release_add": {"type": "array", "items": {"type": "string"}},
 #                 "release_removed": {"type": "array", "items": {"type": "string"}},
-#                 "deploy_hosts": {"type": "array", "items": {"$ref": "#release_host"}},
+#                 "deploy_hosts": {"oneOf": [
+#                     {"type": "array", "items": {"$ref": "#release_host"}},
+#                     {"type": "object", "additionalProperties": {"type": "array", "items": {"$ref": "#release_host"}}}
+#                 ]},
 #                 "deploy_dir": {"type": "string", "format": "file-path"},
 #                 "deploy_releases": {"type": "integer"},
 #                 "deploy_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
