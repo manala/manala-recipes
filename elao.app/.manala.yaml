@@ -177,7 +177,8 @@ integration: {}
 #                 "deploy_post_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
 #                 "deploy_shared_files": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_shared_dirs": {"type": "array", "items": {"type": "string"}},
-#                 "deploy_writable_dirs": {"type": "array", "items": {"type": "string"}}
+#                 "deploy_writable_dirs": {"type": "array", "items": {"type": "string"}},
+#                 "deploy_removed": {"type": "array", "items": {"type": "string"}}
 #             },
 #             "dependencies": {
 #                 "deploy_hosts": ["deploy_dir"]

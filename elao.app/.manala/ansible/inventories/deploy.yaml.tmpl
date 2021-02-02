@@ -38,7 +38,7 @@ deploy:
                 deploy_post_tasks:
                     {{- include "release_tasks" $release.deploy_post_tasks | nindent 18 }}
                 {{- end }}
-                {{- $release = pick $release "deploy_shared_files" "deploy_shared_dirs" "deploy_writable_dirs" -}}
+                {{- $release = pick $release "deploy_shared_files" "deploy_shared_dirs" "deploy_writable_dirs" "deploy_removed" -}}
                 {{- if $release }}
                 {{- $release | toYaml | nindent 16 }}
                 {{- end }}
