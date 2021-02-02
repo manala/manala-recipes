@@ -438,7 +438,7 @@ using Github Action workflows.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
 <p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="6afbcafddd8ec32fc443642238452f69"><span class="token comment">############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="aaac1f9e03705a08cd29cca96310c859"><span class="token comment">############</span>
 <span class="token comment"># Releases #</span>
 <span class="token comment">############</span>
 
@@ -488,6 +488,12 @@ using Github Action workflows.</p>
       <span class="token punctuation">-</span> <span class="token key atrule">ssh_host</span><span class="token punctuation">:</span> foo<span class="token punctuation">-</span>01.bar.elao.local
         <span class="token comment">#master: true # Any custom variable are welcomed</span>
       <span class="token punctuation">-</span> <span class="token key atrule">ssh_host</span><span class="token punctuation">:</span> foo<span class="token punctuation">-</span>02.bar.elao.local
+    <span class="token comment">#deploy_hosts:</span>
+    <span class="token comment">#  foo:</span>
+    <span class="token comment">#    - ssh_host: foo-01.bar.elao.local</span>
+    <span class="token comment">#      #master: true # Any custom variable are welcomed</span>
+    <span class="token comment">#  bar:</span>
+    <span class="token comment">#    - ssh_host: foo-02.bar.elao.local</span>
     <span class="token key atrule">deploy_dir</span><span class="token punctuation">:</span> /srv/app
     <span class="token key atrule">deploy_shared_files</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> config/parameters.yml
@@ -635,7 +641,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2021-02-02UTC21:52:39+00:00">Last modified: February 2, 2021 21:52</time>
+    <time datetime="2021-02-02UTC21:57:29+00:00">Last modified: February 2, 2021 21:57</time>
         </div>
 
         <footer class="footer">
