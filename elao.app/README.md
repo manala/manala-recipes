@@ -497,6 +497,8 @@ releases:
       - shell: make warmup@production
       #- shell: make migration@production
       #  when: master | default # Conditions on custom host variables (jinja2 format)
+    #deploy_removed:
+    #  - web/app_dev.php
     deploy_post_tasks:
       - shell: sudo /bin/systemctl reload php7.4-fpm
       #- shell: sudo /bin/systemctl restart supervisor
