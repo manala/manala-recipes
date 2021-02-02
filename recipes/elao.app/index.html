@@ -438,7 +438,7 @@ using Github Action workflows.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
 <p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="7cbe1237acaf818d2970c382456d054d"><span class="token comment">############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="a7507edc2f43ea6b3afb2331b93e5952"><span class="token comment">############</span>
 <span class="token comment"># Releases #</span>
 <span class="token comment">############</span>
 
@@ -496,6 +496,8 @@ using Github Action workflows.</p>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make warmup@production
       <span class="token comment">#- shell: make migration@production</span>
       <span class="token comment">#  when: master | default # Conditions on custom host variables (jinja2 format)</span>
+    <span class="token comment">#deploy_removed:</span>
+    <span class="token comment">#  - web/app_dev.php</span>
     <span class="token key atrule">deploy_post_tasks</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> sudo /bin/systemctl reload php7.4<span class="token punctuation">-</span>fpm
       <span class="token comment">#- shell: sudo /bin/systemctl restart supervisor</span>
@@ -632,7 +634,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2021-02-02UTC21:50:40+00:00">Last modified: February 2, 2021 21:50</time>
+    <time datetime="2021-02-02UTC21:51:23+00:00">Last modified: February 2, 2021 21:51</time>
         </div>
 
         <footer class="footer">
