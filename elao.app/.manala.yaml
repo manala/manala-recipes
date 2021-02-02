@@ -167,14 +167,14 @@ integration: {}
 #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
 #                 "mode": {"type": "string", "pattern": "^[a-z]+$"},
 #                 "repo": {"type": "string", "format": "git-repo"},
-#                 "release_tasks": {"type": "array", "items": {"$ref": "#release_tasks"}},
+#                 "release_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
 #                 "release_add": {"type": "array", "items": {"type": "string"}},
 #                 "release_removed": {"type": "array", "items": {"type": "string"}},
-#                 "deploy_hosts": {"type": "array", "items": {"$ref": "#release_hosts"}},
+#                 "deploy_hosts": {"type": "array", "items": {"$ref": "#release_host"}},
 #                 "deploy_dir": {"type": "string", "format": "file-path"},
 #                 "deploy_releases": {"type": "integer"},
-#                 "deploy_tasks": {"type": "array", "items": {"$ref": "#release_tasks"}},
-#                 "deploy_post_tasks": {"type": "array", "items": {"$ref": "#release_tasks"}},
+#                 "deploy_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
+#                 "deploy_post_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
 #                 "deploy_shared_files": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_shared_dirs": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_writable_dirs": {"type": "array", "items": {"type": "string"}}
@@ -184,14 +184,14 @@ integration: {}
 #             },
 #             "required": ["mode", "repo"]
 #         },
-#         "release_tasks": {"type": "object", "$id": "#release_tasks",
+#         "release_task": {"type": "object", "$id": "#release_task",
 #             "additionalProperties": false,
 #             "properties": {
 #                 "shell": {"type": "string"},
 #                 "when": {"type": "string"}
 #             }
 #         },
-#         "release_hosts": {"type": "object", "$id": "#release_hosts",
+#         "release_host": {"type": "object", "$id": "#release_host",
 #             "additionalProperties": true,
 #             "properties": {
 #                 "ssh_host": {"type": "string", "format": "hostname"},
