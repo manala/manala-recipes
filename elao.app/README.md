@@ -489,6 +489,12 @@ releases:
       - ssh_host: foo-01.bar.elao.local
         #master: true # Any custom variable are welcomed
       - ssh_host: foo-02.bar.elao.local
+    #deploy_hosts:
+    #  foo:
+    #    - ssh_host: foo-01.bar.elao.local
+    #      #master: true # Any custom variable are welcomed
+    #  bar:
+    #    - ssh_host: foo-02.bar.elao.local
     deploy_dir: /srv/app
     deploy_shared_files:
       - config/parameters.yml
