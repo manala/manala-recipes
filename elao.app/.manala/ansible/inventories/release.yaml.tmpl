@@ -19,7 +19,9 @@ release:
                 release_target_dir: {{ $release.app }}
                 {{- end }}
                 release_repo: {{ $release.repo }}
-                {{- if hasKey $release "mode" }}
+                {{- if hasKey $release "ref" }}
+                release_version: {{ $release.ref }}
+                {{- else if hasKey $release "mode" }}
                 release_version: {{ if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.mode }}
                 {{- end }}
                 {{- if hasKey $release "release_tasks" }}
