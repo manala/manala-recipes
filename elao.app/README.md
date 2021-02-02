@@ -449,6 +449,7 @@ releases:
     #app: api # Optional
     mode: production
     repo: git@git.elao.com:<vendor>/<app>-release.git
+    #ref: master # Based on app/mode by default
     # Release
     release_tasks:
       - shell: make install@production
