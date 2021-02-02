@@ -438,7 +438,7 @@ using Github Action workflows.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
 <p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="a7507edc2f43ea6b3afb2331b93e5952"><span class="token comment">############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="6afbcafddd8ec32fc443642238452f69"><span class="token comment">############</span>
 <span class="token comment"># Releases #</span>
 <span class="token comment">############</span>
 
@@ -448,6 +448,7 @@ using Github Action workflows.</p>
     <span class="token comment">#app: api # Optional</span>
     <span class="token key atrule">mode</span><span class="token punctuation">:</span> production
     <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@git.elao.com<span class="token punctuation">:</span>&lt;vendor<span class="token punctuation">&gt;</span>/&lt;app<span class="token punctuation">&gt;</span><span class="token punctuation">-</span>release.git
+    <span class="token comment">#ref: master # Based on app/mode by default</span>
     <span class="token comment"># Release</span>
     <span class="token key atrule">release_tasks</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@production
@@ -634,7 +635,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2021-02-02UTC21:51:58+00:00">Last modified: February 2, 2021 21:51</time>
+    <time datetime="2021-02-02UTC21:52:39+00:00">Last modified: February 2, 2021 21:52</time>
         </div>
 
         <footer class="footer">
