@@ -157,7 +157,7 @@ system:
         #     - file: app_no_index
         #       template: nginx/app_no_index.j2
     php:
-        version: 7.4
+        version: "8.0"
         extensions:
           # Symfony
           - intl
@@ -507,7 +507,7 @@ releases:
     #deploy_removed:
     #  - web/app_dev.php
     deploy_post_tasks:
-      - shell: sudo /bin/systemctl reload php7.4-fpm
+      - shell: sudo /bin/systemctl reload php8.0-fpm
       #- shell: sudo /bin/systemctl restart supervisor
 
   - << : *release
