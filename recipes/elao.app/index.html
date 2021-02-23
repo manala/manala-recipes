@@ -121,7 +121,7 @@ App:</code></pre>
 <pre class="code-multiline language-bash"><code class="language-bash" id="fb6dad9a920a0351eb8c4ff9a6284dfd"><span class="token function">make</span> <span class="token function">ssh</span></code></pre>
 <h2 id="system">System<a href="#system" class="anchor"></a></h2>
 <p>Here is an example of a system configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="8769920404d09b44c0d99cac08c609ba"><span class="token comment">##########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="5d2e6a308c49a2ee8c1fb9e0919bfedd"><span class="token comment">##########</span>
 <span class="token comment"># System #</span>
 <span class="token comment">##########</span>
 
@@ -181,7 +181,7 @@ App:</code></pre>
         <span class="token comment">#     - file: app_no_index</span>
         <span class="token comment">#       template: nginx/app_no_index.j2</span>
     <span class="token key atrule">php</span><span class="token punctuation">:</span>
-        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">7.4</span>
+        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">"8.0"</span>
         <span class="token key atrule">extensions</span><span class="token punctuation">:</span>
           <span class="token comment"># Symfony</span>
           <span class="token punctuation">-</span> intl
@@ -438,7 +438,7 @@ using Github Action workflows.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
 <p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="aaac1f9e03705a08cd29cca96310c859"><span class="token comment">############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="c49e54150e8dc7c8c38fc0fd61b93115"><span class="token comment">############</span>
 <span class="token comment"># Releases #</span>
 <span class="token comment">############</span>
 
@@ -506,7 +506,7 @@ using Github Action workflows.</p>
     <span class="token comment">#deploy_removed:</span>
     <span class="token comment">#  - web/app_dev.php</span>
     <span class="token key atrule">deploy_post_tasks</span><span class="token punctuation">:</span>
-      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> sudo /bin/systemctl reload php7.4<span class="token punctuation">-</span>fpm
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> sudo /bin/systemctl reload php8.0<span class="token punctuation">-</span>fpm
       <span class="token comment">#- shell: sudo /bin/systemctl restart supervisor</span>
 
   <span class="token punctuation">-</span> <span class="token key atrule">&lt;&lt;</span> <span class="token punctuation">:</span> <span class="token important">*release</span>
@@ -641,7 +641,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2021-02-12UTC08:30:51+00:00">Last modified: February 12, 2021 08:30</time>
+    <time datetime="2021-02-23UTC10:56:50+00:00">Last modified: February 23, 2021 10:56</time>
         </div>
 
         <footer class="footer">
