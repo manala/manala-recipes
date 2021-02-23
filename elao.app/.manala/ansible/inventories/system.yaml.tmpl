@@ -321,7 +321,8 @@ system:
         manala_php_extensions:
           - opcache
           - readline
-          - json
+          - extension: json
+            state: {{ `"{{ 'present' if (manala_php_version|string is version_compare('8.0', '<')) else 'ignore' }}"` }}
           - extension: xdebug
             enabled: false
         {{- if .php.extensions }}
