@@ -59,6 +59,8 @@ system:
         preferences: []
         # @schema {"items": {"type": "string"}}
         packages: []
+        # @schema {"items": {"type": "string"}}
+        holds: []
     # @schema {"items": {"type": "object"}}
     files: []
     nginx:

@@ -229,6 +229,12 @@ system:
           # App
           {{- .apt.preferences | toYaml | nindent 10 }}
         {{- end }}
+        {{- if .apt.holds }}
+        manala_apt_holds_exclusive: true
+        manala_apt_holds:
+          # App
+          {{- .apt.holds | toYaml | nindent 10 }}
+        {{- end }}
 
         # Ssh
         manala_ssh_server_config_template: config/server/default.dev.j2
