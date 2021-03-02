@@ -322,7 +322,7 @@ system:
           - opcache
           - readline
           - extension: json
-            state: {{ `"{{ 'present' if (manala_php_version|string is version_compare('8.0', '<')) else 'ignore' }}"` }}
+            state: {{ `"{{ 'present' if (manala_php_version and manala_php_version|string is version('8.0', '<')) else 'ignore' }}"` }}
           - extension: xdebug
             enabled: false
         {{- if .php.extensions }}
