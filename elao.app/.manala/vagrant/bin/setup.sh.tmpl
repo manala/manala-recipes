@@ -95,6 +95,15 @@ apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versi
   make \
   linux-image-amd64 linux-headers-amd64
 
+########
+# Grub #
+########
+
+printf "[\033[36mGrub\033[0m] \033[32mSet device...\033[0m\n"
+
+# See: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=982182
+echo 'grub-pc grub-pc/install_devices multiselect /dev/sda' | debconf-set-selections
+
 ###########
 # Upgrade #
 ###########
