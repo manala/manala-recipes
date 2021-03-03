@@ -176,6 +176,8 @@ system:
         {{- end }}
 
         # Apt
+        manala_apt:
+          update: true
         manala_apt_configs:
           - file: archive
             template: configs/check_valid_until_false.j2
