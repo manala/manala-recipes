@@ -17,7 +17,7 @@
 {{ define "release_group" -}}
     {{- if hasKey .release "app" }}{{ .release.app }}_{{ end -}}
     {{- if hasKey . "group" }}{{ regexReplaceAll "[^[:alnum:]_]" .group "_" }}_{{ end -}}
-    {{- .release.mode }}
+    {{- regexReplaceAll "[^[:alnum:]_]" .release.mode "_" }}
 {{- end }}
 
 {{/* Release ansible host */}}

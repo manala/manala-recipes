@@ -167,7 +167,7 @@ integration: {}
 #             "additionalProperties": false,
 #             "properties": {
 #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
-#                 "mode": {"type": "string", "pattern": "^[a-z]+$"},
+#                 "mode": {"type": "string", "pattern": "^[\\w-/]+$"},
 #                 "repo": {"type": "string", "format": "git-repo"},
 #                 "ref": {"type": "string", "pattern": "^[\\w-/]+$"},
 #                 "release_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
