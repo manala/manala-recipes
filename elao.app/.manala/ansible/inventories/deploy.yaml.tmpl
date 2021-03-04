@@ -26,10 +26,10 @@ vars:
     deploy_releases: {{ if hasKey $release "deploy_releases" }}{{ $release.deploy_releases }}{{ else }}3{{ end }}
     deploy_strategy: git
     deploy_strategy_git_repo: {{ $release.repo }}
-    {{- if hasKey $release "ref" }}
-    deploy_strategy_git_ref: {{ $release.ref }}
-    {{- else if hasKey $release "mode" }}
-    deploy_strategy_git_ref: {{ if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.mode }}
+    deploy_strategy_git_ref: {{ if hasKey $release "ref" }}
+      {{- $release.ref }}
+    {{- else }}
+      {{- if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.mode }}
     {{- end }}
     deploy_dir: {{ $release.deploy_dir }}
     {{- if hasKey $release "deploy_tasks" }}
