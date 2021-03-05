@@ -1,31 +1,27 @@
 {{/* Release makefile target */}}
 {{ define "release_target" -}}
-    {{- if hasKey .release "app" }}.{{ .release.app }}{{ end -}}
-    {{- if hasKey . "group" }}/{{ .group }}{{ end -}}
+    {{- if hasKey . "app" }}.{{ .app }}{{ end -}}
     @
-    {{- .release.mode }}
+    {{- .mode }}
 {{- end }}
 
 {{/* Release makefile help */}}
 {{ define "release_help" -}}
-    {{- if hasKey .release "app" }}{{ .release.app }} {{ end -}}
-    {{- if hasKey . "group" }}group {{ .group }} {{ end -}}
-    in {{ .release.mode }}
+    {{- if hasKey . "app" }}{{ .app }} {{ end -}}
+    in {{ .mode }}
 {{- end }}
 
 {{/* Release ansible group */}}
 {{ define "release_group" -}}
-    {{- if hasKey .release "app" }}{{ .release.app }}_{{ end -}}
-    {{- if hasKey . "group" }}{{ regexReplaceAll "[^[:alnum:]_]" .group "_" }}_{{ end -}}
-    {{- regexReplaceAll "[^[:alnum:]_]" .release.mode "_" }}
+    {{- if hasKey . "app" }}{{ .app }}_{{ end -}}
+    {{- regexReplaceAll "[^[:alnum:]_]" .mode "_" }}
 {{- end }}
 
 {{/* Release ansible host */}}
 {{ define "release_host" -}}
-    {{- if hasKey .release "app" }}.{{ .release.app }}{{ end -}}
-    {{- if hasKey . "group" }}_{{ regexReplaceAll "[^[:alnum:]_]" .group "_" }}{{ end -}}
+    {{- if hasKey . "app" }}.{{ .app }}{{ end -}}
     @
-    {{- .release.mode }}
+    {{- .mode }}
 {{- end }}
 
 {{/* Release ansible tasks */}}
