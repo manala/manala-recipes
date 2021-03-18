@@ -114,27 +114,6 @@ docker:
 
 endif
 
-{{- define "release" -}}
-HELP += $(call help,release{{ include "release_target" . }},Release {{ include "release_help" . }})
-release{{ include "release_target" . }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
-release{{ include "release_target" . }}:
-	ansible-playbook $(_ROOT_DIR)/.manala/ansible/release.yaml \
-		--inventory $(_ROOT_DIR)/.manala/ansible/inventories/release.yaml \
-		--limit {{ include "release_group" . }}
-
-{{ end }}
-
-{{- define "deploy" -}}
-HELP += $(call help,deploy{{ include "release_target" . }},Deploy {{ include "release_help" . }} (REF))
-deploy{{ include "release_target" . }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
-deploy{{ include "release_target" . }}:
-	ansible-playbook $(_ROOT_DIR)/.manala/ansible/deploy.yaml \
-		--inventory $(_ROOT_DIR)/.manala/ansible/inventories/deploy.yaml \
-		--limit {{ include "release_group" . }} \
-		$(if $(REF),--extra-vars '{"deploy_strategy_git_ref": "$(REF)"}')
-
-{{ end }}
-
 {{ if .Vars.releases -}}
 ############
 # Releases #
@@ -144,21 +123,28 @@ HELP += $(call help_section, Releases)
 
 {{ range $release := .Vars.releases }}
 
-	{{- if or (hasKey $release "release_tasks") (hasKey $release "release_add") (hasKey $release "release_removed") }}
-		{{- include "release" (dict "release" $release) }}
-	{{- end -}}
+{{- if or (hasKey $release "release_tasks") (hasKey $release "release_add") (hasKey $release "release_removed") -}}
+HELP += $(call help,release{{ include "release_target" $release }},Release {{ include "release_help" $release }})
+release{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+release{{ include "release_target" $release }}:
+	ansible-playbook $(_ROOT_DIR)/.manala/ansible/release.yaml \
+		--inventory $(_ROOT_DIR)/.manala/ansible/inventories/release.yaml \
+		--limit {{ include "release_group" . }}
 
-	{{- if hasKey $release "deploy_hosts" }}
-		{{- if kindIs "map" $release.deploy_hosts }}
-			{{- range $group, $hosts := $release.deploy_hosts }}
-				{{- include "deploy" (dict "release" $release "group" $group) }}
-			{{- end }}
-		{{- else -}}
-			{{- include "deploy" (dict "release" $release) }}
-		{{- end }}
-	{{- end }}
+{{ end -}}
 
-{{- end }}
+{{- if hasKey $release "deploy_hosts" -}}
+HELP += $(call help,deploy{{ include "release_target" $release }},Deploy {{ include "release_help" $release }} (REF))
+deploy{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+deploy{{ include "release_target" $release }}:
+	ansible-playbook $(_ROOT_DIR)/.manala/ansible/deploy.yaml \
+		--inventory $(_ROOT_DIR)/.manala/ansible/inventories/deploy.yaml \
+		--limit {{ include "release_group" $release }} \
+		$(if $(REF),--extra-vars '{"deploy_strategy_git_ref": "$(REF)"}')
+
+{{ end -}}
+
+{{ end }}
 
 {{- end -}}
 
