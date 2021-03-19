@@ -1,0 +1,25 @@
+####################################################################
+# !!! REMINDER !!!                                                 #
+# Don't forget to run `manala up` each time you update this file ! #
+####################################################################
+
+manala:
+    recipe: lazy.symfony
+
+app: {{ .Vars.app | toYaml }}
+
+system:
+    nginx:
+        version: {{ .Vars.system.nginx.version | toYaml }}
+    php:
+        version: {{ .Vars.system.php.version | toYaml }}
+
+    {{- if .Vars.system.nodejs.version }}
+    nodejs:
+        version: {{ .Vars.system.nodejs.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.mariadb.version }}
+    mariadb:
+        version: {{ .Vars.system.mariadb.version | toYaml }}
+    {{- end }}

@@ -1,5 +1,6 @@
 manala:
     description: Elao - Generic application with PHP and Node.js support
+    template: .manala.yaml.tmpl
     sync:
       - .manala/ansible
       - .manala/docker

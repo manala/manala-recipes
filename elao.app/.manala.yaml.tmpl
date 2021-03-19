@@ -1,0 +1,129 @@
+{{- with .Vars.system -}}
+
+####################################################################
+# !!! REMINDER !!!                                                 #
+# Don't forget to run `manala up` each time you update this file ! #
+####################################################################
+
+manala:
+    recipe: elao.app
+
+##########
+# System #
+##########
+
+system:
+    version: {{ .version | toYaml }}
+    hostname: {{ .hostname | toYaml }}
+    nginx:
+        configs:
+          {{- if .php.version }}
+          # Php fpm
+          - file: app_php_fpm
+            template: configs/app_php_fpm.dev.j2
+          {{- end }}
+          # Gzip
+          - file: app_gzip
+            template: configs/app_gzip.dev.j2
+          # App
+          - file: app.conf
+            config:
+              - server:
+                - server_name: ~.
+                - root: /srv/app/public
+                - access_log: /srv/log/nginx.access.log
+                - error_log: /srv/log/nginx.error.log
+                - include: conf.d/app_gzip
+                {{- if .php.version }}
+                - location /:
+                  - try_files: $uri /index.php$is_args$args
+                - location ~ ^/index\.php(/|$):
+                  - include: conf.d/app_php_fpm
+                  - internal;
+                {{- end }}
+    {{- if .php.version }}
+    php:
+        version: {{ .php.version | toYaml }}
+        extensions:
+          # Symfony
+          - intl
+          - curl
+          - mbstring
+          - xml
+          # App
+          {{- if or (not (empty .mysql.version)) (not (empty .mariadb.version)) }}
+          - mysql
+          {{- end }}
+        configs:
+          - file: app_opcache.ini
+            template: configs/app_opcache.dev.j2
+          - file: app.ini
+            template: configs/app.dev.j2
+            config:
+              - date.timezone: UTC
+    {{- end }}
+
+    {{- if .nodejs.version }}
+    nodejs:
+        version: {{ .nodejs.version | toYaml }}
+    {{- end }}
+
+    {{- if .mariadb.version }}
+    mariadb:
+        version: {{ .mariadb.version | toYaml }}
+    {{- end }}
+
+    {{- if .mysql.version }}
+    mysql:
+        version: {{ .mysql.version | toYaml }}
+    {{- end }}
+
+    {{- if .redis.version }}
+    redis:
+        version: {{ .redis.version | toYaml }}
+    {{- end }}
+
+    {{- if .elasticsearch.version }}
+    elasticsearch:
+        version: {{ .elasticsearch.version | toYaml }}
+        plugins: []
+    {{- end }}
+
+    {{- if .influxdb.version }}
+    influxdb:
+        version: {{ .influxdb.version | toYaml }}
+        databases: []
+        users: []
+        privileges: []
+        config: []
+    {{- end }}
+
+    # files:
+    #   # Single symfony app
+    #   # ------------------
+    #   - path: /srv/app/var/log
+    #     src: /srv/log
+    #     state: link_directory
+    #     force: true
+    #   - path: /srv/app/var/cache
+    #     src: /srv/cache
+    #     state: link_directory
+    #     force: true
+    #   # Multi apps
+    #   # ----------
+    #   - path: /srv/app/foo/var/log
+    #     src: /srv/log/foo
+    #     state: link_directory
+    #     force: true
+    #   - path: /srv/app/foo/var/cache
+    #     src: /srv/cache/foo
+    #     state: link_directory
+    #     force: true
+    # ssh:
+    #     client:
+    #         config:
+    #           - Host *.elao.run:
+    #             - User: app
+    #             - ForwardAgent: true
+
+{{- end }}

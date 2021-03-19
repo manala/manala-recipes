@@ -1,5 +1,6 @@
 manala:
     description: Symfony environment, opiniated, docker based, for lazy people
+    template: .manala.yaml.tmpl
     sync:
       - .manala/ansistrano
       - .manala/docker
