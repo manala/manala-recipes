@@ -2,5 +2,6 @@
 
 - hosts: deploy
   any_errors_fatal: true
-  roles:
-    - deploy
+  tasks:
+    - import_role:
+        name: deploy

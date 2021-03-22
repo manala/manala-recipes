@@ -1,6 +1,123 @@
 {{- with .Vars.system -}}
 
 system:
+
+    vars:
+
+        # Ansible
+        ansible_connection: local
+        ansible_python_interpreter: /usr/bin/python{{ if gt (.version|int) 8 }}3{{ end }}
+
+        # Accounts
+        system_accounts: false
+        # Alternatives
+        system_alternatives: false
+        # App
+        system_app: false
+        system_app_dir: /srv/app
+        system_app_log_dir: /srv/log
+        system_app_cache_dir: /srv/cache
+        system_app_sessions_dir: /srv/sessions
+        # Apt
+        system_apt: false
+        {{- dict "system_apt_repositories" .apt.repositories | toYaml | nindent 8 }}
+        {{- dict "system_apt_preferences" .apt.preferences | toYaml | nindent 8 }}
+        {{- dict "system_apt_holds" .apt.holds | toYaml | nindent 8 }}
+        # Cron
+        system_cron: false
+        {{- dict "system_cron_files" .cron.files | toYaml | nindent 8 }}
+        # Docker
+        system_docker: false
+        {{- dict "system_docker_containers" .docker.containers | toYaml | nindent 8 }}
+        # Elasticsearch
+        system_elasticsearch: false
+        system_elasticsearch_version: {{ .elasticsearch.version | toYaml }}
+        {{- dict "system_elasticsearch_plugins" .elasticsearch.plugins | toYaml | nindent 8 }}
+        # Environment
+        system_environment: false
+        {{- dict "system_env" .env | toYaml | nindent 8 }}
+        # Files
+        system_files: false
+        {{- dict "system_files_attributes" .files | toYaml | nindent 8 }}
+        # Git
+        system_git: false
+        # Gomplate
+        system_gomplate: false
+        # InfluxDB
+        system_influxdb: false
+        {{- dict "system_influxdb_config" .influxdb.config | toYaml | nindent 8 }}
+        {{- dict "system_influxdb_databases" .influxdb.databases | toYaml | nindent 8 }}
+        {{- dict "system_influxdb_users" .influxdb.users | toYaml | nindent 8 }}
+        {{- dict "system_influxdb_privileges" .influxdb.privileges | toYaml | nindent 8 }}
+        # Java
+        system_java: {{ `"{{ system_elasticsearch }}"` }}
+        # Locales
+        system_locales: false
+        system_locales_default: {{ .locales.default }}
+        {{- dict "system_locales_codes" .locales.codes | toYaml | nindent 8 }}
+        # MariaDB
+        system_mariadb: false
+        system_mariadb_version: {{ .mariadb.version | toYaml }}
+        system_mariadb_install_packages:
+            - mariadb-server
+            - mariadb-client
+        system_mariadb_configs_dir: {{ ge (.mariadb.version|float64) 10.5 | ternary
+            "/etc/mysql/mariadb.conf.d"
+            "/etc/mysql/conf.d"
+        }}
+        # Motd
+        system_motd: false
+        system_motd_template: {{ .motd.template }}
+        {{- dict "system_motd_message" .motd.message | toYaml | nindent 8 }}
+        # MySQL
+        system_mysql: false
+        system_mysql_version: {{ .mysql.version | toYaml }}
+        system_mysql_install_packages: null
+        system_mysql_configs_dir: /etc/mysql/mysql.conf.d
+        # Nginx
+        system_nginx: false
+        {{- dict "system_nginx_configs" .nginx.configs | toYaml | nindent 8 }}
+        # Ngrok
+        system_ngrok: false
+        # NodeJS
+        system_nodejs: false
+        system_nodejs_version: {{ .nodejs.version | toYaml }}
+        system_nodejs_npm: {{ `"{{ system_nodejs }}"` }}
+        {{- dict "system_nodejs_packages" .nodejs.packages | toYaml | nindent 8 }}
+        system_nodejs_yarn: {{ `"{{ system_nodejs }}"` }}
+        # Oh my zsh
+        system_ohmyzsh: false
+        # Php
+        system_php: false
+        system_php_version: {{ .php.version }}
+        system_php_composer: {{ `"{{ system_php }}"` }}
+        system_php_composer_version: {{ .php.composer.version | toYaml }}
+        system_php_sapis:
+            - cli
+            - fpm
+        {{- dict "system_php_extensions" .php.extensions | toYaml | nindent 8 }}
+        {{- dict "system_php_configs" .php.configs | toYaml | nindent 8 }}
+        # Redis
+        system_redis: false
+        system_redis_version: {{ .redis.version | toYaml }}
+        {{- dict "system_redis_server_config" .redis.config | toYaml | nindent 8 }}
+        # Ssh
+        system_ssh: false
+        system_ssh_server: false
+        {{- dict "system_ssh_client_config" .ssh.client.config | toYaml | nindent 8 }}
+        # Supervisor
+        system_supervisor: false
+        {{- dict "system_supervisor_configs" .supervisor.configs | toYaml | nindent 8 }}
+        # Symfony Cli
+        system_symfony_cli: {{ `"{{ system_php }}"` }}
+        # Timezone
+        system_timezone: false
+        system_timezone_default: {{ .timezone | toYaml }}
+        # Vim
+        system_vim: false
+        # Zsh
+        system_zsh: false
+
     hosts:
 
         ###############
@@ -8,509 +125,126 @@ system:
         ###############
 
         development:
-            # Ansible
-            ansible_connection: local
-            {{- if eq (.version|int) 8 }}
-            ansible_python_interpreter: /usr/bin/python
-            {{- else }}
-            ansible_python_interpreter: /usr/bin/python3
-            {{- end }}
+
             # Accounts
-            manala_accounts_enabled: true
-            # Motd
-            manala_motd_enabled: true
-            # Timezone
-            manala_timezone_enabled: true
-            # Locales
-            manala_locales_enabled: true
-            # Zsh
-            manala_zsh_enabled: true
-            # Environment
-            manala_environment_enabled: true
-            # Apt
-            manala_apt_enabled: true
-            manala_apt_packages:
-              - xz-utils
-              - rsync
-              - wget
-              - curl
-              - make
-              - less
-              - ssl-cert
-              - htop
-              - pv # for real-time progress on streams (e.g mysql import)
-            {{- if .apt.packages }}
-              # App
-              {{- .apt.packages | toYaml | nindent 14 }}
-            {{- end }}
-            # Ssh
-            manala_ssh_enabled: true
-            manala_ssh_client_config_template: config/client/default.dev.j2
-            # Git
-            manala_git_enabled: true
-            # Oh my zsh
-            manala_ohmyzsh_enabled: true
-            # Vim
-            manala_vim_enabled: true
+            system_accounts: true
             # Alternatives
-            manala_alternatives_enabled: true
-            # Files
-            manala_files_enabled: true
-            # NodeJS
-            manala_nodejs_enabled: {{ not (empty .nodejs.version) | ternary "true" "false" }}
-            # Npm
-            manala_npm_enabled: {{ and (not (empty .nodejs.version)) (not (empty .nodejs.packages)) | ternary "true" "false" }}
-            # Php
-            manala_php_enabled: {{ not (empty .php.version) | ternary "true" "false" }}
-            # Nginx
-            manala_nginx_enabled: {{ not (empty .nginx.configs) | ternary "true" "false" }}
-            # Supervisor
-            manala_supervisor_enabled: {{ not (empty .supervisor.configs) | ternary "true" "false" }}
-            # Ngrok
-            manala_ngrok_enabled: true
-            # Java
-            manala_java_enabled: {{ not (empty .elasticsearch.version) | ternary "true" "false" }}
+            system_alternatives: true
+            # App
+            system_app: true
+            system_app_group: vagrant
+            system_app_user: vagrant
+            # Apt
+            system_apt: true
+            system_apt_packages:
+                - xz-utils
+                - rsync
+                - wget
+                - curl
+                - make
+                - less
+                - ssl-cert
+                - htop
+                - pv # for real-time progress on streams (e.g mysql import)
+            {{- if .apt.packages }}
+                # App
+                {{- .apt.packages | toYaml | nindent 16 }}
+            {{- end }}
             # Cron
-            manala_cron_enabled: {{ not (empty .cron.files) | ternary "true" "false" }}
-            # MySQL / MariaDB
-            manala_mysql_enabled: {{ or (not (empty .mysql.version)) (not (empty .mariadb.version)) | ternary "true" "false" }}
-            # Redis
-            manala_redis_enabled: {{ not (empty .redis.version) | ternary "true" "false" }}
-            # Elasticsearch
-            manala_elasticsearch_enabled: {{ not (empty .elasticsearch.version) | ternary "true" "false" }}
-            # InfluxDB
-            manala_influxdb_enabled: {{ not (empty .influxdb.version) | ternary "true" "false" }}
+            system_cron: {{ not (empty .cron.files) | ternary "true" "false" }}
             # Docker
-            manala_docker_enabled: true
+            system_docker: true
+            # Elasticsearch
+            system_elasticsearch: {{ not (empty .elasticsearch.version) | ternary "true" "false" }}
+            # Environment
+            system_environment: true
+            # Files
+            system_files: true
+            # Git
+            system_git: true
             # Gomplate
-            manala_gomplate_enabled: true
+            system_gomplate: true
+            # InfluxDB
+            system_influxdb: {{ not (empty .influxdb.version) | ternary "true" "false" }}
+            # Locales
+            system_locales: true
+            # MariaDB
+            system_mariadb: {{ not (empty .mariadb.version) | ternary "true" "false" }}
+            # Motd
+            system_motd: true
+            # MySQL
+            system_mysql: {{ not (empty .mysql.version) | ternary "true" "false" }}
+            # Nginx
+            system_nginx: {{ not (empty .nginx.configs) | ternary "true" "false" }}
+            # Ngrok
+            system_ngrok: true
+            # NodeJS
+            system_nodejs: {{ not (empty .nodejs.version) | ternary "true" "false" }}
+            # Oh my zsh
+            system_ohmyzsh: true
+            # Php
+            system_php: {{ not (empty .php.version) | ternary "true" "false" }}
+            # Redis
+            system_redis: {{ not (empty .redis.version) | ternary "true" "false" }}
+            # Ssh
+            system_ssh: true
+            system_ssh_server: true
+            system_ssh_client_config_template: {{ `"{{
+              'ssh/development/ssh_config.j2'
+                if (system_ssh_client_config is string) else
+              'config/client/default.dev.j2'
+            }}"` }}
+            # Supervisor
+            system_supervisor: {{ not (empty .supervisor.configs) | ternary "true" "false" }}
+            # Timezone
+            system_timezone: true
+            # Vim
+            system_vim: true
+            # Zsh
+            system_zsh: true
 
         ###############
         # Integration #
         ###############
 
         integration:
-            # Ansible
-            ansible_connection: local
-            {{- if eq (.version|int) 8 }}
-            ansible_python_interpreter: /usr/bin/python
-            {{- else }}
-            ansible_python_interpreter: /usr/bin/python3
-            {{- end }}
+
+            # App
+            system_app: true
+            system_app_group: docker
+            system_app_user: docker
             # Apt
-            manala_apt_enabled: true
-            manala_apt_packages:
-              - xz-utils
-              - rsync
-              - wget
-              - curl
-              - make
-              - less
-              - ssl-cert
-              - procps
-              - vim-tiny
+            system_apt: true
+            system_apt_packages:
+                - xz-utils
+                - rsync
+                - wget
+                - curl
+                - make
+                - less
+                - ssl-cert
+                - procps
+                - vim-tiny
             {{- if .apt.packages }}
-              # App
-              {{- .apt.packages | toYaml | nindent 14 }}
+                # App
+                {{- .apt.packages | toYaml | nindent 16 }}
             {{- end }}
-            # Ssh
-            manala_ssh_enabled: true
-            manala_ssh_server: false
-            manala_ssh_client_config_template: config/client/default.test.j2
             # Git
-            manala_git_enabled: true
+            system_git: true
+            # Locales
+            system_locales: true
             # NodeJS
-            manala_nodejs_enabled: {{ not (empty .nodejs.version) | ternary "true" "false" }}
-            # Npm
-            manala_npm_enabled: {{ and (not (empty .nodejs.version)) (not (empty .nodejs.packages)) | ternary "true" "false" }}
+            system_nodejs: {{ not (empty .nodejs.version) | ternary "true" "false" }}
             # Php
-            manala_php_enabled: {{ not (empty .php.version) | ternary "true" "false" }}
-            manala_php_sapis:
+            system_php: {{ not (empty .php.version) | ternary "true" "false" }}
+            system_php_sapis:
               - cli
-
-    vars:
-
-        #######
-        # All #
-        #######
-
-        # Accounts
-        manala_accounts_groups:
-          - group: docker
-            system: true
-        manala_accounts_users:
-          - user: vagrant
-            group: vagrant
-            groups: ['docker']
-
-        # Motd
-        manala_motd_scripts_exclusive: true
-        manala_motd_scripts:
-          - file: 10-motd
-            template: {{ .motd.template }}
-            {{- dict "message" .motd.message | toYaml | nindent 12 }}
-
-        # Timezone
-        manala_timezone_default: {{ .timezone }}
-
-        # Locales
-        manala_locales_codes_default: {{ .locales.default }}
-        {{- if .locales.codes }}
-        manala_locales_codes:
-            # App
-            {{- .locales.codes | toYaml | nindent 10 }}
-        {{- end }}
-
-        # Environment
-        manala_environment_files:
-          - zsh
-        {{- if or .env (not (empty .php.version)) }}
-        manala_environment_variables:
-        {{- if not (empty .php.version) }}
-            COMPOSER_MEMORY_LIMIT: -1
-        {{- end }}
-        {{- if .env }}
-            # App
-            {{- .env | toYaml | nindent 12 }}
-        {{- end }}
-        {{- end }}
-
-        # Apt
-        manala_apt:
-          update: true
-        manala_apt_configs:
-          - file: archive
-            template: configs/check_valid_until_false.j2
-            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
-        manala_apt_repositories_exclusive: true
-        {{- if .apt.repositories }}
-        manala_apt_repositories:
-            # App
-            {{- .apt.repositories | toYaml | nindent 10 }}
-        {{- end }}
-        manala_apt_preferences_exclusive: true
-        manala_apt_preferences:
-          - ansible@ansible
-          - preference: python-backports.ssl-match-hostname@manala
-            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
-          - preference: python-docker@manala
-            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
-          - preference: python-httplib2@manala
-            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
-          - preference: python-ipaddress@manala
-            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
-          - preference: python-jinja2@manala
-            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
-          - preference: python-websocket@manala
-            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
-          - preference: htop@backports
-            state: {{ `"{{ (ansible_distribution_release in ['jessie']) | ternary('present', 'absent') }}"` }}
-          - preference: docker@docker
-            state: {{ `"{{ (manala_docker_enabled) | ternary('present', 'absent') }}"` }}
-          - preference: git@backports
-            state: {{ `"{{ (manala_git_enabled and (ansible_distribution_release in ['jessie', 'stretch'])) | ternary('present', 'absent') }}"` }}
-          - preference: supervisor@{{ `{{ (ansible_distribution_release in ['jessie']) | ternary('manala', 'backports') }}` }}
-            state: {{ `"{{ (manala_supervisor_enabled and (ansible_distribution_release in ['jessie', 'stretch'])) | ternary('present', 'absent') }}"` }}
-          - preference: php@sury_php
-            state: {{ `"{{ (manala_php_enabled) | ternary('present', 'absent') }}"` }}
-          - preference: nginx@nginx
-            state: {{ `"{{ (manala_nginx_enabled) | ternary('present', 'absent') }}"` }}
-          - preference: nodejs@{{ not (empty .nodejs.version) | ternary (print "nodesource_" .nodejs.version | replace "." "_") "default" }}
-            state: {{ `"{{ (manala_nodejs_enabled) | ternary('present', 'absent') }}"` }}
-          - preference: yarn@yarn
-            state: {{ `"{{ (manala_yarn_enabled) | ternary('present', 'absent') }}"` }}
-          - preference: mysql@{{ not (empty .mysql.version) | ternary (print "mysql_" .mysql.version | replace "." "_") "default" }}
-            state: {{ not (empty .mysql.version) | ternary "present" "absent" }}
-          - preference: mariadb@{{ not (empty .mariadb.version) | ternary (print "mariadb_" .mariadb.version | replace "." "_") "default" }}
-            state: {{ not (empty .mariadb.version) | ternary "present" "absent" }}
-          - preference: redis@{{ `{{ (ansible_distribution_release in ['stretch']) | ternary('backports', 'default') }}` }}
-            state: {{ `"{{ (manala_redis_enabled and (ansible_distribution_release in ['stretch'])) | ternary('present', 'absent') }}"` }}
-          - preference: elasticsearch@{{ not (empty .elasticsearch.version) | ternary (print "elasticsearch_" .elasticsearch.version | replace "." "_") "default" }}
-            state: {{ `"{{ (manala_elasticsearch_enabled) | ternary('present', 'absent') }}"` }}
-          - preference: influxdb@{{ not (empty .influxdb.version) | ternary "influxdata" "default" }}
-            state: {{ `"{{ (manala_influxdb_enabled) | ternary('present', 'absent') }}"` }}
-        {{- if .apt.preferences }}
-          # App
-          {{- .apt.preferences | toYaml | nindent 10 }}
-        {{- end }}
-        {{- if .apt.holds }}
-        manala_apt_holds_exclusive: true
-        manala_apt_holds:
-          # App
-          {{- .apt.holds | toYaml | nindent 10 }}
-        {{- end }}
-
-        # Ssh
-        manala_ssh_server_config_template: config/server/default.dev.j2
-        manala_ssh_server_config:
-          - AcceptEnv: WORKDIR
-        {{- if .ssh.client.config }}
-        manala_ssh_client_config:
-          # App
-          {{- .ssh.client.config | toYaml | nindent 10 }}
-        {{- end }}
-        manala_ssh_known_hosts:
-          - github.com
-          - git.elao.com
-
-        # Git
-        manala_git_config_template: config/default.dev.j2
-
-        # Oh my zsh
-        manala_ohmyzsh_users:
-          - user: vagrant
-            group: vagrant
-            template: users/php.dev.j2
-            config:
-              - "[ -d ${WORKDIR:-/srv/app} ] && cd ${WORKDIR:-/srv/app}"
-
-        # Vim
-        manala_vim_config_template: config/default.dev.j2
-
-        # Alternatives
-        manala_alternatives_selections:
-          - selection: editor
-            path: /usr/bin/vim.basic
-
-        # Files
-        manala_files_attributes_defaults:
-          - parents: true
-            force: true
-          - path: "^/srv/log"
-            user: vagrant
-            group: vagrant
-          - path: "^/srv/cache"
-            user: vagrant
-            group: vagrant
-          - path: "^/srv/sessions"
-            user: vagrant
-            group: vagrant
-        manala_files_attributes:
-          - path: /srv/log
-            state: directory
-          - path: /srv/cache
-            state: directory
-          - path: /srv/sessions
-            state: directory
-          - path: /usr/share/nginx/html/404.html
-            template: nginx/html/404.html.j2
-            mode: "0644"
-        {{- if .files }}
-          # App
-          {{- .files| toYaml | nindent 10 }}
-        {{- end }}
-
-        {{- if and (not (empty .nodejs.version)) .nodejs.packages }}
-
-        # Npm
-        manala_npm_packages:
-          # App
-          {{- .nodejs.packages | toYaml | nindent 10 }}
-        {{- end }}
-
-        # Yarn
-        manala_yarn_enabled: {{ `"{{ manala_nodejs_enabled }}"` }}
-
-        # Php
-        manala_php_version: {{ .php.version }}
-        manala_php_sapis_exclusive: true
-        manala_php_fpm_pools_exclusive: true
-        manala_php_fpm_pools:
-          - file: app.conf
-            template: fpm_pools/app.dev.j2
-            config:
-              - app:
-                  - user: vagrant
-                  - group: vagrant
-                  {{- if .env }}
-                  - env:
-                        {{- .env | toYaml | nindent 26 }}
-                  {{- end }}
-                  - php_admin_value[error_log]: /srv/log/php.error.log
-        manala_php_extensions_exclusive: true
-        manala_php_extensions:
-          - opcache
-          - readline
-          - extension: json
-            state: {{ `"{{ 'present' if (manala_php_version and manala_php_version|string is version('8.0', '<')) else 'ignore' }}"` }}
-          - extension: xdebug
-            enabled: false
-        {{- if .php.extensions }}
-          # App
-          {{- .php.extensions | toYaml | nindent 10 }}
-        {{- end }}
-        manala_php_configs_exclusive: true
-        manala_php_configs:
-          - file: 50-xdebug.ini
-            template: configs/xdebug.dev.j2
-        {{- if .php.configs }}
-          # App
-          {{- .php.configs | toYaml | nindent 10 }}
-        {{- end }}
-
-        # Composer
-        manala_composer_enabled: {{ `"{{ manala_php_enabled }}"` }}
-        {{- if .php.composer.version }}
-        manala_composer_version: {{ .php.composer.version | toYaml }}
-        {{- end }}
-
-        # Symfony Cli
-        manala_symfony_cli_enabled: {{ `"{{ manala_php_enabled }}"` }}
-
-        # Nginx
-        manala_nginx_config_template: config/http.dev.j2
-        manala_nginx_configs_exclusive: true
-        manala_nginx_configs:
-          - file: default.conf
-            config:
-              - server:
-                - listen: '* default_server'
-                - error_page: '404 /404.html'
-                - location /404.html:
-                  - root: /usr/share/nginx/html
-                  - internal;
-        {{- if .nginx.configs }}
-          # App
-          {{- .nginx.configs | toYaml | nindent 10 }}
-        {{- end }}
-
-        # Supervisor
-        manala_supervisor_config_template: config/debian/supervisord.conf.j2
-        manala_supervisor_configs_exclusive: true
-        manala_supervisor_configs_defaults:
-          template: supervisor/app.conf.j2
-        manala_supervisor_configs:
-          - template: configs/inet_http_server.conf.j2
-            config:
-              port: "*:9001"
-        {{- if .supervisor.configs }}
-          # App
-          {{- .supervisor.configs | toYaml | nindent 10 }}
-        {{- end }}
-
-        # Ngrok
-        manala_ngrok_configs_exclusive: true
-        manala_ngrok_configs:
-          - file: config.yml
-            template: configs/default.dev.j2
-
-        # Java
-        manala_java_version: {{ `"{{
-          {
-            'jessie': '8',
-            'stretch': '8',
-            'buster': '11',
-          }[ansible_distribution_release]
-        }}"` }}
-
-        # Cron
-        manala_cron_files_defaults:
-          user: vagrant
-        {{- if .cron.files }}
-        manala_cron_files:
-          # App
-          {{- .cron.files | toYaml | nindent 10 }}
-        {{- end }}
-
-        # MySQL / MariaDB
-        {{- if .mysql.version }}
-        manala_mysql_configs_dir: /etc/mysql/mysql.conf.d
-        {{- else if gt (.mariadb.version|float64) 10.4 }}
-        manala_mysql_configs_dir: /etc/mysql/mariadb.conf.d
-        {{- end }}
-        manala_mysql_configs:
-          - template: mysql/zz-mysqld.cnf.j2
-        manala_mysql_users:
-          # Create a password-less/any-host root user...
-          - name: root
-            password: ~
-            host: "%"
-            priv: "*.*:ALL,GRANT"
-          # ...then remove anonymous localhost user (MySQL 5.6)
-          - name: ''
-            host: localhost
-            state: absent
-          # ...then remove root localhost user (socket based authentication on MySQL 5.7+/MariaDB)
-          - name: root
-            host: localhost
-            state: absent
-        {{- if .mariadb.version }}
-        manala_mysql_install_packages:
-          - mariadb-server
-          - mariadb-client
-        {{- end }}
-
-        # Redis
-        manala_redis_config_template: config/default.dev.j2
-        {{- if .redis.config }}
-        manala_redis_config:
-          # App
-          {{- .redis.config | toYaml | nindent 10 }}
-        {{- end }}
-
-        # Elasticsearch
-        {{- if .elasticsearch.plugins }}
-        manala_elasticsearch_plugins:
-          # App
-          {{- .elasticsearch.plugins | toYaml | nindent 10 }}
-        {{- end }}
-
-        {{- if .influxdb.version }}
-        # InfluxDB
-        {{- if .influxdb.databases }}
-        manala_influxdb_databases:
-          # App
-          {{- .influxdb.databases | toYaml | nindent 10 }}
-        {{- end }}
-        {{- if .influxdb.users }}
-        manala_influxdb_users:
-          # App
-          {{- .influxdb.users | toYaml | nindent 10 }}
-        {{- end }}
-        {{- if .influxdb.privileges }}
-        manala_influxdb_privileges:
-          # App
-          {{- .influxdb.privileges | toYaml | nindent 10 }}
-        {{- end }}
-        {{- if .influxdb.databases }}
-        manala_influxdb_config:
-          # App
-          {{- .influxdb.config | toYaml | nindent 10 }}
-        {{- end }}
-        {{- end }}
-
-        # Docker
-        manala_docker_containers:
-          - name: mailhog
-            image: mailhog/mailhog:v1.0.1
-            state: started
-            restart_policy: unless-stopped
-            ports:
-              - 25:1025
-              - 8025:8025
-          - name: phpmyadmin
-            image: phpmyadmin/phpmyadmin
-            state: {{ or (not (empty .mysql.version)) (not (empty .mariadb.version)) | ternary "started" "absent" }}
-            restart_policy: unless-stopped
-            env:
-              PMA_USER: root
-              # Default docker host ip
-              PMA_HOST: 172.17.0.1
-              UPLOAD_LIMIT: 64M
-            ports:
-              - 1979:80
-          - name: phpredisadmin
-            image: erikdubbelboer/phpredisadmin
-            state: {{ not (empty .redis.version) | ternary "started" "absent" }}
-            restart_policy: unless-stopped
-            env:
-              # Default docker host ip
-              REDIS_1_HOST: 172.17.0.1
-            ports:
-              - 1981:80
-        {{- if .docker.containers }}
-          # App
-          {{- .docker.containers | toYaml | nindent 10 }}
-        {{- end }}
+            # Ssh
+            system_ssh: true
+            system_ssh_client_config_template: {{ `"{{
+              'ssh/integration/ssh_config.j2'
+                if (system_ssh_client_config is string) else
+              'config/client/default.test.j2'
+            }}"` }}
 
 {{- end }}

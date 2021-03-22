@@ -61,8 +61,8 @@ build@staging:
 watch:
 	# npx encore dev --color=always --watch --watch-poll
 
-#######
-# App #
-#######
+###########
+# Project #
+###########
 
 # ...

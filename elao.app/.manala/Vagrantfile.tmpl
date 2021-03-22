@@ -59,7 +59,7 @@ Vagrant.configure('2') do |config|
     system.playbook = 'system.yaml'
     system.inventory_path = 'inventories'
     system.become = true
-    system.galaxy_role_file = 'roles/system/requirements.yaml'
+    system.galaxy_role_file = 'collections/requirements.yaml'
     system.galaxy_command = 'ansible-galaxy collection install --requirements-file=%{role_file} --force'
     system.tags = ENV['TAGS']
     system.verbose = ENV['VERBOSE'] ? 'vvv' : false

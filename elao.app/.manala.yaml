@@ -64,7 +64,17 @@ system:
     # @schema {"items": {"type": "object"}}
     files: []
     nginx:
-        # @schema {"items": {"type": "object"}}
+        # @schema {
+        #     "items": {"type": "object",
+        #         "additionalProperties": false,
+        #         "properties": {
+        #             "template": {"type": "string"},
+        #             "file": {"type": "string"},
+        #             "config": {"type": ["string", "array"]},
+        #             "content": {"type": "string"}
+        #         }
+        #     }
+        # }
         configs: []
     php:
         # @option {"label": "Php version"}
@@ -72,7 +82,16 @@ system:
         version: ~
         # @schema {"items": {"type": "string"}}
         extensions: []
-        # @schema {"items": {"type": "object"}}
+        # @schema {
+        #     "items": {"type": "object",
+        #         "additionalProperties": false,
+        #         "properties": {
+        #             "template": {"type": "string"},
+        #             "file": {"type": "string"},
+        #             "config": {"type": ["object", "string", "array"]}
+        #         }
+        #     }
+        # }
         configs: []
         composer:
           # @schema {"enum": [null, 1]}
@@ -101,8 +120,8 @@ system:
         # @option {"label": "Redis version"}
         # @schema {"enum": [null, "*"]}
         version: ~
-        # @schema {"items": {"type": "object"}}
-        config: []
+        # @schema {"type": ["object", "array"]}
+        config: {}
     elasticsearch:
         # @option {"label": "Elasticsearch version"}
         # @schema {"enum": [null, 7, 6, 5, 2, 1.7, 1.6, 1.5]}
@@ -113,18 +132,18 @@ system:
         # @option {"label": "InfluxDB version"}
         # @schema {"enum": [null, "*"]}
         version: ~
+        # @schema {"type": ["object", "array"]}
+        config: {}
         # @schema {"items": {"type": "string"}}
         databases: []
         # @schema {"items": {"type": "object"}}
         users: []
         # @schema {"items": {"type": "object"}}
         privileges: []
-        # @schema {"items": {"type": "object"}}
-        config: []
     ssh:
         client:
-            # @schema {"items": {"type": "object"}}
-            config: []
+            # @schema {"type": ["null", "string", "array"]}
+            config: ~
     docker:
         # @schema {"items": {"type": "object"}}
         containers: []
@@ -168,13 +187,13 @@ integration: {}
 #             "properties": {
 #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
 #                 "mode": {"type": "string", "pattern": "^[\\w-/]+$"},
-#                 "repo": {"type": "string", "format": "git-repo"},
+#                 "repo": {"type": "string"},
 #                 "ref": {"type": "string", "pattern": "^[\\w-/]+$"},
 #                 "release_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
 #                 "release_add": {"type": "array", "items": {"type": "string"}},
 #                 "release_removed": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_hosts": {"type": "array", "items": {"$ref": "#release_host"}},
-#                 "deploy_dir": {"type": "string", "format": "file-path"},
+#                 "deploy_dir": {"type": "string"},
 #                 "deploy_releases": {"type": "integer"},
 #                 "deploy_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
 #                 "deploy_post_tasks": {"type": "array", "items": {"$ref": "#release_task"}},

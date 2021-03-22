@@ -2,6 +2,7 @@
 
 * [Requirements](#requirements)
 * [Overview](#overview)
+* [Init](#init)
 * [Quick start](#quick-start)
 * [System](#system)
 * [Integration](#integration)
@@ -24,6 +25,14 @@
 ## Overview
 
 This recipe contains some helpful scripts in the context of a php/nodejs app, such as Makefile tasks in order to release and deploy your app.
+
+
+## Init
+
+```
+$ cd [workspace]
+$ manala init -i elao.app [project]
+```
 
 ## Quick start
 
@@ -104,11 +113,11 @@ Here is an example of a system configuration in `.manala.yaml`:
 system:
     version: 10
     hostname: app.vm
-    #memory: 2048 # Optional
-    #cpus: 1 # Optional
+    #memory: 4096 # Optional
+    #cpus: 2 # Optional
     #motd: # Optional
-    #    template: template/elao.j2
-    #    message: App
+    #    template: motd/cow.j2
+    #    message: Foo bar
     #timezone: Etc/UTC # Optional
     #locales: # Optional
     #    default: C.UTF-8
@@ -141,23 +150,31 @@ system:
     nginx:
         configs: []
         # configs:
-        #     # Php fpm
-        #     - file: app_php_fpm
-        #       template: nginx/app_php_fpm.j2
-        #     # Gzip
-        #     - file: app_gzip
-        #       template: nginx/app_gzip.j2
-        #     # Ssl
-        #     - file: app_ssl.conf
-        #       template: nginx/app_ssl_offloading.conf.j2
-        #     # Cors
-        #     - file: app_cors
-        #       template: nginx/app_cors.j2
-        #     # No index
-        #     - file: app_no_index
-        #       template: nginx/app_no_index.j2
+        #     - template: nginx/gzip.j2
+        #     #- template: nginx/cors.j2
+        #     #- template: nginx/no_index.j2
+        #     - template: nginx/php_fpm_app.j2
+        #     # App
+        #     - file: app.conf
+        #       config: |
+        #           server {
+        #               server_name ~.;
+        #               root /srv/app/public;
+        #               access_log /srv/log/nginx.access.log;
+        #               error_log /srv/log/nginx.error.log;
+        #               include conf.d/gzip;
+        #               location / {
+        #                   try_files $uri /index.php$is_args$args;
+        #               }
+        #               location ~ ^/index\.php(/|$) {
+        #                   include conf.d/php_fpm_app;
+        #                   internal;
+        #               }
+        #           }
     php:
         version: "8.0"
+        # composer:
+        #   version: 1 # Optional
         extensions:
           # Symfony
           - intl
@@ -166,8 +183,13 @@ system:
           - xml
           # App
           - mysql
-        # composer:
-        #   version: 1 # Optional
+        configs:
+          - template: php/opcache.ini.j2
+          - template: php/app.ini.j2
+            config:
+                date.timezone: UTC
+                upload_max_filesize: 16M
+                post_max_size: 16M
     nodejs:
         version: 14
         # packages:
@@ -177,37 +199,38 @@ system:
     #     files:
     #       - file: app
     #         env:
-    #           SHELL: /usr/bin/zsh
     #           HOME: /srv/app
     #         jobs:
-    #           - name: foo-bar
-    #             job: bin/console app:foo:bar --no-interaction -vv >> /srv/log/cron.foo-bar.log 2>&1
+    #           # Foo - Bar
+    #           - command: php bin/console app:foo:bar --no-interaction -vv >> /srv/log/cron.foo-bar.log 2>&1
     #             minute: 0
+    #             # Dev
+    #             state: absent
     # supervisor:
     #     configs:
-    #         - file: app.conf
-    #           groups:
-    #               acme:
-    #                   programs:
-    #                       - foo
-    #                       - bar
-    #           programs:
-    #               foo:
-    #                   command: zsh -c "bin/console app:acme:foo --no-interaction -vv"
-    #                   directory: /srv/app
-    #                   stdout_logfile: /srv/log/supervisor.acme-foo.log
-    #               bar:
-    #                   command: zsh -c "bin/console app:acme:bar --no-interaction -vv"
-    #                   directory: /srv/app
-    #                   stdout_logfile: /srv/log/supervisor.acme-bar.log
-    #               foo-bar:
-    #                   command: zsh -c "bin/console app:foo:bar --no-interaction -vv"
-    #                   directory: /srv/app
-    #                   stdout_logfile: /srv/log/supervisor.foo-bar.log
-    #         - file: app_foo.conf
-    #           config: |
-    #               [program:foo]
-    #               command=/bin/foo
+    #       - file: app.conf
+    #         #groups:
+    #         #    acme:
+    #         #        programs:
+    #         #          - foo
+    #         #          - bar
+    #         programs:
+    #             foo:
+    #                 command: php bin/console app:acme:foo --no-interaction -vv
+    #                 directory: /srv/app
+    #                 stdout_logfile: /srv/log/supervisor.acme-foo.log
+    #             bar:
+    #                 command: php bin/console app:acme:bar --no-interaction -vv
+    #                 directory: /srv/app
+    #                 stdout_logfile: /srv/log/supervisor.acme-bar.log
+    #             foo-bar:
+    #                 command: php bin/console app:foo:bar --no-interaction -vv
+    #                 directory: /srv/app
+    #                 stdout_logfile: /srv/log/supervisor.foo-bar.log
+    #       - file: app_foo.conf
+    #         config: |
+    #             [program:foo]
+    #             command=/bin/foo
     # MariaDB
     mariadb:
         version: 10.5
@@ -216,14 +239,16 @@ system:
         version: "8.0"
     # redis:
     #     version: "*"
-    #     config:
-    #       - save: '""' # Disable persistence
+    #     # config:
+    #     #     save: '""' # Disable persistence
     elasticsearch:
         version: 7
         plugins:
           - analysis-icu
     # influxdb:
     #     version: "*"
+    #     config:
+    #       reporting-disabled: true
     #     databases:
     #       - app
     #     users:
@@ -234,20 +259,14 @@ system:
     #       - database: app
     #         user: app
     #         grant: ALL
-    #     config:
-    #       - reporting-disabled: true
     # mongodb:
     #     version: 4.4
     ssh:
         client:
-            config:
-                - Host *.elao.run:
-                    - User: app
-                    - ForwardAgent: yes
-                - Host *.elao.local:
-                    - User: app
-                    - ForwardAgent: yes
-                    - ProxyCommand: ssh gateway@bastion.elao.com -W %h:%p
+            config: |
+                Host *.elao.run
+                    User app
+                    ForwardAgent yes
 ```
 
 
@@ -685,4 +704,9 @@ See [Go Template syntax](https://docs.gomplate.ca/syntax/) for more info.
 
   ```shell
   ansible-galaxy collection install manala.roles --collections-path /vagrant/ansible/collections
+  ```
+* Update vagrant boxes
+  ```
+  vagrant box outdated --global
+  vagrant box update --box bento/debian-10
   ```
