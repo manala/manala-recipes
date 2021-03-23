@@ -49,6 +49,10 @@ RUN \
         python3-pip \
         python3-setuptools \
         python3-wheel \
+        python3-jinja2 \
+        python3-yaml \
+        python3-cryptography \
+        python3-packaging \
     && pip3 install ansible==${ANSIBLE_VERSION}
 
 CMD ["sleep", "infinity"]
