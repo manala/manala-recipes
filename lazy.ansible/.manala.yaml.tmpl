@@ -1,0 +1,11 @@
+####################################################################
+# !!! REMINDER !!!                                                 #
+# Don't forget to run `manala up` each time you update this file ! #
+####################################################################
+
+manala:
+    recipe: lazy.ansible
+
+system:
+    ansible:
+        version: {{ .Vars.system.ansible.version | toYaml }}
