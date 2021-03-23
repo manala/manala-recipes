@@ -6,7 +6,7 @@
         <!-- Enable responsiveness on mobile devices-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <title>    Manala Recipes - Lazy - Symfony
+        <title>    Manala Recipes - Lazy - Ansible
 </title>
         
             <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
@@ -60,25 +60,14 @@
         <div class="container">
                 <section>
         <article>
-            <body><h1 id="lazy-symfony">Lazy - Symfony<a href="#lazy-symfony" class="anchor"></a></h1>
+            <body><h1 id="lazy-ansible">Lazy - Ansible<a href="#lazy-ansible" class="anchor"></a></h1>
 <ul>
 <li><a href="#requirements">Requirements</a></li>
 </ul>
 <h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
 <ul>
 <li>Docker Desktop 2.2.0+</li>
-</ul>
-<h2 id="setup">Setup<a href="#setup" class="anchor"></a></h2>
-<p>Ok, let's init a <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application:</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="69c12abcfaed39a59514c2ea971375df">manala init -i lazy.symfony foo
-<span class="token builtin class-name">cd</span> foo</code></pre>
-<p>Up the environment and shell into it into another terminal:</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="e3bf9cd354412ccf8475b26f1132a3f8"><span class="token function">make</span> up
-<span class="token function">make</span> <span class="token function">sh</span></code></pre>
-<p>Create the <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application into <code class="code-inline" id="d42b9c57d24cf5db3bd8d332dc35437f">/tmp</code> and move files into your project (<em>symfony can't create application in a non-empty dir</em>):</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="55951e413e5515e83a1357c3fa2e7142">symfony new /tmp/foo --no-git --demo
-<span class="token function">rsync</span> -a /tmp/foo/ ./</code></pre>
-<p>Browse <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> and enjoy :)</p></body>
+</ul></body>
         </article>
     </section>
 
