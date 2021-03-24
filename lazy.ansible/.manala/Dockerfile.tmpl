@@ -53,6 +53,7 @@ RUN \
         python3-yaml \
         python3-cryptography \
         python3-packaging \
+        openssh-client sshpass \
     && pip3 install ansible==${ANSIBLE_VERSION}
 
 CMD ["sleep", "infinity"]
