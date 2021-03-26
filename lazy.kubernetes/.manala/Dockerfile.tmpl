@@ -1,0 +1,59 @@
+ARG STARSHIP_VERSION=0.51.0
+ARG KUBECTL_VERSION={{ .Vars.system.kubectl.version | toString }}
+
+########
+# Base #
+########
+
+FROM debian:buster-slim as base
+
+ARG STARSHIP_VERSION
+
+# The 'container' environment variable tells systemd that it's running inside a
+# Docker container environment.
+# It's also internally used for checking we're running inside a container.
+ENV container="docker"
+
+RUN \
+    apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        bash-completion \
+        apt-utils \
+        gnupg \
+        ca-certificates \
+        sudo \
+        curl \
+        unzip \
+        make \
+        rsync \
+        vim-tiny \
+        less \
+    # Bash completion
+    && mkdir -p /etc/bash_completion.d \
+    # User
+    && adduser --disabled-password --gecos "" lazy \
+    && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
+    # Starship
+    && curl --location https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-x86_64-unknown-linux-gnu.tar.gz \
+        | tar zx -C /usr/local/bin \
+    && echo "eval \"\$(starship init bash)\"" > /etc/profile.d/starship.sh
+
+WORKDIR /srv
+
+##############
+# Kubernetes #
+##############
+
+FROM base AS kubernetes
+
+ARG KUBECTL_VERSION
+
+RUN \
+    # Kubectl
+    curl --location https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+        --output /usr/local/bin/kubectl \
+    && chmod +x /usr/local/bin/kubectl \
+    # Kubectl - Bash completion
+    && kubectl completion bash > /etc/bash_completion.d/kubectl
+
+CMD ["sleep", "infinity"]

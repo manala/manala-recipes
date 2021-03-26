@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+
+  ##############
+  # Kubernetes #
+  ##############
+
+  kubernetes:
+    hostname: kubernetes
+    build:
+      context: .
+      target: kubernetes
+    init: true
+    restart: always
+    volumes:
+      - ..:/srv:cached
