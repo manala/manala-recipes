@@ -38,6 +38,11 @@ RUN \
         | tar zx -C /usr/local/bin \
     && echo "eval \"\$(starship init bash)\"" > /etc/profile.d/starship.sh
 
+ENV STARSHIP_CONFIG="/etc/starship.toml"
+
+COPY shell/starship.toml /etc/
+COPY shell/message.sh /etc/profile.d/
+
 WORKDIR /srv
 
 ###########

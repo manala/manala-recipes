@@ -3,7 +3,7 @@ manala:
     template: .manala.yaml.tmpl
     sync:
       - .manala/make
-      - .manala/starship
+      - .manala/shell
       - .manala/docker-compose.yaml.tmpl
       - .manala/Dockerfile.tmpl
       - .manala/Makefile.tmpl
