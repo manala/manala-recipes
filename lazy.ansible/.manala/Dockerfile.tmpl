@@ -1,3 +1,4 @@
+ARG STARSHIP_VERSION=0.51.0
 ARG ANSIBLE_VERSION={{ .Vars.system.ansible.version | toString }}
 
 ########
@@ -5,6 +6,8 @@ ARG ANSIBLE_VERSION={{ .Vars.system.ansible.version | toString }}
 ########
 
 FROM debian:buster-slim as base
+
+ARG STARSHIP_VERSION
 
 # The 'container' environment variable tells systemd that it's running inside a
 # Docker container environment.
@@ -29,7 +32,7 @@ RUN \
     && adduser --disabled-password --gecos "" lazy \
     && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
     # Starship
-    && curl --location https://github.com/starship/starship/releases/latest/download/starship-x86_64-unknown-linux-gnu.tar.gz \
+    && curl --location https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-x86_64-unknown-linux-gnu.tar.gz \
         | tar zx -C /usr/local/bin \
     && echo "eval \"\$(starship init bash)\"" > /etc/profile.d/starship.sh
 
