@@ -28,6 +28,8 @@ RUN \
         rsync \
         vim-tiny \
         less \
+    # Bash completion
+    && mkdir -p /etc/bash_completion.d \
     # User
     && adduser --disabled-password --gecos "" lazy \
     && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
