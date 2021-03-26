@@ -1,0 +1,11 @@
+####################################################################
+# !!! REMINDER !!!                                                 #
+# Don't forget to run `manala up` each time you update this file ! #
+####################################################################
+
+manala:
+    recipe: lazy.kubernetes
+
+system:
+    kubectl:
+        version: {{ .Vars.system.kubectl.version | toYaml }}
