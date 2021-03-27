@@ -6,6 +6,17 @@
 manala:
     recipe: lazy.ansible
 
+###########
+# Project #
+###########
+
+project:
+    name: {{ .Vars.project.name | toYaml }}
+
+##########
+# System #
+##########
+
 system:
     ansible:
         version: {{ .Vars.system.ansible.version | toYaml }}

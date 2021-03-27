@@ -10,6 +10,15 @@ manala:
       - Makefile.dist
       - README.md .manala/README.md
 
+###########
+# Project #
+###########
+
+project:
+    # @schema {"type": "string", "minLength": 1}
+    # @option {"label": "Project name"}
+    name: ~
+
 ##########
 # System #
 ##########

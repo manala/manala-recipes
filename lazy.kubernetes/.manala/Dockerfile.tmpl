@@ -1,5 +1,8 @@
 ARG STARSHIP_VERSION=0.51.0
 ARG KUBECTL_VERSION={{ .Vars.system.kubectl.version | toString }}
+{{- if .Vars.system.helm.version }}
+ARG HELM_VERSION={{ .Vars.system.helm.version | toString }}
+{{- end }}
 
 ########
 # Base #
@@ -51,14 +54,22 @@ WORKDIR /srv
 
 FROM base AS kubernetes
 
+# Kubectl
 ARG KUBECTL_VERSION
-
 RUN \
-    # Kubectl
     curl --location https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
         --output /usr/local/bin/kubectl \
     && chmod +x /usr/local/bin/kubectl \
-    # Kubectl - Bash completion
+    # Bash completion
     && kubectl completion bash > /etc/bash_completion.d/kubectl
 
-CMD ["sleep", "infinity"]
+{{- if .Vars.system.helm.version }}
+
+# Helm
+ARG HELM_VERSION
+RUN \
+    curl --location https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
+        | tar zx --strip-components=1 -C /usr/local/bin linux-amd64/helm \
+    # Bash completion
+    && helm completion bash > /etc/bash_completion.d/helm
+{{- end }}

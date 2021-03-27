@@ -6,6 +6,21 @@
 manala:
     recipe: lazy.kubernetes
 
+###########
+# Project #
+###########
+
+project:
+    name: {{ .Vars.project.name | toYaml }}
+
+##########
+# System #
+##########
+
 system:
     kubectl:
         version: {{ .Vars.system.kubectl.version | toYaml }}
+    {{- if .Vars.system.helm.version }}
+    helm:
+        version: {{ .Vars.system.helm.version | toYaml }}
+    {{- end }}

@@ -10,6 +10,15 @@ manala:
       - Makefile.dist
       - README.md .manala/README.md
 
+###########
+# Project #
+###########
+
+project:
+    # @schema {"type": "string", "minLength": 1}
+    # @option {"label": "Project name"}
+    name: ~
+
 ##########
 # System #
 ##########
@@ -18,4 +27,8 @@ system:
     kubectl:
         # @option {"label": "Kubectl version"}
         # @schema {"enum": ["1.20.5"]}
+        version: ~
+    helm:
+        # @schema {"enum": [null, "3.5.3"]}
+        # @option {"label": "Helm version"}
         version: ~

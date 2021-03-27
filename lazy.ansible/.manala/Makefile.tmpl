@@ -8,6 +8,7 @@ _DIR := $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_ROOT_DIR))%,%,$(CUR
 include $(_ROOT_DIR)/.manala/make/text.mk
 include $(_ROOT_DIR)/.manala/make/help.mk
 include $(_ROOT_DIR)/.manala/make/os.mk
+include $(_ROOT_DIR)/.manala/make/docker-compose.mk
 
 ###############
 # Environment #
@@ -15,31 +16,21 @@ include $(_ROOT_DIR)/.manala/make/os.mk
 
 ifneq ($(container),docker)
 
-export COMPOSE_FILE         = $(_ROOT_DIR)/.manala/docker-compose.yaml
-export COMPOSE_PROJECT_NAME = $(notdir $(CURDIR))
+DOCKER_COMPOSE_FILE := $(_ROOT_DIR)/.manala/docker-compose.yaml
+DOCKER_PROJECT_NAME := {{ .Vars.project.name }}
+DOCKER_USER         := lazy
+DOCKER_SERVICE      := ansible
 
 HELP += $(call help_section, Environment)
 
-HELP += $(call help,up,        Create and start environment (BUILD))
-up:
-	$(call message,Create and start environment...)
-	docker-compose up \
-		$(if $(BUILD),--build --remove-orphans)
-
-HELP += $(call help,clean,     Clean environment)
-clean:
-	$(call confirm,Please$(,) confirm environment cleaning)
-	docker-compose down \
-		--rmi all \
-		--volumes \
-		--remove-orphans
-
-HELP += $(call help,sh,        Shell environment)
+HELP += $(call help,sh,   Shell environment)
 sh:
-	docker-compose exec \
-		--user lazy \
-		ansible \
-		bash -l
+	$(call docker_run, bash -l)
+
+HELP += $(call help,clean,Clean environment)
+clean:
+	$(call confirm,Confirm environment cleaning)
+	$(call docker_clean)
 
 endif
 
