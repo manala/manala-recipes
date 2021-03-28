@@ -25,7 +25,7 @@ project:
 
 system:
     # @schema {"items": {"type": "string"}}
-    volumes: []
+    mount: []
     kubectl:
         # @schema {"enum": ["1.20.5"]}
         # @option {"label": "Kubectl version"}
