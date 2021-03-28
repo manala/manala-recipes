@@ -3,8 +3,8 @@
 ########
 
 # Usage:
-#   $(call helm, COMMAND [OPTIONS...])
+#   $(helm) COMMAND [OPTIONS...]
 
 define helm
-	$(call docker_run, helm $(strip $(1)))
+	$(docker_run) helm
 endef

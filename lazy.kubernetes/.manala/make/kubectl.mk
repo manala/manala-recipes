@@ -3,8 +3,8 @@
 ###########
 
 # Usage:
-#   $(call kubectl, COMMAND [OPTIONS...])
+#   $(kubectl) COMMAND [OPTIONS...]
 
 define kubectl
-	$(call docker_run, kubectl $(strip $(1)))
+	$(docker_run) kubectl
 endef
