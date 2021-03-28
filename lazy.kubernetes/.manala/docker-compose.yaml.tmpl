@@ -11,8 +11,3 @@ services:
     build:
       context: .
       target: kubernetes
-    command: ["sleep", "infinity"]
-    init: true
-    restart: always
-    volumes:
-      - ..:/srv:cached

@@ -13,6 +13,8 @@ define docker_run
 		run \
 		$(if $(_DOCKER_USER),--user $(_DOCKER_USER)) \
 		--rm \
+		--volume $(realpath $(_ROOT_DIR)):$(realpath $(_ROOT_DIR)):cached \
+		--workdir $(realpath $(_ROOT_DIR)) \
 		$(_DOCKER_SERVICE)
 endef
 else

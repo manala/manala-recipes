@@ -11,8 +11,3 @@ services:
     build:
       context: .
       target: ansible
-    command: ["sleep", "infinity"]
-    init: true
-    restart: always
-    volumes:
-      - ..:/srv:cached
