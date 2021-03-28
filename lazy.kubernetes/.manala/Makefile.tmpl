@@ -23,6 +23,9 @@ ifneq ($(container),docker)
 _DOCKER_COMPOSE_FILE := $(_ROOT_DIR)/.manala/docker-compose.yaml
 _DOCKER_PROJECT_NAME := {{ .Vars.project.name }}
 _DOCKER_USER         := lazy
+{{- if .Vars.system.volumes }}
+_DOCKER_VOLUMES      := {{ .Vars.system.volumes | join " " }}
+{{- end }}
 _DOCKER_SERVICE      := kubernetes
 
 HELP += $(call help_section, Environment)

@@ -24,7 +24,9 @@ project:
 ##########
 
 system:
+    # @schema {"items": {"type": "string"}}
+    volumes: []
     ansible:
-        # @option {"label": "Ansible version"}
         # @schema {"enum": ["3.1.0", "2.10.7", "2.10.4"]}
+        # @option {"label": "Ansible version"}
         version: ~

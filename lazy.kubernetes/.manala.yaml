@@ -24,9 +24,11 @@ project:
 ##########
 
 system:
+    # @schema {"items": {"type": "string"}}
+    volumes: []
     kubectl:
-        # @option {"label": "Kubectl version"}
         # @schema {"enum": ["1.20.5"]}
+        # @option {"label": "Kubectl version"}
         version: ~
     helm:
         # @schema {"enum": [null, "3.5.3"]}
