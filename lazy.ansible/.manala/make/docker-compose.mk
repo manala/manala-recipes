@@ -13,7 +13,7 @@ define docker_run
 		run \
 		$(if $(_DOCKER_USER),--user $(_DOCKER_USER)) \
 		--rm \
-		$(foreach volume,$(_DOCKER_VOLUMES),--volume $(realpath $(volume)):$(realpath $(volume)):cached) \
+		$(foreach volume,$(_DOCKER_VOLUMES),--volume $(realpath $(_ROOT_DIR)/$(volume)):$(realpath $(_ROOT_DIR)/$(volume)):cached) \
 		--volume $(realpath $(_ROOT_DIR)):$(realpath $(_ROOT_DIR)):cached \
 		--workdir $(realpath $(_ROOT_DIR)) \
 		$(_DOCKER_SERVICE)
