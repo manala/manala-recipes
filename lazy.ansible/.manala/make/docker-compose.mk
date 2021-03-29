@@ -18,6 +18,7 @@ define docker_run
 			-e SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
 		) \
 		$(foreach volume,$(_DOCKER_VOLUMES),--volume $(realpath $(_ROOT_DIR)/$(volume)):$(realpath $(_ROOT_DIR)/$(volume)):cached) \
+		--volume $(realpath $(_ROOT_DIR)/.manala)/.home:/home:delegated \
 		--volume $(realpath $(_ROOT_DIR)):$(realpath $(_ROOT_DIR)):cached \
 		--workdir $(realpath $(_ROOT_DIR)) \
 		$(_DOCKER_SERVICE)
