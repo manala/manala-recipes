@@ -13,6 +13,10 @@ define docker_run
 		run \
 		$(if $(_DOCKER_USER),--user $(_DOCKER_USER)) \
 		--rm \
+		$(if $(OS_DARWIN), \
+			--volume /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock:ro \
+			-e SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
+		) \
 		$(foreach volume,$(_DOCKER_VOLUMES),--volume $(realpath $(_ROOT_DIR)/$(volume)):$(realpath $(_ROOT_DIR)/$(volume)):cached) \
 		--volume $(realpath $(_ROOT_DIR)):$(realpath $(_ROOT_DIR)):cached \
 		--workdir $(realpath $(_ROOT_DIR)) \
