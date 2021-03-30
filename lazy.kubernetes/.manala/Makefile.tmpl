@@ -13,6 +13,9 @@ include $(_ROOT_DIR)/.manala/make/kubectl.mk
 {{- if .Vars.system.helm.version }}
 include $(_ROOT_DIR)/.manala/make/helm.mk
 {{- end }}
+{{- if .Vars.system.k9s.version }}
+include $(_ROOT_DIR)/.manala/make/k9s.mk
+{{- end }}
 
 ###############
 # Environment #
