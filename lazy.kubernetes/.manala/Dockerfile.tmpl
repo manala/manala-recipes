@@ -34,6 +34,7 @@ RUN \
         rsync \
         vim-tiny \
         less \
+        bsdtar \
     # Bash completion
     && mkdir -p /etc/bash_completion.d \
     # User
@@ -41,7 +42,7 @@ RUN \
     && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
     # Starship
     && curl --location https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-x86_64-unknown-linux-gnu.tar.gz \
-        | tar zx -C /usr/local/bin \
+        | bsdtar -xf - -C /usr/local/bin \
     && echo "eval \"\$(starship init bash)\"" > /etc/profile.d/starship.sh
 
 ENV STARSHIP_CONFIG="/etc/starship.toml"
@@ -70,7 +71,7 @@ RUN \
 ARG HELM_VERSION
 RUN \
     curl --location https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
-        | tar zx --strip-components=1 -C /usr/local/bin linux-amd64/helm \
+        | bsdtar -xf - --strip-components=1 -C /usr/local/bin linux-amd64/helm \
     # Bash completion
     && helm completion bash > /etc/bash_completion.d/helm
 {{- end }}
@@ -81,5 +82,5 @@ RUN \
 ARG K9S_VERSION
 RUN \
     curl --location https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz \
-        | tar zx -C /usr/local/bin k9s
+        | bsdtar -xf - -C /usr/local/bin k9s
 {{- end }}
