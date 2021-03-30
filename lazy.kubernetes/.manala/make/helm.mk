@@ -6,5 +6,5 @@
 #   $(helm) COMMAND [OPTIONS...]
 
 define helm
-	$(docker_run) helm
+	$(docker_compose_run) helm
 endef

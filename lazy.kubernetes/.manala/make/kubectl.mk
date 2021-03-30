@@ -6,5 +6,5 @@
 #   $(kubectl) COMMAND [OPTIONS...]
 
 define kubectl
-	$(docker_run) kubectl
+	$(docker_compose_run) kubectl
 endef

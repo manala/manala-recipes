@@ -8,7 +8,7 @@ _DIR := $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_ROOT_DIR))%,%,$(CUR
 include $(_ROOT_DIR)/.manala/make/text.mk
 include $(_ROOT_DIR)/.manala/make/help.mk
 include $(_ROOT_DIR)/.manala/make/os.mk
-include $(_ROOT_DIR)/.manala/make/docker-compose.mk
+include $(_ROOT_DIR)/.manala/make/docker_compose.mk
 include $(_ROOT_DIR)/.manala/make/ansible.mk
 
 ###############
@@ -17,9 +17,10 @@ include $(_ROOT_DIR)/.manala/make/ansible.mk
 
 ifneq ($(container),docker)
 
+export _DOCKER_WORKDIR := $(realpath $(_ROOT_DIR))
+
 _DOCKER_COMPOSE_FILE := $(_ROOT_DIR)/.manala/docker-compose.yaml
 _DOCKER_PROJECT_NAME := {{ .Vars.project.name }}
-_DOCKER_USER         := lazy
 {{- if .Vars.system.mount }}
 _DOCKER_VOLUMES      := {{ .Vars.system.mount | join " " }}
 {{- end }}
@@ -29,12 +30,12 @@ HELP += $(call help_section, Environment)
 
 HELP += $(call help,sh,   Shell environment)
 sh:
-	$(docker_run) bash -l
+	$(docker_compose_run) bash -l
 
 HELP += $(call help,clean,Clean environment)
 clean:
 	$(call confirm,Confirm environment cleaning)
-	$(docker_clean)
+	$(docker_compose_clean)
 
 endif
 

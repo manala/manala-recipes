@@ -11,4 +11,9 @@ services:
     build:
       context: .
       target: ansible
+    user: lazy
+    volumes:
+      - .home:/home:delegated
+      - ..:/${_DOCKER_WORKDIR}:cached
+    working_dir: ${_DOCKER_WORKDIR}
     network_mode: bridge # Use default docker bridge network
