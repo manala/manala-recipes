@@ -61,5 +61,8 @@ RUN \
         python3-yaml \
         python3-cryptography \
         python3-packaging \
+        python3-argcomplete \
         openssh-client sshpass \
-    && pip3 install ansible==${ANSIBLE_VERSION}
+    && pip3 install ansible==${ANSIBLE_VERSION} \
+    # Bash completion
+    && activate-global-python-argcomplete3 --dest /etc/bash_completion.d
