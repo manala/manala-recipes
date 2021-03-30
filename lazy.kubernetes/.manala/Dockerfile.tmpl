@@ -6,6 +6,21 @@ ARG HELM_VERSION={{ .Vars.system.helm.version | toString }}
 {{- if .Vars.system.k9s.version }}
 ARG K9S_VERSION={{ .Vars.system.k9s.version | toString }}
 {{- end }}
+{{- if .Vars.system.stern.version }}
+ARG STERN_VERSION={{ .Vars.system.stern.version | toString }}
+{{- end }}
+{{- if .Vars.system.kubespy.version }}
+ARG KUBESPY_VERSION={{ .Vars.system.kubespy.version | toString }}
+{{- end }}
+{{- if .Vars.system.kubebox.version }}
+ARG KUBEBOX_VERSION={{ .Vars.system.kubebox.version | toString }}
+{{- end }}
+{{- if .Vars.system.kube_prompt.version }}
+ARG KUBE_PROMPT_VERSION={{ .Vars.system.kube_prompt.version | toString }}
+{{- end }}
+{{- if .Vars.system.popeye.version }}
+ARG POPEYE_VERSION={{ .Vars.system.popeye.version | toString }}
+{{- end }}
 
 ########
 # Base #
@@ -83,4 +98,53 @@ ARG K9S_VERSION
 RUN \
     curl --location https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz \
         | bsdtar -xf - -C /usr/local/bin k9s
+{{- end }}
+
+{{- if .Vars.system.stern.version }}
+
+# Stern
+ARG STERN_VERSION
+RUN \
+    curl --location https://github.com/stern/stern/releases/download/v${STERN_VERSION}/stern_${STERN_VERSION}_linux_amd64.tar.gz \
+        | bsdtar -xf - --strip-components=1 -C /usr/local/bin stern_${STERN_VERSION}_linux_amd64/stern \
+    # Bash completion
+    && stern --completion=bash > /etc/bash_completion.d/stern
+{{- end }}
+
+{{- if .Vars.system.kubespy.version }}
+
+# Kubespy
+ARG KUBESPY_VERSION
+RUN \
+    curl --location https://github.com/pulumi/kubespy/releases/download/v${KUBESPY_VERSION}/kubespy-v${KUBESPY_VERSION}-linux-amd64.tar.gz \
+        | bsdtar -xf - -C /usr/local/bin kubespy
+{{- end }}
+
+{{- if .Vars.system.kubebox.version }}
+
+# Kubebox
+ARG KUBEBOX_VERSION
+RUN \
+    curl --location https://github.com/astefanutti/kubebox/releases/download/v${KUBEBOX_VERSION}/kubebox-linux \
+        --output /usr/local/bin/kubebox \
+    && chmod +x /usr/local/bin/kubebox
+{{- end }}
+
+{{- if .Vars.system.kube_prompt.version }}
+
+# Kube Prompt
+ARG KUBE_PROMPT_VERSION
+RUN \
+    curl --location https://github.com/c-bata/kube-prompt/releases/download/v${KUBE_PROMPT_VERSION}/kube-prompt_v${KUBE_PROMPT_VERSION}_linux_amd64.zip \
+        | bsdtar -xf - -C /usr/local/bin \
+    && chmod +x /usr/local/bin/kube-prompt
+{{- end }}
+
+{{- if .Vars.system.popeye.version }}
+
+# Popeye
+ARG POPEYE_VERSION
+RUN \
+    curl --location https://github.com/derailed/popeye/releases/download/v${POPEYE_VERSION}/popeye_Linux_x86_64.tar.gz \
+        | bsdtar -xf - -C /usr/local/bin popeye
 {{- end }}

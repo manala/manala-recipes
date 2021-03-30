@@ -28,3 +28,23 @@ system:
     k9s:
         version: {{ .Vars.system.k9s.version | toYaml }}
     {{- end }}
+    {{- if .Vars.system.stern.version }}
+    stern:
+        version: {{ .Vars.system.stern.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.kubespy.version }}
+    kubespy:
+        version: {{ .Vars.system.kubespy.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.kubebox.version }}
+    kubebox:
+        version: {{ .Vars.system.kubebox.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.kube_prompt.version }}
+    kube_prompt:
+        version: {{ .Vars.system.kube_prompt.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.popeye.version }}
+    popeye:
+        version: {{ .Vars.system.popeye.version | toYaml }}
+    {{- end }}

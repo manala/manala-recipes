@@ -16,6 +16,21 @@ include $(_ROOT_DIR)/.manala/make/helm.mk
 {{- if .Vars.system.k9s.version }}
 include $(_ROOT_DIR)/.manala/make/k9s.mk
 {{- end }}
+{{- if .Vars.system.stern.version }}
+include $(_ROOT_DIR)/.manala/make/stern.mk
+{{- end }}
+{{- if .Vars.system.kubespy.version }}
+include $(_ROOT_DIR)/.manala/make/kubespy.mk
+{{- end }}
+{{- if .Vars.system.kubebox.version }}
+include $(_ROOT_DIR)/.manala/make/kubebox.mk
+{{- end }}
+{{- if .Vars.system.kube_prompt.version }}
+include $(_ROOT_DIR)/.manala/make/kube_prompt.mk
+{{- end }}
+{{- if .Vars.system.popeye.version }}
+include $(_ROOT_DIR)/.manala/make/popeye.mk
+{{- end }}
 
 ###############
 # Environment #

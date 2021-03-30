@@ -41,3 +41,23 @@ system:
         # @schema {"enum": [null, "0.24.6"]}
         # @option {"label": "K9s version"}
         version: ~
+    stern:
+        # @schema {"enum": [null, "1.14.0"]}
+        # @option {"label": "Stern version"}
+        version: ~
+    kubespy:
+        # @schema {"enum": [null, "0.6.0"]}
+        # @option {"label": "Kubespy version"}
+        version: ~
+    kubebox:
+        # @schema {"enum": [null, "0.9.0"]}
+        # @option {"label": "Kubebox version"}
+        version: ~
+    kube_prompt:
+        # @schema {"enum": [null, "1.0.11"]}
+        # @option {"label": "Kube Prompt version"}
+        version: ~
+    popeye:
+        # @schema {"enum": [null, "0.9.0"]}
+        # @option {"label": "Popeye version"}
+        version: ~
