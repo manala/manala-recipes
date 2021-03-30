@@ -12,6 +12,10 @@ services:
       context: .
       target: kubernetes
     user: lazy
+    {{- if .Vars.system.kubeconfig }}
+    environment:
+      KUBECONFIG: ${_DOCKER_WORKDIR}/{{ .Vars.system.kubeconfig }}
+    {{- end }}
     volumes:
       - .home:/home:delegated
       - ..:/${_DOCKER_WORKDIR}:cached

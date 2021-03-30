@@ -25,6 +25,8 @@ project:
 ##########
 
 system:
+    # @schema {"type": ["null", "string"]}
+    kubeconfig: ~
     # @schema {"items": {"type": "string"}}
     mount: []
     kubectl:
