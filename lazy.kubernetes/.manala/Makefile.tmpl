@@ -38,14 +38,13 @@ include $(_ROOT_DIR)/.manala/make/popeye.mk
 
 ifneq ($(container),docker)
 
-export _DOCKER_WORKDIR := $(realpath $(_ROOT_DIR))
+export _DOCKER_DIR := $(realpath $(_ROOT_DIR))
 
-_DOCKER_COMPOSE_FILE := $(_ROOT_DIR)/.manala/docker-compose.yaml
-_DOCKER_PROJECT_NAME := {{ .Vars.project.name }}
-{{- if .Vars.system.mount }}
-_DOCKER_VOLUMES      := {{ .Vars.system.mount | join " " }}
-{{- end }}
-_DOCKER_SERVICE      := kubernetes
+_DOCKER_PROJECT_NAME  := {{ .Vars.project.name }}
+_DOCKER_COMPOSE_FILES := \
+	$(_ROOT_DIR)/.manala/docker-compose.yaml \
+	$(if $(OS_DARWIN), $(_ROOT_DIR)/.manala/docker-compose.darwin.yaml)
+_DOCKER_SERVICE       := kubernetes
 
 HELP += $(call help_section, Environment)
 
@@ -55,7 +54,7 @@ sh:
 
 HELP += $(call help,clean,Clean environment)
 clean:
-	$(call confirm,Confirm environment cleaning)
+	$(call confirm, Confirm environment cleaning)
 	$(docker_compose_clean)
 
 endif

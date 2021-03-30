@@ -14,6 +14,9 @@ services:
     user: lazy
     volumes:
       - .home:/home:delegated
-      - ..:/${_DOCKER_WORKDIR}:cached
-    working_dir: ${_DOCKER_WORKDIR}
+      - ..:${_DOCKER_DIR}:cached
+      {{- range $mount := .Vars.system.mount }}
+      - ../{{ $mount }}:${_DOCKER_DIR}/{{ $mount }}:cached
+      {{- end }}
+    working_dir: ${_DOCKER_DIR}
     network_mode: bridge # Use default docker bridge network

@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+
+  ##############
+  # Kubernetes #
+  ##############
+
+  kubernetes:
+    volumes:
+      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock:ro
+    environment:
+      SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock
