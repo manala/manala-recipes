@@ -1,14 +1,8 @@
-# Disable the package module, hiding it from the prompt completely
-[package]
-disabled = true
-
 [hostname]
-disabled = false
 ssh_only = false
 trim_at = ""
 
 [username]
-disabled = false
 show_always = true
 
 [git_branch]
@@ -17,11 +11,11 @@ disabled = true
 [git_commit]
 disabled = true
 
+[git_state]
+disabled = true
+
 [git_status]
 disabled = true
 
-[php]
-disabled = true
-
-[nodejs]
-disabled = true
+[kubernetes]
+disabled = false
