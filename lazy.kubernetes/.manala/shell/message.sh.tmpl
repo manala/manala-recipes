@@ -1,0 +1,18 @@
+printf "\n"
+printf "          \033[33m|\033[0m\n"
+printf "        \033[33m\ _ /\033[0m     Lazy - Kubernetes\n"
+printf "      \033[33m-= (_) =-\033[0m\n"
+printf "        \033[33m/   \ \033[0m        \033[32m_\/_\033[0m\n"
+printf "          \033[33m|\033[0m           \033[32m//o\ \033[0m \033[32m_\/_\033[0m\n"
+printf "\033[34m   _____ _ __ __ ____ _ \033[32m| \033[34m__\033[32m/o\ \033[34m_\033[0m\n"
+printf "\033[34m =-=-_-__=_-= _=_=-=_,-'\033[32m|\033[34m\"'\"\"-\033[32m|\033[34m-,_\033[0m\n"
+printf "\033[34m  =- _=-=- -_=-=_,-\"          \033[32m|\033[34m\"\033[0m\n"
+printf "\033[34m    =- =- -=.--\"\033[0m\n"
+printf "\n"
+printf " \033[36m‣ kubectl \033[35m{{ .Vars.system.kubectl.version }}\033[0m\n"
+{{- if .Vars.system.helm.version }}
+printf " \033[36m‣ helm \033[35m{{ .Vars.system.helm.version }}\033[0m\n"
+{{- end }}
+{{- if .Vars.system.helm.version }}
+printf " \033[36m‣ k9s \033[35m{{ .Vars.system.k9s.version }}\033[0m\n"
+{{- end }}
