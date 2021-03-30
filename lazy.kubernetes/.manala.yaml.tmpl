@@ -24,3 +24,7 @@ system:
     helm:
         version: {{ .Vars.system.helm.version | toYaml }}
     {{- end }}
+    {{- if .Vars.system.k9s.version }}
+    k9s:
+        version: {{ .Vars.system.k9s.version | toYaml }}
+    {{- end }}

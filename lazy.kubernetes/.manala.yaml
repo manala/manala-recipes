@@ -35,3 +35,7 @@ system:
         # @schema {"enum": [null, "3.5.3"]}
         # @option {"label": "Helm version"}
         version: ~
+    k9s:
+        # @schema {"enum": [null, "0.24.6"]}
+        # @option {"label": "K9s version"}
+        version: ~

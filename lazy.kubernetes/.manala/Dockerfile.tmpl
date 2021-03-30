@@ -3,6 +3,9 @@ ARG KUBECTL_VERSION={{ .Vars.system.kubectl.version | toString }}
 {{- if .Vars.system.helm.version }}
 ARG HELM_VERSION={{ .Vars.system.helm.version | toString }}
 {{- end }}
+{{- if .Vars.system.k9s.version }}
+ARG K9S_VERSION={{ .Vars.system.k9s.version | toString }}
+{{- end }}
 
 ########
 # Base #
@@ -70,4 +73,13 @@ RUN \
         | tar zx --strip-components=1 -C /usr/local/bin linux-amd64/helm \
     # Bash completion
     && helm completion bash > /etc/bash_completion.d/helm
+{{- end }}
+
+{{- if .Vars.system.k9s.version }}
+
+# K9s
+ARG K9S_VERSION
+RUN \
+    curl --location https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz \
+        | tar zx -C /usr/local/bin k9s
 {{- end }}
