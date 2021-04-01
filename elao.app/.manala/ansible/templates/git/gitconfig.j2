@@ -1,0 +1,23 @@
+{%- set config = {
+  'core': {},
+  'oh-my-zsh': {},
+} | combine(manala_git_config|default({}, true)) -%}
+
+[core]
+    ; See: http://git.661346.n2.nabble.com/git-status-takes-30-seconds-on-Windows-7-Why-td7580816.html
+    {{ config.core | manala.roles.git_config_parameter('preloadindex', default=true) | indent(4) }}
+    ; See: https://news.ycombinator.com/item?id=11388479
+    {{ config.core | manala.roles.git_config_parameter('untrackedCache', default=true) | indent(4) }}
+    {{- config.core | manala.roles.git_config_section(exclude=[
+      'preloadindex',
+      'untrackedCache'
+    ]) }}
+
+[oh-my-zsh]
+    ; See: http://marc-abramowitz.com/archives/2012/04/10/fix-for-oh-my-zsh-git-svn-prompt-slowness/
+    {{ config['oh-my-zsh'] | manala.roles.git_config_parameter('hide-status', default=1) | indent(4) }}
+    {{- config['oh-my-zsh'] | manala.roles.git_config_section(exclude=[
+      'hide-status'
+    ]) }}
+
+{{ config | manala.roles.git_config(exclude=['core', 'oh-my-zsh']) }}

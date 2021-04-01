@@ -1,0 +1,11 @@
+{%- set config = manala_ssh_client_config|default('', True) -%}
+
+Host *
+    HashKnownHosts no
+    GSSAPIAuthentication yes
+    GSSAPIDelegateCredentials no
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    LogLevel ERROR
+
+{{ config }}

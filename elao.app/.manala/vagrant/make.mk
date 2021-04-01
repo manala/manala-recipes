@@ -2,12 +2,12 @@
 # Vagrant #
 ###########
 
-define vagrant_ssh
-	vagrant ssh -- cd /srv/app/$(_DIR) \&\& $(strip $(1))
+define VAGRANT_SSH
+	vagrant ssh -- cd /srv/app/$(_DIR) \&\&
 endef
 
 ifneq ($(container),vagrant)
-VAGRANT_MAKE = $(call vagrant_ssh, make)
+VAGRANT_MAKE = $(VAGRANT_SSH) make
 else
 VAGRANT_MAKE = $(MAKE)
 endif

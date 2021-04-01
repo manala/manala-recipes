@@ -1,0 +1,25 @@
+{%- set config = manala_ssh_server_config|default({}, True) -%}
+
+{{ config | manala.roles.ssh_config_parameter('PermitRootLogin', default=True) }}
+{{ config | manala.roles.ssh_config_parameter('PermitEmptyPasswords', default=True) }}
+{{ config | manala.roles.ssh_config_parameter('ChallengeResponseAuthentication', default=False) }}
+{{ config | manala.roles.ssh_config_parameter('PasswordAuthentication', default=True) }}
+{{ config | manala.roles.ssh_config_parameter('X11Forwarding', default=True) }}
+{{ config | manala.roles.ssh_config_parameter('PrintMotd', default=False) }}
+{{ config | manala.roles.ssh_config_parameter('Subsystem', default='sftp /usr/lib/openssh/sftp-server') }}
+{{ config | manala.roles.ssh_config_parameter('UsePAM', default=True) }}
+{{ config | manala.roles.ssh_config_parameter('UseDNS', default=False) }}
+{{ config | manala.roles.ssh_config_parameter('PrintLastLog', default=False) }}
+
+{{ config | manala.roles.ssh_config(exclude=[
+  'PermitRootLogin',
+  'PermitEmptyPasswords',
+  'ChallengeResponseAuthentication',
+  'PasswordAuthentication',
+  'X11Forwarding',
+  'PrintMotd',
+  'Subsystem',
+  'UsePAM',
+  'UseDNS',
+  'PrintLastLog',
+]) }}

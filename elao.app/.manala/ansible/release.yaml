@@ -1,5 +1,6 @@
 ---
 
 - hosts: release
-  roles:
-    - release
+  tasks:
+    - import_role:
+        name: release

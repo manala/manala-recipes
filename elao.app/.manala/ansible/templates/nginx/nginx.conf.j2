@@ -1,0 +1,67 @@
+{%- set config = {
+  'events': {},
+  'http': {},
+} | combine(manala_nginx_config|default({}, true)) -%}
+
+user www-data;
+{{ config | manala.roles.nginx_config_parameter('worker_processes', default=1) }}
+
+error_log /var/log/nginx/error.log warn;
+pid /var/run/nginx.pid;
+
+{{ config | manala.roles.nginx_config_parameter('load_module', default=[]) }}
+
+events {
+    {{ config.events | manala.roles.nginx_config_parameter('worker_connections', default=1024) }}
+}
+
+http {
+    server_tokens on;
+    default_type application/octet-stream;
+
+    {{ config.http | manala.roles.nginx_config_parameter('log_format', default='main  \'$remote_addr - $remote_user [$time_local] "$request" \'
+                      \'$status $body_bytes_sent "$http_referer" \'
+                      \'"$http_user_agent" "$http_x_forwarded_for"\'') }}
+
+    access_log /var/log/nginx/access.log;
+
+    # See: http://jeremyfelt.com/code/2013/01/08/clear-nginx-cache-in-vagrant/
+    sendfile off;
+    #tcp_nopush     on;
+
+    {{ config.http | manala.roles.nginx_config_parameter('keepalive_timeout', default=65) }}
+
+    # See: http://www.nicogiraud.com/blog/nginx-erreur-502-bad-gateway-sur-les-requetes-en-post.html
+    {{ config.http | manala.roles.nginx_config_parameter('fastcgi_buffer_size', default='128k') }}
+    {{ config.http | manala.roles.nginx_config_parameter('fastcgi_buffers', default='4 256k') }}
+    {{ config.http | manala.roles.nginx_config_parameter('fastcgi_busy_buffers_size', default='256k') }}
+
+    # See: http://charles.lescampeurs.org/2008/11/14/fix-nginx-increase-server_names_hash_bucket_size
+    {{ config.http | manala.roles.nginx_config_parameter('server_names_hash_bucket_size', default=128) }}
+
+    include mime.types;
+    include /etc/nginx/conf.d/*.conf;
+{{ config.http | manala.roles.nginx_config_section(exclude=[
+  'server_tokens',
+  'default_type',
+  'log_format',
+  'access_log',
+  'sendfile',
+  'tcp_nopush',
+  'keepalive_timeout',
+  'fastcgi_buffer_size',
+  'fastcgi_buffers',
+  'fastcgi_busy_buffers_size',
+  'server_names_hash_bucket_size',
+  'include',
+]) | indent(4) }}
+}
+{{ config | manala.roles.nginx_config_section(exclude=[
+  'user',
+  'worker_processes',
+  'error_log',
+  'pid',
+  'load_module',
+  'events',
+  'http',
+]) }}

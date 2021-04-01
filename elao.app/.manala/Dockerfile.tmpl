@@ -66,15 +66,15 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # System #
 ##########
 
+COPY ansible/collections                     /tmp/ansible/collections/
 COPY ansible/inventories/system.yaml         /tmp/ansible/inventories/
-COPY ansible/roles/system                    /tmp/ansible/roles/system/
 COPY ansible/templates                       /tmp/ansible/templates/
 COPY ansible/ansible.cfg ansible/system.yaml /tmp/ansible/
 
 RUN \
     cd /tmp/ansible \
     && ansible-galaxy collection install \
-      --requirements-file roles/system/requirements.yaml \
+      --requirements-file collections/requirements.yaml \
       --force \
     && ansible-playbook system.yaml \
       --inventory-file inventories \

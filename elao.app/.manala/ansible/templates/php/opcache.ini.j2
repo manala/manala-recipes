@@ -1,0 +1,15 @@
+{%- set config = item.config|default({}) -%}
+
+{{ config | manala.roles.php_config_parameter('opcache.memory_consumption', default=128) }}
+{{ config | manala.roles.php_config_parameter('opcache.interned_strings_buffer', default=8) }}
+{{ config | manala.roles.php_config_parameter('opcache.max_accelerated_files', default=4000) }}
+{{ config | manala.roles.php_config_parameter('opcache.revalidate_freq', default=2) }}
+{{ config | manala.roles.php_config_parameter('opcache.fast_shutdown', default=1) }}
+
+{{ config | manala.roles.php_config(exclude=[
+  'opcache.memory_consumption',
+  'opcache.interned_strings_buffer',
+  'opcache.max_accelerated_files',
+  'opcache.revalidate_freq',
+  'opcache.fast_shutdown',
+]) -}}
