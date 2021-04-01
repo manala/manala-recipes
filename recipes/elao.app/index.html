@@ -65,6 +65,7 @@
 <ul>
 <li><a href="#requirements">Requirements</a></li>
 <li><a href="#overview">Overview</a></li>
+<li><a href="#init">Init</a></li>
 <li><a href="#quick-start">Quick start</a></li>
 <li><a href="#system">System</a></li>
 <li><a href="#integration">Integration</a>
@@ -88,6 +89,9 @@
 </ul>
 <h2 id="overview">Overview<a href="#overview" class="anchor"></a></h2>
 <p>This recipe contains some helpful scripts in the context of a php/nodejs app, such as Makefile tasks in order to release and deploy your app.</p>
+<h2 id="init">Init<a href="#init" class="anchor"></a></h2>
+<pre class="code-multiline"><code id="d770455ce9ab4ff2143db1f7eed39fba">$ cd [workspace]
+$ manala init -i elao.app [project]</code></pre>
 <h2 id="quick-start">Quick start<a href="#quick-start" class="anchor"></a></h2>
 <p>In a shell terminal, change directory to your app, and run the following commands:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="aca5cb8e0fce2d5de8ea4ed6cb5c590a"><span class="token builtin class-name">cd</span> /path/to/my/app
@@ -128,18 +132,18 @@ App:</code></pre>
 <pre class="code-multiline language-bash"><code class="language-bash" id="fb6dad9a920a0351eb8c4ff9a6284dfd"><span class="token function">make</span> <span class="token function">ssh</span></code></pre>
 <h2 id="system">System<a href="#system" class="anchor"></a></h2>
 <p>Here is an example of a system configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="5d2e6a308c49a2ee8c1fb9e0919bfedd"><span class="token comment">##########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="8b2b82d548bb0d7881118d29d839813d"><span class="token comment">##########</span>
 <span class="token comment"># System #</span>
 <span class="token comment">##########</span>
 
 <span class="token key atrule">system</span><span class="token punctuation">:</span>
     <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">10</span>
     <span class="token key atrule">hostname</span><span class="token punctuation">:</span> app.vm
-    <span class="token comment">#memory: 2048 # Optional</span>
-    <span class="token comment">#cpus: 1 # Optional</span>
+    <span class="token comment">#memory: 4096 # Optional</span>
+    <span class="token comment">#cpus: 2 # Optional</span>
     <span class="token comment">#motd: # Optional</span>
-    <span class="token comment">#    template: template/elao.j2</span>
-    <span class="token comment">#    message: App</span>
+    <span class="token comment">#    template: motd/cow.j2</span>
+    <span class="token comment">#    message: Foo bar</span>
     <span class="token comment">#timezone: Etc/UTC # Optional</span>
     <span class="token comment">#locales: # Optional</span>
     <span class="token comment">#    default: C.UTF-8</span>
@@ -172,23 +176,31 @@ App:</code></pre>
     <span class="token key atrule">nginx</span><span class="token punctuation">:</span>
         <span class="token key atrule">configs</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
         <span class="token comment"># configs:</span>
-        <span class="token comment">#     # Php fpm</span>
-        <span class="token comment">#     - file: app_php_fpm</span>
-        <span class="token comment">#       template: nginx/app_php_fpm.j2</span>
-        <span class="token comment">#     # Gzip</span>
-        <span class="token comment">#     - file: app_gzip</span>
-        <span class="token comment">#       template: nginx/app_gzip.j2</span>
-        <span class="token comment">#     # Ssl</span>
-        <span class="token comment">#     - file: app_ssl.conf</span>
-        <span class="token comment">#       template: nginx/app_ssl_offloading.conf.j2</span>
-        <span class="token comment">#     # Cors</span>
-        <span class="token comment">#     - file: app_cors</span>
-        <span class="token comment">#       template: nginx/app_cors.j2</span>
-        <span class="token comment">#     # No index</span>
-        <span class="token comment">#     - file: app_no_index</span>
-        <span class="token comment">#       template: nginx/app_no_index.j2</span>
+        <span class="token comment">#     - template: nginx/gzip.j2</span>
+        <span class="token comment">#     #- template: nginx/cors.j2</span>
+        <span class="token comment">#     #- template: nginx/no_index.j2</span>
+        <span class="token comment">#     - template: nginx/php_fpm_app.j2</span>
+        <span class="token comment">#     # App</span>
+        <span class="token comment">#     - file: app.conf</span>
+        <span class="token comment">#       config: |</span><span class="token scalar string">
+        #           server {
+        #               server_name ~.;
+        #               root /srv/app/public;
+        #               access_log /srv/log/nginx.access.log;
+        #               error_log /srv/log/nginx.error.log;
+        #               include conf.d/gzip;
+        #               location / {
+        #                   try_files $uri /index.php$is_args$args;
+        #               }
+        #               location ~ ^/index\.php(/|$) {
+        #                   include conf.d/php_fpm_app;
+        #                   internal;
+        #               }
+        #           }</span>
     <span class="token key atrule">php</span><span class="token punctuation">:</span>
         <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">"8.0"</span>
+        <span class="token comment"># composer:</span>
+        <span class="token comment">#   version: 1 # Optional</span>
         <span class="token key atrule">extensions</span><span class="token punctuation">:</span>
           <span class="token comment"># Symfony</span>
           <span class="token punctuation">-</span> intl
@@ -197,8 +209,13 @@ App:</code></pre>
           <span class="token punctuation">-</span> xml
           <span class="token comment"># App</span>
           <span class="token punctuation">-</span> mysql
-        <span class="token comment"># composer:</span>
-        <span class="token comment">#   version: 1 # Optional</span>
+        <span class="token key atrule">configs</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">template</span><span class="token punctuation">:</span> php/opcache.ini.j2
+          <span class="token punctuation">-</span> <span class="token key atrule">template</span><span class="token punctuation">:</span> php/app.ini.j2
+            <span class="token key atrule">config</span><span class="token punctuation">:</span>
+                <span class="token key atrule">date.timezone</span><span class="token punctuation">:</span> UTC
+                <span class="token key atrule">upload_max_filesize</span><span class="token punctuation">:</span> 16M
+                <span class="token key atrule">post_max_size</span><span class="token punctuation">:</span> 16M
     <span class="token key atrule">nodejs</span><span class="token punctuation">:</span>
         <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">14</span>
         <span class="token comment"># packages:</span>
@@ -208,37 +225,38 @@ App:</code></pre>
     <span class="token comment">#     files:</span>
     <span class="token comment">#       - file: app</span>
     <span class="token comment">#         env:</span>
-    <span class="token comment">#           SHELL: /usr/bin/zsh</span>
     <span class="token comment">#           HOME: /srv/app</span>
     <span class="token comment">#         jobs:</span>
-    <span class="token comment">#           - name: foo-bar</span>
-    <span class="token comment">#             job: bin/console app:foo:bar --no-interaction -vv &gt;&gt; /srv/log/cron.foo-bar.log 2&gt;&amp;1</span>
+    <span class="token comment">#           # Foo - Bar</span>
+    <span class="token comment">#           - command: php bin/console app:foo:bar --no-interaction -vv &gt;&gt; /srv/log/cron.foo-bar.log 2&gt;&amp;1</span>
     <span class="token comment">#             minute: 0</span>
+    <span class="token comment">#             # Dev</span>
+    <span class="token comment">#             state: absent</span>
     <span class="token comment"># supervisor:</span>
     <span class="token comment">#     configs:</span>
-    <span class="token comment">#         - file: app.conf</span>
-    <span class="token comment">#           groups:</span>
-    <span class="token comment">#               acme:</span>
-    <span class="token comment">#                   programs:</span>
-    <span class="token comment">#                       - foo</span>
-    <span class="token comment">#                       - bar</span>
-    <span class="token comment">#           programs:</span>
-    <span class="token comment">#               foo:</span>
-    <span class="token comment">#                   command: zsh -c "bin/console app:acme:foo --no-interaction -vv"</span>
-    <span class="token comment">#                   directory: /srv/app</span>
-    <span class="token comment">#                   stdout_logfile: /srv/log/supervisor.acme-foo.log</span>
-    <span class="token comment">#               bar:</span>
-    <span class="token comment">#                   command: zsh -c "bin/console app:acme:bar --no-interaction -vv"</span>
-    <span class="token comment">#                   directory: /srv/app</span>
-    <span class="token comment">#                   stdout_logfile: /srv/log/supervisor.acme-bar.log</span>
-    <span class="token comment">#               foo-bar:</span>
-    <span class="token comment">#                   command: zsh -c "bin/console app:foo:bar --no-interaction -vv"</span>
-    <span class="token comment">#                   directory: /srv/app</span>
-    <span class="token comment">#                   stdout_logfile: /srv/log/supervisor.foo-bar.log</span>
-    <span class="token comment">#         - file: app_foo.conf</span>
-    <span class="token comment">#           config: |</span><span class="token scalar string">
-    #               [program:foo]
-    #               command=/bin/foo
+    <span class="token comment">#       - file: app.conf</span>
+    <span class="token comment">#         #groups:</span>
+    <span class="token comment">#         #    acme:</span>
+    <span class="token comment">#         #        programs:</span>
+    <span class="token comment">#         #          - foo</span>
+    <span class="token comment">#         #          - bar</span>
+    <span class="token comment">#         programs:</span>
+    <span class="token comment">#             foo:</span>
+    <span class="token comment">#                 command: php bin/console app:acme:foo --no-interaction -vv</span>
+    <span class="token comment">#                 directory: /srv/app</span>
+    <span class="token comment">#                 stdout_logfile: /srv/log/supervisor.acme-foo.log</span>
+    <span class="token comment">#             bar:</span>
+    <span class="token comment">#                 command: php bin/console app:acme:bar --no-interaction -vv</span>
+    <span class="token comment">#                 directory: /srv/app</span>
+    <span class="token comment">#                 stdout_logfile: /srv/log/supervisor.acme-bar.log</span>
+    <span class="token comment">#             foo-bar:</span>
+    <span class="token comment">#                 command: php bin/console app:foo:bar --no-interaction -vv</span>
+    <span class="token comment">#                 directory: /srv/app</span>
+    <span class="token comment">#                 stdout_logfile: /srv/log/supervisor.foo-bar.log</span>
+    <span class="token comment">#       - file: app_foo.conf</span>
+    <span class="token comment">#         config: |</span><span class="token scalar string">
+    #             [program:foo]
+    #             command=/bin/foo
     # MariaDB
     mariadb:
         version: 10.5
@@ -247,14 +265,16 @@ App:</code></pre>
         version: "8.0"
     # redis:
     #     version: "*"
-    #     config:
-    #       - save: '""' # Disable persistence
+    #     # config:
+    #     #     save: '""' # Disable persistence
     elasticsearch:
         version: 7
         plugins:
           - analysis-icu
     # influxdb:
     #     version: "*"
+    #     config:
+    #       reporting-disabled: true
     #     databases:
     #       - app
     #     users:
@@ -265,20 +285,14 @@ App:</code></pre>
     #       - database: app
     #         user: app
     #         grant: ALL
-    #     config:
-    #       - reporting-disabled: true
     # mongodb:
     #     version: 4.4
     ssh:
         client:
-            config:
-                - Host *.elao.run:
-                    - User: app
-                    - ForwardAgent: yes
-                - Host *.elao.local:
-                    - User: app
-                    - ForwardAgent: yes
-                    - ProxyCommand: ssh gateway@bastion.elao.com -W %h:%p</span></code></pre>
+            config: |
+                Host *.elao.run
+                    User app
+                    ForwardAgent yes</span></code></pre>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
 <h3 id="jenkins">Jenkins<a href="#jenkins" class="anchor"></a></h3>
 <p>Here are some examples of integration configurations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> for Jenkins:</p>
@@ -645,11 +659,14 @@ parameters:</span>
 <p>Debug ansible provisioning:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="5ed0125f03431e6a4f2df8fd17f0e610">ansible-galaxy collection <span class="token function">install</span> manala.roles --collections-path /vagrant/ansible/collections</code></pre>
 </li>
+<li>Update vagrant boxes
+<pre class="code-multiline"><code id="8a36056dcdf83615ead592c9cff76a9d">vagrant box outdated --global
+vagrant box update --box bento/debian-10</code></pre></li>
 </ul></body>
         </article>
     </section>
 
-    <time datetime="2021-04-01UTC08:50:51+00:00">Last modified: April 1, 2021 08:50</time>
+    <time datetime="2021-04-01UTC19:44:30+00:00">Last modified: April 1, 2021 19:44</time>
         </div>
 
         <footer class="footer">
