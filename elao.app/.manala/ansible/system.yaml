@@ -248,11 +248,7 @@
     # InfluxDB #
     ############
 
-    manala_influxdb_config_template: "{{
-      'config/influxdata/influxdb.conf.j2'
-        if (system_influxdb_config is mapping) else
-      None
-    }}"
+    manala_influxdb_config_template: config/influxdata/influxdb.conf.j2
     manala_influxdb_config: "{{ system_influxdb_config }}"
 
     manala_influxdb_databases: "{{ system_influxdb_databases }}"
@@ -411,18 +407,10 @@
     # Redis #
     #########
 
-    manala_redis_server_config_template: "{{
-      'config/debian/redis.conf.j2'
-        if (system_redis_server_config is mapping) else
-      'config/default.dev.j2'
-    }}"
-    manala_redis_server_config: "{{
-      {
-        'bind': '0.0.0.0',
-      }|combine(system_redis_server_config)
-        if (system_redis_server_config is mapping) else
-      system_redis_server_config
-    }}"
+    manala_redis_server_config_template: config/debian/redis.conf.j2
+    manala_redis_server_config: "{{ {
+      'bind': '0.0.0.0',
+    }|combine(system_redis_server_config) }}"
 
     #######
     # Ssh #
