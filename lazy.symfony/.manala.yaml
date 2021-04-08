@@ -39,7 +39,7 @@ system:
         version: ~
     php:
         # @option {"label": "Php version"}
-        # @schema {"enum": [7.4]}
+        # @schema {"enum": ["8.0", 7.4]}
         version: ~
     nodejs:
         # @option {"label": "Nodejs version"}
