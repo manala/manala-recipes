@@ -322,6 +322,12 @@
         host: localhost
         state: absent
 
+    ###########
+    # Network #
+    ###########
+
+    manala_network_hosts: "{{ system_network_hosts }}"
+
     #########
     # Nginx #
     #########
@@ -477,6 +483,11 @@
         name: apt
       when: system_apt
       tags: [apt]
+
+    - import_role:
+        name: network
+      when: system_network
+      tags: [network]
 
     - import_role:
         name: accounts
