@@ -64,7 +64,6 @@ system:
     # @schema {"items": {"type": "object"}}
     files: []
     network:
-      # @schema {"type": "object"}
       hosts: {}
     nginx:
         # @schema {
