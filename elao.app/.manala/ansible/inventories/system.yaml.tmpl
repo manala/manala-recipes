@@ -151,7 +151,7 @@ system:
                 {{- .apt.packages | toYaml | nindent 16 }}
             {{- end }}
             # Network
-            system_network: true
+            system_network: {{ not (empty .network.hosts) | ternary "true" "false" }}
             system_network_hosts:
               {{- .network.hosts | toYaml | nindent 16 }}
             # Cron
