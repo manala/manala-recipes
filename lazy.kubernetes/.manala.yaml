@@ -1,11 +1,15 @@
 manala:
-    description: Kubernetes environment, opiniated, docker based, for lazy people
+    description: Kubernetes cluster administration environment, opiniated and docker based, for lazy people
     template: .manala.yaml.tmpl
     sync:
+      - .manala/docker
       - .manala/make
-      - .manala/shell
+      - .manala/templates
+      - .manala/.dockerignore
       - .manala/.gitignore
       - .manala/docker-compose.darwin.yaml
+      - .manala/docker-compose.linux.yaml
+      - .manala/docker-compose.windows.yaml
       - .manala/docker-compose.yaml.tmpl
       - .manala/Dockerfile.tmpl
       - .manala/Makefile.tmpl
@@ -26,24 +30,27 @@ project:
 ##########
 
 system:
-    # @schema {"type": ["null", "string"]}
-    kubeconfig: ~
+    # @schema {
+    #     "additionalProperties": {"type": ["string", "integer"]},
+    #     "propertyNames": {"pattern": "^[A-Z_]+$"}
+    # }
+    env: {}
     # @schema {"items": {"type": "string"}}
     mount: []
     kubectl:
-        # @schema {"enum": ["1.20.5"]}
+        # @schema {"enum": ["1.21.2", "1.20.8", "1.19.12", "1.18.20"]}
         # @option {"label": "Kubectl version"}
         version: ~
     helm:
-        # @schema {"enum": [null, "3.5.3"]}
+        # @schema {"enum": [null, "3.6.1"]}
         # @option {"label": "Helm version"}
         version: ~
     k9s:
-        # @schema {"enum": [null, "0.24.6"]}
+        # @schema {"enum": [null, "0.24.10"]}
         # @option {"label": "K9s version"}
         version: ~
     stern:
-        # @schema {"enum": [null, "1.14.0"]}
+        # @schema {"enum": [null, "1.19.0"]}
         # @option {"label": "Stern version"}
         version: ~
     kubespy:
@@ -59,6 +66,34 @@ system:
         # @option {"label": "Kube Prompt version"}
         version: ~
     popeye:
-        # @schema {"enum": [null, "0.9.0"]}
+        # @schema {"enum": [null, "0.9.2"]}
         # @option {"label": "Popeye version"}
         version: ~
+    knsk:
+        # @schema {"enum": [null, "1.0"]}
+        # @option {"label": "Kubernetes namespace killer version"}
+        version: ~
+    vault:
+        # @schema {"enum": [null, "1.7.3"]}
+        # @option {"label": "Vault version"}
+        version: ~
+    rclone:
+        # @schema {"enum": [null, "1.55.1"]}
+        # @option {"label": "Rclone version"}
+      version: ~
+    openstack:
+        # @schema {"enum": [null, "5.5.0"]}
+        # @option {"label": "Openstack client version"}
+      version: ~
+    swift:
+        # @schema {"enum": [null, "3.12.0"]}
+        # @option {"label": "Swift client version"}
+      version: ~
+      keystone:
+        # @schema {"enum": [null, "4.2.0"]}
+        # @option {"label": "Swift keystone client version"}
+        version: ~
+    scw:
+        # @schema {"enum": [null, "2.3.1"]}
+        # @option {"label": "Scaleway cli version"}
+      version: ~

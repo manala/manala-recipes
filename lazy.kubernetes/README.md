@@ -5,7 +5,7 @@
 ## Requirements
 
 * Make
-* Docker Desktop 2.2.0+
+* Docker Desktop 2.2.0+ or Docker Engine + Docker Compose
 
 ## Todo
 

@@ -6,20 +6,45 @@
 manala:
     recipe: lazy.symfony
 
-app: {{ .Vars.app | toYaml }}
+###########
+# Project #
+###########
+
+project:
+    name: {{ .Vars.project.name | toYaml }}
+
+##########
+# System #
+##########
 
 system:
     nginx:
         version: {{ .Vars.system.nginx.version | toYaml }}
+        port: {{ .Vars.system.nginx.port }}
     php:
         version: {{ .Vars.system.php.version | toYaml }}
-
+        {{- if .Vars.system.mariadb.version }}
+        extensions:
+          - mysql
+        {{- else }}
+        extensions: []
+        {{- end }}
     {{- if .Vars.system.nodejs.version }}
     nodejs:
         version: {{ .Vars.system.nodejs.version | toYaml }}
     {{- end }}
-
     {{- if .Vars.system.mariadb.version }}
     mariadb:
         version: {{ .Vars.system.mariadb.version | toYaml }}
+        port: {{ .Vars.system.mariadb.port }}
+    {{- if .Vars.system.phpmyadmin.version }}
+    phpmyadmin:
+        version: {{ .Vars.system.phpmyadmin.version | toYaml }}
+        port: {{ .Vars.system.phpmyadmin.port }}
+    {{- end }}
+    {{- end }}
+    {{- if .Vars.system.maildev.version }}
+    maildev:
+        version: {{ .Vars.system.maildev.version | toYaml }}
+        port: {{ .Vars.system.maildev.port }}
     {{- end }}

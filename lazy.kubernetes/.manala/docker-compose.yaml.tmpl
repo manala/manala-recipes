@@ -1,26 +1,31 @@
+{{- $now := dateInZone "20060102150405" (now) "UTC" -}}
+
 version: "3.7"
 
 services:
 
-  ##############
-  # Kubernetes #
-  ##############
+  ##########
+  # System #
+  ##########
 
-  kubernetes:
-    hostname: kubernetes
+  system:
+    hostname: {{ .Vars.project.name }}
     build:
       context: .
-      target: kubernetes
-    user: lazy
-    {{- if .Vars.system.kubeconfig }}
-    environment:
-      KUBECONFIG: ${_DOCKER_DIR}/{{ .Vars.system.kubeconfig }}
-    {{- end }}
+      target: system
+    image: {{ .Vars.project.name }}:{{ $now }}
     volumes:
-      - .home:/home:delegated
-      - ..:${_DOCKER_DIR}:cached
+      - ..:${DIR}
       {{- range $mount := .Vars.system.mount }}
-      - ../{{ $mount }}:${_DOCKER_DIR}/{{ $mount }}:cached
+      - ../{{ $mount }}:${DIR}/{{ $mount }}
       {{- end }}
-    working_dir: ${_DOCKER_DIR}
-    network_mode: bridge # Use default docker bridge network
+    environment:
+      DIR: ${DIR}
+      CACHE_DIR: ${CACHE_DIR}
+      {{- range $key, $value := .Vars.system.env }}
+      {{ $key }}: {{ $value }}
+      {{- end }}
+    working_dir: ${DIR}
+    entrypoint: .manala/docker/entrypoint
+    # Use default docker bridge network
+    network_mode: bridge

@@ -1,11 +1,15 @@
 manala:
-    description: Ansible environment, opiniated, docker based, for lazy people
+    description: Ansible administration environment, opiniated and docker based, for lazy people
     template: .manala.yaml.tmpl
     sync:
+      - .manala/docker
       - .manala/make
-      - .manala/shell
+      - .manala/templates
+      - .manala/.dockerignore
       - .manala/.gitignore
       - .manala/docker-compose.darwin.yaml
+      - .manala/docker-compose.linux.yaml
+      - .manala/docker-compose.windows.yaml
       - .manala/docker-compose.yaml.tmpl
       - .manala/Dockerfile.tmpl
       - .manala/Makefile.tmpl
@@ -26,9 +30,14 @@ project:
 ##########
 
 system:
+    # @schema {
+    #     "additionalProperties": {"type": ["string", "integer"]},
+    #     "propertyNames": {"pattern": "^[A-Z_]+$"}
+    # }
+    env: {}
     # @schema {"items": {"type": "string"}}
     mount: []
     ansible:
-        # @schema {"enum": ["3.1.0", "2.10.7", "2.10.4"]}
+        # @schema {"enum": ["2.11.2"]}
         # @option {"label": "Ansible version"}
         version: ~
