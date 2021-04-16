@@ -152,8 +152,7 @@ system:
             {{- end }}
             # Network
             system_network: {{ not (empty .network.hosts) | ternary "true" "false" }}
-            system_network_hosts:
-              {{- .network.hosts | toYaml | nindent 16 }}
+            {{- dict "system_network_hosts" .network.hosts | toYaml | nindent 12 }}
             # Cron
             system_cron: {{ not (empty .cron.files) | ternary "true" "false" }}
             # Docker
