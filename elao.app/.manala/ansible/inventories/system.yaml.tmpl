@@ -74,6 +74,8 @@ system:
         system_mysql_version: {{ .mysql.version | toYaml }}
         system_mysql_install_packages: null
         system_mysql_configs_dir: /etc/mysql/mysql.conf.d
+        # Network
+        system_network: false
         # Nginx
         system_nginx: false
         {{- dict "system_nginx_configs" .nginx.configs | toYaml | nindent 8 }}
