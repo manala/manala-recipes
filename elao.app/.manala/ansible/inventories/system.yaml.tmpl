@@ -150,9 +150,6 @@ system:
                 # App
                 {{- .apt.packages | toYaml | nindent 16 }}
             {{- end }}
-            # Network
-            system_network: {{ not (empty .network.hosts) | ternary "true" "false" }}
-            {{- dict "system_network_hosts" .network.hosts | toYaml | nindent 12 }}
             # Cron
             system_cron: {{ not (empty .cron.files) | ternary "true" "false" }}
             # Docker
@@ -177,6 +174,9 @@ system:
             system_motd: true
             # MySQL
             system_mysql: {{ not (empty .mysql.version) | ternary "true" "false" }}
+            # Network
+            system_network: {{ not (empty .network.hosts) | ternary "true" "false" }}
+            {{- dict "system_network_hosts" .network.hosts | toYaml | nindent 12 }}
             # Nginx
             system_nginx: {{ not (empty .nginx.configs) | ternary "true" "false" }}
             # Ngrok
