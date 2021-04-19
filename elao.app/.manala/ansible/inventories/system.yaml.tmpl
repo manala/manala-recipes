@@ -74,6 +74,8 @@ system:
         system_mysql_version: {{ .mysql.version | toYaml }}
         system_mysql_install_packages: null
         system_mysql_configs_dir: /etc/mysql/mysql.conf.d
+        # Network
+        system_network: false
         # Nginx
         system_nginx: false
         {{- dict "system_nginx_configs" .nginx.configs | toYaml | nindent 8 }}
@@ -174,6 +176,9 @@ system:
             system_motd: true
             # MySQL
             system_mysql: {{ not (empty .mysql.version) | ternary "true" "false" }}
+            # Network
+            system_network: {{ not (empty .network.hosts) | ternary "true" "false" }}
+            {{- dict "system_network_hosts" .network.hosts | toYaml | nindent 12 }}
             # Nginx
             system_nginx: {{ not (empty .nginx.configs) | ternary "true" "false" }}
             # Ngrok

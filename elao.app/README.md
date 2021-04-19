@@ -147,6 +147,9 @@ system:
       #- path: /srv/app/api/var/cache
       #  src: /srv/cache/api
       #  state: link_directory
+    #network: # Optional
+    #    hosts:
+    #        127.0.0.1: foo.fr foobar.fr
     nginx:
         configs: []
         # configs:

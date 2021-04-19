@@ -63,6 +63,8 @@ system:
         holds: []
     # @schema {"items": {"type": "object"}}
     files: []
+    network:
+      hosts: {}
     nginx:
         # @schema {
         #     "items": {"type": "object",
