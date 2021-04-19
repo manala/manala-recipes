@@ -132,7 +132,7 @@ App:</code></pre>
 <pre class="code-multiline language-bash"><code class="language-bash" id="fb6dad9a920a0351eb8c4ff9a6284dfd"><span class="token function">make</span> <span class="token function">ssh</span></code></pre>
 <h2 id="system">System<a href="#system" class="anchor"></a></h2>
 <p>Here is an example of a system configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="8b2b82d548bb0d7881118d29d839813d"><span class="token comment">##########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="a96053aa21de46de0b27d983f75fa2cf"><span class="token comment">##########</span>
 <span class="token comment"># System #</span>
 <span class="token comment">##########</span>
 
@@ -173,6 +173,9 @@ App:</code></pre>
       <span class="token comment">#- path: /srv/app/api/var/cache</span>
       <span class="token comment">#  src: /srv/cache/api</span>
       <span class="token comment">#  state: link_directory</span>
+    <span class="token comment">#network: # Optional</span>
+    <span class="token comment">#    hosts:</span>
+    <span class="token comment">#        127.0.0.1: foo.fr foobar.fr</span>
     <span class="token key atrule">nginx</span><span class="token punctuation">:</span>
         <span class="token key atrule">configs</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
         <span class="token comment"># configs:</span>
@@ -666,7 +669,7 @@ vagrant box update --box bento/debian-10</code></pre></li>
         </article>
     </section>
 
-    <time datetime="2021-04-08UTC13:50:58+00:00">Last modified: April 8, 2021 13:50</time>
+    <time datetime="2021-04-19UTC07:09:25+00:00">Last modified: April 19, 2021 07:09</time>
         </div>
 
         <footer class="footer">
