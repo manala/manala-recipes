@@ -13,7 +13,6 @@ manala:
       - .manala/Jenkinsfile.tmpl
       - .manala/Makefile.tmpl
       - .manala/Vagrantfile.tmpl
-      - .manala.yaml.tmpl.dist
       - Makefile.dist
       - README.md .manala/README.md
 
