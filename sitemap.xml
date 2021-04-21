@@ -2,22 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
             <url>
             <loc>https://manala.github.io/manala-recipes/</loc>
-            <lastmod>2021-04-21T06:22:37+00:00</lastmod>            <priority>0</priority>            <changefreq>monthly</changefreq>
+            <lastmod>2021-04-21T06:32:34+00:00</lastmod>            <priority>0</priority>            <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/recipes/lazy.ansible</loc>
-            <lastmod>2021-04-21T06:22:37+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2021-04-21T06:32:34+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/recipes/elao.app</loc>
-            <lastmod>2021-04-21T06:22:37+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2021-04-21T06:32:34+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/recipes/lazy.kubernetes</loc>
-            <lastmod>2021-04-21T06:22:37+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2021-04-21T06:32:34+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/recipes/lazy.symfony</loc>
-            <lastmod>2021-04-21T06:22:37+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2021-04-21T06:32:34+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
     </urlset>
