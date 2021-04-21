@@ -154,6 +154,22 @@ deploy{{ include "release_target" $release }}:
 
 {{- end -}}
 
+#######
+# SSH #
+#######
+{{- range $release := .Vars.releases }}
+{{- if hasKey $release "deploy_hosts" }}
+  {{- range $index, $host := $release.deploy_hosts }}
+  {{- $length := len $release.deploy_hosts }}
+
+## Ssh to {{ if hasKey $release "app" }}{{ $release.app }} {{ end }}{{ $release.mode }}{{ if gt $length 1 }} {{ (add $index 1) | printf "%02d" }}{{ end }} server
+ssh{{ if hasKey $release "app" }}-{{ $release.app }}{{ end }}@{{ $release.mode }}{{ if gt $length 1 }}-{{ (add $index 1) | printf "%02d" }}{{ end }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+ssh{{ if hasKey $release "app" }}-{{ $release.app }}{{ end }}@{{ $release.mode }}{{ if gt $length 1 }}-{{ (add $index 1) | printf "%02d" }}{{ end }}:
+	ssh {{ if hasKey $host "ssh_user" }}{{ $host.ssh_user }}@{{ end }}{{ $host.ssh_host }}
+  {{- end }}
+{{- end -}}
+{{- end }}
+
 ###########
 # Project #
 ###########
