@@ -100,6 +100,10 @@ VM shell:
 make ssh
 ```
 
+Box update:
+```bash
+cd .manala && vagrant box update && cd -
+```
 
 ## System
 
@@ -707,9 +711,4 @@ See [Go Template syntax](https://docs.gomplate.ca/syntax/) for more info.
 
   ```shell
   ansible-galaxy collection install manala.roles --collections-path /vagrant/ansible/collections
-  ```
-* Update vagrant boxes
-  ```
-  vagrant box outdated --global
-  vagrant box update --box bento/debian-10
   ```
