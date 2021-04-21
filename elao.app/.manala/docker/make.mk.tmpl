@@ -20,6 +20,7 @@ define docker_run
 		docker build \
 			--quiet \
 			$(_ROOT_DIR)/.manala \
+		| head -n 1 \
 	) \
 	&& docker run \
 		--rm \
