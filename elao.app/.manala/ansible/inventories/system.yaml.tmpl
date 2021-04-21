@@ -194,11 +194,7 @@ system:
             # Ssh
             system_ssh: true
             system_ssh_server: true
-            system_ssh_client_config_template: {{ `"{{
-              'ssh/development/ssh_config.j2'
-                if (system_ssh_client_config is string) else
-              'config/client/default.dev.j2'
-            }}"` }}
+            system_ssh_client_config_template: ssh/development/ssh_config.j2
             # Supervisor
             system_supervisor: {{ not (empty .supervisor.configs) | ternary "true" "false" }}
             # Timezone
@@ -246,10 +242,6 @@ system:
               - cli
             # Ssh
             system_ssh: true
-            system_ssh_client_config_template: {{ `"{{
-              'ssh/integration/ssh_config.j2'
-                if (system_ssh_client_config is string) else
-              'config/client/default.test.j2'
-            }}"` }}
+            system_ssh_client_config_template: ssh/integration/ssh_config.j2
 
 {{- end }}
