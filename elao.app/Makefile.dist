@@ -45,13 +45,13 @@ install@staging:
 
 ## Build application
 build:
-	# npx encore dev --color=always
+	# npx encore dev --color --progress
 
 build@production:
-	# npx encore production --color=always --no-progress
+	# npx encore production --color
 
 build@staging:
-	# npx encore production --color=always --no-progress
+	# npx encore production --color
 
 #########
 # Watch #
@@ -59,7 +59,7 @@ build@staging:
 
 ## Watch application
 watch:
-	# npx encore dev --color=always --watch --watch-poll
+	# npx encore dev --color --progress --watch --watch-options-poll=200
 
 ###########
 # Project #
