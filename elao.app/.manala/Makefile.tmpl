@@ -1,27 +1,29 @@
 # Relative root dir ("."|".."|"../.."|…)
-_ROOT_DIR := $(patsubst ./%,%,$(patsubst %/.manala/Makefile,%,./$(filter %.manala/Makefile,$(MAKEFILE_LIST))))
+_DIR := $(patsubst ./%,%,$(patsubst %/.manala/Makefile,%,./$(filter %.manala/Makefile,$(MAKEFILE_LIST))))
 # Is current dir root ? (""|"1")
-_ROOT := $(if $(filter .,$(_ROOT_DIR)),1)
+_ROOT = $(if $(filter .,$(_DIR)),1)
 # Relative current dir ("."|"foo"|"foo/bar"|…)
-_DIR := $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_ROOT_DIR))%,%,$(CURDIR)))
+_CURRENT_DIR = $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_DIR))%,%,$(CURDIR)))
+# Relative cache dir ("./.manala/.cache"|"../.manala/.cache"|"../../.manala/.cache"|…)
+_CACHE_DIR = $(shell dir=$(_DIR)/.manala/.cache ; mkdir -p $${dir} ; echo $${dir})
 
-include $(_ROOT_DIR)/.manala/make/text.mk
-include $(_ROOT_DIR)/.manala/make/help.mk
-include $(_ROOT_DIR)/.manala/make/os.mk
-include $(_ROOT_DIR)/.manala/make/try.mk
-include $(_ROOT_DIR)/.manala/make/git.mk
-include $(_ROOT_DIR)/.manala/make/semver.mk
+include $(_DIR)/.manala/make/text.mk
+include $(_DIR)/.manala/make/help.mk
+include $(_DIR)/.manala/make/os.mk
+include $(_DIR)/.manala/make/try.mk
+include $(_DIR)/.manala/make/git.mk
+include $(_DIR)/.manala/make/semver.mk
 
 ###############
 # Environment #
 ###############
 
-include $(_ROOT_DIR)/.manala/vagrant/make.mk
+include $(_DIR)/.manala/vagrant/make.mk
 
 # Vagrant commands only available *OUTSIDE* vagrant environment
 ifneq ($(container),vagrant)
 
-export VAGRANT_CWD = $(_ROOT_DIR)/.manala
+export VAGRANT_CWD = $(_DIR)/.manala
 
 HELP += $(call help_section, Environment)
 
@@ -46,7 +48,7 @@ reload:
 	vagrant reload
 
 HELP += $(call help,ssh,                 Connect to the environment via SSH)
-ssh: export WORKDIR = /srv/app/$(_DIR)
+ssh: export DIR = /srv/app/$(_CURRENT_DIR)
 ssh:
 	vagrant ssh
 
@@ -65,12 +67,12 @@ HELP += $(call help_section, Environment)
 HELP += $(call help,provision,           Provision the environment (TAGS|DIFF|VERBOSE))
 provision:
 	$(call log, Install ansible galaxy collection)
-	cd $(_ROOT_DIR)/.manala/ansible \
+	cd $(_DIR)/.manala/ansible \
 		&& ansible-galaxy collection install \
 			--requirements-file collections/requirements.yaml \
 			--force
 	$(call log, Run ansible playbook)
-	cd $(_ROOT_DIR)/.manala/ansible \
+	cd $(_DIR)/.manala/ansible \
 		&& ansible-playbook system.yaml \
 			--inventory-file inventories \
 			--limit development \
@@ -105,7 +107,7 @@ provision.php: provision
 # Docker #
 ##########
 
-include $(_ROOT_DIR)/.manala/docker/make.mk
+include $(_DIR)/.manala/docker/make.mk
 
 # Docker commands only available *OUTSIDE* docker environment
 ifneq ($(container),docker)
@@ -132,8 +134,8 @@ HELP += $(call help,release{{ include "release_target" $release }},Release {{ in
 release{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
 release{{ include "release_target" $release }}:
 	$(call log, Run ansible playbook)
-	ansible-playbook $(_ROOT_DIR)/.manala/ansible/release.yaml \
-		--inventory $(_ROOT_DIR)/.manala/ansible/inventories/release.yaml \
+	ansible-playbook $(_DIR)/.manala/ansible/release.yaml \
+		--inventory $(_DIR)/.manala/ansible/inventories/release.yaml \
 		--limit {{ include "release_group" . }}
 
 {{ end -}}
@@ -143,8 +145,8 @@ HELP += $(call help,deploy{{ include "release_target" $release }},Deploy {{ incl
 deploy{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
 deploy{{ include "release_target" $release }}:
 	$(call log, Run ansible playbook)
-	ansible-playbook $(_ROOT_DIR)/.manala/ansible/deploy.yaml \
-		--inventory $(_ROOT_DIR)/.manala/ansible/inventories/deploy.yaml \
+	ansible-playbook $(_DIR)/.manala/ansible/deploy.yaml \
+		--inventory $(_DIR)/.manala/ansible/inventories/deploy.yaml \
 		--limit {{ include "release_group" $release }} \
 		$(if $(REF),--extra-vars '{"deploy_strategy_git_ref": "$(REF)"}')
 

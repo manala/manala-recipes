@@ -142,6 +142,6 @@ echo
 
 {% include 'functions/ngrok_http.j2' %}
 
-if [ -d ${WORKDIR:-{{ system_app_dir }}} ]; then
-  cd ${WORKDIR:-{{ system_app_dir }}}
+if [ -d ${DIR:-{{ system_app_dir }}} ]; then
+  cd ${DIR:-{{ system_app_dir }}}
 fi
