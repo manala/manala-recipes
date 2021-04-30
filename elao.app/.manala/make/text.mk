@@ -54,20 +54,6 @@ define message_error
 	printf "$(COLOR_ERROR)(╯°□°)╯︵ ┻━┻ $(strip $(1))$(COLOR_RESET)\n"
 endef
 
-###########
-# Confirm #
-###########
-
-# Usage:
-#   $(call confirm, Foo bar) = ༼ つ ◕_◕ ༽つ Foo bar (y/N):
-
-define confirm
-	$(if $(CONFIRM),, \
-		printf "$(COLOR_INFO) ༼ つ ◕_◕ ༽つ $(COLOR_WARNING)$(strip $(1)) $(COLOR_RESET)$(COLOR_WARNING)(y/N)$(COLOR_RESET): "; \
-		read CONFIRM ; if [ "$$CONFIRM" != "y" ]; then printf "\n"; exit 1; fi; \
-	)
-endef
-
 #######
 # Log #
 #######
@@ -87,4 +73,31 @@ endef
 
 define log_error
 	printf "[$(COLOR_COMMENT)$(call time)$(COLOR_RESET)] [$(COLOR_COMMENT)$(@)$(COLOR_RESET)] " ;  $(call message_error, $(1))
+endef
+
+###########
+# Confirm #
+###########
+
+# Usage:
+#   $(call confirm, Foo bar) = ༼ つ ◕_◕ ༽つ Foo bar (y/N):
+
+define confirm
+	$(if $(CONFIRM),, \
+		printf "$(COLOR_INFO) ༼ つ ◕_◕ ༽つ $(COLOR_WARNING)$(strip $(1)) $(COLOR_RESET)$(COLOR_WARNING)(y/N)$(COLOR_RESET): "; \
+		read CONFIRM ; if [ "$$CONFIRM" != "y" ]; then printf "\n"; exit 1; fi; \
+	)
+endef
+
+################
+# Conditionals #
+################
+
+# Usage:
+#   $(call error_if_not, $(FOO), FOO has not been specified) = (╯°□°)╯︵ ┻━┻ FOO has not been specified
+
+define error_if_not
+	$(if $(strip $(1)),, \
+		$(call message_error, $(strip $(2))) ; exit 1 \
+	)
 endef
