@@ -419,7 +419,7 @@
     manala_ssh_server: "{{ system_ssh_server }}"
     manala_ssh_server_config_template: ssh/sshd_config.j2
     manala_ssh_server_config:
-      AcceptEnv: WORKDIR
+      AcceptEnv: DIR
 
     manala_ssh_client_config_template: "{{ system_ssh_client_config_template }}"
     manala_ssh_client_config: "{{ system_ssh_client_config }}"

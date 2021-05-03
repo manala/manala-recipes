@@ -9,7 +9,7 @@ Vagrant.configure('2') do |config|
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
   config.ssh.extra_args = ['-q'] # Quiet mode
-  config.ssh.forward_env = ['WORKDIR']
+  config.ssh.forward_env = ['DIR']
 
   # Vm
   config.vm.box = 'bento/debian-{{ .Vars.system.version }}'
