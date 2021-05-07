@@ -101,3 +101,21 @@ define error_if_not
 		$(call message_error, $(strip $(2))) ; exit 1 \
 	)
 endef
+
+# Usage:
+#   $(call confirm_if, $(FOO), Foo bar) = ༼ つ ◕_◕ ༽つ Foo bar (y/N):
+
+define confirm_if
+	$(if $(strip $(1)), \
+		$(call confirm, $(strip $(2)))
+	)
+endef
+
+# Usage:
+#   $(call confirm_if_not, $(FOO), Foo bar) = ༼ つ ◕_◕ ༽つ Foo bar (y/N):
+
+define confirm_if_not
+	$(if $(strip $(1)),, \
+		$(call confirm, $(strip $(2)))
+	)
+endef
