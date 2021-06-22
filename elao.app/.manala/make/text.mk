@@ -119,3 +119,14 @@ define confirm_if_not
 		$(call confirm, $(strip $(2)))
 	)
 endef
+
+##########
+# Random #
+##########
+
+# Usage:
+#   $(call rand, 8) = 8th56zp2
+
+define rand
+`cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w $(strip $(1)) | head -n 1`
+endef
