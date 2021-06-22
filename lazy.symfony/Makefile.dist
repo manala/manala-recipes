@@ -4,4 +4,4 @@
 
 ## Install
 install:
-	composer install
+	$(composer) install

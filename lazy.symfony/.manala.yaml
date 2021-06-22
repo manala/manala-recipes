@@ -1,53 +1,80 @@
 manala:
-    description: Symfony environment, opiniated, docker based, for lazy people
+    description: Symfony development environment, opiniated and docker based, for lazy people
     template: .manala.yaml.tmpl
     sync:
       - .manala/ansistrano
       - .manala/docker
       - .manala/make
-      - .manala/mariadb
-      - .manala/nginx
-      - .manala/php
-      - .manala/starship
+      - .manala/templates
       - .manala/.dockerignore
       - .manala/.gitignore
+      - .manala/docker-compose.darwin.yaml
+      - .manala/docker-compose.linux.yaml
+      - .manala/docker-compose.windows.yaml
       - .manala/docker-compose.yaml.tmpl
       - .manala/Dockerfile.tmpl
       - .manala/Makefile.tmpl
       - Makefile.dist
       - README.md .manala/README.md
 
-#######
-# App #
-#######
+###########
+# Project #
+###########
 
-# @option {"label": "App name"}
-# @schema {"type": "string", "pattern": "^[-a-z]+$"}
-app: ~
+project:
+    # @schema {"type": "string", "minLength": 1}
+    # @option {"label": "Project name"}
+    name: ~
 
 ##########
 # System #
 ##########
 
 system:
-    # @schema {"enum": [8000, 9000, 10000]}
-    ports: 8000
+    # @schema {
+    #     "additionalProperties": {"type": ["string", "integer"]},
+    #     "propertyNames": {"pattern": "^[A-Z_]+$"}
+    # }
+    env: {}
+    # @schema {"items": {"type": "string"}}
+    mount: []
     nginx:
         # @option {"label": "Nginx version"}
         # @schema {"enum": [1.18]}
         version: ~
+        # @schema {"type": "integer", "exclusiveMinimum": 1024, "maximum": 65535}
+        port: 8000
     php:
         # @option {"label": "Php version"}
         # @schema {"enum": ["8.0", 7.4]}
         version: ~
+        # @schema {"items": {"type": "string"}}
+        extensions: []
     nodejs:
         # @option {"label": "Nodejs version"}
         # @schema {"enum": [null, 14, 12]}
         version: ~
     mariadb:
         # @option {"label": "MariaDB version"}
-        # @schema {"enum": [null, 10.4]}
+        # @schema {"enum": [null, 10.5, 10.4]}
         version: ~
+        # @schema {"type": "integer", "exclusiveMinimum": 1024, "maximum": 65535}
+        port: 8306
+    phpmyadmin:
+        # @option {"label": "PhpMyAdmin version"}
+        # @schema {"enum": [null, 5.1]}
+        version: ~
+        # @schema {"type": "integer", "exclusiveMinimum": 1024, "maximum": 65535}
+        port: 8300
+    maildev:
+        # @option {"label": "MailDev version"}
+        # @schema {"enum": [null, "2.0.0-beta3"]}
+        version: ~
+        # @schema {"type": "integer", "exclusiveMinimum": 1024, "maximum": 65535}
+        port: 8025
+    network:
+      # @schema {"items": {"type": "string"}}
+      ports: []
 
 ##########
 # Deploy #
