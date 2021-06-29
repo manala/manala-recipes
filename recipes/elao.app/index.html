@@ -8,9 +8,11 @@
 
         <title>    Manala Recipes - Elao - App
 </title>
+
+                    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+            <link rel="stylesheet" href="/manala-recipes/build/app.787aff7e.css">
         
-            <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
-            <link rel="stylesheet" href="/manala-recipes/build/app.fb22faa9.css">
+                    <script src="/manala-recipes/build/runtime.9644eff8.js" defer></script><script src="/manala-recipes/build/app.5415922d.js" defer></script>
             </head>
     <body>
 
@@ -27,8 +29,8 @@
                         <div class="dropdown-menu">
                                                             <a class="dropdown-item" href="/manala-recipes/recipes/elao.app">Elao - App</a>
                                                             <a class="dropdown-item" href="/manala-recipes/recipes/lazy.ansible">Lazy - Ansible</a>
-                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.symfony">Lazy - Symfony</a>
                                                             <a class="dropdown-item" href="/manala-recipes/recipes/lazy.kubernetes">Lazy - Kubernetes</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.symfony">Lazy - Symfony</a>
                                                     </div>
                     </div>
                 </li>
@@ -59,28 +61,59 @@
         </header>
 
         <div class="container">
-                <section>
+                <h1>Elao - App</h1>
+
+            <ul>
+                            <li>
+                    <a href="#requirements">Requirements</a>
+                                    </li>
+                            <li>
+                    <a href="#overview">Overview</a>
+                                    </li>
+                            <li>
+                    <a href="#init">Init</a>
+                                    </li>
+                            <li>
+                    <a href="#quick-start">Quick start</a>
+                                    </li>
+                            <li>
+                    <a href="#vm-interaction">VM interaction</a>
+                                    </li>
+                            <li>
+                    <a href="#system">System</a>
+                                    </li>
+                            <li>
+                    <a href="#integration">Integration</a>
+                                            <ul class="sub-list">
+                                                            <li><a href="#jenkins">Jenkins</a></li>
+                                                            <li><a href="#github-actions">Github Actions</a></li>
+                                                            <li><a href="#common-integration-tasks">Common integration tasks</a></li>
+                                                    </ul>
+                                    </li>
+                            <li>
+                    <a href="#releases">Releases</a>
+                                    </li>
+                            <li>
+                    <a href="#makefile">Makefile</a>
+                                            <ul class="sub-list">
+                                                            <li><a href="#git-tools">Git tools</a></li>
+                                                            <li><a href="#try-tools">Try tools</a></li>
+                                                    </ul>
+                                    </li>
+                            <li>
+                    <a href="#secrets">Secrets</a>
+                                    </li>
+                            <li>
+                    <a href="#https">Https</a>
+                                    </li>
+                            <li>
+                    <a href="#tips-tricks-and-tweaks">Tips, Tricks, and Tweaks</a>
+                                    </li>
+                    </ul>
+    
+    <section>
         <article>
-            <body><h1 id="elao-app">Elao - App<a href="#elao-app" class="anchor"></a></h1>
-<ul>
-<li><a href="#requirements">Requirements</a></li>
-<li><a href="#overview">Overview</a></li>
-<li><a href="#init">Init</a></li>
-<li><a href="#quick-start">Quick start</a></li>
-<li><a href="#system">System</a></li>
-<li><a href="#integration">Integration</a>
-<ul>
-<li><a href="#jenkins">Jenkins</a></li>
-<li><a href="#github-actions">Github Actions</a></li>
-<li><a href="#common-integration-tasks">Common Integration Tasks</a></li>
-</ul></li>
-<li><a href="#releases">Releases</a></li>
-<li><a href="#makefile">Makefile</a></li>
-<li><a href="#secrets">Secrets</a></li>
-<li><a href="#https">Https</a></li>
-<li><a href="#tips-tricks-and-tweaks">Tips, Tricks, and Tweaks</a></li>
-</ul>
-<h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
+            <body><h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
 <ul>
 <li>Make</li>
 <li>Vagrant 2.2.10+</li>
@@ -659,12 +692,20 @@ parameters:</span>
 </p>
 </div>
 <h2 id="https">Https<a href="#https" class="anchor"></a></h2>
-<p>In  order for https to work properly, you must:
-1) ensure elao ca certificate has been added to your local keychain (one time for <em>all</em> projects)</p>
-<pre class="code-multiline"><code id="c3dcbef8d973dace788b1dd85bc3c3ee">$ sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" .manala/certificates/ca.crt</code></pre>
-<p>2) generate a project certificate (one time <em>by</em> project, inside vagrant, remember to commit them right after)</p>
-<pre class="code-multiline"><code id="eeb3e472903f3360f248e70679e0438b">⇒  make provision.certificates</code></pre>
-<p>3) For firefox only, browse to <code class="code-inline" id="e43648ef7c80e1a6aa2fc5e3182ed187">about:config</code> and ensure <code class="code-inline" id="40169ca3c0758a897e82d7000d02abe3">security.enterprise_roots.enabled</code> value is set to true</p>
+<p>In  order for https to work properly, you must:</p>
+<ol>
+<li>
+<p>ensure elao ca certificate has been added to your local keychain (one time for <em>all</em> projects)</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="c3dcbef8d973dace788b1dd85bc3c3ee">$ <span class="token function">sudo</span> security add-trusted-cert -d -r trustRoot -k <span class="token string">"/Library/Keychains/System.keychain"</span> .manala/certificates/ca.crt</code></pre>
+</li>
+<li>
+<p>generate a project certificate (one time <em>by</em> project, inside vagrant, remember to commit them right after)</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="eeb3e472903f3360f248e70679e0438b">⇒  <span class="token function">make</span> provision.certificates</code></pre>
+</li>
+<li>
+<p>For firefox only, browse to <code class="code-inline" id="e43648ef7c80e1a6aa2fc5e3182ed187">about:config</code> and ensure <code class="code-inline" id="40169ca3c0758a897e82d7000d02abe3">security.enterprise_roots.enabled</code> value is set to true</p>
+</li>
+</ol>
 <h2 id="tips-tricks-and-tweaks">Tips, Tricks, and Tweaks<a href="#tips-tricks-and-tweaks" class="anchor"></a></h2>
 <ul>
 <li><a href="https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement" target="_blank">Vagrant root privilege requirement</a></li>
@@ -676,7 +717,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2021-06-29UTC12:49:29+00:00">Last modified: June 29, 2021 12:49</time>
+    <time datetime="2021-06-29UTC15:23:35+00:00">Last modified: June 29, 2021 15:23</time>
         </div>
 
         <footer class="footer">
@@ -695,7 +736,5 @@ parameters:</span>
                 </div>
             </div>
         </footer>
-
-                    <script src="/manala-recipes/build/runtime.1850121c.js"></script><script src="/manala-recipes/build/app.b93718f0.js"></script>
-            </body>
+    </body>
 </html>
