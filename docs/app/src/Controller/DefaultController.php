@@ -16,9 +16,7 @@ class DefaultController extends AbstractController
         $this->contentManager = $contentManager;
     }
 
-    /**
-     * @Route(path="/", name="index")
-     */
+    #[Route('/', name: 'index')]
     public function index()
     {
         /** @var DefaultPage $page */

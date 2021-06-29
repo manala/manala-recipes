@@ -25,7 +25,7 @@ jobs:
 
       # https://github.com/actions/setup-node
       - name: Setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -33,7 +33,7 @@ jobs:
           coverage: "none"
           extensions: "json"
           ini-values: "memory_limit=-1"
-          php-version: "7.4"
+          php-version: "8.0"
 
       - name: Determine composer cache directory
         id: composer-cache

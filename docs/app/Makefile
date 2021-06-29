@@ -7,7 +7,7 @@
 
 ## Install dependencies
 install:
-	composer install
+	symfony composer install
 	npm install
 
 ###############
@@ -36,8 +36,8 @@ build:
 ## Build static site
 build-static: export APP_ENV = prod
 build-static:
-	bin/console cache:clear
-	bin/console stenope:build
+	symfony console cache:clear
+	symfony console stenope:build
 
 serve-static:
 	open http://localhost:8001
