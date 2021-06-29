@@ -25,10 +25,10 @@
                     <div class="dropdown">
                         <a class="dropdown-toggle" href="/manala-recipes/">Recipes</a>
                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.ansible">Lazy - Ansible</a>
                                                             <a class="dropdown-item" href="/manala-recipes/recipes/elao.app">Elao - App</a>
-                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.kubernetes">Lazy - Kubernetes</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.ansible">Lazy - Ansible</a>
                                                             <a class="dropdown-item" href="/manala-recipes/recipes/lazy.symfony">Lazy - Symfony</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.kubernetes">Lazy - Kubernetes</a>
                                                     </div>
                     </div>
                 </li>
@@ -67,13 +67,13 @@
 </ul>
 <h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
 <ul>
-<li>Docker Desktop 2.2.0+</li>
+<li>Docker Desktop 2.2.0+ or Docker Engine + Docker Compose</li>
 </ul>
 <h2 id="setup">Setup<a href="#setup" class="anchor"></a></h2>
 <p>Ok, let's init a <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="69c12abcfaed39a59514c2ea971375df">manala init -i lazy.symfony foo
 <span class="token builtin class-name">cd</span> foo</code></pre>
-<p>Up the environment and shell into it into another terminal:</p>
+<p>Up the system and open a shell into an another terminal:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="e3bf9cd354412ccf8475b26f1132a3f8"><span class="token function">make</span> up
 <span class="token function">make</span> <span class="token function">sh</span></code></pre>
 <p>Create the <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application into <code class="code-inline" id="d42b9c57d24cf5db3bd8d332dc35437f">/tmp</code> and move files into your project (<em>symfony can't create application in a non-empty dir</em>):</p>
@@ -83,7 +83,7 @@
         </article>
     </section>
 
-    <time datetime="2021-04-21UTC07:01:09+00:00">Last modified: April 21, 2021 07:01</time>
+    <time datetime="2021-06-29UTC12:49:29+00:00">Last modified: June 29, 2021 12:49</time>
         </div>
 
         <footer class="footer">

@@ -25,10 +25,10 @@
                     <div class="dropdown">
                         <a class="dropdown-toggle" href="/manala-recipes/">Recipes</a>
                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.ansible">Lazy - Ansible</a>
                                                             <a class="dropdown-item" href="/manala-recipes/recipes/elao.app">Elao - App</a>
-                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.kubernetes">Lazy - Kubernetes</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.ansible">Lazy - Ansible</a>
                                                             <a class="dropdown-item" href="/manala-recipes/recipes/lazy.symfony">Lazy - Symfony</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.kubernetes">Lazy - Kubernetes</a>
                                                     </div>
                     </div>
                 </li>
@@ -77,6 +77,7 @@
 <li><a href="#releases">Releases</a></li>
 <li><a href="#makefile">Makefile</a></li>
 <li><a href="#secrets">Secrets</a></li>
+<li><a href="#https">Https</a></li>
 <li><a href="#tips-tricks-and-tweaks">Tips, Tricks, and Tweaks</a></li>
 </ul>
 <h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
@@ -657,6 +658,13 @@ parameters:</span>
     Make sure to include the <code class="code-inline" id="7de38f3c3d3baa7ca58a366f09577586">secrets</code> directory into your release, using the <code class="code-inline" id="0daf67ed1fa9305d63925bc08acf9c96">release_add</code> entry.
 </p>
 </div>
+<h2 id="https">Https<a href="#https" class="anchor"></a></h2>
+<p>In  order for https to work properly, you must:
+1) ensure elao ca certificate has been added to your local keychain (one time for <em>all</em> projects)</p>
+<pre class="code-multiline"><code id="c3dcbef8d973dace788b1dd85bc3c3ee">$ sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" .manala/certificates/ca.crt</code></pre>
+<p>2) generate a project certificate (one time <em>by</em> project, inside vagrant, remember to commit them right after)</p>
+<pre class="code-multiline"><code id="eeb3e472903f3360f248e70679e0438b">⇒  make provision.certificates</code></pre>
+<p>3) For firefox only, browse to <code class="code-inline" id="e43648ef7c80e1a6aa2fc5e3182ed187">about:config</code> and ensure <code class="code-inline" id="40169ca3c0758a897e82d7000d02abe3">security.enterprise_roots.enabled</code> value is set to true</p>
 <h2 id="tips-tricks-and-tweaks">Tips, Tricks, and Tweaks<a href="#tips-tricks-and-tweaks" class="anchor"></a></h2>
 <ul>
 <li><a href="https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement" target="_blank">Vagrant root privilege requirement</a></li>
@@ -668,7 +676,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2021-04-21UTC07:01:09+00:00">Last modified: April 21, 2021 07:01</time>
+    <time datetime="2021-06-29UTC12:49:29+00:00">Last modified: June 29, 2021 12:49</time>
         </div>
 
         <footer class="footer">
