@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Stenope\Provider\Factory;
 
 use App\Stenope\Provider\ReadmeDirProvider;

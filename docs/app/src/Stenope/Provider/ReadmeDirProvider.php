@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Stenope\Provider;
 
 use Stenope\Bundle\Content;
@@ -20,7 +22,7 @@ class ReadmeDirProvider implements ContentProviderInterface
         array $excludes = []
     ) {
         $this->supportedClass = $supportedClass;
-        $this->localProvider = new LocalFilesystemProvider($supportedClass, $path, 1, $excludes, ['*/README.md']);
+        $this->localProvider = new LocalFilesystemProvider($supportedClass, $path, '1', $excludes, ['*/README.md']);
     }
 
     public function listContents(): iterable

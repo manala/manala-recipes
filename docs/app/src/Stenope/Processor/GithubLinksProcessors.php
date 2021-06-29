@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Stenope\Processor;
 
 use App\Model\Recipe;
@@ -54,6 +56,5 @@ class GithubLinksProcessors implements ProcessorInterface
             $content->getSlug(),
             substr($link->getAttribute('href'), 2),
         ));
-
     }
 }
