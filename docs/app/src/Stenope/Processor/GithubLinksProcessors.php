@@ -21,9 +21,9 @@ class GithubLinksProcessors implements ProcessorInterface
         $this->property = $property;
     }
 
-    public function __invoke(array &$data, string $type, Content $content): void
+    public function __invoke(array &$data, Content $content): void
     {
-        if ($type !== Recipe::class) {
+        if ($content->getType() !== Recipe::class) {
             return;
         }
 
