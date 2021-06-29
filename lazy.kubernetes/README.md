@@ -1,6 +1,7 @@
-# Lazy - Kubernetes
-
-* [Requirements](#requirements)
+---
+title: Lazy - Kubernetes
+tableOfContent: 3
+---
 
 ## Requirements
 

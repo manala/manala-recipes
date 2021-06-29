@@ -1,6 +1,7 @@
-# Lazy - Ansible
-
-* [Requirements](#requirements)
+---
+title: Lazy - Ansible
+tableOfContent: 3
+---
 
 ## Requirements
 
