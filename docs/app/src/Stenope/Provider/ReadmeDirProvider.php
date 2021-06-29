@@ -47,6 +47,7 @@ class ReadmeDirProvider implements ContentProviderInterface
     {
         return new Content(
             str_replace('/README', '', $content->getSlug()),
+            $this->supportedClass,
             $content->getRawContent(),
             $content->getFormat(),
             $content->getLastModified(),
