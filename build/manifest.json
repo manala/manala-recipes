@@ -1,10 +1,10 @@
 {
-  "build/app.css": "/manala-recipes/build/app.787aff7e.css",
-  "build/app.js": "/manala-recipes/build/app.5415922d.js",
-  "build/runtime.js": "/manala-recipes/build/runtime.9644eff8.js",
-  "build/images/header-background.png": "/manala-recipes/build/images/header-background.3e0b9fb4.png",
-  "build/images/manala.svg": "/manala-recipes/build/images/manala.053e7ef8.svg",
-  "build/images/github.svg": "/manala-recipes/build/images/github.04ed74f3.svg",
+  "build/app.css": "/manala-recipes/build/app.fb22faa9.css",
+  "build/app.js": "/manala-recipes/build/app.b93718f0.js",
+  "build/runtime.js": "/manala-recipes/build/runtime.1850121c.js",
   "build/images/arms.svg": "/manala-recipes/build/images/arms.b7d6de72.svg",
-  "build/images/elao.svg": "/manala-recipes/build/images/elao.91d6ac3c.svg"
+  "build/images/elao.svg": "/manala-recipes/build/images/elao.91d6ac3c.svg",
+  "build/images/github.svg": "/manala-recipes/build/images/github.04ed74f3.svg",
+  "build/images/header-background.png": "/manala-recipes/build/images/header-background.3e0b9fb4.png",
+  "build/images/manala.svg": "/manala-recipes/build/images/manala.053e7ef8.svg"
 }
