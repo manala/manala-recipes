@@ -1,15 +1,24 @@
-name: Build Documentation
+name: CI
 
 on:
   workflow_dispatch: ~
   push:
     branches:
       - master
+    paths:
+      - 'docs/**'
+      - '.github/**'
+      - '**/README.md'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - '.github/**'
+      - '**/README.md'
 
 jobs:
 
-  docs:
-    name: 🚧  Build & Deploy  🚀
+  ci:
+    name: CI
     runs-on: ubuntu-latest
 
     env:
@@ -20,14 +29,14 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
     steps:
-      - name: Checkout
+      - name: 'Checkout'
         uses: actions/checkout@v2
 
       # https://github.com/actions/setup-node
-      - name: Setup node
+      - name: 'Setup node'
         uses: actions/setup-node@v2
 
-      - name: Setup PHP
+      - name: 'Setup PHP'
         uses: shivammathur/setup-php@v2
         with:
           coverage: "none"
@@ -35,25 +44,26 @@ jobs:
           ini-values: "memory_limit=-1"
           php-version: "8.0"
 
-      - name: Determine composer cache directory
+      - name: 'Determine composer cache directory'
         id: composer-cache
         run: echo "::set-output name=directory::$(composer config cache-dir)"
 
-      - name: Cache composer dependencies
+      - name: 'Cache composer dependencies'
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.directory }}
           key: composer-${{ hashFiles('docs/app/composer.lock') }}
           restore-keys: composer-
 
-      - name: Cache NPM dependencies
+      - name: 'Cache NPM dependencies'
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: node-${{ hashFiles('docs/app/package-lock.json') }}
           restore-keys: node-
 
-      - name: Install dependencies
+      - name: 'Install dependencies'
+        id: deps
         run: |
           echo "::group::composer install"
             composer install --no-progress --no-suggest --ansi
@@ -63,29 +73,36 @@ jobs:
             npm install --color=always --no-progress
           echo "::endgroup::"
 
-      - name: Warmup
+      - name: 'Warmup'
         run: |
-          echo "::group::warmup production env"
-            npx encore production --color
-            bin/console cache:clear --ansi
-            bin/console cache:warmup --ansi
-          echo "::endgroup::"
+          npx encore production --color
+          bin/console cache:clear --ansi
+          bin/console cache:warmup --ansi
         env:
           APP_ENV: prod
-          WEBPACK_PUBLIC_PATH: /manala-recipes/build
 
-      - name: Build static site
+      - name: 'Composer validate'
+        if: always() && steps.deps.outcome == 'success'
+        run: composer validate --no-check-publish --ansi --no-interaction
+
+      - name: 'Lint YAML'
+        if: always() && steps.deps.outcome == 'success'
+        run: bin/console lint:yaml config --parse-tags --ansi --no-interaction
+
+      - name: 'Lint Twig'
+        if: always() && steps.deps.outcome == 'success'
+        run: bin/console lint:twig templates --show-deprecations --ansi --no-interaction
+
+      - name: 'Lint Parameters and Services'
+        if: always() && steps.deps.outcome == 'success'
+        run: bin/console lint:container --ansi --no-interaction
+
+      - name: 'PHP CS Fixer'
+        if: always() && steps.deps.outcome == 'success'
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: 'Check static build'
+        if: always() && steps.deps.outcome == 'success'
         run: bin/console stenope:build --no-interaction -vv --ansi
         env:
           APP_ENV: prod
-          ROUTER_DEFAULT_URI: https://manala.github.io/manala-recipes
-
-      # https://github.com/marketplace/actions/deploy-to-github-pages
-      - name: 🚀 Deploy
-        uses: JamesIves/github-pages-deploy-action@3.7.1
-        with:
-          COMMIT_MESSAGE: "[AUTO] Static site update"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: docs/app/build # The folder the action should deploy.
-          CLEAN: true # Automatically remove deleted files from the deploy branch

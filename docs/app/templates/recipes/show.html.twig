@@ -5,6 +5,25 @@
 {% endblock %}
 
 {% block content %}
+    <h1>{{ recipe.title }}</h1>
+
+    {% if recipe.tableOfContent|length > 1 %}
+        <ul>
+            {% for headline in recipe.tableOfContent %}
+                <li>
+                    <a href="#{{ headline.id }}">{{ headline.content }}</a>
+                    {% if headline.children is not empty %}
+                        <ul class="sub-list">
+                            {% for child in headline.children %}
+                                <li><a href="#{{ child.id }}">{{ child.content }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <section>
         <article>
             {{ recipe.content|raw }}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Model\DefaultPage;
@@ -16,9 +18,7 @@ class DefaultController extends AbstractController
         $this->contentManager = $contentManager;
     }
 
-    /**
-     * @Route(path="/", name="index")
-     */
+    #[Route('/', name: 'index')]
     public function index()
     {
         /** @var DefaultPage $page */
