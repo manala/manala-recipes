@@ -52,7 +52,7 @@ system:
         extensions: []
     nodejs:
         # @option {"label": "Nodejs version"}
-        # @schema {"enum": [null, 14, 12]}
+        # @schema {"enum": [null, 16, 14, 12]}
         version: ~
     mariadb:
         # @option {"label": "MariaDB version"}
