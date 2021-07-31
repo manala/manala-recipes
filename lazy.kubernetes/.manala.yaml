@@ -38,15 +38,15 @@ system:
     # @schema {"items": {"type": "string"}}
     mount: []
     kubectl:
-        # @schema {"enum": ["1.21.2", "1.20.8", "1.19.12", "1.18.20"]}
+        # @schema {"enum": ["1.21.3", "1.20.9", "1.19.13", "1.18.20"]}
         # @option {"label": "Kubectl version"}
         version: ~
     helm:
-        # @schema {"enum": [null, "3.6.1"]}
+        # @schema {"enum": [null, "3.6.3"]}
         # @option {"label": "Helm version"}
         version: ~
     k9s:
-        # @schema {"enum": [null, "0.24.10"]}
+        # @schema {"enum": [null, "0.24.14"]}
         # @option {"label": "K9s version"}
         version: ~
     stern:
@@ -66,7 +66,7 @@ system:
         # @option {"label": "Kube Prompt version"}
         version: ~
     popeye:
-        # @schema {"enum": [null, "0.9.2"]}
+        # @schema {"enum": [null, "0.9.7"]}
         # @option {"label": "Popeye version"}
         version: ~
     knsk:
@@ -78,7 +78,7 @@ system:
         # @option {"label": "Vault version"}
         version: ~
     rclone:
-        # @schema {"enum": [null, "1.55.1"]}
+        # @schema {"enum": [null, "1.56.0"]}
         # @option {"label": "Rclone version"}
       version: ~
     openstack:
