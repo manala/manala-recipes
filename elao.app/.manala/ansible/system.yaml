@@ -127,6 +127,9 @@
           'default'
         }}"
         state: "{{ 'present' if (system_mariadb) else 'ignore' }}"
+      # PostgreSQL
+      - preference: postgresql@postgresql
+        state: "{{ 'present' if (system_postgresql) else 'ignore' }}"
       # Redis
       - preference: redis@backports
         state: "{{ 'present' if (
@@ -332,6 +335,26 @@
       - name: root
         host: localhost
         state: absent
+
+    ##############
+    # PostgreSQL #
+    ##############
+
+    manala_postgresql_version: "{{ system_postgresql_version }}"
+    manala_postgresql_roles:
+      - role:       "root"
+        password:   ~
+        attributes: ['SUPERUSER']
+    manala_postgresql_config_template: config/default.dev.j2
+    manala_postgresql_config:
+      - max_connections: 123
+    manala_postgresql_config_hba_template: config/hba/default.dev.j2
+    manala_postgresql_config_hba:
+      - local   all             postgres                                peer
+      - local   all             all                                     peer
+      - host    all             all             127.0.0.1/32            md5
+      - host    all             all             ::1/128                 md5
+      - local   foo             bar                                     peer
 
     ###########
     # Network #
@@ -601,6 +624,11 @@
         name: mysql
       when: system_mysql or system_mariadb
       tags: [mysql, mariadb]
+
+    - import_role:
+        name: postgresql
+      when: system_postgresql
+      tags: [postgresql]
 
     - import_role:
         name: java

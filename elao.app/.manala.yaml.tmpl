@@ -75,6 +75,11 @@ system:
         version: {{ .mysql.version | toYaml }}
     {{- end }}
 
+    {{- if .postgresql.version }}
+    postgresql:
+        version: {{ .postgresql.version | toYaml }}
+    {{- end }}
+
     {{- if .redis.version }}
     redis:
         version: {{ .redis.version | toYaml }}

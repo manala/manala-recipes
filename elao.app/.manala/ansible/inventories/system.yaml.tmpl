@@ -77,6 +77,9 @@ system:
         system_mysql_version: {{ .mysql.version | toYaml }}
         system_mysql_install_packages: null
         system_mysql_configs_dir: /etc/mysql/mysql.conf.d
+        # PostgreSQL
+        system_postgresql: false
+        system_postgresql_version: {{ .postgresql.version | toYaml }}
         # Network
         system_network: false
         # Nginx
@@ -181,6 +184,8 @@ system:
             system_motd: true
             # MySQL
             system_mysql: {{ not (empty .mysql.version) | ternary "true" "false" }}
+            # PostgreSQL
+            system_postgresql: {{ not (empty .postgresql.version) | ternary "true" "false" }}
             # Network
             system_network: {{ not (empty .network.hosts) | ternary "true" "false" }}
             {{- dict "system_network_hosts" .network.hosts | toYaml | nindent 12 }}

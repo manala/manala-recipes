@@ -118,6 +118,10 @@ system:
         # @option {"label": "MySQL version"}
         # @schema {"enum": [null, "8.0", 5.7, 5.6]}
         version: ~
+    postgresql:
+        # @option {"label": "PostgreSQL version"}
+        # @schema {"enum": [null, 13]}
+        version: ~
     redis:
         # @option {"label": "Redis version"}
         # @schema {"enum": [null, "*"]}
