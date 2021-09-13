@@ -80,7 +80,11 @@ apt-key adv --quiet --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 1394DE
 
 printf "[\033[36mApt\033[0m] \033[32mUpdate...\033[0m\n"
 
+{{ if eq (.version|int) 9 -}}
+apt-get --quiet update
+{{- else -}}
 apt-get --quiet --allow-releaseinfo-change update
+{{- end }}
 
 ##########
 # System #
