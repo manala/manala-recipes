@@ -96,6 +96,16 @@ services:
             DIR: ${DIR}
             CACHE_DIR: ${CACHE_DIR}
             {{- .Vars.system.env | toYaml | nindent 12 }}
+        {{- if .Vars.system.env_file }}
+        {{- if kindIs "slice" .Vars.system.env_file }}
+        env_file:
+            {{- range $file := .Vars.system.env_file }}
+            - ../{{ $file }}
+            {{- end }}
+        {{- else }}
+        env_file: ../{{ .Vars.system.env_file }}
+        {{- end }}
+        {{- end }}
         working_dir: ${DIR}
         entrypoint: .manala/docker/entrypoint
         {{- if or .Vars.system.mariadb.version .Vars.system.maildev.version }}

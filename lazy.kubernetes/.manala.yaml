@@ -35,6 +35,8 @@ system:
     #     "propertyNames": {"pattern": "^[A-Z_]+$"}
     # }
     env: {}
+    # @schema {"type": ["string", "array"]}
+    env_file: ""
     # @schema {"items": {"type": "string"}}
     mount: []
     kubectl:
