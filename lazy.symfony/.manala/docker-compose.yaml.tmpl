@@ -5,7 +5,7 @@ version: '3.5'
 {{- if .Vars.system.mariadb.version }}
 
 volumes:
-  mariadb:
+    mariadb:
 
 {{- end }}
 
@@ -13,42 +13,42 @@ services:
 
 {{- if .Vars.system.mariadb.version }}
 
-  ###########
-  # MariaDB #
-  ###########
+    ###########
+    # MariaDB #
+    ###########
 
-  mariadb:
-    hostname: mariadb.{{ .Vars.project.name }}
-    image: mariadb:{{ .Vars.system.mariadb.version | toString }}
-    restart: always
-    ports:
-      - {{ .Vars.system.mariadb.port | toString }}:3306
-    volumes:
-      - mariadb:/var/lib/mysql
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
-      MYSQL_DATABASE: project
-      MYSQL_USER: project
-      MYSQL_PASSWORD: project
+    mariadb:
+        hostname: mariadb.{{ .Vars.project.name }}
+        image: mariadb:{{ .Vars.system.mariadb.version | toString }}
+        restart: always
+        ports:
+            - {{ .Vars.system.mariadb.port | toString }}:3306
+        volumes:
+            - mariadb:/var/lib/mysql
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            MYSQL_DATABASE: project
+            MYSQL_USER: project
+            MYSQL_PASSWORD: project
 
 {{- if .Vars.system.phpmyadmin.version }}
 
-  ##############
-  # PhpMyAdmin #
-  ##############
+    ##############
+    # PhpMyAdmin #
+    ##############
 
-  phpmyadmin:
-    hostname: phpmyadmin.{{ .Vars.project.name }}
-    image: phpmyadmin/phpmyadmin:{{ .Vars.system.phpmyadmin.version | toString }}
-    restart: always
-    ports:
-      - {{ .Vars.system.phpmyadmin.port }}:80
-    links:
-      - mariadb
-    environment:
-      PMA_HOST: mariadb
-      PMA_USER: root
-      UPLOAD_LIMIT: 64M
+    phpmyadmin:
+        hostname: phpmyadmin.{{ .Vars.project.name }}
+        image: phpmyadmin/phpmyadmin:{{ .Vars.system.phpmyadmin.version | toString }}
+        restart: always
+        ports:
+            - {{ .Vars.system.phpmyadmin.port }}:80
+        links:
+            - mariadb
+        environment:
+            PMA_HOST: mariadb
+            PMA_USER: root
+            UPLOAD_LIMIT: 64M
 
 {{- end }}
 
@@ -56,56 +56,56 @@ services:
 
 {{- if .Vars.system.maildev.version }}
 
-  ###########
-  # MailDev #
-  ###########
+    ###########
+    # MailDev #
+    ###########
 
-  maildev:
-    hostname: maildev.{{ .Vars.project.name }}
-    image: maildev/maildev:{{ .Vars.system.maildev.version | toString }}
-    restart: always
-    user: root
-    ports:
-      - {{ .Vars.system.maildev.port }}:80
-    command: ["--web", "80", "--smtp", "25"]
+    maildev:
+        hostname: maildev.{{ .Vars.project.name }}
+        image: maildev/maildev:{{ .Vars.system.maildev.version | toString }}
+        restart: always
+        user: root
+        ports:
+            - {{ .Vars.system.maildev.port }}:80
+        command: ["--web", "80", "--smtp", "25"]
 
 {{- end }}
 
-  ##########
-  # System #
-  ##########
+    ##########
+    # System #
+    ##########
 
-  system:
-    hostname: {{ .Vars.project.name }}
-    build:
-      context: .
-      target: system
-    image: {{ .Vars.project.name }}:{{ $now }}
-    restart: always
-    ports:
-      - {{ .Vars.system.nginx.port }}:80
-      {{- range $port := .Vars.system.network.ports }}
-      - {{ $port }}
-      {{- end }}
-    volumes:
-      - ..:${DIR}
-      {{- range $mount := .Vars.system.mount }}
-      - ../{{ $mount }}:${DIR}/{{ $mount }}
-      {{- end }}
-    environment:
-      DIR: ${DIR}
-      CACHE_DIR: ${CACHE_DIR}
-      {{- range $key, $value := .Vars.system.env }}
-      {{ $key }}: {{ $value }}
-      {{- end }}
-    working_dir: ${DIR}
-    entrypoint: .manala/docker/entrypoint
-    {{- if or .Vars.system.mariadb.version .Vars.system.maildev.version }}
-    links:
-      {{- if .Vars.system.mariadb.version }}
-      - mariadb
-      {{- end }}
-      {{- if .Vars.system.maildev.version }}
-      - maildev
-      {{- end }}
-    {{- end }}
+    system:
+        hostname: {{ .Vars.project.name }}
+        build:
+            context: .
+            target: system
+        image: {{ .Vars.project.name }}:{{ $now }}
+        restart: always
+        ports:
+            - {{ .Vars.system.nginx.port }}:80
+            {{- range $port := .Vars.system.network.ports }}
+            - {{ $port }}
+            {{- end }}
+        volumes:
+            - ..:${DIR}
+            {{- range $mount := .Vars.system.mount }}
+            - ../{{ $mount }}:${DIR}/{{ $mount }}
+            {{- end }}
+        environment:
+            DIR: ${DIR}
+            CACHE_DIR: ${CACHE_DIR}
+            {{- range $key, $value := .Vars.system.env }}
+            {{ $key }}: {{ $value }}
+            {{- end }}
+        working_dir: ${DIR}
+        entrypoint: .manala/docker/entrypoint
+        {{- if or .Vars.system.mariadb.version .Vars.system.maildev.version }}
+        links:
+            {{- if .Vars.system.mariadb.version }}
+            - mariadb
+            {{- end }}
+            {{- if .Vars.system.maildev.version }}
+            - maildev
+            {{- end }}
+        {{- end }}

@@ -4,28 +4,28 @@ version: "3.7"
 
 services:
 
-  ##########
-  # System #
-  ##########
+    ##########
+    # System #
+    ##########
 
-  system:
-    hostname: {{ .Vars.project.name }}
-    build:
-      context: .
-      target: system
-    image: {{ .Vars.project.name }}:{{ $now }}
-    volumes:
-      - ..:${DIR}
-      {{- range $mount := .Vars.system.mount }}
-      - ../{{ $mount }}:${DIR}/{{ $mount }}
-      {{- end }}
-    environment:
-      DIR: ${DIR}
-      CACHE_DIR: ${CACHE_DIR}
-      {{- range $key, $value := .Vars.system.env }}
-      {{ $key }}: {{ $value }}
-      {{- end }}
-    working_dir: ${DIR}
-    entrypoint: .manala/docker/entrypoint
-    # Use default docker bridge network
-    network_mode: bridge
+    system:
+        hostname: {{ .Vars.project.name }}
+        build:
+            context: .
+            target: system
+        image: {{ .Vars.project.name }}:{{ $now }}
+        volumes:
+            - ..:${DIR}
+            {{- range $mount := .Vars.system.mount }}
+            - ../{{ $mount }}:${DIR}/{{ $mount }}
+            {{- end }}
+        environment:
+            DIR: ${DIR}
+            CACHE_DIR: ${CACHE_DIR}
+            {{- range $key, $value := .Vars.system.env }}
+            {{ $key }}: {{ $value }}
+            {{- end }}
+        working_dir: ${DIR}
+        entrypoint: .manala/docker/entrypoint
+        # Use default docker bridge network
+        network_mode: bridge

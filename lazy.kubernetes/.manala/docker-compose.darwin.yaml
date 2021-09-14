@@ -2,12 +2,12 @@ version: "3.7"
 
 services:
 
-  ##########
-  # System #
-  ##########
+    ##########
+    # System #
+    ##########
 
-  system:
-    volumes:
-      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
-    environment:
-      SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock
+    system:
+        volumes:
+            - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
+        environment:
+            SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock

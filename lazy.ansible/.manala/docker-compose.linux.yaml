@@ -2,16 +2,16 @@ version: "3.7"
 
 services:
 
-  ##########
-  # System #
-  ##########
+    ##########
+    # System #
+    ##########
 
-  system:
-    build:
-      args:
-        USER_ID: ${USER_ID:-1000}
-        GROUP_ID: ${GROUP_ID:-1000}
-    volumes:
-      - ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}
-    environment:
-      SSH_AUTH_SOCK: ${SSH_AUTH_SOCK}
+    system:
+        build:
+            args:
+                USER_ID: ${USER_ID:-1000}
+                GROUP_ID: ${GROUP_ID:-1000}
+        volumes:
+            - ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}
+        environment:
+            SSH_AUTH_SOCK: ${SSH_AUTH_SOCK}
