@@ -38,7 +38,7 @@ system:
     # @schema {"items": {"type": "string"}}
     mount: []
     kubectl:
-        # @schema {"enum": ["1.21.3", "1.20.9", "1.19.13", "1.18.20"]}
+        # @schema {"enum": ["1.21.4", "1.20.10", "1.19.14", "1.18.20"]}
         # @option {"label": "Kubectl version"}
         version: ~
     helm:
@@ -46,11 +46,11 @@ system:
         # @option {"label": "Helm version"}
         version: ~
     k9s:
-        # @schema {"enum": [null, "0.24.14"]}
+        # @schema {"enum": [null, "0.24.15"]}
         # @option {"label": "K9s version"}
         version: ~
     stern:
-        # @schema {"enum": [null, "1.19.0"]}
+        # @schema {"enum": [null, "1.20.1"]}
         # @option {"label": "Stern version"}
         version: ~
     kubespy:
@@ -74,7 +74,7 @@ system:
         # @option {"label": "Kubernetes namespace killer version"}
         version: ~
     vault:
-        # @schema {"enum": [null, "1.7.3"]}
+        # @schema {"enum": [null, "1.8.2"]}
         # @option {"label": "Vault version"}
         version: ~
     rclone:
@@ -82,7 +82,7 @@ system:
         # @option {"label": "Rclone version"}
       version: ~
     openstack:
-        # @schema {"enum": [null, "5.5.0"]}
+        # @schema {"enum": [null, "5.6.0"]}
         # @option {"label": "Openstack client version"}
       version: ~
     swift:
