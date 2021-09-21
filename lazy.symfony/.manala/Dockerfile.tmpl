@@ -20,7 +20,9 @@ ARG STARSHIP_VERSION=0.56.0
 ENV container="docker"
 
 RUN \
-    apt-get update \
+    # Backports
+    printf "deb http://deb.debian.org/debian ${DEBIAN}-backports main" > /etc/apt/sources.list.d/backports.list \
+    && apt-get update \
     && apt-get install --yes --no-install-recommends \
         sudo \
         curl \
