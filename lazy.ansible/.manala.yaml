@@ -40,6 +40,6 @@ system:
     # @schema {"items": {"type": "string"}}
     mount: []
     ansible:
-        # @schema {"enum": ["2.11.2"]}
+        # @schema {"enum": ["2.11.5"]}
         # @option {"label": "Ansible version"}
         version: ~
