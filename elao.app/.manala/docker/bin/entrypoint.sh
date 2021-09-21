@@ -10,6 +10,9 @@ if [ -n "${XDG_CACHE_HOME}" ]; then
     export HISTFILE="${XDG_CACHE_HOME}/.bash_history"
     # Ansible
     export ANSIBLE_CACHE_PLUGIN_CONNECTION="${XDG_CACHE_HOME}/ansible"
+    # NodeJs
+    mkdir -p /usr/etc
+    echo "cache=\${XDG_CACHE_HOME}/npm" > /usr/etc/npmrc
 fi
 
 # Ssh authorization socket
