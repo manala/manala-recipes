@@ -22,7 +22,9 @@ services:
         environment:
             DIR: ${DIR}
             CACHE_DIR: ${CACHE_DIR}
+            {{- if .Vars.system.env }}
             {{- .Vars.system.env | toYaml | nindent 12 }}
+            {{- end }}
         {{- if .Vars.system.env_file }}
         {{- if kindIs "slice" .Vars.system.env_file }}
         env_file:
