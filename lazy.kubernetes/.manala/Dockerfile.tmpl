@@ -1,4 +1,4 @@
-ARG DEBIAN=buster
+ARG DEBIAN=bullseye
 
 ########
 # Base #
@@ -26,7 +26,7 @@ RUN \
         curl \
         ca-certificates \
         gnupg \
-        bsdtar bzip2 \
+        libarchive-tools bzip2 \
         bash-completion \
         make \
         less \
