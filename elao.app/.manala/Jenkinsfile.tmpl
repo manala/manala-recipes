@@ -17,11 +17,6 @@
     {{- $node := mergeOverwrite (dict "label" "" "env" dict "app" "" "junit" "" "artifacts" "" "tasks" list "parallel" false "shell" "" "warn" false) .node -}}
     {{- $parallel_task := get . "parallel_task" -}}
 
-    {{- /* --- Cache dir by app --- */ -}}
-    {{- if not (empty $node.app) -}}
-      {{- $node = mergeOverwrite $node (dict "env" (set $node.env "XDG_CACHE_HOME" (printf "${appCacheHome}/%s" $node.app))) -}}
-    {{- end -}}
-
     {{- $indent := 0 -}}
     {{- $indent_parallel_task := 0 -}}
     {{- $indent_env := 0 -}}
@@ -190,23 +185,55 @@ stage('{{ include "node_label" $node }}') {
 
 #!/usr/bin/env groovy
 
+def app = env.JOB_NAME.split('/')[1].replaceAll('[^a-zA-Z0-9-]', '-')
+def hash
+
 podTemplate(
-    inheritFrom: 'integration',
-    label: '{{ include "pod_label" .Vars.system }}',
+    inheritFrom: 'buildkit',
+    label: 'buildkit',
+) {
+    node('buildkit') {
+        stage('System') {
+            checkout scm
+            container('buildkit') {
+                hash = sh(label: 'Get hash', script: 'find .manala.yaml .manala -type f -exec md5sum {} + | LC_ALL=C sort | md5sum', returnStdout: true).take(8)
+                if (
+                    sh(label: 'Check system image', script: """
+                        wget \
+                            --spider -q \
+                            http://${env.DOCKER_REGISTRY_PUSH}/v2/app/manifests/${app}-${hash}
+                    """, returnStatus: true) != 0
+                ) {
+                    sh label: 'Build system image', script: """
+                        buildctl build \
+                            --frontend dockerfile.v0 \
+                            --local context=.manala \
+                            --local dockerfile=.manala \
+                            --export-cache type=registry,ref=${env.DOCKER_REGISTRY_PUSH}/app:cache,mode=max \
+                            --import-cache type=registry,ref=${env.DOCKER_REGISTRY_PUSH}app:cache \
+                            --output type=image,name=${env.DOCKER_REGISTRY_PUSH}/app:${app}-${hash},push=true
+                    """
+                }
+            }
+        }
+    }
+}
+
+podTemplate(
+    inheritFrom: 'app',
+    label: "app-${app}-${hash}",
     containers: [
         containerTemplate(
-            name: 'debug',
-            image: 'debian:{{ .Vars.system.version }}-slim',
-            alwaysPullImage: false,
-            ttyEnabled: true,
-            command: 'cat'
+            name: 'app',
+            image: "${env.DOCKER_REGISTRY_PULL}/app:${app}-${hash}",
+            command: 'sleep',
+            args: '9999999',
         ),
         {{- if .Vars.system.mysql.version -}}
         {{- $mysql := .Vars.system.mysql }}
         containerTemplate(
             name: 'mysql',
             image: 'mysql:{{ $mysql.version }}',
-            alwaysPullImage: false,
             envVars: [
                 envVar(key: 'MYSQL_ALLOW_EMPTY_PASSWORD', value: 'yes')
             ]
@@ -216,7 +243,6 @@ podTemplate(
         containerTemplate(
             name: 'mariadb',
             image: 'mariadb:{{ $mariadb.version }}',
-            alwaysPullImage: false,
             envVars: [
                 envVar(key: 'MYSQL_ALLOW_EMPTY_PASSWORD', value: 'yes')
             ]
@@ -227,7 +253,6 @@ podTemplate(
         containerTemplate(
             name: 'elasticsearch',
             image: 'docker.elastic.co/elasticsearch/elasticsearch:{{ include "elasticsearch_version" $elasticsearch }}',
-            alwaysPullImage: false,
             envVars: [
                 envVar(key: 'discovery.type', value: 'single-node')
             ],
@@ -238,25 +263,15 @@ podTemplate(
         {{- end }}
     ]
 ) {
-    node('{{ include "pod_label" .Vars.system }}') {
+    node("app-${app}-${hash}") {
         {{- if not .Vars.integration }}
         stage('¯\\_(ツ)_/¯') {
             echo 'Because testing is doubting...'
         }
         {{- else }}
         {{- $integration := .Vars.integration }}
-        def appImage
-        def appImageTag = 'integration:' + URLDecoder.decode("${BUILD_TAG}").replaceAll('[^\\w-]', '-')
-        def appCacheHome = env.XDG_CACHE_HOME ? "${XDG_CACHE_HOME}" : '/home/docker/.cache'
-        def hostContainerId
-
         stage('Setup') {
             checkout scm
-            // Build app image
-            appImage = docker.build("${appImageTag}", '.manala')
-            // Get host docker container id
-            hostContainerId = sh label: 'Get host docker container id', script: 'cat /proc/self/cpuset | head -1 | awk -F/ \'{print $NF}\'', returnStdout: true
-            println "Host container id: ${hostContainerId}"
             {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
             // Setup MySQL/MariaDB service
             // - Wait until service is up
@@ -287,14 +302,8 @@ podTemplate(
             }
             {{- end }}
         }
-
-        try {
-            appImage.inside("--network container:${hostContainerId} --env XDG_CACHE_HOME=${appCacheHome}/app") {
-                {{- include "node" (dict "node" $integration) | trim | nindent 16 }}
-            }
-        } finally {
-            // Remove app docker image
-            sh label: 'Remove app docker image', script: "docker rmi --no-prune ${appImageTag}"
+        container('app') {
+            {{- include "node" (dict "node" $integration) | trim | nindent 12 }}
         }
         {{- end }}
     }
