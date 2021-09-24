@@ -1,0 +1,41 @@
+volumes:
+  app:
+
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        volumes:
+          # App
+          - app:/srv/app
+
+x-mutagen:
+  sync:
+    defaults:
+      ignore:
+        vcs: true
+      permissions:
+        defaultGroup: id:1000
+        defaultOwner: id:1000
+        defaultFileMode: 0644
+        defaultDirectoryMode: 0755
+    app:
+      alpha: ..
+      beta: volume://app
+      mode: two-way-resolved
+      # ignore:
+      #   paths:
+      #     - "/*"
+      #     - "!/api/"
+      #     - "/api/*"
+      #     - "!/api/{entrypoint.sh,go.mod,go.sum,server.go}"
+      #     - "!/frontend/"
+      #     - "/frontend/*"
+      #     - "!/frontend/{entrypoint.sh,gulpfile.js,index.html,package*.json}"
+      #     - "!/web/"
+      #     - "/web/*"
+      #     - "!/web/{entrypoint.sh,go.mod,go.sum,server.go}"
+      #     - "!/tmp/"

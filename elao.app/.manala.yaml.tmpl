@@ -1,5 +1,3 @@
-{{- with .Vars.system -}}
-
 ####################################################################
 # !!! REMINDER !!!                                                 #
 # Don't forget to run `manala up` each time you update this file ! #
@@ -8,13 +6,25 @@
 manala:
     recipe: elao.app
 
+###########
+# Project #
+###########
+
+{{- with .Vars.project }}
+
+project:
+    name: {{ .name | toYaml }}
+
+{{- end }}
+
 ##########
 # System #
 ##########
 
+{{- with .Vars.system }}
+
 system:
     version: {{ .version | toYaml }}
-    hostname: {{ .hostname | toYaml }}
     nginx:
         configs:
           - template: nginx/gzip.j2
@@ -27,8 +37,6 @@ system:
                 server {
                     server_name ~.;
                     root /srv/app/public;
-                    access_log /srv/log/nginx.access.log;
-                    error_log /srv/log/nginx.error.log;
                     include conf.d/gzip;
                 {{- if .php.version }}
                     location / {
@@ -70,47 +78,6 @@ system:
         version: {{ .mariadb.version | toYaml }}
     {{- end }}
 
-    {{- if .mysql.version }}
-    mysql:
-        version: {{ .mysql.version | toYaml }}
-    {{- end }}
-
-    {{- if .redis.version }}
-    redis:
-        version: {{ .redis.version | toYaml }}
-    {{- end }}
-
-    {{- if .elasticsearch.version }}
-    elasticsearch:
-        version: {{ .elasticsearch.version | toYaml }}
-    {{- end }}
-
-    {{- if .influxdb.version }}
-    influxdb:
-        version: {{ .influxdb.version | toYaml }}
-    {{- end }}
-
-    # files:
-    #   # Single symfony app
-    #   # ------------------
-    #   - path: /srv/app/var/log
-    #     src: /srv/log
-    #     state: link_directory
-    #     force: true
-    #   - path: /srv/app/var/cache
-    #     src: /srv/cache
-    #     state: link_directory
-    #     force: true
-    #   # Multi apps
-    #   # ----------
-    #   - path: /srv/app/foo/var/log
-    #     src: /srv/log/foo
-    #     state: link_directory
-    #     force: true
-    #   - path: /srv/app/foo/var/cache
-    #     src: /srv/cache/foo
-    #     state: link_directory
-    #     force: true
     # ssh:
     #     client:
     #         config: |

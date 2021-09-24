@@ -6,7 +6,7 @@
 user www-data;
 {{ config | manala.roles.nginx_config_parameter('worker_processes', default=1) }}
 
-error_log /var/log/nginx/error.log warn;
+error_log syslog:server=unix:/dev/log notice;
 pid /var/run/nginx.pid;
 
 {{ config | manala.roles.nginx_config_parameter('load_module', default=[]) }}
@@ -23,9 +23,9 @@ http {
                       \'$status $body_bytes_sent "$http_referer" \'
                       \'"$http_user_agent" "$http_x_forwarded_for"\'') }}
 
-    access_log /var/log/nginx/access.log;
+    access_log syslog:server=unix:/dev/log main;
 
-    # See: http://jeremyfelt.com/code/2013/01/08/clear-nginx-cache-in-vagrant/
+    # See: https://serverfault.com/questions/269420/disable-caching-when-serving-static-files-with-nginx-for-development
     sendfile off;
     #tcp_nopush     on;
 

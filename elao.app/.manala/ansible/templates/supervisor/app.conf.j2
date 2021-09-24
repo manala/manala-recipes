@@ -20,18 +20,16 @@
 [program:{{ program }}]
 {{ parameters | manala.roles.supervisor_config_parameter('autorestart', default=True) }}
 {{ parameters | manala.roles.supervisor_config_parameter('autostart', default=False) }}
-{{ parameters | manala.roles.supervisor_config_parameter('redirect_stderr', default=True) }}
 {{ parameters | manala.roles.supervisor_config_parameter('startretries', default=20) }}
-{{ parameters | manala.roles.supervisor_config_parameter('stderr_logfile_maxbytes', default=0) }}
-{{ parameters | manala.roles.supervisor_config_parameter('stdout_logfile_maxbytes', default=0) }}
-{{ parameters | manala.roles.supervisor_config_parameter('user', default='vagrant') }}
+{{ parameters | manala.roles.supervisor_config_parameter('stdout_syslog', default=True) }}
+{{ parameters | manala.roles.supervisor_config_parameter('stderr_syslog', default=True) }}
+{{ parameters | manala.roles.supervisor_config_parameter('user', default='app') }}
 {{- parameters | manala.roles.supervisor_config_section(exclude=[
   'autorestart',
   'autostart',
-  'redirect_stderr',
   'startretries',
-  'stderr_logfile_maxbytes',
-  'stdout_logfile_maxbytes',
+  'stdout_syslog',
+  'stderr_syslog',
   'user',
 ]) }}
 

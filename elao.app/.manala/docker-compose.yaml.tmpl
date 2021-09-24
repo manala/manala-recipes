@@ -1,0 +1,50 @@
+version: "3.7"
+
+{{- if .Vars.system.mariadb.version }}
+
+volumes:
+    mariadb:
+
+{{- end }}
+
+services:
+
+{{- if .Vars.system.mariadb.version }}
+
+    ###########
+    # MariaDB #
+    ###########
+
+    mariadb:
+        image: mariadb:{{ .Vars.system.mariadb.version | toString }}
+        volumes:
+            - mariadb:/var/lib/mysql
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        network_mode: service:app
+
+{{- end }}
+
+    #######
+    # App #
+    #######
+
+    app:
+        hostname: {{ .Vars.project.name }}
+        build:
+            context: .
+        tty: true
+        tmpfs:
+            # Systemd
+            #- /tmp
+            - /run
+            - /run/lock
+        volumes:
+            # Systemd
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+            # App
+            - ..:/srv/app
+        ports:
+            - 8000:80
+            - 8043:443
+            - 8001:9001

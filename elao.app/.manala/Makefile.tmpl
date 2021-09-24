@@ -1,168 +1,121 @@
-# Relative root dir ("."|".."|"../.."|…)
-_DIR := $(patsubst ./%,%,$(patsubst %/.manala/Makefile,%,./$(filter %.manala/Makefile,$(MAKEFILE_LIST))))
-# Is current dir root ? (""|"1")
-_ROOT = $(if $(filter .,$(_DIR)),1)
-# Relative current dir ("."|"foo"|"foo/bar"|…)
-_CURRENT_DIR = $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_DIR))%,%,$(CURDIR)))
-# Relative cache dir ("./.manala/.cache"|"../.manala/.cache"|"../../.manala/.cache"|…)
-_CACHE_DIR = $(shell dir=$(_DIR)/.manala/.cache ; mkdir -p $${dir} ; echo $${dir})
+# Relative manala dir (.|.manala|…)
+_MANALA_DIR := $(patsubst %/.,%,$(patsubst %Makefile,%,$(lastword $(MAKEFILE_LIST))).)
 
-include $(_DIR)/.manala/make/text.mk
-include $(_DIR)/.manala/make/help.mk
-include $(_DIR)/.manala/make/os.mk
-include $(_DIR)/.manala/make/try.mk
-include $(_DIR)/.manala/make/git.mk
-include $(_DIR)/.manala/make/semver.mk
+include \
+	$(_MANALA_DIR)/make/std.mk \
+	$(_MANALA_DIR)/make/help.mk \
+	$(_MANALA_DIR)/make/os.mk \
+	$(_MANALA_DIR)/make/docker.mk \
+	$(_MANALA_DIR)/make/try.mk \
+	$(_MANALA_DIR)/make/git.mk \
+	$(_MANALA_DIR)/make/semver.mk
+
+_DOCKER_COMPOSE_PROJECT_DIRECTORY = $(_MANALA_DIR)
+_DOCKER_COMPOSE_PROJECT_NAME = {{ .Vars.project.name }}
+_DOCKER_COMPOSE_FILE = $(_MANALA_DIR)/docker-compose.yaml
+_DOCKER_COMPOSE_SERVICE = app
+_DOCKER_COMPOSE_USER = app
+
+ifdef OS_DARWIN
+_DOCKER_COMPOSE = mutagen compose
+_DOCKER_COMPOSE_FILE += $(_MANALA_DIR)/docker-compose.mutagen.yaml
+endif
 
 ###############
 # Environment #
 ###############
 
-include $(_DIR)/.manala/vagrant/make.mk
-
-# Vagrant commands only available *OUTSIDE* vagrant environment
-ifndef VAGRANT
-
-export VAGRANT_CWD = $(_DIR)/.manala
-
 HELP += $(call help_section, Environment)
-
-# Setup commands only available *IN* root directory
-ifdef _ROOT
-HELP += $(call help,setup,               Setup environment)
-setup:
-	vagrant up --provision
-	$(setup)
-endif
-
-HELP += $(call help,up,                  Start the environment)
-up:
-	vagrant up
-
-HELP += $(call help,halt,                Stop the environment)
-halt:
-	vagrant halt
-
-HELP += $(call help,reload,              Restart the environment)
-reload:
-	vagrant reload
-
-HELP += $(call help,ssh,                 Connect to the environment via SSH)
-ssh: export DIR = /srv/app/$(_CURRENT_DIR)
-ssh:
-	vagrant ssh
-
-HELP += $(call help,destroy,             Stop and delete environment)
-destroy:
-	vagrant destroy
-
-HELP += $(call help,provision,           Provision the environment (TAGS|DIFF|VERBOSE))
-provision:
-	vagrant provision --provision-with system
-
-else
-
-HELP += $(call help_section, Environment)
-
-HELP += $(call help,provision,             Provision the environment (TAGS|DIFF|VERBOSE))
-provision:
-	$(call log, Install ansible galaxy collection)
-	cd $(_DIR)/.manala/ansible \
-		&& ansible-galaxy collection install \
-			--requirements-file collections/requirements.yaml \
-			--force
-	$(call log, Run ansible playbook)
-	cd $(_DIR)/.manala/ansible \
-		&& ansible-playbook system.yaml \
-			--inventory-file inventories \
-			--limit development \
-			--become \
-			$(if $(TAGS),--tags $(TAGS)) \
-			$(if $(VARS),--extra-vars '$(VARS)') \
-			$(if $(VERBOSE),-vvv) \
-			$(if $(DIFF),--check --diff)
-
-endif
-
-HELP += $(call help,provision.apt,         Provision the environment - Apt (DIFF|VERBOSE))
-provision.apt: export TAGS = apt
-provision.apt: provision
-
-HELP += $(call help,provision.files,       Provision the environment - Files (DIFF|VERBOSE))
-provision.files: export TAGS = files
-provision.files: provision
-
-HELP += $(call help,provision.nginx,       Provision the environment - Nginx (DIFF|VERBOSE))
-provision.nginx: export TAGS = nginx
-provision.nginx: provision
-
-HELP += $(call help,provision.supervisor,  Provision the environment - Supervisor (DIFF|VERBOSE))
-provision.supervisor: export TAGS = supervisor
-provision.supervisor: provision
-
-HELP += $(call help,provision.php,         Provision the environment - Php (DIFF|VERBOSE))
-provision.php: export TAGS = php
-provision.php: provision
-
-HELP += $(call help,provision.certificates,Provision the environment - Certificates (DIFF|VERBOSE))
-ifdef VAGRANT
-provision.certificates: export TAGS = certificates
-provision.certificates: export VARS = certificates_prompt=true
-provision.certificates: provision
-else
-provision.certificates:
-	$(call message_warning, Command only available *INSIDE* vagrant environment)
-endif
-
-##########
-# Docker #
-##########
-
-include $(_DIR)/.manala/docker/make.mk
 
 # Docker commands only available *OUTSIDE* docker environment
 ifndef DOCKER
 
-HELP += $(call help_section, Docker)
+# Setup commands only available *IN* root directory
+ifeq ($(_MANALA_DIR),.manala)
 
-HELP += $(call help,docker,Run docker container)
-docker:
-	$(call docker_run)
+HELP += $(call help,setup,               Setup environment)
+setup:
+	$(_docker_compose) up --detach
+	$(setup)
 
 endif
 
-{{ if .Vars.releases -}}
-############
-# Releases #
-############
+HELP += $(call help,up,                  Start the environment)
+up:
+	$(if $(shell $(_docker_compose) ps --quiet $(_DOCKER_COMPOSE_SERVICE)), \
+		$(_docker_compose) up --detach, \
+		$(call message_error, Environment has not been setup) ; exit 1 \
+	)
 
-HELP += $(call help_section, Releases)
+HELP += $(call help,halt,                Stop the environment)
+halt:
+	$(_docker_compose) stop
 
-{{ range $release := .Vars.releases }}
+HELP += $(call help,reload,              Restart the environment)
+reload:
+	$(_docker_compose) restart
 
-{{- if or (hasKey $release "release_tasks") (hasKey $release "release_add") (hasKey $release "release_removed") -}}
-HELP += $(call help,release{{ include "release_target" $release }},Release {{ include "release_help" $release }})
-release{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
-release{{ include "release_target" $release }}:
-	$(call log, Run ansible playbook)
-	ansible-playbook $(_DIR)/.manala/ansible/release.yaml \
-		--inventory $(_DIR)/.manala/ansible/inventories/release.yaml \
-		--limit {{ include "release_group" . }}
+HELP += $(call help,sh,                  Open shell to the environment)
+sh:
+	$(_docker_compose_exec) bash --login
 
-{{ end -}}
+HELP += $(call help,logs,                Show environment logs)
+logs:
+	$(_docker_compose) logs --follow
 
-{{- if hasKey $release "deploy_hosts" -}}
-HELP += $(call help,deploy{{ include "release_target" $release }},Deploy {{ include "release_help" $release }} (REF))
-deploy{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
-deploy{{ include "release_target" $release }}:
-	$(call log, Run ansible playbook)
-	ansible-playbook $(_DIR)/.manala/ansible/deploy.yaml \
-		--inventory $(_DIR)/.manala/ansible/inventories/deploy.yaml \
-		--limit {{ include "release_group" $release }} \
-		$(if $(REF),--extra-vars '{"deploy_strategy_git_ref": "$(REF)"}')
+HELP += $(call help,destroy,             Stop and delete environment)
+destroy:
+	$(_docker_compose) down \
+		--rmi local \
+		--volumes \
+		--remove-orphans
 
-{{ end -}}
+endif
 
-{{ end }}
+HELP += $(call help,provision,           Provision the environment (TAGS|DIFF|VERBOSE))
+provision: SHELL = $(DOCKER_SHELL)
+provision:
+	$(call log, Installing ansible galaxy collections...)
+	sudo ansible-galaxy collection install \
+		--requirements-file $(_MANALA_DIR)/ansible/collections/requirements.yaml
+	$(call log, Running ansible playbook...)
+	sudo ansible-playbook $(_MANALA_DIR)/ansible/system.yaml \
+		$(if $(TAGS),--tags $(TAGS)) \
+		$(if $(DIFF),--check --diff) \
+		$(if $(VERBOSE),-vvv)
 
-{{- end -}}
+HELP += $(call help,provision.apt,       Provision the environment - Apt (DIFF|VERBOSE))
+provision.apt: TAGS = apt
+provision.apt: provision
+
+{{- if .Vars.system.files }}
+
+HELP += $(call help,provision.files,     Provision the environment - Files (DIFF|VERBOSE))
+provision.files: TAGS = files
+provision.files: provision
+
+{{- end }}
+
+{{- if .Vars.system.nginx.configs }}
+
+HELP += $(call help,provision.nginx,     Provision the environment - Nginx (DIFF|VERBOSE))
+provision.nginx: TAGS = nginx
+provision.nginx: provision
+
+{{- end }}
+
+{{- if .Vars.system.supervisor.configs }}
+
+HELP += $(call help,provision.supervisor,Provision the environment - Supervisor (DIFF|VERBOSE))
+provision.supervisor: TAGS = supervisor
+provision.supervisor: provision
+
+{{- end }}
+
+{{- if .Vars.system.php.version }}
+
+HELP += $(call help,provision.php,       Provision the environment - Php (DIFF|VERBOSE))
+provision.php: TAGS = php
+provision.php: provision
+
+{{- end }}

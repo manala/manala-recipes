@@ -1,0 +1,311 @@
+{{- with .Vars.system -}}
+---
+
+- hosts: localhost
+  vars:
+      # Variables
+      apt_architecture: {{ `"{{ ansible_architecture | manala.roles.apt_architecture }}"` }}
+      #apt_architecture: prout
+
+      system_app_user: app
+      system_app_group: app
+
+      system_apt: true
+      system_locales: true
+      system_timezone: true
+      system_files: true
+      system_nginx: {{ not (empty .nginx.configs) | toYaml }}
+      system_php: {{ not (empty .php.version) | toYaml }}
+      system_php_sapis:
+          - cli
+          - fpm
+      system_php_composer: {{ `"{{ system_php }}"` }}
+      system_symfony_cli: {{ `"{{ system_php }}"` }}
+      system_nodejs: {{ not (empty .nodejs.version) | toYaml }}
+      system_nodejs_npm: {{ `"{{ system_nodejs }}"` }}
+      system_nodejs_yarn: {{ `"{{ system_nodejs }}"` }}
+      system_cron: {{ not (empty .cron.files) | toYaml }}
+      system_supervisor: {{ not (empty .supervisor.configs) | toYaml }}
+      system_ssh: true
+      #system_ssh_client_config_template: ssh/integration/ssh_config.j2
+      system_ssh_client_config_template: ssh/development/ssh_config.j2
+      system_gomplate: true
+  tasks:
+
+      #######
+      # Apt #
+      #######
+
+      - import_role:
+            name: manala.roles.apt
+        when: system_apt
+        tags: [apt]
+        vars:
+            manala_apt:
+                update: true
+            manala_apt_components:
+                - main
+            manala_apt_sources_list_template: apt/sources.list.j2
+            manala_apt_repositories_exclusive: true
+            {{- dict "manala_apt_repositories" .apt.repositories | toYaml | nindent 12 }}
+            manala_apt_preferences_exclusive: true
+            manala_apt_preferences:
+                # NodeJS
+                - preference: nodejs@{{ not (empty .nodejs.version) | ternary (print "nodesource_" (.nodejs.version | toString | replace "." "_")) "default" }}
+                  state: {{ `"{{ system_nodejs | ternary('present', 'ignore') }}"` }}
+                # Yarn
+                - preference: yarn@yarn
+                  state: {{ `"{{ system_nodejs_yarn | ternary('present', 'ignore') }}"` }}
+                # Php
+                - preference: php@sury_php
+                  state: {{ `"{{ system_php | ternary('present', 'ignore') }}"` }}
+                # Nginx
+                - preference: nginx@nginx
+                  state: {{ `"{{ system_nginx | ternary('present', 'ignore') }}"` }}
+                # Supervisor
+                - preference: {{ `"supervisor@{{
+                    'backports' if (ansible_distribution_release in ['stretch']) else
+                    'default'
+                  }}"` }}
+                  state: {{ `"{{ (system_supervisor and (ansible_distribution_release in ['stretch'])) | ternary('present', 'ignore') }}"` }}
+            {{- if .apt.preferences }}
+                # App
+                {{- .apt.preferences | toYaml | nindent 16 }}
+            {{- end }}
+            manala_apt_holds_exclusive: true
+            {{- dict "manala_apt_holds" .apt.holds | toYaml | nindent 12 }}
+            manala_apt_packages:
+                - xz-utils
+                - rsync
+                - wget
+                - curl
+                - make
+                - less
+                - ssl-cert
+                - htop
+                - pv # for real-time progress on streams (e.g mysql import)
+            {{- if .apt.packages }}
+                # App
+                {{- .apt.packages | toYaml | nindent 16 }}
+            {{- end }}
+
+      ###########
+      # Locales #
+      ###########
+
+      - import_role:
+            name: manala.roles.locales
+        when: system_locales
+        tags: [locales]
+        vars:
+            manala_locales_codes_default: {{ .locales.default }}
+            {{- dict "manala_locales_codes" .locales.codes | toYaml | nindent 12 }}
+
+      #######
+      # Ssh #
+      #######
+
+      - import_role:
+            name: manala.roles.ssh
+        when: system_ssh
+        tags: [ssh]
+        vars:
+            manala_ssh_server: false
+            manala_ssh_client_config_template: {{ `"{{ system_ssh_client_config_template }}"` }}
+            {{- dict "manala_ssh_client_config" .ssh.client.config | toYaml | nindent 12 }}
+            manala_ssh_known_hosts:
+                - github.com
+                - git.elao.com
+
+      ############
+      # Timezone #
+      ############
+
+      - import_role:
+            name: manala.roles.timezone
+        when: system_timezone
+        tags: [timezone]
+        vars:
+            manala_timezone_default: {{ .timezone | toYaml }}
+
+      #########
+      # Files #
+      #########
+
+      - import_role:
+            name: manala.roles.files
+        when: system_files
+        tags: [files]
+        vars:
+            manala_files_attributes_defaults:
+                - parents: true
+                  force: true
+            manala_files_attributes:
+                - path: /usr/share/nginx/html/404.html
+                  template: nginx/html/404.html.j2
+            {{- if .files }}
+                # App
+                {{- .files | toYaml | nindent 16 }}
+            {{- end }}
+
+      ##########
+      # NodeJS #
+      ##########
+
+      - import_role:
+            name: manala.roles.nodejs
+        when: system_nodejs
+        tags: [nodejs, node]
+
+      #######
+      # Npm #
+      #######
+
+      - import_role:
+            name: manala.roles.npm
+        when: system_nodejs_npm
+        tags: [npm, nodejs, node]
+        vars:
+            {{- dict "manala_npm_packages" .nodejs.packages | toYaml | nindent 12 }}
+
+      ########
+      # Yarn #
+      ########
+
+      - import_role:
+            name: manala.roles.yarn
+        when: system_nodejs_yarn
+        tags: [yarn, nodejs, node]
+
+      #######
+      # Php #
+      #######
+
+      - import_role:
+            name: manala.roles.php
+        when: system_php
+        tags: [php]
+        vars:
+            manala_php_version: {{ .php.version | toYaml }}
+            manala_php_sapis_exclusive: true
+            manala_php_sapis: {{ `"{{ system_php_sapis }}"` }}
+            manala_php_fpm_pools_exclusive: true
+            manala_php_fpm_pools:
+                - file: app.conf
+                  template: fpm_pools/sury/pools.conf.j2
+                  config:
+                      app:
+                          user: {{ `"{{ system_app_user }}"` }}
+                          group: {{ `"{{ system_app_group }}"` }}
+                          listen: /run/php-fpm.app.sock
+                          pm.max_children: 20
+                          {{- dict "env" .env | toYaml | nindent 26 }}
+                          php_admin_value:
+                              error_log: syslog
+            manala_php_extensions_exclusive: true
+            manala_php_extensions:
+                - opcache
+                - readline
+                - extension: json
+                  state: {{ `"{{ 'present' if (manala_php_version and manala_php_version|string is version('8.0', '<')) else 'ignore' }}"` }}
+                - extension: xdebug
+                  enabled: false
+            {{- if .php.extensions }}
+                # App
+                {{- .php.extensions | toYaml | nindent 16 }}
+            {{- end }}
+            manala_php_extensions_pecl_versioned: true
+            manala_php_configs_exclusive: true
+            manala_php_configs:
+                - template: php/50-xdebug.ini.j2
+            {{- if .php.configs }}
+                # App
+                {{- .php.configs | toYaml | nindent 16 }}
+            {{- end }}
+
+      ############
+      # Composer #
+      ############
+
+      - import_role:
+            name: manala.roles.composer
+        when: system_php_composer
+        tags: [composer]
+        vars:
+            manala_composer_version: {{ .php.composer.version | toYaml }}
+
+      ###############
+      # Symfony Cli #
+      ###############
+
+      - import_role:
+            name: manala.roles.symfony_cli
+        when: system_symfony_cli
+        tags: [symfony]
+
+      #########
+      # Nginx #
+      #########
+
+      - import_role:
+            name: manala.roles.nginx
+        when: system_nginx
+        tags: [nginx, certificates]
+        vars:
+            manala_nginx_config_template: nginx/nginx.conf.j2
+            manala_nginx_configs_exclusive: true
+            manala_nginx_configs:
+                - template: nginx/default.conf.j2
+                #- template: nginx/ssl_offloading.conf.j2
+            {{- if .nginx.configs }}
+                # App
+                {{- .nginx.configs | toYaml | nindent 16 }}
+            {{- end }}
+
+      ########
+      # Cron #
+      ########
+
+      - import_role:
+            name: manala.roles.cron
+        when: system_cron
+        tags: [cron]
+        vars:
+            manala_cron_files_defaults:
+                user: {{ `"{{ system_app_user }}"` }}
+            {{- dict "manala_cron_files" .cron.files | toYaml | nindent 12 }}
+
+      ##############
+      # Supervisor #
+      ##############
+
+      - import_role:
+            name: manala.roles.supervisor
+        when: system_supervisor
+        tags: [supervisor]
+        vars:
+            manala_supervisor_config_template: config/debian/supervisord.conf.j2
+            manala_supervisor_configs_exclusive: true
+            manala_supervisor_configs_defaults:
+                template: supervisor/app.conf.j2
+            manala_supervisor_configs:
+                - template: configs/inet_http_server.conf.j2
+                  config:
+                    port: "*:9001"
+            {{- if .supervisor.configs }}
+                # App
+                {{- .supervisor.configs | toYaml | nindent 16 }}
+            {{- end }}
+
+      ############
+      # Gomplate #
+      ############
+
+      - import_role:
+            name: manala.roles.gomplate
+        when: system_gomplate
+        tags: [gomplate]
+        vars:
+            manala_gomplate_version: 3.10.0
+
+{{- end }}

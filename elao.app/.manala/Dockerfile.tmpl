@@ -1,89 +1,72 @@
-{{- with .Vars.system -}}
-
-FROM debian:{{ .version }}-slim
-
-LABEL maintainer="Elao <contact@elao.com>"
-
-ARG UID=1000
-ARG GID=1000
-
-#########
-# Setup #
-#########
-
-# The 'container' environment variable tells systemd that it's running inside a
-# Docker container environment.
-# It's also internally used for checking we're running inside a container too.
-ENV \
-  container="docker"
+FROM debian:{{ .Vars.system.version }}-slim
 
 RUN \
-    # Disable irrelevants apt-key warnings
-    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
-    # Disable all debian user interaction
-    && export DEBIAN_FRONTEND="noninteractive" \
-    && apt-get update \
+    apt-get update \
     && apt-get install --yes --no-install-recommends \
-        bash-completion \
-        gnupg dirmngr \
-        ca-certificates \
         sudo \
-    # Srv
-    && mkdir -p /srv \
-    && chmod 777 /srv \
+        curl ca-certificates \
+        gnupg \
+        bash-completion \
+        make \
+    # Starship
+    && curl -sSL https://github.com/starship/starship/releases/latest/download/starship-$(uname -m)-unknown-linux-musl.tar.gz \
+        | tar zxf - -C /usr/local/bin \
     # User
-    && addgroup --gid ${GID} docker \
-    && adduser --disabled-password --gecos "" docker --uid ${UID} --ingroup docker \
-    # Bash
-    && sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' \
-        /home/docker/.bashrc \
-    # Sudo
-    && echo "docker ALL=(ALL) NOPASSWD:ALL" \
-        > /etc/sudoers.d/docker \
-    # Ansible
-    {{- if eq (.version|int) 8 }}
-    && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" \
-    {{- else if eq (.version|int) 9 }}
-    && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu xenial main" \
-    {{- else if eq (.version|int) 10 }}
-    && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu bionic main" \
-    {{- end }}
-        > /etc/apt/sources.list.d/ppa_launchpad_net_ansible_ansible_ubuntu.list \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
-    && apt-get update \
+    && addgroup --gid 1000 app \
+    && adduser --disabled-password --gecos "" app --uid 1000 --ingroup app \
+    && printf "app ALL=(ALL) NOPASSWD:ALL\n" \
+        > /etc/sudoers.d/app \
+    && printf "eval \"\$(starship init bash)\"\n" \
+        >> /home/app/.bashrc \
+    # Systemd
     && apt-get install --yes --no-install-recommends \
-    {{- if eq (.version|int) 8 }}
-        ansible python python-apt
-    {{- else }}
-        ansible python3 python3-apt
-    {{- end }}
+        systemd dbus \
+    && systemctl set-default multi-user.target \
+    && sed -i 's/#\(ForwardToConsole=\).*$/\1yes/' \
+        /etc/systemd/journald.conf \
+    && printf "Defaults env_keep += \"container\"\n" \
+        > /etc/sudoers.d/systemd \
+    && rm -rf \
+        /etc/systemd/system/*.wants/* \
+        /lib/systemd/system/multi-user.target.wants/* \
+        /lib/systemd/system/local-fs.target.wants/* \
+        /lib/systemd/system/sockets.target.wants/*udev* \
+        /lib/systemd/system/sockets.target.wants/*initctl* \
+        /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev* \
+        /lib/systemd/system/systemd-update-utmp*
 
-COPY docker/bin/entrypoint.sh /usr/local/bin/entrypoint.sh
+# Systemd
+ENV container docker
+VOLUME /sys/fs/cgroup
+CMD ["/lib/systemd/systemd"]
+STOPSIGNAL SIGRTMIN+3
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-##########
-# System #
-##########
-
-COPY ansible/collections                     /tmp/ansible/collections/
-COPY ansible/inventories/system.yaml         /tmp/ansible/inventories/
-COPY ansible/roles/certificates              /tmp/ansible/roles/certificates/
-COPY ansible/templates                       /tmp/ansible/templates/
-COPY ansible/ansible.cfg ansible/system.yaml /tmp/ansible/
-
+# Ansible
 RUN \
-    cd /tmp/ansible \
-    && ansible-galaxy collection install \
-      --requirements-file collections/requirements.yaml \
-      --force \
-    && ansible-playbook system.yaml \
-      --inventory-file inventories \
-      --limit integration \
-    && rm -Rf /tmp/ansible
+    apt-get install --yes --no-install-recommends \
+        zstd \
+    && curl -sSL https://github.com/indygreg/python-build-standalone/releases/download/20210724/cpython-3.9.6-$(uname -m)-unknown-linux-gnu-lto-20210724T1424.tar.zst \
+        | tar -I zstd -xf - -C /opt --strip-components=2 --one-top-level=python3.9 python/install \
+    && /opt/python3.9/bin/python3 -m venv /opt/ansible \
+    && /opt/ansible/bin/pip install ansible-core==2.11.5  \
+    && ln --symbolic --target-directory /usr/local/bin \
+        /opt/ansible/bin/ansible \
+        /opt/ansible/bin/ansible-galaxy \
+        /opt/ansible/bin/ansible-playbook \
+    && mkdir -p /etc/ansible \
+    && printf "\
+[defaults]\n\
+force_color = True\n\
+gather_subset = all,!hardware\n\
+display_skipped_hosts = False\n\
+retry_files_enabled = False\n\
+collections_path = /usr/share/ansible/collections\n" \
+        > /etc/ansible/ansible.cfg
 
 WORKDIR /srv/app
 
-USER docker
+COPY . ./.manala/
 
-{{- end }}
+# Provision
+RUN \
+    make --silent --directory .manala provision
