@@ -193,7 +193,7 @@ RUN \
 {{ if $openstack.version -}}
 # Openstack
 RUN \
-    BUILD_PACKAGES="pipx python3-venv gcc libpython3.7-dev" \
+    BUILD_PACKAGES="pipx python3-venv gcc libpython3-dev" \
     export PIPX_HOME="/usr/local" \
     export PIPX_BIN_DIR="/usr/local/bin" \
     && apt-get install --yes --no-install-recommends \
@@ -210,7 +210,7 @@ RUN \
 {{ if $swift.version -}}
 # Swift
 RUN \
-    BUILD_PACKAGES="pipx python3-venv gcc libpython3.7-dev" \
+    BUILD_PACKAGES="pipx python3-venv gcc libpython3-dev" \
     export PIPX_HOME="/usr/local" \
     export PIPX_BIN_DIR="/usr/local/bin" \
     && apt-get install --yes --no-install-recommends \
@@ -218,7 +218,7 @@ RUN \
       ${BUILD_PACKAGES} \
     && pipx install python-swiftclient=={{ $swift.version }} \
     {{ if $swift.keystone.version -}}
-    && pipx inject python-swiftclient=={{ $swift.version }} python-keystoneclient=={{ $swift.keystone.version }} \
+    && pipx inject python-swiftclient python-keystoneclient=={{ $swift.keystone.version }} \
     {{ end -}}
     && apt-get purge --yes --autoremove ${BUILD_PACKAGES}
 
