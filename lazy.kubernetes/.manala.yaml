@@ -40,11 +40,11 @@ system:
     # @schema {"items": {"type": "string"}}
     mount: []
     kubectl:
-        # @schema {"enum": ["1.21.4", "1.20.10", "1.19.14", "1.18.20"]}
+        # @schema {"enum": ["1.21.5", "1.20.11", "1.19.15", "1.18.20"]}
         # @option {"label": "Kubectl version"}
         version: ~
     helm:
-        # @schema {"enum": [null, "3.6.3"]}
+        # @schema {"enum": [null, "3.7.0"]}
         # @option {"label": "Helm version"}
         version: ~
     k9s:
@@ -76,11 +76,11 @@ system:
         # @option {"label": "Kubernetes namespace killer version"}
         version: ~
     vault:
-        # @schema {"enum": [null, "1.8.2"]}
+        # @schema {"enum": [null, "1.8.3"]}
         # @option {"label": "Vault version"}
         version: ~
     rclone:
-        # @schema {"enum": [null, "1.56.0"]}
+        # @schema {"enum": [null, "1.56.1"]}
         # @option {"label": "Rclone version"}
       version: ~
     openstack:
@@ -92,7 +92,7 @@ system:
         # @option {"label": "Swift client version"}
       version: ~
       keystone:
-        # @schema {"enum": [null, "4.2.0"]}
+        # @schema {"enum": [null, "4.3.0"]}
         # @option {"label": "Swift keystone client version"}
         version: ~
     scw:
