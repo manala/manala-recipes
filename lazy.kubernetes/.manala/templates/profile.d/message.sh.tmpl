@@ -57,7 +57,9 @@ printf " \033[36m‣ openstack \033[35m{{ $openstack.version }}\033[0m\n"
 {{- end }}
 {{- $swift := .Vars.system.swift }}
 {{- if $swift.version }}
-printf " \033[36m‣ swift \033[35m{{ $swift.version }}\033[0m\n"
+printf " \033[36m‣ swift \033[35m{{ $swift.version }}\033[0m
+  {{- if $swift.keystone.version }} (\033[36mkeystone \033[35m{{ $swift.keystone.version }}\033[0m){{ end -}}
+\n"
 {{- end }}
 {{- $scw := .Vars.system.scw }}
 {{- if $scw.version }}
