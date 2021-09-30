@@ -17,6 +17,11 @@
     {{- $node := mergeOverwrite (dict "label" "" "env" dict "app" "" "junit" "" "artifacts" "" "tasks" list "parallel" false "shell" "" "warn" false) .node -}}
     {{- $parallel_task := get . "parallel_task" -}}
 
+    {{- /* --- Cache dir by app --- */ -}}
+    {{- if not (empty $node.app) -}}
+      {{- $node = mergeOverwrite $node (dict "env" (set $node.env "XDG_CACHE_HOME" (printf "${appCache}/%s" $node.app))) -}}
+    {{- end -}}
+
     {{- $indent := 0 -}}
     {{- $indent_parallel_task := 0 -}}
     {{- $indent_env := 0 -}}
@@ -185,7 +190,16 @@ stage('{{ include "node_label" $node }}') {
 
 #!/usr/bin/env groovy
 
+{{- if not .Vars.integration }}
+
+stage('¯\\_(ツ)_/¯') {
+    echo 'Because testing is doubting...'
+}
+
+{{- else }}
+
 def app = env.JOB_NAME.split('/')[1].replaceAll('[^a-zA-Z0-9-]', '-')
+def appCache = env.XDG_CACHE_HOME ? "${XDG_CACHE_HOME}" : '/home/docker/.cache'
 def hash
 
 podTemplate(
@@ -196,7 +210,7 @@ podTemplate(
         stage('System') {
             checkout scm
             container('buildkit') {
-                hash = sh(label: 'Get hash', script: 'find .manala.yaml .manala -type f -exec md5sum {} + | LC_ALL=C sort | md5sum', returnStdout: true).take(8)
+                hash = sh(label: 'Get hash', script: 'find .manala -type f -exec md5sum {} + | LC_ALL=C sort | md5sum', returnStdout: true).take(8)
                 if (
                     sh(label: 'Check system image', script: """
                         wget \
@@ -264,12 +278,6 @@ podTemplate(
     ]
 ) {
     node("app-${app}-${hash}") {
-        {{- if not .Vars.integration }}
-        stage('¯\\_(ツ)_/¯') {
-            echo 'Because testing is doubting...'
-        }
-        {{- else }}
-        {{- $integration := .Vars.integration }}
         stage('Setup') {
             checkout scm
             {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
@@ -303,8 +311,11 @@ podTemplate(
             {{- end }}
         }
         container('app') {
-            {{- include "node" (dict "node" $integration) | trim | nindent 12 }}
+            withEnv(["XDG_CACHE_HOME=${appCache}/app"]) {
+                {{- include "node" (dict "node" .Vars.integration) | trim | nindent 16 }}
+            }
         }
-        {{- end }}
     }
 }
+
+{{- end }}
