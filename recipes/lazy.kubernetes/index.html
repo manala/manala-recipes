@@ -68,7 +68,7 @@
                     <a href="#requirements">Requirements</a>
                                     </li>
                             <li>
-                    <a href="#todo">Todo</a>
+                    <a href="#kubectl">Kubectl</a>
                                     </li>
                     </ul>
     
@@ -79,14 +79,19 @@
 <li>Make</li>
 <li>Docker Desktop 2.2.0+ or Docker Engine + Docker Compose</li>
 </ul>
-<h2 id="todo">Todo<a href="#todo" class="anchor"></a></h2>
-<ul>
-<li>[] <a href="https://krew.sigs.k8s.io/" target="_blank">https://krew.sigs.k8s.io/</a></li>
-</ul></body>
+<h2 id="kubectl">Kubectl<a href="#kubectl" class="anchor"></a></h2>
+<p>Alias <code class="code-inline" id="8ce4b16b22b58894aa86c421e8759df3">k</code></p>
+<pre class="code-multiline"><code id="f76711a85fefb022fdbeebfc058415ac">❯ kubectl version
+Client Version: ...
+❯ k version
+Client Version: ...</code></pre>
+<p>Port forwarding to expose a service port on localhost:1234</p>
+<pre class="code-multiline"><code id="96fb62746dac608c20cb27c6f1aef698">$ make sh PORT=1234:4321
+❯ kubectl --namespace [namespace] port-forward --address 0.0.0.0 svc/[service] 4321:[port]</code></pre></body>
         </article>
     </section>
 
-    <time datetime="2021-10-01UTC10:55:54+00:00">Last modified: October 1, 2021 10:55</time>
+    <time datetime="2021-10-01UTC11:22:11+00:00">Last modified: October 1, 2021 11:22</time>
         </div>
 
         <footer class="footer">
