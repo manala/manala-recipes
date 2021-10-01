@@ -30,9 +30,12 @@ _DOCKER_COMPOSE_ENV = \
 
 HELP += $(call help_section, System)
 
-HELP += $(call help,sh,   Open a local system shell)
+HELP += $(call help,sh,   Open a local system shell (PORT))
 sh:
-	$(call docker_run, exec bash --login)
+	$(call docker_run, \
+		$(if $(PORT),--publish $(PORT)), \
+		exec bash --login \
+	)
 .PHONY: sh
 
 HELP += $(call help,clean,Clean local system)
