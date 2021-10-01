@@ -199,7 +199,6 @@ stage('¯\\_(ツ)_/¯') {
 {{- else }}
 
 def app = env.JOB_NAME.split('/')[1].replaceAll('[^a-zA-Z0-9-]', '-')
-def appCache = env.XDG_CACHE_HOME ? "${XDG_CACHE_HOME}" : '/home/docker/.cache'
 def hash
 
 podTemplate(
@@ -278,6 +277,7 @@ podTemplate(
     ]
 ) {
     node("app-${app}-${hash}") {
+        def appCache = env.XDG_CACHE_HOME ? "${XDG_CACHE_HOME}" : '/home/docker/.cache'
         stage('Setup') {
             checkout scm
             {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
