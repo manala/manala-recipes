@@ -82,6 +82,11 @@ RUN \
       --limit integration \
     && rm -Rf /tmp/ansible
 
+RUN \
+    # NodeJs
+    mkdir -p /usr/etc \
+    && echo "cache=\${XDG_CACHE_HOME}/npm" > /usr/etc/npmrc
+
 WORKDIR /srv/app
 
 USER docker
