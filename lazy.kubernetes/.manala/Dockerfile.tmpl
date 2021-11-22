@@ -74,7 +74,10 @@ RUN \
     && printf "let g:GPGPreferSymmetric = 1" >> /etc/vim/vimrc \
     # Rush
     && curl -sSL https://github.com/shenwei356/rush/releases/download/v${RUSH_VERSION}/rush_linux_amd64.tar.gz \
-        | bsdtar -xvf - -C /usr/local/bin
+        | bsdtar -xvf - -C /usr/local/bin \
+    # Jq
+    && apt-get install --yes --no-install-recommends \
+        jq
 
 # Kubectl
 {{ $kubectl := .Vars.system.kubectl -}}
