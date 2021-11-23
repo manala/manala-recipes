@@ -67,8 +67,10 @@ ARG VIM_GNUPG_VERSION=2.7.1
 ARG RUSH_VERSION=0.4.2
 
 RUN \
+    apt-get install --yes --no-install-recommends \
+        jq \
     # Vim Gnupg
-    mkdir -p /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg \
+    && mkdir -p /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg \
     && curl -sSL https://github.com/jamessan/vim-gnupg/releases/download/v${VIM_GNUPG_VERSION}/vim-gnupg-v${VIM_GNUPG_VERSION}.tar.gz \
         | bsdtar -xvf - -C /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg --strip-components=1 vim-gnupg-${VIM_GNUPG_VERSION} \
     && printf "let g:GPGPreferSymmetric = 1" >> /etc/vim/vimrc \
