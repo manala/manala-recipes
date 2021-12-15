@@ -48,7 +48,7 @@ system:
         port: 8000
     php:
         # @option {"label": "Php version"}
-        # @schema {"enum": ["8.0", 7.4]}
+        # @schema {"enum": [8.1, "8.0", 7.4]}
         version: ~
         # @schema {"items": {"type": "string"}}
         extensions: []
