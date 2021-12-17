@@ -167,7 +167,7 @@ system:
         #               }
         #           }
     php:
-        version: "8.1"
+        version: 8.1
         # composer:
         #   version: 1 # Optional
         extensions:
