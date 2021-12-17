@@ -167,7 +167,7 @@ system:
         #               }
         #           }
     php:
-        version: "8.0"
+        version: "8.1"
         # composer:
         #   version: 1 # Optional
         extensions:
@@ -515,7 +515,7 @@ releases:
     #deploy_removed:
     #  - web/app_dev.php
     deploy_post_tasks:
-      - shell: sudo /bin/systemctl reload php8.0-fpm
+      - shell: sudo /bin/systemctl reload php8.1-fpm
       #- shell: sudo /bin/systemctl restart supervisor
 
   - << : *release
