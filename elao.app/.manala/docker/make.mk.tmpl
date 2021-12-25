@@ -33,7 +33,7 @@ define docker_run
 		--mount 'type=bind,consistency=delegated,source=$(realpath $(_DIR)/.manala),target=/docker' \
 		$(if $(OS_DARWIN),\
 			--env SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
-			--volume /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock, \
+			--volume /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock \
 			--env SSH_KEY=/home/docker/.ssh/id_rsa \
 			--mount 'type=bind$(,)consistency=cached$(,)source=$(HOME)/.ssh/id_rsa$(,)target=/home/docker/.ssh/id_rsa' \
 		) \
