@@ -49,6 +49,10 @@ http {
       'sendfile',
       'tcp_nopush',
       'keepalive_timeout',
+      'fastcgi_buffer_size',
+      'fastcgi_buffers',
+      'fastcgi_busy_buffers_size',
+      'server_names_hash_bucket_size',
       'include',
     ])).rstrip() | indent(4) }}
 }
