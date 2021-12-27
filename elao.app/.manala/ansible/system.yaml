@@ -441,7 +441,8 @@
 
     manala_ssh_known_hosts:
       - github.com
-      - git.elao.com
+      - host: git.elao.com
+        file: "{{ playbook_dir ~ '/templates/ssh/keys/git.elao.com' }}"
 
     ##############
     # Supervisor #
