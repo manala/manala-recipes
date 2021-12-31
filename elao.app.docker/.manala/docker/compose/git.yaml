@@ -1,0 +1,9 @@
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        volumes:
+            - ${MANALA_GIT_CONFIG}:/home/app/.gitconfig

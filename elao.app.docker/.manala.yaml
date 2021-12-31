@@ -1,0 +1,228 @@
+manala:
+    description: Elao - Generic application with PHP and Node.js support - Docker
+    template: .manala.yaml.tmpl
+    sync:
+      - .manala/ansible
+      - .manala/certificates/ca.crt
+      - .manala/certificates/ca.key
+      - .manala/docker
+      - .manala/github
+      - .manala/jenkins
+      - .manala/make
+      - .manala/.dockerignore
+      - .manala/.gitignore
+      - .manala/Jenkinsfile.tmpl
+      - .manala/Makefile.tmpl
+      - Makefile.dist
+      - README.md .manala/README.md
+
+###########
+# Project #
+###########
+
+project:
+    # @schema {"type": "string", "minLength": 1}
+    # @option {"label": "Project name"}
+    name: ~
+    # @schema {"type": "integer", "multipleOf" : 100, "minimum": 2000, "maximum": 65400}
+    ports: ~
+
+##########
+# System #
+##########
+
+system:
+    # @option {"label": "System version"}
+    # @schema {"enum": [11, 10, 9]}
+    version: ~
+    # @schema {"type": ["string"], "pattern": "^[a-zA-Z]+/[a-zA-Z]+$"}
+    timezone: Etc/UTC
+    locales:
+        # @schema {"type": ["string"]}
+        default: C.UTF-8
+        # @schema {"items": {"type": "string"}}
+        codes: []
+    # @schema {
+    #     "additionalProperties": {"type": ["string", "integer"]},
+    #     "propertyNames": {"pattern": "^[A-Z_]+$"}
+    # }
+    env: {}
+    apt:
+        # @schema {"items": {"type": "string"}}
+        repositories: []
+        # @schema {"items": {"type": "string"}}
+        preferences: []
+        # @schema {"items": {"type": "string"}}
+        packages: []
+        # @schema {"items": {"type": "string"}}
+        holds: []
+    # @schema {"items": {"type": "object"}}
+    files: []
+    network:
+      hosts: {}
+    nginx:
+        # @schema {
+        #     "items": {"type": "object",
+        #         "additionalProperties": false,
+        #         "properties": {
+        #             "template": {"type": "string"},
+        #             "file": {"type": "string"},
+        #             "config": {"type": "string"}
+        #         }
+        #     }
+        # }
+        configs: []
+    php:
+        # @option {"label": "Php version"}
+        # @schema {"enum": [null, 8.1, "8.0", 7.4, 7.3, 7.2, 7.1, "7.0", 5.6]}
+        version: ~
+        # @schema {"items": {"type": "string"}}
+        extensions: []
+        # @schema {
+        #     "items": {"type": "object",
+        #         "additionalProperties": false,
+        #         "properties": {
+        #             "template": {"type": "string"},
+        #             "file": {"type": "string"},
+        #             "config": {"type": ["object", "string"]}
+        #         }
+        #     }
+        # }
+        configs: []
+        composer:
+          # @schema {"enum": [null, 1]}
+          version: ~
+    cron:
+        # @schema {"items": {"type": "object"}}
+        files: []
+    supervisor:
+        # @schema {"items": {"type": "object"}}
+        configs: []
+    nodejs:
+        # @option {"label": "Nodejs version"}
+        # @schema {"enum": [null, 16, 14, 12, 10, 8, 6]}
+        version: ~
+        # @schema {"items": {"type": "object"}}
+        packages: []
+    mariadb:
+        # @option {"label": "MariaDB version"}
+        # @schema {"enum": [null, 10.6, 10.5, 10.4, 10.3, 10.2, 10.1]}
+        version: ~
+    mysql:
+        # @option {"label": "MySQL version"}
+        # @schema {"enum": [null, "8.0", 5.7, 5.6]}
+        version: ~
+    redis:
+        # @option {"label": "Redis version"}
+        # @schema {"enum": [null, "*"]}
+        version: ~
+        config: {}
+    elasticsearch:
+        # @option {"label": "Elasticsearch version"}
+        # @schema {"enum": [null, 7, 6, 5, 2]}
+        version: ~
+        # @schema {"items": {"type": "string"}}
+        plugins: []
+    influxdb:
+        # @option {"label": "InfluxDB version"}
+        # @schema {"enum": [null, "*"]}
+        version: ~
+        config: {}
+        # @schema {"items": {"type": "string"}}
+        databases: []
+        # @schema {"items": {"type": "object"}}
+        users: []
+        # @schema {"items": {"type": "object"}}
+        privileges: []
+    ssh:
+        client:
+            # @schema {"type": ["null", "string"]}
+            config: ~
+    docker:
+        # @schema {"additionalProperties": true}
+        services:
+            app:
+                ports: []
+        mutagen:
+            ignore:
+                paths: []
+
+###############
+# Integration #
+###############
+
+# @schema {
+#     "definitions": {
+#         "integration": {"type": "object", "$id": "#integration",
+#             "additionalProperties": false,
+#             "properties": {
+#                 "label": {"type": "string"},
+#                 "parallel": {"type": "boolean"},
+#                 "app": {"type": "string", "pattern": "^[a-z]+$"},
+#                 "env": {"type": "object",
+#                     "additionalProperties": {"type": ["string", "integer"]},
+#                     "propertyNames": {"pattern": "^[A-Z_]+$"}
+#                 },
+#                 "junit": {"type": "string"},
+#                 "artifacts": {"type": ["string", "array"]},
+#                 "shell": {"type": "string"},
+#                 "warn": {"type": "boolean"},
+#                 "tasks": {"type": "array", "items": {"$ref": "#integration"}}
+#             }
+#         }
+#     },
+#     "$ref": "#integration"
+# }
+integration: {}
+
+############
+# Releases #
+############
+
+# @schema {
+#     "definitions": {
+#         "release": {"type": "object", "$id": "#release",
+#             "additionalProperties": false,
+#             "properties": {
+#                 "app": {"type": "string", "pattern": "^[a-z]+$"},
+#                 "mode": {"type": "string", "pattern": "^[\\w-/]+$"},
+#                 "repo": {"type": "string"},
+#                 "ref": {"type": "string", "pattern": "^[\\w-/]+$"},
+#                 "release_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
+#                 "release_add": {"type": "array", "items": {"type": "string"}},
+#                 "release_removed": {"type": "array", "items": {"type": "string"}},
+#                 "deploy_hosts": {"type": "array", "items": {"$ref": "#release_host"}},
+#                 "deploy_dir": {"type": "string"},
+#                 "deploy_releases": {"type": "integer"},
+#                 "deploy_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
+#                 "deploy_post_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
+#                 "deploy_shared_files": {"type": "array", "items": {"type": "string"}},
+#                 "deploy_shared_dirs": {"type": "array", "items": {"type": "string"}},
+#                 "deploy_writable_dirs": {"type": "array", "items": {"type": "string"}},
+#                 "deploy_removed": {"type": "array", "items": {"type": "string"}}
+#             },
+#             "dependencies": {
+#                 "deploy_hosts": ["deploy_dir"]
+#             },
+#             "required": ["mode", "repo"]
+#         },
+#         "release_task": {"type": "object", "$id": "#release_task",
+#             "additionalProperties": false,
+#             "properties": {
+#                 "shell": {"type": "string"},
+#                 "when": {"type": "string"}
+#             }
+#         },
+#         "release_host": {"type": "object", "$id": "#release_host",
+#             "additionalProperties": true,
+#             "properties": {
+#                 "ssh_host": {"type": "string", "format": "hostname"},
+#                 "ssh_user": {"type": "string"},
+#                 "ssh_args": {"type": "string"}
+#             },
+#             "required": ["ssh_host"]
+#         }
+#     },
+#     "items": {"$ref": "#release"}
+# }
+releases: []

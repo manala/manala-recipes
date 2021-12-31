@@ -1,0 +1,109 @@
+system:
+
+    vars:
+
+        # Ansible
+        ansible_connection: local
+
+        # Variables
+        apt_architecture: {{ `"{{ ansible_architecture | manala.roles.apt_architecture }}"` }}
+
+        # Alternatives
+        system_alternatives: false
+        # App
+        system_app_group: app
+        system_app_user: app
+        system_app_dir: /srv/app
+        system_app_log_dir: /srv/log
+        system_app_cache_dir: /srv/cache
+        system_app_sessions_dir: /srv/sessions
+        system_app_release_dir: /srv/release
+        # Apt
+        system_apt: false
+        {{- dict "system_apt_repositories" .Vars.system.apt.repositories | toYaml | nindent 8 }}
+        {{- dict "system_apt_preferences" .Vars.system.apt.preferences | toYaml | nindent 8 }}
+        {{- dict "system_apt_holds" .Vars.system.apt.holds | toYaml | nindent 8 }}
+        # Certificates
+        system_certificates: false
+        system_certificates_name: {{ .Vars.project.name | toYaml }}.ela.ooo
+        # Cron
+        system_cron: false
+        {{- dict "system_cron_files" .Vars.system.cron.files | toYaml | nindent 8 }}
+        # Elasticsearch
+        system_elasticsearch: false
+        system_elasticsearch_version: {{ .Vars.system.elasticsearch.version | toYaml }}
+        {{- dict "system_elasticsearch_plugins" .Vars.system.elasticsearch.plugins | toYaml | nindent 8 }}
+        # Environment
+        system_environment: false
+        {{- dict "system_env" .Vars.system.env | toYaml | nindent 8 }}
+        # Files
+        system_files: false
+        {{- dict "system_files_attributes" .Vars.system.files | toYaml | nindent 8 }}
+        # Git
+        system_git: false
+        # Gomplate
+        system_gomplate: false
+        # InfluxDB
+        system_influxdb: false
+        {{- dict "system_influxdb_config" .Vars.system.influxdb.config | toYaml | nindent 8 }}
+        {{- dict "system_influxdb_databases" .Vars.system.influxdb.databases | toYaml | nindent 8 }}
+        {{- dict "system_influxdb_users" .Vars.system.influxdb.users | toYaml | nindent 8 }}
+        {{- dict "system_influxdb_privileges" .Vars.system.influxdb.privileges | toYaml | nindent 8 }}
+        # Java
+        system_java: {{ `"{{ system_elasticsearch }}"` }}
+        # Locales
+        system_locales: false
+        {{- dict "system_locales_codes" .Vars.system.locales.codes | toYaml | nindent 8 }}
+        # MariaDB
+        system_mariadb: {{ not (empty .Vars.system.mariadb.version) | ternary "true" "false" }}
+        system_mariadb_version: {{ .Vars.system.mariadb.version | toYaml }}
+        system_mariadb_install_packages:
+            - mariadb-client
+        # MySQL
+        system_mysql: {{ not (empty .Vars.system.mysql.version) | ternary "true" "false" }}
+        system_mysql_version: {{ .Vars.system.mysql.version | toYaml }}
+        system_mysql_install_packages: ~
+        # Network
+        system_network: false
+        # Nginx
+        system_nginx: false
+        {{- dict "system_nginx_configs" .Vars.system.nginx.configs | toYaml | nindent 8 }}
+        # Ngrok
+        system_ngrok: false
+        # NodeJS
+        system_nodejs: false
+        system_nodejs_version: {{ .Vars.system.nodejs.version | toYaml }}
+        system_nodejs_npm: {{ `"{{ system_nodejs }}"` }}
+        {{- dict "system_nodejs_packages" .Vars.system.nodejs.packages | toYaml | nindent 8 }}
+        system_nodejs_yarn: {{ `"{{ system_nodejs }}"` }}
+        # Oh my zsh
+        system_ohmyzsh: false
+        # Php
+        system_php: false
+        system_php_version: {{ .Vars.system.php.version }}
+        system_php_composer: {{ `"{{ system_php }}"` }}
+        system_php_composer_version: {{ .Vars.system.php.composer.version | toYaml }}
+        system_php_sapis:
+            - cli
+            - fpm
+        {{- dict "system_php_extensions" .Vars.system.php.extensions | toYaml | nindent 8 }}
+        {{- dict "system_php_configs" .Vars.system.php.configs | toYaml | nindent 8 }}
+        # Redis
+        system_redis: false
+        system_redis_version: {{ .Vars.system.redis.version | toYaml }}
+        {{- dict "system_redis_server_config" .Vars.system.redis.config | toYaml | nindent 8 }}
+        # Ssh
+        system_ssh: false
+        {{- dict "system_ssh_client_config" .Vars.system.ssh.client.config | toYaml | nindent 8 }}
+        # Supervisor
+        system_supervisor: false
+        {{- dict "system_supervisor_configs" .Vars.system.supervisor.configs | toYaml | nindent 8 }}
+        # Symfony Cli
+        system_symfony_cli: {{ `"{{ system_php }}"` }}
+        # Timezone
+        system_timezone: false
+        system_timezone_default: {{ .Vars.system.timezone | toYaml }}
+        # Vim
+        system_vim: false
+        # Zsh
+        system_zsh: false

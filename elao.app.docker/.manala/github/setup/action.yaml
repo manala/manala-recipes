@@ -1,0 +1,38 @@
+name: Setup
+description: Setup
+author: Elao
+
+branding:
+  icon: terminal
+  color: orange
+
+runs:
+  using: composite
+  steps:
+    - name: Cache docker
+      uses: satackey/action-docker-layer-caching@v0.0.11
+      with:
+        key: app-docker-${{ hashFiles('.manala/**') }}-{hash}
+        restore-keys: app-docker-${{ hashFiles('.manala/**') }}
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: .manala/.cache
+        key: app-${{ hashFiles('**/composer.lock', '**/package-lock.json', '**/yarn.lock') }}
+    - name: Docker compose
+      shell: bash
+      env:
+        DOCKER_BUILDKIT: 1
+        BUILDKIT_PROGRESS: plain
+      run: >
+        MANALA_USER_ID=$(id -u)
+        MANALA_GROUP_ID=$(id -g)
+        docker-compose
+        --project-directory ./.manala/docker
+        --project-name app
+        --profile integration
+        --file ./.manala/docker/compose.yaml
+        --file ./.manala/docker/compose/integration.yaml
+        --file ./.manala/docker/compose/cache.yaml
+        up
+        --detach

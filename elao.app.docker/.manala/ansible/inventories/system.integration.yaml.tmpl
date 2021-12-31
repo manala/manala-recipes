@@ -1,0 +1,37 @@
+system:
+
+    hosts:
+
+        ###############
+        # Integration #
+        ###############
+
+        integration:
+
+            # Apt
+            system_apt: true
+            system_apt_packages:
+                - xz-utils
+                - rsync
+                - wget
+                - less
+                - ssl-cert
+                - procps
+                - vim-tiny
+            {{- if .Vars.system.apt.packages }}
+                # App
+                {{- .Vars.system.apt.packages | toYaml | nindent 16 }}
+            {{- end }}
+            # Git
+            system_git: true
+            # Locales
+            system_locales: true
+            # NodeJS
+            system_nodejs: {{ not (empty .Vars.system.nodejs.version) | ternary "true" "false" }}
+            # Php
+            system_php: {{ not (empty .Vars.system.php.version) | ternary "true" "false" }}
+            system_php_sapis:
+              - cli
+            # Ssh
+            system_ssh: true
+            system_ssh_client_config_template: ssh/integration/ssh_config.j2

@@ -1,0 +1,182 @@
+# Relative root dir ("."|".."|"../.."|…)
+_DIR := $(patsubst %/.,%,$(patsubst %.manala/..,%.,$(patsubst %Makefile,%..,$(lastword $(MAKEFILE_LIST)))))
+# Is current dir root ? (""|"1")
+_ROOT = $(if $(filter .,$(_DIR)),1)
+# Relative current dir ("."|"foo"|"foo/bar"|…)
+_CURRENT_DIR = $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_DIR))%,%,$(CURDIR)))
+
+-include $(_DIR)/.manala/make/text.mk
+-include $(_DIR)/.manala/make/help.mk
+-include $(_DIR)/.manala/make/os.mk
+-include $(_DIR)/.manala/docker/make.mk
+-include $(_DIR)/.manala/ansible/make.mk
+-include $(_DIR)/.manala/make/try.mk
+-include $(_DIR)/.manala/make/git.mk
+-include $(_DIR)/.manala/make/semver.mk
+
+###############
+# Environment #
+###############
+
+HELP += $(call help_section, Environment)
+
+# Docker commands only available *OUTSIDE* docker environment
+ifndef DOCKER
+
+# Setup commands only available *IN* root directory
+ifdef _ROOT
+HELP += $(call help,setup,                 Setup environment (DEBUG))
+setup:
+	$(_docker_compose) up \
+		--build \
+		--detach
+	$(setup)
+	$(MAKE) help
+endif
+
+HELP += $(call help,up,                    Start the environment)
+up:
+	$(_docker_compose) start
+
+HELP += $(call help,halt,                  Stop the environment)
+halt:
+	$(_docker_compose) stop
+
+HELP += $(call help,reload,                Restart the environment)
+reload:
+	$(_docker_compose) restart
+
+HELP += $(call help,sh,                    Open shell to the environment)
+sh:
+	$(_docker_compose_exec) \
+		sh -c "if [ -x \"$$(command -v zsh)\" ] ; then exec zsh --login ; else exec bash --login ; fi"
+
+HELP += $(call help,destroy,               Stop and delete environment)
+destroy:
+	$(_docker_compose) down \
+		--rmi local \
+		--volumes \
+		--remove-orphans
+
+HELP += $(call help,docker,                Arbitrary docker compose commands)
+ifeq (docker, $(firstword $(MAKECMDGOALS)))
+ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
+$(eval $(ARGS):;@true)
+docker:
+	$(_docker_compose) $(ARGS)
+endif
+
+endif
+
+HELP += $(call help,provision,             Provision the environment (TAGS|DIFF|VERBOSE|LIMIT))
+provision: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+provision: _ANSIBLE_PLAYBOOK_INVENTORY = $(_DIR)/.manala/ansible/inventories
+provision: _ANSIBLE_PLAYBOOK_BECOME = 1
+provision:
+	$(call log, Install ansible galaxy collections)
+	$(_ansible_galaxy_collection_install) \
+		$(_DIR)/.manala/ansible/collections/requirements.yaml
+	$(call log, Run ansible playbook)
+	$(_ansible_playbook) \
+		$(_DIR)/.manala/ansible/system.yaml
+
+HELP += $(call help,provision.apt,         Provision the environment - Apt (DIFF|VERBOSE))
+provision.apt: _ANSIBLE_PLAYBOOK_TAGS = apt
+provision.apt: provision
+
+{{- if .Vars.system.files }}
+
+HELP += $(call help,provision.files,       Provision the environment - Files (DIFF|VERBOSE))
+provision.files: _ANSIBLE_PLAYBOOK_TAGS = files
+provision.files: provision
+{{- end }}
+
+{{- if .Vars.system.nginx.configs }}
+
+HELP += $(call help,provision.nginx,       Provision the environment - Nginx (DIFF|VERBOSE))
+provision.nginx: _ANSIBLE_PLAYBOOK_TAGS = nginx
+provision.nginx: provision
+{{- end }}
+
+{{- if .Vars.system.supervisor.configs }}
+
+HELP += $(call help,provision.supervisor,  Provision the environment - Supervisor (DIFF|VERBOSE))
+provision.supervisor: _ANSIBLE_PLAYBOOK_TAGS = supervisor
+provision.supervisor: provision
+{{- end }}
+
+{{- if .Vars.system.php.version }}
+
+HELP += $(call help,provision.php,         Provision the environment - Php (DIFF|VERBOSE))
+provision.php: _ANSIBLE_PLAYBOOK_TAGS = php
+provision.php: provision
+{{- end }}
+
+HELP += $(call help,provision.certificates,Provision the environment - Certificates (DIFF|VERBOSE))
+provision.certificates: _ANSIBLE_PLAYBOOK_TAGS = certificates
+provision.certificates: _ANSIBLE_PLAYBOOK_EXTRA_VARS = certificates_prompt=true
+provision.certificates: provision
+
+{{ if .Vars.releases -}}
+############
+# Releases #
+############
+
+HELP += $(call help_section, Releases)
+
+{{ range $release := .Vars.releases }}
+
+{{- if or (hasKey $release "release_tasks") (hasKey $release "release_add") (hasKey $release "release_removed") -}}
+HELP += $(call help,release{{ include "release_target" $release }},Release {{ include "release_help" $release }})
+release{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+release{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_INVENTORY = $(_DIR)/.manala/ansible/inventories/release.yaml
+release{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_LIMIT = {{ include "release_group" . }}
+release{{ include "release_target" $release }}:
+	$(call log, Run ansible playbook)
+	$(_ansible_playbook) \
+		$(_DIR)/.manala/ansible/release.yaml
+
+{{ end -}}
+
+{{- if hasKey $release "deploy_hosts" -}}
+HELP += $(call help,deploy{{ include "release_target" $release }},Deploy {{ include "release_help" $release }} (REF))
+deploy{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+deploy{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_INVENTORY = $(_DIR)/.manala/ansible/inventories/deploy.yaml
+deploy{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_LIMIT = {{ include "release_group" $release }}
+deploy{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_EXTRA_VARS = $(if $(REF),'{"deploy_strategy_git_ref": "$(REF)"}')
+deploy{{ include "release_target" $release }}:
+	$(call log, Run ansible playbook)
+	$(_ansible_playbook) \
+		$(_DIR)/.manala/ansible/deploy.yaml
+
+{{ end -}}
+
+{{ end }}
+
+{{- end -}}
+
+########
+# Help #
+########
+
+HELP_FOOTER = \n\n$(COLOR_COMMENT)┏(°.°)┛┗(°.°)┓$(COLOR_RESET) ♪♫ Let's party ♫♪ $(COLOR_COMMENT)┗(°.°)┛┏(°.°)┓$(COLOR_RESET)\n
+{{- if .Vars.system.nginx.configs }}
+HELP_FOOTER += $(call help,Http,         http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 80 }})
+HELP_FOOTER += $(call help,Https,        https://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 43 }})
+{{- end }}
+{{- if .Vars.system.supervisor.configs }}
+HELP_FOOTER += $(call help,Supervisor,   http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 1 }})
+{{- end }}
+{{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
+{{- if .Vars.system.mysql.version }}
+HELP_FOOTER += $(call help,MySQL,        mysql://root@{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 6 }})
+{{- else if .Vars.system.mariadb.version }}
+HELP_FOOTER += $(call help,MariaDB,      mysql://root@{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 6 }})
+{{- end }}
+HELP_FOOTER += $(call help,PhpMyAdmin,   http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 79 }})
+{{- end }}
+{{- if .Vars.system.redis.version }}
+HELP_FOOTER += $(call help,PhpRedisAdmin,http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 81 }})
+{{- end }}
+HELP_FOOTER += $(call help,MailHog,      http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 25 }})
+HELP_FOOTER += \n

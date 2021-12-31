@@ -1,0 +1,37 @@
+{%- set config = item.config|default({}) -%}
+
+{# Upstream - [PHP] - Error handling and logging #}
+{{ config | manala.roles.php_config_parameter('error_reporting', default='E_ALL') }}
+{{ config | manala.roles.php_config_parameter('display_errors', default=True) }}
+{{ config | manala.roles.php_config_parameter('display_startup_errors', default=True) }}
+{{ config | manala.roles.php_config_parameter('track_errors', default=True) }}
+
+{# [PHP] - Miscellaneous #}
+{{ config | manala.roles.php_config_parameter('expose_php', default=True) }}
+
+{# [PHP] - Resource Limits #}
+{{ config | manala.roles.php_config_parameter('memory_limit', default='512M') }}
+
+{# [PHP] - Error handling and logging #}
+{{ config | manala.roles.php_config_parameter('error_log', default='/var/log/php' ~ manala_php_version|string ~ '/error.log') }}
+
+{# Enable apc on cli as soon as apcu/apcu-bc extension is installed #}
+{{ config | manala.roles.php_config_parameter('apc.enable_cli', default=True) }}
+
+{# [PHP] - Language Options - Dev #}
+{# See: http://stackoverflow.com/questions/12905404/symfony2-slow-initialization-time #}
+{{ config | manala.roles.php_config_parameter('realpath_cache_size', default='4096k') }}
+{{ config | manala.roles.php_config_parameter('realpath_cache_ttl', default=7200) }}
+
+{{ config | manala.roles.php_config(exclude=[
+  'error_reporting',
+  'display_errors',
+  'display_startup_errors',
+  'track_errors',
+  'expose_php',
+  'memory_limit',
+  'error_log',
+  'apc.enable_cli',
+  'realpath_cache_size',
+  'realpath_cache_ttl',
+]) -}}

@@ -1,0 +1,17 @@
+{%- set config = manala_vim_config|default({}, true) -%}
+
+syntax on
+
+{{ config | manala.roles.vim_config_parameter('encoding', default='utf8') }}
+{{ config | manala.roles.vim_config_parameter('expandtab', default=True) }}
+{{ config | manala.roles.vim_config_parameter('smarttab', default=True) }}
+{{ config | manala.roles.vim_config_parameter('shiftwidth', default=4) }}
+{{ config | manala.roles.vim_config_parameter('tabstop', default=4) }}
+
+{{ config | manala.roles.vim_config(exclude=[
+  'encoding',
+  'expandtab',
+  'smarttab',
+  'shiftwidth',
+  'tabstop'
+]) }}

@@ -1,0 +1,93 @@
+---
+
+# Install packages
+- name: certificates > Install packages
+  ansible.builtin.apt:
+    name:
+      - python3-cryptography
+    install_recommends: false
+    update_cache: true
+    cache_valid_time: 3600
+
+# Ca certificate key passphrase prompt
+- block:
+    - name: certificates > Prompt ca key passphrase
+      ansible.builtin.pause:
+        prompt: Enter ca key passphrase
+        echo: false
+      register: __certificates_ca_key_passphrase
+    - name: certificates > Assign ca key passphrase
+      ansible.builtin.set_fact:
+        certificates_ca_key_passphrase: "{{__certificates_ca_key_passphrase.user_input}}"
+  when: certificates_prompt
+
+# Generate ssl certificate from ca certificate
+- block:
+    - name: certificates > Generate ssl private key
+      community.crypto.openssl_privatekey:
+        path: "{{ playbook_dir }}/../certificates/ssl.key"
+        force: true
+        type: RSA
+        size: 4096
+    - name: certificates > Generate ssl certificate signing request
+      community.crypto.openssl_csr:
+        path: "{{ playbook_dir }}/../certificates/ssl.csr"
+        privatekey_path: "{{ playbook_dir }}/../certificates/ssl.key"
+        force: true
+        common_name: |-
+          {{ certificates_name }}
+        subject_alt_name: |-
+          DNS:{{ certificates_name }},DNS:*.{{ certificates_name }}
+    - name: certificates > Generate ssl certificate
+      community.crypto.x509_certificate:
+        path: "{{ playbook_dir }}/../certificates/ssl.pem"
+        csr_path: "{{ playbook_dir }}/../certificates/ssl.csr"
+        force: true
+        provider: ownca
+        ownca_path: "{{ playbook_dir }}/../certificates/ca.crt"
+        ownca_privatekey_path: "{{ playbook_dir }}/../certificates/ca.key"
+        ownca_privatekey_passphrase: "{{ certificates_ca_key_passphrase }}"
+        ownca_not_after: +825d
+  when: (certificates_ca_key_passphrase)
+
+# Copy ssl certificate
+- block:
+    - name: certificates > Copy ssl certificate
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../certificates/{{ item[0] }}"
+        dest: /etc/ssl/{{ item[1] }}/{{ item[0] }}
+      loop:
+        - [ssl.pem, certs]
+        - [ssl.key, private]
+      notify:
+        - nginx restart
+  when: ((playbook_dir ~ '/../certificates/ssl.key') is file)
+    and ((playbook_dir ~ '/../certificates/ssl.pem') is file)
+
+# Generate self signed ssl certificate
+- block:
+    - name: certificates > Generate self signed ssl private key
+      community.crypto.openssl_privatekey:
+        path: /etc/ssl/private/ssl.key
+        type: RSA
+        size: 4096
+      notify:
+        - nginx restart
+    - name: certificates > Generate self signed ssl certificate signing request
+      community.crypto.openssl_csr:
+        path: /etc/ssl/certs/ssl.csr
+        privatekey_path: /etc/ssl/private/ssl.key
+        common_name: |-
+          {{ certificates_name }}
+        subject_alt_name: |-
+          DNS:{{ certificates_name }},DNS:*.{{ certificates_name }}
+    - name: certificates > Generate self signed ssl certificate
+      community.crypto.x509_certificate:
+        path: /etc/ssl/certs/ssl.pem
+        csr_path: /etc/ssl/certs/ssl.csr
+        privatekey_path: /etc/ssl/private/ssl.key
+        provider: selfsigned
+      notify:
+        - nginx restart
+  when: ((playbook_dir ~ '/../certificates/ssl.key') is not file)
+     or ((playbook_dir ~ '/../certificates/ssl.pem') is not file)
