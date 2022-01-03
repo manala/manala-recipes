@@ -151,6 +151,7 @@ system:
                 - ssl-cert
                 - htop
                 - pv # for real-time progress on streams (e.g mysql import)
+                - tcpdump
             {{- if .apt.packages }}
                 # App
                 {{- .apt.packages | toYaml | nindent 16 }}
