@@ -47,7 +47,7 @@ manala up
 ```
 
 !!! Warning
-    Don't forget to run the `manala up` command each time you update the 
+    Don't forget to run the `manala up` command each time you update the
     `.manala.yaml` file to actually apply your changes !!!
 
 From now on, if you execute the `make help` command in your console, you should obtain the following output:
@@ -340,11 +340,11 @@ integration:
 
 ### Github Actions
 
-The recipes generates a `Dockerfile` and a `docker-compose.yaml` file that can 
+The recipes generates a `Dockerfile` and a `docker-compose.yaml` file that can
 be used to provide a fully-fledged environnement according to your project needs.
 
-The [Elao/manala-ci-action](https://github.com/Elao/manala-ci-action) rely on 
-this to allow you running any CLI command in this environnement, 
+The [Elao/manala-ci-action](https://github.com/Elao/manala-ci-action) rely on
+this to allow you running any CLI command in this environnement,
 using Github Action workflows.
 
 ### Common integration tasks
@@ -684,7 +684,7 @@ parameters:
 
 !!! Note
     Note that the path to the secret will slightly differ from what the Vault server will display:    
-    if the path is `MyApp/production/env` on the Vault server, 
+    if the path is `MyApp/production/env` on the Vault server,
     it will become `MyApp/data/production/env` in the template
 
 See [Go Template syntax](https://docs.gomplate.ca/syntax/) for more info.
@@ -701,7 +701,7 @@ In  order for https to work properly, you must:
     ```shell
     $ sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" .manala/certificates/ca.crt
     ```
-   
+
 2. generate a project certificate (one time *by* project, inside vagrant, remember to commit them right after)
 
     ```shell
