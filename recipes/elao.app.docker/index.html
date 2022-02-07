@@ -6,7 +6,7 @@
         <!-- Enable responsiveness on mobile devices-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <title>    Manala Recipes - Elao - App
+        <title>    Manala Recipes - Elao - App - Docker
 </title>
 
                     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
@@ -62,7 +62,7 @@
         </header>
 
         <div class="container">
-                <h1>Elao - App</h1>
+                <h1>Elao - App - Docker</h1>
 
             <ul>
                             <li>
@@ -78,10 +78,10 @@
                     <a href="#quick-start">Quick start</a>
                                     </li>
                             <li>
-                    <a href="#vm-interaction">VM interaction</a>
+                    <a href="#environment-interaction">Environment interaction</a>
                                     </li>
                             <li>
-                    <a href="#system">System</a>
+                    <a href="#configuration">Configuration</a>
                                     </li>
                             <li>
                     <a href="#integration">Integration</a>
@@ -107,9 +107,6 @@
                             <li>
                     <a href="#https">Https</a>
                                     </li>
-                            <li>
-                    <a href="#tips-tricks-and-tweaks">Tips, Tricks, and Tweaks</a>
-                                    </li>
                     </ul>
     
     <section>
@@ -117,21 +114,24 @@
             <body><h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
 <ul>
 <li>Make</li>
-<li>Vagrant 2.2.10+</li>
-<li>Landrush 1.3.2+</li>
-<li>VirtualBox 6.1.12+</li>
-<li>Docker Desktop 2.2.0+</li>
+</ul>
+<p>MacOS</p>
+<ul>
+<li>Docker Desktop 4.3.2+
+<code class="code-inline" id="46498ebd83f0fa20a7399fc1752a1ae0">brew install docker</code></li>
+<li>Mutagen Compose 0.13.0+
+<code class="code-inline" id="a14d6e44dbd1ccc8b4dd53663b5e50a5">brew install mutagen-io/mutagen/mutagen-compose</code></li>
 </ul>
 <h2 id="overview">Overview<a href="#overview" class="anchor"></a></h2>
 <p>This recipe contains some helpful scripts in the context of a php/nodejs app, such as Makefile tasks in order to release and deploy your app.</p>
 <h2 id="init">Init<a href="#init" class="anchor"></a></h2>
-<pre class="code-multiline"><code id="d770455ce9ab4ff2143db1f7eed39fba">$ cd [workspace]
-$ manala init -i elao.app [project]</code></pre>
+<pre class="code-multiline"><code id="39da62de0871bbd93e2b3283990f4105">$ cd [workspace]
+$ manala init -i elao.app.docker [project]</code></pre>
 <h2 id="quick-start">Quick start<a href="#quick-start" class="anchor"></a></h2>
 <p>In a shell terminal, change directory to your app, and run the following commands:</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="aca5cb8e0fce2d5de8ea4ed6cb5c590a"><span class="token builtin class-name">cd</span> /path/to/my/app
+<pre class="code-multiline language-shell"><code class="language-shell" id="54405844b4665d159d041271eae7661a"><span class="token builtin class-name">cd</span> /path/to/my/app
 manala init
-Select the <span class="token string">"elao.app"</span> recipe</code></pre>
+Select the <span class="token string">"elao.app.docker"</span> recipe</code></pre>
 <p>Edit the <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code> at the root directory of your project and add the following lines at the beginning of the file:</p>
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="9373f17e5e68c64fb38756e6ecd46f7d"><span class="token builtin">.SILENT</span><span class="token punctuation">:</span>
 
@@ -155,32 +155,32 @@ Docker:
   docker Run docker container
 
 App:</code></pre>
-<h2 id="vm-interaction">VM interaction<a href="#vm-interaction" class="anchor"></a></h2>
+<h2 id="environment-interaction">Environment interaction<a href="#environment-interaction" class="anchor"></a></h2>
 <p>In your app directory.</p>
 <p>Initialise your app:</p>
 <pre class="code-multiline language-bash"><code class="language-bash" id="4fd2c64dcfff0125ebf36e5089c49f7c"><span class="token function">make</span> setup</code></pre>
-<p>Start VM:</p>
+<p>Start environment:</p>
 <pre class="code-multiline language-bash"><code class="language-bash" id="2e9d335be8c5d384ed7b6df0a31c9696"><span class="token function">make</span> up</code></pre>
-<p>Stop VM:</p>
+<p>Stop environment:</p>
 <pre class="code-multiline language-bash"><code class="language-bash" id="18a4b187ddd402eeaff3210c41b411d9"><span class="token function">make</span> <span class="token function">halt</span></code></pre>
-<p>VM shell:</p>
-<pre class="code-multiline language-bash"><code class="language-bash" id="fb6dad9a920a0351eb8c4ff9a6284dfd"><span class="token function">make</span> <span class="token function">ssh</span></code></pre>
-<p>Box update:</p>
-<pre class="code-multiline language-bash"><code class="language-bash" id="98afaecc287e7d6b0aeb95f9cdef49b5"><span class="token builtin class-name">cd</span> .manala <span class="token operator">&amp;&amp;</span> vagrant box update <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">cd</span> -</code></pre>
-<h2 id="system">System<a href="#system" class="anchor"></a></h2>
-<p>Here is an example of a system configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="c1e81657dad6ec5ab46493492c9d6831"><span class="token comment">##########</span>
+<p>Environment shell:</p>
+<pre class="code-multiline language-bash"><code class="language-bash" id="6e3c3438c618a6a853510bb4ffe64803"><span class="token function">make</span> <span class="token function">sh</span></code></pre>
+<h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
+<p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="05e3b278c56b1b556dd0d1dd3a3c7d5f"><span class="token comment">###########</span>
+<span class="token comment"># Project #</span>
+<span class="token comment">###########</span>
+
+<span class="token key atrule">project</span><span class="token punctuation">:</span>
+    <span class="token key atrule">name</span><span class="token punctuation">:</span> app
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span> <span class="token number">12300</span> <span class="token comment"># Mulitple of 100, &gt;= 2000, &lt;= 64000</span>
+
+<span class="token comment">##########</span>
 <span class="token comment"># System #</span>
 <span class="token comment">##########</span>
 
 <span class="token key atrule">system</span><span class="token punctuation">:</span>
-    <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">10</span>
-    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> app.vm
-    <span class="token comment">#memory: 4096 # Optional</span>
-    <span class="token comment">#cpus: 2 # Optional</span>
-    <span class="token comment">#motd: # Optional</span>
-    <span class="token comment">#    template: motd/cow.j2</span>
-    <span class="token comment">#    message: Foo bar</span>
+    <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">11</span>
     <span class="token comment">#timezone: Etc/UTC # Optional</span>
     <span class="token comment">#locales: # Optional</span>
     <span class="token comment">#    default: C.UTF-8</span>
@@ -192,7 +192,7 @@ App:</code></pre>
         <span class="token comment">#preferences: [] # Optional</span>
         <span class="token key atrule">packages</span><span class="token punctuation">:</span>
           <span class="token punctuation">-</span> pdftk
-          <span class="token punctuation">-</span> https<span class="token punctuation">:</span>//github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5<span class="token punctuation">-</span>1.stretch_amd64.deb
+          <span class="token punctuation">-</span> https<span class="token punctuation">:</span>//github.com/wkhtmltopdf/packaging/releases/download/0.12.6<span class="token punctuation">-</span>1/wkhtmltox_0.12.6<span class="token punctuation">-</span>1.buster_<span class="token punctuation">{</span><span class="token punctuation">{</span> apt_architecture <span class="token punctuation">}</span><span class="token punctuation">}</span>.deb
     <span class="token key atrule">files</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> /srv/app/var/log
         <span class="token key atrule">src</span><span class="token punctuation">:</span> /srv/log
@@ -332,7 +332,19 @@ App:</code></pre>
             config: |
                 Host *.elao.run
                     User app
-                    ForwardAgent yes</span></code></pre>
+                    ForwardAgent yes
+    docker:
+        services:
+            whoami:
+                image: traefik/whoami:v1.7.1
+                network_mode: service:app
+                profiles:
+                    - development
+            # App ports
+            app:
+                ports:
+                    # whoami
+                    - 12345:80</span></code></pre>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
 <h3 id="jenkins">Jenkins<a href="#jenkins" class="anchor"></a></h3>
 <p>Here are some examples of integration configurations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> for Jenkins:</p>
@@ -404,7 +416,7 @@ this to allow you running any CLI command in this environnement,
 using Github Action workflows.</p>
 <h3 id="common-integration-tasks">Common integration tasks<a href="#common-integration-tasks" class="anchor"></a></h3>
 <p>Add in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>:</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="47b245d62a5a426fee968acfc64942da"><span class="token comment">###########</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="626e3a6cd593698728b85ecac62a1cc7"><span class="token comment">###########</span>
 <span class="token comment"># Install #</span>
 <span class="token comment">###########</span>
 
@@ -420,9 +432,9 @@ using Github Action workflows.</p>
     <span class="token comment"># Yarn</span>
     yarn install --color<span class="token operator">=</span>always --no-progress
 
-<span class="token comment">###########</span>
+<span class="token comment">#########</span>
 <span class="token comment"># Build #</span>
-<span class="token comment">###########</span>
+<span class="token comment">#########</span>
 
 ...
 
@@ -499,7 +511,7 @@ using Github Action workflows.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
 <p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="3152e346468f7462e3d3e583e29a83d6"><span class="token comment">############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="0153568d6fd2a5c79daa2d0a06c907ce"><span class="token comment">############</span>
 <span class="token comment"># Releases #</span>
 <span class="token comment">############</span>
 
@@ -540,7 +552,6 @@ using Github Action workflows.</p>
     <span class="token comment">#   - package.json</span>
     <span class="token comment">#   - phpunit.xml.dist</span>
     <span class="token comment">#   - README.md</span>
-    <span class="token comment">#   - Vagrantfile</span>
     <span class="token comment">#   - webpack.config.js</span>
     <span class="token comment">#   - yarn.lock</span>
 
@@ -618,7 +629,7 @@ using Github Action workflows.</p>
 <span class="token symbol">sync.api-uploads@staging</span><span class="token punctuation">:</span>
   ...</code></pre>
 <h3 id="git-tools">Git tools<a href="#git-tools" class="anchor"></a></h3>
-<p>This recipe contains some git helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app/.manala/make/git.mk" target="_blank"><code class="code-inline" id="e6c58e1556cef6518971d204931757e6">git_diff</code></a> function.</p>
+<p>This recipe contains some git helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app.docker/.manala/make/git.mk" target="_blank"><code class="code-inline" id="e6c58e1556cef6518971d204931757e6">git_diff</code></a> function.</p>
 <p>This function is useful for example to apply <code class="code-inline" id="bb7790bfaa80da52ecba1a151b299b55">php-cs</code>, <code class="code-inline" id="84a40fcfe7ec43f029d5956efb08d1c2">php-cs-fix</code> or <code class="code-inline" id="b098e670cdbfc421583801f6038ae38d">PHPStan</code> checks only on the subset of updated PHP files and not on any PHP file of your project.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="e9821a313f802ec649b58e33a335fc7e"><span class="token symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span> DIFF <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">call</span> git_diff, php, src tests<span class="token punctuation">)</span>
@@ -628,7 +639,7 @@ using Github Action workflows.</p>
         printf <span class="token string">"You have made no change in PHP files\n"</span> \
     <span class="token punctuation">)</span></code></pre>
 <h3 id="try-tools">Try tools<a href="#try-tools" class="anchor"></a></h3>
-<p>This recipe contains some try helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app/.manala/make/try.mk" target="_blank"><code class="code-inline" id="73691059dcea540103db82ad2b3c40f7">try_finally</code></a> function.</p>
+<p>This recipe contains some try helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app.docker/.manala/make/try.mk" target="_blank"><code class="code-inline" id="73691059dcea540103db82ad2b3c40f7">try_finally</code></a> function.</p>
 <p>This function is useful for example to run <code class="code-inline" id="85af727fd022d3a13e7972fd6a418582">phpunit</code> tests needing a started symfony server, and to stop this server regardless of the tests retur code.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="e0f9aa14ca8d2939a55c0be70ca37768"><span class="token symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
@@ -700,21 +711,13 @@ parameters:</span>
 <pre class="code-multiline language-shell"><code class="language-shell" id="c3dcbef8d973dace788b1dd85bc3c3ee">$ <span class="token function">sudo</span> security add-trusted-cert -d -r trustRoot -k <span class="token string">"/Library/Keychains/System.keychain"</span> .manala/certificates/ca.crt</code></pre>
 </li>
 <li>
-<p>generate a project certificate (one time <em>by</em> project, inside vagrant, remember to commit them right after)</p>
+<p>generate a project certificate (one time <em>by</em> project, remember to commit them right after)</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="eeb3e472903f3360f248e70679e0438b">⇒  <span class="token function">make</span> provision.certificates</code></pre>
 </li>
 <li>
 <p>For firefox only, browse to <code class="code-inline" id="e43648ef7c80e1a6aa2fc5e3182ed187">about:config</code> and ensure <code class="code-inline" id="40169ca3c0758a897e82d7000d02abe3">security.enterprise_roots.enabled</code> value is set to true</p>
 </li>
-</ol>
-<h2 id="tips-tricks-and-tweaks">Tips, Tricks, and Tweaks<a href="#tips-tricks-and-tweaks" class="anchor"></a></h2>
-<ul>
-<li><a href="https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement" target="_blank">Vagrant root privilege requirement</a></li>
-<li>
-<p>Debug ansible provisioning:</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="5ed0125f03431e6a4f2df8fd17f0e610">ansible-galaxy collection <span class="token function">install</span> manala.roles --collections-path /vagrant/ansible/collections</code></pre>
-</li>
-</ul></body>
+</ol></body>
         </article>
     </section>
 
