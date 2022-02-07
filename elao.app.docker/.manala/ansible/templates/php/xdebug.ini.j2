@@ -1,0 +1,29 @@
+{%- set config = item.config|default({}) -%}
+
+{%- set host = ansible_env.MANALA_HOST | default('linux') -%}
+{% if host == 'linux' %}
+# Linux
+xdebug.discover_client_host = 1
+{% elif host == 'darwin' %}
+# MacOS
+xdebug.client_host = host.docker.internal
+{% elif host == 'windows' %}
+# Windows
+xdebug.client_host = host.docker.internal
+{% endif %}
+
+{{ config | manala.roles.php_config_parameter('xdebug.mode', default='develop,debug,coverage') }}
+{{ config | manala.roles.php_config_parameter('xdebug.max_nesting_level', default=300) }}
+{{ config | manala.roles.php_config_parameter('xdebug.var_display_max_children', default=128) }}
+{{ config | manala.roles.php_config_parameter('xdebug.var_display_max_data', default=512) }}
+{{ config | manala.roles.php_config_parameter('xdebug.var_display_max_depth', default=4) }}
+{{ config | manala.roles.php_config_parameter('xdebug.cli_color', default=1) }}
+
+{{ config | manala.roles.php_config(exclude=[
+  'xdebug.mode',
+  'xdebug.max_nesting_level',
+  'xdebug.var_display_max_children',
+  'xdebug.var_display_max_data',
+  'xdebug.var_display_max_depth',
+  'xdebug.cli_color',
+]) }}

@@ -1,0 +1,109 @@
+####################################################################
+# !!! REMINDER !!!                                                 #
+# Don't forget to run `manala up` each time you update this file ! #
+####################################################################
+
+manala:
+    recipe: elao.app.docker
+
+{{- with .Vars.project }}
+
+###########
+# Project #
+###########
+
+project:
+    name: {{ .name | toYaml }}
+    ports: {{ mul (randInt 20 655) 100 }}
+
+{{- end }}
+
+{{- with .Vars.system }}
+
+##########
+# System #
+##########
+
+system:
+    version: {{ .version | toYaml }}
+    nginx:
+        configs:
+          - template: nginx/gzip.j2
+          {{- if .php.version }}
+          - template: nginx/php_fpm_app.j2
+          {{- end }}
+          # App
+          - file: app.conf
+            config: |
+                server {
+                    server_name ~.;
+                    root /srv/app/public;
+                    access_log /srv/log/nginx.access.log;
+                    error_log /srv/log/nginx.error.log;
+                    include conf.d/gzip;
+                {{- if .php.version }}
+                    location / {
+                        try_files $uri /index.php$is_args$args;
+                    }
+                    location ~ ^/index\.php(/|$) {
+                        include conf.d/php_fpm_app;
+                        internal;
+                    }
+                {{- end }}
+                }
+    {{- if .php.version }}
+    php:
+        version: {{ .php.version | toYaml }}
+        extensions:
+          # Symfony
+          - intl
+          - curl
+          - mbstring
+          - xml
+          # App
+          {{- if or .mysql.version .mariadb.version }}
+          - mysql
+          {{- end }}
+        configs:
+          - template: php/opcache.ini.j2
+          - template: php/app.ini.j2
+            config:
+              date.timezone: UTC
+    {{- end }}
+
+    {{- if .nodejs.version }}
+    nodejs:
+        version: {{ .nodejs.version | toYaml }}
+    {{- end }}
+
+    {{- if .mysql.version }}
+    mysql:
+        version: {{ .mysql.version | toYaml }}
+    {{- else if .mariadb.version }}
+    mariadb:
+        version: {{ .mariadb.version | toYaml }}
+    {{- end }}
+
+    {{- if .redis.version }}
+    redis:
+        version: {{ .redis.version | toYaml }}
+    {{- end }}
+
+    {{- if .elasticsearch.version }}
+    elasticsearch:
+        version: {{ .elasticsearch.version | toYaml }}
+    {{- end }}
+
+    {{- if .influxdb.version }}
+    influxdb:
+        version: {{ .influxdb.version | toYaml }}
+    {{- end }}
+
+    # ssh:
+    #     client:
+    #         config: |
+    #             Host *.elao.run
+    #                 User app
+    #                 ForwardAgent yes
+
+{{- end }}

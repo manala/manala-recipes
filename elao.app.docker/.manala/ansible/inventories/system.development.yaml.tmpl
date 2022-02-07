@@ -1,0 +1,70 @@
+system:
+
+    hosts:
+
+        ###############
+        # Development #
+        ###############
+
+        development:
+
+            # Alternatives
+            system_alternatives: true
+            # Apt
+            system_apt: true
+            system_apt_packages:
+                - xz-utils
+                - rsync
+                - wget
+                - less
+                - ssl-cert
+                - pv # for real-time progress on streams (e.g mysql import)
+                - tcpdump
+            {{- if .Vars.system.apt.packages }}
+                # App
+                {{- .Vars.system.apt.packages | toYaml | nindent 16 }}
+            {{- end }}
+            # Certificates
+            system_certificates: true
+            # Cron
+            system_cron: {{ not (empty .Vars.system.cron.files) | ternary "true" "false" }}
+            # Elasticsearch
+            system_elasticsearch: {{ not (empty .Vars.system.elasticsearch.version) | ternary "true" "false" }}
+            # Environment
+            system_environment: true
+            # Files
+            system_files: true
+            # Git
+            system_git: true
+            # Gomplate
+            system_gomplate: true
+            # InfluxDB
+            system_influxdb: {{ not (empty .Vars.system.influxdb.version) | ternary "true" "false" }}
+            # Locales
+            system_locales: true
+            # Network
+            system_network: {{ not (empty .Vars.system.network.hosts) | ternary "true" "false" }}
+            {{- dict "system_network_hosts" .Vars.system.network.hosts | toYaml | nindent 12 }}
+            # Nginx
+            system_nginx: {{ not (empty .Vars.system.nginx.configs) | ternary "true" "false" }}
+            # Ngrok
+            system_ngrok: true
+            # NodeJS
+            system_nodejs: {{ not (empty .Vars.system.nodejs.version) | ternary "true" "false" }}
+            # Oh my zsh
+            system_ohmyzsh: true
+            # Php
+            system_php: {{ not (empty .Vars.system.php.version) | ternary "true" "false" }}
+            # Redis
+            system_redis: {{ not (empty .Vars.system.redis.version) | ternary "true" "false" }}
+            # Ssh
+            system_ssh: true
+            system_ssh_client_config_template: ssh/development/ssh_config.j2
+            # Supervisor
+            system_supervisor: {{ not (empty .Vars.system.supervisor.configs) | ternary "true" "false" }}
+            # Timezone
+            system_timezone: true
+            # Vim
+            system_vim: true
+            # Zsh
+            system_zsh: true

@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+
+    {{- if .Vars.system.mysql.version }}
+
+    #########
+    # MySQL #
+    #########
+
+    mysql:
+        image: mysql/mysql-server:{{ .Vars.system.mysql.version | toString }}
+        {{- if le (.Vars.system.mysql.version|float64) 5.7 }}
+        # mysql/mysql-server image unavailable for arm64 on version <= 5.7
+        # force amd64 architecture
+        platform: linux/amd64
+        {{- end }}
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_ROOT_HOST: "%"
+        network_mode: service:app
+
+    {{- else if .Vars.system.mariadb.version }}
+
+    ###########
+    # MariaDB #
+    ###########
+
+    mariadb:
+        image: mariadb:{{ .Vars.system.mariadb.version | toString }}
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        network_mode: service:app
+
+    {{- end }}
+
+    #######
+    # App #
+    #######
+
+    app:
+        hostname: {{ .Vars.project.name }}
+        build:
+            context: ..
+            dockerfile: docker/Dockerfile
+            target: app
+            args:
+                MANALA_HOST: ${MANALA_HOST:-linux}
+                MANALA_USER_ID: ${MANALA_USER_ID:-1000}
+                MANALA_GROUP_ID: ${MANALA_GROUP_ID:-1000}
+        volumes:
+            - ../..:/srv/app
+
+    {{- $services := omit .Vars.system.docker.services "app" }}
+    {{- if $services }}
+    {{ $services | toYaml | nindent 4 }}
+    {{- end }}

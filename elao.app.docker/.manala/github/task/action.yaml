@@ -1,0 +1,35 @@
+name: Task
+description: Task
+author: Elao
+
+branding:
+  icon: terminal
+  color: orange
+
+inputs:
+  shell:
+    description: Shell command
+    required: true
+  app:
+    description: App
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Task
+      shell: bash
+      run: >
+        docker-compose
+        --project-directory ./.manala/docker
+        --project-name app
+        --profile integration
+        --file ./.manala/docker/compose.yaml
+        --file ./.manala/docker/compose/integration.yaml
+        --file ./.manala/docker/compose/cache.yaml
+        exec
+        -T
+        ${{ inputs.app != '' && format('--workdir /srv/app/{0}', inputs.app) }}
+        ${{ inputs.app != '' && format('--env XDG_CACHE_HOME=/srv/cache/{0}', inputs.app) }}
+        app
+        sh -c "${{ inputs.shell }}"

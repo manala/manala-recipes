@@ -1,0 +1,11 @@
+---
+
+- name: task/shell
+  block:
+
+    - name: task/shell > "{{ item.options }}"
+      ansible.builtin.shell: >
+        {{ item.options }}
+      args:
+        chdir: "{{ release_dir }}"
+      tags: log
