@@ -4,6 +4,9 @@ system:
 
         # Ansible
         ansible_connection: local
+        {{- if eq (.Vars.system.version|int) 9 }}
+        ansible_python_interpreter: /usr/bin/python3
+        {{- end }}
 
         # Variables
         apt_architecture: {{ `"{{ ansible_architecture | manala.roles.apt_architecture }}"` }}
