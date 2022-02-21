@@ -29,7 +29,8 @@ HELP += $(call help,setup,                 Setup environment (DEBUG))
 setup:
 	$(_docker_compose) up \
 		--build \
-		--detach
+		--detach \
+		--wait
 	$(setup)
 	$(MAKE) help
 endif
