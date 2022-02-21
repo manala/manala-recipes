@@ -13,11 +13,6 @@ system:
             # Apt
             system_apt: true
             system_apt_packages:
-                - xz-utils
-                - rsync
-                - wget
-                - less
-                - ssl-cert
                 - pv # for real-time progress on streams (e.g mysql import)
                 - tcpdump
             {{- if .Vars.system.apt.packages }}

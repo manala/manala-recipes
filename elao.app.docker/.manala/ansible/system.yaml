@@ -89,6 +89,11 @@
       - "{{ system_apt_holds }}"
 
     manala_apt_packages:
+      - xz-utils
+      - rsync
+      - wget
+      - less
+      - ssl-cert
       - "{{ ['symfony-cli'] if (system_php) else [] }}"
       - "{{ system_apt_packages }}"
 

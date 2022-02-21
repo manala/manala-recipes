@@ -11,11 +11,6 @@ system:
             # Apt
             system_apt: true
             system_apt_packages:
-                - xz-utils
-                - rsync
-                - wget
-                - less
-                - ssl-cert
                 - procps
                 - vim-tiny
             {{- if .Vars.system.apt.packages }}
