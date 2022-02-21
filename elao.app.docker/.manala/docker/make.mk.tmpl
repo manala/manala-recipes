@@ -29,7 +29,7 @@ _GIT_CONFIG = $(wildcard ~/.gitconfig)
 
 _DOCKER_COMPOSE = $(if $(_MUTAGEN_COMPOSE), \
 	$(_MUTAGEN_COMPOSE), \
-	$(shell command -v docker-compose) \
+	$(shell command -v docker) compose \
 )
 _DOCKER_COMPOSE_ENV = \
 	DOCKER_BUILDKIT=1 \
