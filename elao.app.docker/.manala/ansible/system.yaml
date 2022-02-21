@@ -69,7 +69,7 @@
           'mysql_' ~ system_mysql_version|string|replace('.', '_') if (system_mysql) else
           'default'
         }}"
-        state: "{{ 'present' if (system_mysql) else 'ignore' }}"
+        state: "{{ 'present' if (system_mysql and (ansible_distribution_release not in ['stretch'])) else 'ignore' }}"
       # MariaDB
       - preference: "mariadb@{{
           'mariadb_' ~ system_mariadb_version|string|replace('.', '_') if (system_mariadb) else
