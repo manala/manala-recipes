@@ -44,6 +44,8 @@
       # Php
       - preference: php@sury_php
         state: "{{ 'present' if (system_php) else 'ignore' }}"
+      - preference: symfony-cli@symfony
+        state: "{{ 'present' if (system_php) else 'ignore' }}"
       # Elasticsearch
       - preference: "elasticsearch@{{
           'elasticsearch_' ~ system_elasticsearch_version|string|replace('.', '_') if (system_elasticsearch) else
@@ -87,6 +89,7 @@
       - "{{ system_apt_holds }}"
 
     manala_apt_packages:
+      - "{{ ['symfony-cli'] if (system_php) else [] }}"
       - "{{ system_apt_packages }}"
 
     ################
@@ -443,11 +446,6 @@
         name: composer
       when: system_php_composer
       tags: [composer]
-
-    - import_role:
-        name: symfony_cli
-      when: system_symfony_cli
-      tags: [symfony]
 
     - import_role:
         name: certificates
