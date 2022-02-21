@@ -57,7 +57,7 @@
         state: "{{ 'present' if (system_influxdb) else 'ignore' }}"
       # Nginx
       - preference: nginx@nginx
-        state: "{{ 'present' if (system_nginx) else 'ignore' }}"
+        state: "{{ 'present' if (system_nginx and (ansible_distribution_release not in ['stretch'])) else 'ignore' }}"
       # Supervisor
       - preference: "supervisor@{{
           'backports' if (ansible_distribution_release in ['stretch']) else
