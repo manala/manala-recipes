@@ -94,6 +94,7 @@
       - wget
       - less
       - ssl-cert
+      - bzip2
       - "{{ ['symfony-cli'] if (system_php) else [] }}"
       - "{{ system_apt_packages }}"
 
