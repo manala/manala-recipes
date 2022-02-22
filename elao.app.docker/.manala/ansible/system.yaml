@@ -95,6 +95,7 @@
       - less
       - ssl-cert
       - bzip2
+      - iproute2
       - "{{ ['symfony-cli'] if (system_php) else [] }}"
       - "{{ system_apt_packages }}"
 
