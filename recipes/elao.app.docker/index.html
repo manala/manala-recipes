@@ -107,6 +107,9 @@
                             <li>
                     <a href="#https">Https</a>
                                     </li>
+                            <li>
+                    <a href="#caveats">Caveats</a>
+                                    </li>
                     </ul>
     
     <section>
@@ -125,8 +128,8 @@
 <h2 id="overview">Overview<a href="#overview" class="anchor"></a></h2>
 <p>This recipe contains some helpful scripts in the context of a php/nodejs app, such as Makefile tasks in order to release and deploy your app.</p>
 <h2 id="init">Init<a href="#init" class="anchor"></a></h2>
-<pre class="code-multiline"><code id="39da62de0871bbd93e2b3283990f4105">$ cd [workspace]
-$ manala init -i elao.app.docker [project]</code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="0a315574906857275052dffa43cf2349"><span class="token builtin class-name">cd</span> <span class="token punctuation">[</span>workspace<span class="token punctuation">]</span>
+manala init -i elao.app.docker <span class="token punctuation">[</span>project<span class="token punctuation">]</span></code></pre>
 <h2 id="quick-start">Quick start<a href="#quick-start" class="anchor"></a></h2>
 <p>In a shell terminal, change directory to your app, and run the following commands:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="54405844b4665d159d041271eae7661a"><span class="token builtin class-name">cd</span> /path/to/my/app
@@ -158,22 +161,26 @@ App:</code></pre>
 <h2 id="environment-interaction">Environment interaction<a href="#environment-interaction" class="anchor"></a></h2>
 <p>In your app directory.</p>
 <p>Initialise your app:</p>
-<pre class="code-multiline language-bash"><code class="language-bash" id="4fd2c64dcfff0125ebf36e5089c49f7c"><span class="token function">make</span> setup</code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="4fd2c64dcfff0125ebf36e5089c49f7c"><span class="token function">make</span> setup</code></pre>
 <p>Start environment:</p>
-<pre class="code-multiline language-bash"><code class="language-bash" id="2e9d335be8c5d384ed7b6df0a31c9696"><span class="token function">make</span> up</code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="2e9d335be8c5d384ed7b6df0a31c9696"><span class="token function">make</span> up</code></pre>
 <p>Stop environment:</p>
-<pre class="code-multiline language-bash"><code class="language-bash" id="18a4b187ddd402eeaff3210c41b411d9"><span class="token function">make</span> <span class="token function">halt</span></code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="18a4b187ddd402eeaff3210c41b411d9"><span class="token function">make</span> <span class="token function">halt</span></code></pre>
 <p>Environment shell:</p>
-<pre class="code-multiline language-bash"><code class="language-bash" id="6e3c3438c618a6a853510bb4ffe64803"><span class="token function">make</span> <span class="token function">sh</span></code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="6e3c3438c618a6a853510bb4ffe64803"><span class="token function">make</span> <span class="token function">sh</span></code></pre>
+<p>Custom docker compose command:</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="6bd301f7d95d8f77fd162d6459dc268a"><span class="token function">make</span> docker <span class="token punctuation">[</span>COMMAND<span class="token punctuation">]</span></code></pre>
+<p>:warning: separate hyphen based arguments or flags with <code class="code-inline" id="cfab1ba8c67c7c838db98d666f02a132">--</code> to avoid shell miss-interpretation:</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> docker logs -- --follow</code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="05e3b278c56b1b556dd0d1dd3a3c7d5f"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="7ceef0d751a467a3b3350c2d286110e0"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
 <span class="token key atrule">project</span><span class="token punctuation">:</span>
     <span class="token key atrule">name</span><span class="token punctuation">:</span> app
-    <span class="token key atrule">ports</span><span class="token punctuation">:</span> <span class="token number">12300</span> <span class="token comment"># Mulitple of 100, &gt;= 2000, &lt;= 64000</span>
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span> <span class="token number">12300</span> <span class="token comment"># Multiple of 100, &gt;= 2000, &lt;= 64000</span>
 
 <span class="token comment">##########</span>
 <span class="token comment"># System #</span>
@@ -345,6 +352,13 @@ App:</code></pre>
                 ports:
                     # whoami
                     - 12345:80</span></code></pre>
+<p>Details:</p>
+<ul>
+<li><code class="code-inline" id="46f86faa6bbf9ac94a7e459509a20ed0">project</code>
+<ul>
+<li><code class="code-inline" id="47f06098d3034f593871b524ce4f7965">ports</code>: docker network behavior force <code class="code-inline" id="421aa90e079fa326b6494f812ad13e79">localhost</code> usage for all projects. In order to runs multiple projects simultaneously, a kind of range ports must be set to avoid conflicts. Choose a base value, multiple of 100, greater or equal to 2000, and lower or equal to 64000, like 12300. All project ports will be based on this value, like 12380 for http or 12343 for https accesses.</li>
+</ul></li>
+</ul>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
 <h3 id="jenkins">Jenkins<a href="#jenkins" class="anchor"></a></h3>
 <p>Here are some examples of integration configurations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> for Jenkins:</p>
@@ -717,11 +731,18 @@ parameters:</span>
 <li>
 <p>For firefox only, browse to <code class="code-inline" id="e43648ef7c80e1a6aa2fc5e3182ed187">about:config</code> and ensure <code class="code-inline" id="40169ca3c0758a897e82d7000d02abe3">security.enterprise_roots.enabled</code> value is set to true</p>
 </li>
-</ol></body>
+</ol>
+<h2 id="caveats">Caveats<a href="#caveats" class="anchor"></a></h2>
+<ul>
+<li>MySQL 5.7 docker images are not available on arm64, that's why amd64 architecture is forced. Expect rare speed and stability issues.</li>
+<li>Nginx official debian packages for stretch are not available on arm64, that's why debian packages are used in version <code class="code-inline" id="bdca6efb043178ef172612dd1e173dde">1.10</code>. Expect rare configuration issues.</li>
+<li>OpenSSL debian packages for buster are broken on arm64, that's why bullseye ones are used. Expect rare behavior issues.</li>
+<li>Firefox is blocking some ports like <code class="code-inline" id="ebd774c929a7f6c7e5df19e355f61e23">10080</code>. Try to avoid them.</li>
+</ul></body>
         </article>
     </section>
 
-    <time datetime="2022-02-22UTC10:27:44+00:00">Last modified: February 22, 2022 10:27</time>
+    <time datetime="2022-02-22UTC11:15:12+00:00">Last modified: February 22, 2022 11:15</time>
         </div>
 
         <footer class="footer">
