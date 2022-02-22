@@ -27,12 +27,12 @@ These are the steps to migrate a project
 
 ### Manala
 
-Change recipe name
+Change recipe name in `.manala.yaml`
 
 ```diff
-  manala:
--     recipe: elao.app
-+     recipe: elao.app.docker
+manala:
+-    recipe: elao.app
++    recipe: elao.app.docker
 ```
 
 ### Project
@@ -41,20 +41,20 @@ Replace system.hostname by project.name in `.manala.yaml`, without forgetting to
 
 Set project.ports, multiple of 100, minimum 2000, maximum 65400
 
-```
+```diff
 ###########
 # Project #
 ###########
 
-project:
-    name: foo-bar  # <-- Yep! That's it!
-    ports: XXX00  # 20 < XXX < 654
++project:
++    name: foo-bar
++    ports: XXX00  # 20 < XXX < 654
 
 ...
 
 system:
     ...
-    hostname: foo-bar.vm  # <-- So 2021...
+-    hostname: foo-bar.vm
 ```
 
 ### System
@@ -68,10 +68,10 @@ In `.manala.yaml` system:
 ```diff
 system:
     ...
--    version: 8  # <-- No...
-+    version: 10  # <-- Yes!
--    memory: 4096 # <-- Please, no...
--    cpus: 2 # <-- No, no, no...
+-    version: 8
++    version: 10  # 9|10|11
+-    memory: 4096
+-    cpus: 2
 ```
 
 ### Motd
@@ -81,14 +81,16 @@ Sorry, `motd` is no more supported in `.manala.yaml`... It was tightly coupled t
 ```diff
 system:
     ...
--    motd:  # <-- So long, farewell...
-        ...
+-    motd:
+-        ...
 ```
 
 ### Vagrant
 
 - remove `.manala/Vagrantfile` file
 - remove `.manala/vagrant` directory
+
+Look for any references to `vagrant` in source code, especially in Makefiles, and find a way to fix them.
 
 ### Apt packages
 
@@ -101,7 +103,7 @@ system:
         ...
         packages:
             ...
--            - tcpdump <--- Kill! Kill! Kill!
+-            - tcpdump
 ```
 
 ### Docker
@@ -217,4 +219,53 @@ Regenerate certificates if necessary
 
 ```shell
 make provision.certificates
+```
+
+### Mutagen
+
+Mutagen in a great tool to sync files between host and guest, but could be tweaked a bit in some situations in `.manala.yaml`:
+
+```yaml
+system:
+    ...
+    docker:
+        ...
+        mutagen:
+            ignore:
+                paths:
+                    - /var/cache
+                    - /var/log
+```
+
+### Nginx
+
+Ensure nginx logs path are properly set on `/srv/log`.
+
+```yaml
+system:
+    ...
+    nginx:
+        configs:
+          ...
+          - file: app.conf
+            config: |
+                ...
+                    access_log /srv/log/nginx.access.log;
+                    error_log /srv/log/nginx.error.log;
+```
+
+### Node-sass
+
+node-sass is deprecated and could not work on arm64
+
+```shell
+# Npm
+npm uninstall node-sass
+npm add sass [--save-dev]
+# Yarn
+yarn remove node-sass
+yarn add sass [--dev]
+# Handle deprecations
+sudo npm install -g sass-migrator
+sass-migrator --migrate-deps division "assets/**/*.scss"
 ```
