@@ -20,9 +20,9 @@ This recipe contains some helpful scripts in the context of a php/nodejs app, su
 
 ## Init
 
-```
-$ cd [workspace]
-$ manala init -i elao.app.docker [project]
+```shell
+cd [workspace]
+manala init -i elao.app.docker [project]
 ```
 
 ## Quick start
@@ -72,23 +72,33 @@ App:
 In your app directory.
 
 Initialise your app:
-```bash
+```shell
 make setup
 ```
 
 Start environment:
-```bash
+```shell
 make up
 ```
 
 Stop environment:
-```bash
+```shell
 make halt
 ```
 
 Environment shell:
-```bash
+```shell
 make sh
+```
+
+Custom docker compose command:
+```shell
+make docker [COMMAND]
+```
+
+:warning: separate hyphen based arguments or flags with `--` to avoid shell miss-interpretation:
+```shell
+make docker logs -- --follow
 ```
 
 ## Configuration
@@ -102,7 +112,7 @@ Here is an example of a configuration in `.manala.yaml`:
 
 project:
     name: app
-    ports: 12300 # Mulitple of 100, >= 2000, <= 64000
+    ports: 12300 # Multiple of 100, >= 2000, <= 64000
 
 ##########
 # System #
@@ -275,6 +285,11 @@ system:
                     # whoami
                     - 12345:80
 ```
+
+Details:
+
+- `project`
+  - `ports`: docker network behavior force `localhost` usage for all projects. In order to runs multiple projects simultaneously, a kind of range ports must be set to avoid conflicts. Choose a base value, multiple of 100, greater or equal to 2000, and lower or equal to 64000, like 12300. All project ports will be based on this value, like 12380 for http or 12343 for https accesses.
 
 ## Integration
 
@@ -719,3 +734,10 @@ In  order for https to work properly, you must:
     ```
 
 3. For firefox only, browse to `about:config` and ensure `security.enterprise_roots.enabled` value is set to true
+
+## Caveats
+
+- MySQL 5.7 docker images are not available on arm64, that's why amd64 architecture is forced. Expect rare speed and stability issues.
+- Nginx official debian packages for stretch are not available on arm64, that's why debian packages are used in version `1.10`. Expect rare configuration issues.
+- OpenSSL debian packages for buster are broken on arm64, that's why bullseye ones are used. Expect rare behavior issues.
+- Firefox is blocking some ports like `10080`. Try to avoid them.
