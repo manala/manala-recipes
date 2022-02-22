@@ -1,10 +1,41 @@
 # Migration - 2022-01
 
-:warning: Launch a 'make destroy' under current code base before anything!
+How to migrate from `elao.app` recipe, and basically from a vagrant to a docker stack.
 
-:warning: Read carefully README's requirements!
+## On a per-machine basis
 
-## Project
+These are the tasks required to cleanup local environments for each `elao.app` based project, before switching to `elao.app.docker`.
+
+:warning: Ensure you're currently on a vagrant based git branch!
+
+```shell
+# Properly destroy vagrant machine
+make destroy
+# Remove local vagrant stuff
+rm -Rf .manala/.vagrant
+# Remove local cache
+rm -Rf .manala/.cache
+# Delete broken symlinks
+find -L . -type l -exec rm -i {} \;
+```
+
+Once all of your local environment are clean, you can proudly uninstall vagrant, landrush and virtualbox if not needed elsewhere.
+
+## On a per-project basis
+
+These are the steps to migrate a project
+
+### Manala
+
+Change recipe name
+
+```diff
+  manala:
+-     recipe: elao.app
++     recipe: elao.app.docker
+```
+
+### Project
 
 Replace system.hostname by project.name in `.manala.yaml`, without forgetting to remove the `.vm` extension!
 
@@ -26,7 +57,7 @@ system:
     hostname: foo-bar.vm  # <-- So 2021...
 ```
 
-## System
+### System
 
 In `.manala.yaml` system:
 - `version` 8 (jessie) is no more available (time to upgrade dude, debian jessie is no more maintained)
@@ -43,7 +74,7 @@ system:
 -    cpus: 2 # <-- No, no, no...
 ```
 
-## Motd
+### Motd
 
 Sorry, `motd` is no more supported in `.manala.yaml`... It was tightly coupled to `ssh`, which became useless using docker instead of vagrant.
 
@@ -54,15 +85,12 @@ system:
         ...
 ```
 
-## Vagrant
+### Vagrant
 
 - remove `.manala/Vagrantfile` file
 - remove `.manala/vagrant` directory
-- remove `.manala/.vagrant` directory
 
-You can uninstall vagrant, landrush and virtualbox if not needed elsewhere.
-
-## Apt packages
+### Apt packages
 
 You can remove `tcpdump` from system.apt.packages in `.manala.yaml` as it's now available by default in the recipe
 
@@ -76,7 +104,7 @@ system:
 -            - tcpdump <--- Kill! Kill! Kill!
 ```
 
-## Docker
+### Docker
 
 Remove `.manala/Dockerfile` file
 
@@ -112,7 +140,7 @@ Replace system.docker.containers entry in `.manala.yaml` by system.docker.servic
 +                     - 59402:9102
 ```
 
-## Multi architecture
+### Multi architecture
 
 The recipe is now supposed to support both `amd64` and `arm64` architectures, but sometime, we needed to use apt packages having such architectures defined in their names.
 An `apt_architecture` ansible variable is now available to automatically switch between them:
@@ -128,7 +156,7 @@ system:
 +            - https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_{{ apt_architecture }}.deb
 ```
 
-## Files
+### Files
 
 You can remove a lot of system.files entries in `.manala.yaml`, especially the ones related to previous vagrant symlink tricks with app cache & logs.
 
@@ -166,14 +194,14 @@ Multi app (just keep the log directories themselves)
 +           state: directory
 ```
 
-## Urls
+### Urls
 
 Replace in your project any references to `.vm` development url, and replace them by `ela.ooo` references.
 
 For instance:
 - `http://foo.vm` -> `http://foo.ela.ooo:12345`
 
-## Makefile
+### Makefile
 
 Replace `VAGRANT_MAKE` by `DOCKER_MAKE`
 ```diff
@@ -183,9 +211,10 @@ Replace `VAGRANT_MAKE` by `DOCKER_MAKE`
   endef
 ```
 
-## Certificates
+### Certificates
 
 Regenerate certificates if necessary
+
 ```shell
 make provision.certificates
 ```
