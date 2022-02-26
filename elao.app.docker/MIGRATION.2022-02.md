@@ -233,8 +233,12 @@ system:
         mutagen:
             ignore:
                 paths:
+                    # Single app
                     - /var/cache
                     - /var/log
+                    # Multi app
+                    - /foo/var/cache
+                    - /foo/var/log
 ```
 
 ### Nginx
