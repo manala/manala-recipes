@@ -123,7 +123,13 @@ RUN \
         sendsigs \
         umountnfs.sh \
         umountfs \
-        umountroot
+        umountroot \
+    # Block systemd replacement
+    && printf "\
+Package: systemd-sysv\n\
+Pin: release *\n\
+Pin-Priority: -1\n\
+" > /etc/apt/preferences
 
 STOPSIGNAL SIGINT
 
