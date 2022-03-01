@@ -65,7 +65,11 @@ system:
         # MySQL
         system_mysql: {{ not (empty .Vars.system.mysql.version) | ternary "true" "false" }}
         system_mysql_version: {{ .Vars.system.mysql.version | toYaml }}
-        system_mysql_install_packages: ~
+        system_mysql_install_packages:
+            - default-mysql-client
+            {{- if eq (.Vars.system.version|int) 10 }}
+            - libmariadb3
+            {{- end }}
         # Network
         system_network: false
         # Nginx
