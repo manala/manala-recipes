@@ -83,7 +83,7 @@ system:
         system_ohmyzsh: false
         # Php
         system_php: false
-        system_php_version: {{ .Vars.system.php.version }}
+        system_php_version: {{ .Vars.system.php.version | toYaml }}
         system_php_composer: {{ `"{{ system_php }}"` }}
         system_php_composer_version: {{ .Vars.system.php.composer.version | toYaml }}
         system_php_sapis:
