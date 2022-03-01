@@ -38,7 +38,7 @@ endif
 HELP += $(call help,up,                    Start the environment)
 up:
 	$(_docker_compose) start
-	$(MAKE) help
+	$(MAKE) help.project
 
 HELP += $(call help,halt,                  Stop the environment)
 halt:
@@ -47,7 +47,7 @@ halt:
 HELP += $(call help,reload,                Restart the environment)
 reload:
 	$(_docker_compose) restart
-	$(MAKE) help
+	$(MAKE) help.project
 
 HELP += $(call help,sh,                    Open shell to the environment)
 sh:
@@ -162,27 +162,26 @@ deploy{{ include "release_target" $release }}:
 # Help #
 ########
 
-HELP_FOOTER = \n\n$(COLOR_COMMENT)┏(°.°)┛┗(°.°)┓$(COLOR_RESET) ♪♫ Let's party ♫♪ $(COLOR_COMMENT)┗(°.°)┛┏(°.°)┓$(COLOR_RESET)\n
+HELP_PROJECT = $(COLOR_COMMENT)┏(°.°)┛┗(°.°)┓$(COLOR_RESET) ♪♫ Let's party ♫♪ $(COLOR_COMMENT)┗(°.°)┛┏(°.°)┓$(COLOR_RESET)\n
 {{- if .Vars.system.nginx.configs }}
-HELP_FOOTER += $(call help,Http,         http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 80 }})
-HELP_FOOTER += $(call help,Https,        https://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 43 }})
+HELP_PROJECT += $(call help,Http,         http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 80 }})
+HELP_PROJECT += $(call help,Https,        https://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 43 }})
 {{- end }}
 {{- if .Vars.system.supervisor.configs }}
-HELP_FOOTER += $(call help,Supervisor,   http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 1 }})
+HELP_PROJECT += $(call help,Supervisor,   http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 1 }})
 {{- end }}
 {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
 {{- if .Vars.system.mysql.version }}
-HELP_FOOTER += $(call help,MySQL,        mysql://root@{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 6 }})
+HELP_PROJECT += $(call help,MySQL,        mysql://root@{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 6 }})
 {{- else if .Vars.system.mariadb.version }}
-HELP_FOOTER += $(call help,MariaDB,      mysql://root@{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 6 }})
+HELP_PROJECT += $(call help,MariaDB,      mysql://root@{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 6 }})
 {{- end }}
-HELP_FOOTER += $(call help,PhpMyAdmin,   http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 79 }})
+HELP_PROJECT += $(call help,PhpMyAdmin,   http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 79 }})
 {{- end }}
 {{- if .Vars.system.elasticsearch.version }}
-HELP_FOOTER += $(call help,Elasticsearch,http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 92 }})
+HELP_PROJECT += $(call help,Elasticsearch,http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 92 }})
 {{- end }}
 {{- if .Vars.system.redis.version }}
-HELP_FOOTER += $(call help,PhpRedisAdmin,http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 81 }})
+HELP_PROJECT += $(call help,PhpRedisAdmin,http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 81 }})
 {{- end }}
-HELP_FOOTER += $(call help,MailHog,      http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 25 }})
-HELP_FOOTER += \n
+HELP_PROJECT += $(call help,MailHog,      http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 25 }})

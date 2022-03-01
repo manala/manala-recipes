@@ -4,11 +4,10 @@
 
 .DEFAULT_GOAL := help
 
-HELP_HEADER = \nUsage: make [$(COLOR_INFO)command$(COLOR_RESET)]
 HELP = \
+	Usage: make [$(COLOR_INFO)command$(COLOR_RESET)] \
 	$(call help_section, Help) \
 	$(call help,help,This help)
-HELP_FOOTER = \n
 
 define help_section
 	\n\n$(COLOR_COMMENT)$(strip $(1)):$(COLOR_RESET)
@@ -19,8 +18,7 @@ define help
 endef
 
 help:
-	@printf "$(HELP_HEADER)"
-	@printf "$(HELP)"
+	@printf "\n$(HELP)"
 	@awk ' \
 		BEGIN { \
 			sectionsName[1] = "Commands" ; \
@@ -66,6 +64,9 @@ help:
 			} \
 		} \
 	' $(MAKEFILE_LIST)
-	@printf "$(HELP_FOOTER)"
-	@printf "\n"
+	@printf "\n\n"
+	@printf "$(if $(HELP_PROJECT),$(HELP_PROJECT)\n\n)"
 .PHONY: help
+
+help.project:
+	@printf "$(if $(HELP_PROJECT),\n$(HELP_PROJECT)\n\n)"
