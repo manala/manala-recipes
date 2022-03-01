@@ -178,6 +178,9 @@ HELP_FOOTER += $(call help,MariaDB,      mysql://root@{{ .Vars.project.name }}.e
 {{- end }}
 HELP_FOOTER += $(call help,PhpMyAdmin,   http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 79 }})
 {{- end }}
+{{- if .Vars.system.elasticsearch.version }}
+HELP_FOOTER += $(call help,Elasticsearch,http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 92 }})
+{{- end }}
 {{- if .Vars.system.redis.version }}
 HELP_FOOTER += $(call help,PhpRedisAdmin,http://{{ .Vars.project.name }}.ela.ooo:{{ add .Vars.project.ports 81 }})
 {{- end }}

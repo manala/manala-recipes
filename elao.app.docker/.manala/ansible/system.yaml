@@ -46,12 +46,6 @@
         state: "{{ 'present' if (system_php) else 'ignore' }}"
       - preference: symfony-cli@symfony
         state: "{{ 'present' if (system_php) else 'ignore' }}"
-      # Elasticsearch
-      - preference: "elasticsearch@{{
-          'elasticsearch_' ~ system_elasticsearch_version|string|replace('.', '_') if (system_elasticsearch) else
-          'default'
-        }}"
-        state: "{{ 'present' if (system_elasticsearch) else 'ignore' }}"
       # InfluxDB
       - preference: influxdb@influxdata
         state: "{{ 'present' if (system_influxdb) else 'ignore' }}"
@@ -112,14 +106,6 @@
     manala_cron_files_defaults:
       user: "{{ system_app_user }}"
     manala_cron_files: "{{ system_cron_files }}"
-
-    #################
-    # Elasticsearch #
-    #################
-
-    manala_elasticsearch_version: "{{ system_elasticsearch_version }}"
-
-    manala_elasticsearch_plugins: "{{ system_elasticsearch_plugins }}"
 
     ###############
     # Environment #
@@ -193,17 +179,6 @@
     manala_influxdb_users: "{{ system_influxdb_users }}"
 
     manala_influxdb_privileges: "{{ system_influxdb_privileges }}"
-
-    ########
-    # Java #
-    ########
-
-    manala_java_version: "{{ {
-        'stretch': '8',
-        'buster': '11',
-        'bullseye': '11',
-      }[ansible_distribution_release]
-    }}"
 
     ###########
     # Locales #
@@ -477,16 +452,6 @@
         name: mysql
       when: system_mysql or system_mariadb
       tags: [mysql, mariadb]
-
-    - import_role:
-        name: java
-      when: system_java
-      tags: [java]
-
-    - import_role:
-        name: elasticsearch
-      when: system_elasticsearch
-      tags: [elasticsearch]
 
     - import_role:
         name: influxdb

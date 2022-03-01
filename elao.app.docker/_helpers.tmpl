@@ -38,7 +38,7 @@
 
 {{/* Elasticsearch version */}}
 {{- define "elasticsearch_version" -}}
-    {{- $elasticsearch_versions := dict 1.5 "1.5" 1.6 "1.6" 1.7 "1.7" 2 "2" 5 "5" 6 "6.8.6" 7 "7.5.1" -}}
+    {{- $elasticsearch_versions := dict 5 "5.6.16" 6 "6.8.23" 7 "7.17.1" 8 "8.0.0" -}}
     {{- $version := .version -}}
     {{- index $elasticsearch_versions ($version | toString) -}}
 {{- end -}}

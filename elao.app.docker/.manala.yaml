@@ -119,7 +119,7 @@ system:
         config: {}
     elasticsearch:
         # @option {"label": "Elasticsearch version"}
-        # @schema {"enum": [null, 7, 6, 5, 2]}
+        # @schema {"enum": [null, 8, 7, 6, 5]}
         version: ~
         # @schema {"items": {"type": "string"}}
         plugins: []

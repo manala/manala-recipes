@@ -52,8 +52,6 @@ system:
         {{- dict "system_influxdb_databases" .Vars.system.influxdb.databases | toYaml | nindent 8 }}
         {{- dict "system_influxdb_users" .Vars.system.influxdb.users | toYaml | nindent 8 }}
         {{- dict "system_influxdb_privileges" .Vars.system.influxdb.privileges | toYaml | nindent 8 }}
-        # Java
-        system_java: {{ `"{{ system_elasticsearch }}"` }}
         # Locales
         system_locales: false
         {{- dict "system_locales_codes" .Vars.system.locales.codes | toYaml | nindent 8 }}

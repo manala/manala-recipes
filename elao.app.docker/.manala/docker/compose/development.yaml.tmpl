@@ -80,6 +80,9 @@ services:
             {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
             - {{ add .Vars.project.ports 6 }}:3306
             {{- end }}
+            {{- if .Vars.system.elasticsearch.version }}
+            - {{ add .Vars.project.ports 92 }}:9200
+            {{- end }}
             {{- if .Vars.system.docker.services.app.ports }}
             {{- .Vars.system.docker.services.app.ports | toYaml | nindent 12 }}
             {{- end }}

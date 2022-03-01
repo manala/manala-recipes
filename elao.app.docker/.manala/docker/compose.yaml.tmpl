@@ -40,6 +40,29 @@ services:
 
     {{- end }}
 
+    {{- if .Vars.system.elasticsearch.version }}
+
+    #################
+    # Elasticsearch #
+    #################
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:{{ include "elasticsearch_version" .Vars.system.elasticsearch }}
+        {{- if le (.Vars.system.elasticsearch.version|int) 6 }}
+        # docker.elastic.co/elasticsearch/elasticsearch image unavailable for arm64 on version <= 6
+        # force amd64 architecture
+        platform: linux/amd64
+        {{- end }}
+        environment:
+            discovery.type: single-node
+        command: >
+            sh -c
+            "{{- range $plugin := $.Vars.system.elasticsearch.plugins }}elasticsearch-plugin install --batch --verbose {{ $plugin }} && {{ end -}}
+            exec docker-entrypoint.sh"
+        network_mode: service:app
+
+    {{- end }}
+
     #######
     # App #
     #######
