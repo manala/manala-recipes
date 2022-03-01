@@ -136,8 +136,12 @@ echo
 
 {% include 'functions/ip.j2' %}
 
+{%- if system_php %}
 {% include 'functions/php_xdebug.j2' %}
+{%- endif %}
 
+{%- if system_nginx %}
 {% include 'functions/nginx_timeout.j2' %}
+{%- endif %}
 
 {% include 'functions/ngrok_http.j2' %}
