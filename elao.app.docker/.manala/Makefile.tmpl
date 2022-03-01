@@ -38,6 +38,7 @@ endif
 HELP += $(call help,up,                    Start the environment)
 up:
 	$(_docker_compose) start
+	$(MAKE) help
 
 HELP += $(call help,halt,                  Stop the environment)
 halt:
@@ -46,6 +47,7 @@ halt:
 HELP += $(call help,reload,                Restart the environment)
 reload:
 	$(_docker_compose) restart
+	$(MAKE) help
 
 HELP += $(call help,sh,                    Open shell to the environment)
 sh:
