@@ -40,11 +40,11 @@ system:
     # @schema {"items": {"type": "string"}}
     mount: []
     kubectl:
-        # @schema {"enum": ["1.22.3", "1.21.6", "1.20.12", "1.19.16", "1.18.20"]}
+        # @schema {"enum": ["1.23.4", "1.22.3", "1.21.6", "1.20.12", "1.19.16", "1.18.20"]}
         # @option {"label": "Kubectl version"}
         version: ~
     helm:
-        # @schema {"enum": [null, "3.7.1"]}
+        # @schema {"enum": [null, "3.8.0", "3.7.1"]}
         # @option {"label": "Helm version"}
         version: ~
     k9s:
@@ -76,7 +76,7 @@ system:
         # @option {"label": "Kubernetes namespace killer version"}
         version: ~
     vault:
-        # @schema {"enum": [null, "1.8.4"]}
+        # @schema {"enum": [null, "1.9.3", "1.8.4"]}
         # @option {"label": "Vault version"}
         version: ~
     rclone:
