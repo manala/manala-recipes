@@ -17,12 +17,13 @@ services:
 x-mutagen:
     sync:
         defaults:
+            permissions:
+                defaultFileMode: 0644
+                defaultDirectoryMode: 0755
             configurationBeta:
                 permissions:
                     defaultGroup: id:1000
                     defaultOwner: id:1000
-                    defaultFileMode: 0644
-                    defaultDirectoryMode: 0755
         app:
             alpha: ../..
             beta: volume://app
