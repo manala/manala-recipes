@@ -29,6 +29,7 @@
         force: true
         type: RSA
         size: 4096
+        mode: 0644
     - name: certificates > Generate ssl certificate signing request
       community.crypto.openssl_csr:
         path: "{{ playbook_dir }}/../certificates/ssl.csr"
