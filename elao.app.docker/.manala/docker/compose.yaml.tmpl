@@ -55,6 +55,8 @@ services:
         {{- end }}
         environment:
             discovery.type: single-node
+            http.cors.allow-origin: "*"
+            http.cors.enabled: "true"
         command: >
             sh -c
             "{{- range $plugin := $.Vars.system.elasticsearch.plugins }}elasticsearch-plugin install --batch --verbose {{ $plugin }} && {{ end -}}
