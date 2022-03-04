@@ -273,3 +273,23 @@ yarn add sass [--dev]
 sudo npm install -g sass-migrator
 sass-migrator --migrate-deps division "assets/**/*.scss"
 ```
+
+### Watch / Webpack / Encore
+
+Remove vagrant related stuff in `Makefile`:
+```diff
+- ifeq ($(container),vagrant)
+- 	VAGRANT = 1
+- endif
+```
+
+Remove useless dev server options in `webpack.config.js`:
+```diff
+- .configureDevServerOptions(options => {
+-   // See: https://symfony.com/doc/current/frontend/encore/dev-server.html#cors-issues
+-   options.allowedHosts = 'all';
+-   options.port = 'auto';
+- })
+```
+
+Use `Makefile.dist` watch targets as a base to refactor own project's makefile targets.
