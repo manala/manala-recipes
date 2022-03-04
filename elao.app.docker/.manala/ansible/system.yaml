@@ -70,6 +70,9 @@
           (system_redis_version|string == '5.0') and (ansible_distribution_release in ['stretch'])
           or (system_redis_version|string == '6.0') and (ansible_distribution_release in ['buster'])
         ) else 'ignore' }}"
+      # GitHub CLI
+      - preference: gh@github_cli
+        state: "{{ 'present' if (system_git) else 'ignore' }}"
       - "{{ system_apt_preferences }}"
 
     manala_apt_holds_exclusive: true
@@ -85,6 +88,7 @@
       - bzip2
       - iproute2
       - "{{ ['symfony-cli'] if (system_php) else [] }}"
+      - "{{ ['gh'] if (system_git) else [] }}"
       - "{{ system_apt_packages }}"
 
     ################
