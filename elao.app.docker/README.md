@@ -112,7 +112,7 @@ Here is an example of a configuration in `.manala.yaml`:
 
 project:
     name: app
-    ports: 12300 # Multiple of 100, >= 2000, <= 64000
+    ports_prefix: 123 # >= 2000, <= 64000
 
 ##########
 # System #
@@ -289,7 +289,7 @@ system:
 Details:
 
 - `project`
-  - `ports`: docker network behavior force `localhost` usage for all projects. In order to runs multiple projects simultaneously, a kind of range ports must be set to avoid conflicts. Choose a base value, multiple of 100, greater or equal to 2000, and lower or equal to 64000, like 12300. All project ports will be based on this value, like 12380 for http or 12343 for https accesses.
+  - `ports_prefix`: docker network behavior force `localhost` usage for all projects. In order to runs multiple projects simultaneously, a kind of range ports must be set to avoid conflicts. Choose a prefix value, greater or equal to 20, and lower or equal to 640, like 123. All project ports will be based on this value, like 12380 for http or 12343 for https accesses.
 
 ## Integration
 

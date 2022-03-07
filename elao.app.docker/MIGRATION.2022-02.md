@@ -39,7 +39,7 @@ manala:
 
 Replace system.hostname by project.name in `.manala.yaml`, without forgetting to remove the `.vm` extension!
 
-Set project.ports, multiple of 100, minimum 2000, maximum 65400
+Set project.ports_prefix, minimum 20, maximum 654
 
 ```diff
 ###########
@@ -48,7 +48,7 @@ Set project.ports, multiple of 100, minimum 2000, maximum 65400
 
 +project:
 +    name: foo-bar
-+    ports: XXX00  # 20 < XXX < 654
++    ports_prefix: XXX  # 20 < XXX < 654
 
 ...
 

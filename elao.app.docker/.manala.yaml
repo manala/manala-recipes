@@ -24,8 +24,9 @@ project:
     # @schema {"type": "string", "minLength": 1}
     # @option {"label": "Project name"}
     name: ~
-    # @schema {"type": "integer", "multipleOf" : 100, "minimum": 2000, "maximum": 65400}
-    ports: ~
+    domain: ela.ooo
+    # @schema {"type": "integer", "minimum": 20, "maximum": 654}
+    ports_prefix: ~
 
 ##########
 # System #

@@ -14,7 +14,7 @@ manala:
 
 project:
     name: {{ .name | toYaml }}
-    ports: {{ mul (randInt 20 655) 100 }}
+    ports_prefix: {{ randInt 20 655 }}
 
 {{- end }}
 

@@ -28,7 +28,7 @@ system:
         {{- dict "system_apt_holds" .Vars.system.apt.holds | toYaml | nindent 8 }}
         # Certificates
         system_certificates: false
-        system_certificates_name: {{ .Vars.project.name | toYaml }}.ela.ooo
+        system_certificates_name: {{ include "project_host" .Vars.project }}
         # Cron
         system_cron: false
         {{- dict "system_cron_files" .Vars.system.cron.files | toYaml | nindent 8 }}
