@@ -40,7 +40,7 @@ _DOCKER_COMPOSE_FILE = \
  	$(_DIR)/.manala/docker/compose/development.yaml \
 	$(if $(_MUTAGEN_COMPOSE),$(_DIR)/.manala/docker/compose/mutagen.yaml) \
 	$(if $(_GIT_CONFIG),$(_DIR)/.manala/docker/compose/git.yaml)
-_DOCKER_COMPOSE_PROJECT_NAME = {{ .Vars.project.name }}
+_DOCKER_COMPOSE_PROJECT_NAME = $(PROJECT_NAME)
 _DOCKER_COMPOSE_PROJECT_DIRECTORY = $(_DIR)/.manala/docker
 _DOCKER_COMPOSE_PROFILE = development
 _DOCKER_COMPOSE_EXEC_SERVICE = app
