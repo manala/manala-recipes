@@ -174,13 +174,13 @@ App:</code></pre>
 <pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> docker logs -- --follow</code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="7ceef0d751a467a3b3350c2d286110e0"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="156c3fb54d1be72a0be061100e88eaba"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
 <span class="token key atrule">project</span><span class="token punctuation">:</span>
     <span class="token key atrule">name</span><span class="token punctuation">:</span> app
-    <span class="token key atrule">ports</span><span class="token punctuation">:</span> <span class="token number">12300</span> <span class="token comment"># Multiple of 100, &gt;= 2000, &lt;= 64000</span>
+    <span class="token key atrule">ports_prefix</span><span class="token punctuation">:</span> <span class="token number">123</span> <span class="token comment"># &gt;= 2000, &lt;= 64000</span>
 
 <span class="token comment">##########</span>
 <span class="token comment"># System #</span>
@@ -356,7 +356,7 @@ App:</code></pre>
 <ul>
 <li><code class="code-inline" id="46f86faa6bbf9ac94a7e459509a20ed0">project</code>
 <ul>
-<li><code class="code-inline" id="47f06098d3034f593871b524ce4f7965">ports</code>: docker network behavior force <code class="code-inline" id="421aa90e079fa326b6494f812ad13e79">localhost</code> usage for all projects. In order to runs multiple projects simultaneously, a kind of range ports must be set to avoid conflicts. Choose a base value, multiple of 100, greater or equal to 2000, and lower or equal to 64000, like 12300. All project ports will be based on this value, like 12380 for http or 12343 for https accesses.</li>
+<li><code class="code-inline" id="9fb4cc62d9fee9c73612d87ea60dbca2">ports_prefix</code>: docker network behavior force <code class="code-inline" id="421aa90e079fa326b6494f812ad13e79">localhost</code> usage for all projects. In order to runs multiple projects simultaneously, a kind of range ports must be set to avoid conflicts. Choose a prefix value, greater or equal to 20, and lower or equal to 640, like 123. All project ports will be based on this value, like 12380 for http or 12343 for https accesses.</li>
 </ul></li>
 </ul>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
@@ -742,7 +742,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2022-03-07UTC10:04:51+00:00">Last modified: March 7, 2022 10:04</time>
+    <time datetime="2022-03-07UTC13:29:57+00:00">Last modified: March 7, 2022 13:29</time>
         </div>
 
         <footer class="footer">
