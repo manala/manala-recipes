@@ -69,6 +69,8 @@ services:
            - /tmp
            - /run
         ports:
+            # Usuals
+            - {{ include "project_port" (list .Vars.project 88) }}:8080
             # MailHog
             - {{ include "project_port" (list .Vars.project 25) }}:8025
             {{- if .Vars.system.nginx.configs }}
