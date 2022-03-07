@@ -54,6 +54,19 @@ services:
 
     {{- end }}
 
+    {{- if .Vars.system.elasticsearch.version }}
+
+    ##############
+    # Elasticvue #
+    ##############
+
+    elasticvue :
+        image: cars10/elasticvue:0.39.0
+        ports:
+            - {{ include "project_port" (list .Vars.project 78) }}:8080
+
+    {{- end }}
+
     #######
     # App #
     #######

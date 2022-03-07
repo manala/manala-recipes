@@ -190,6 +190,7 @@ HELP_PROJECT += $(call help,PhpMyAdmin,   http://$(call project_host, 79))
 {{- end }}
 {{- if .Vars.system.elasticsearch.version }}
 HELP_PROJECT += $(call help,Elasticsearch,http://$(call project_host, 92))
+HELP_PROJECT += $(call help,Elasticvue,   http://$(call project_host, 78))
 {{- end }}
 {{- if .Vars.system.redis.version }}
 HELP_PROJECT += $(call help,PhpRedisAdmin,http://$(call project_host, 81))
