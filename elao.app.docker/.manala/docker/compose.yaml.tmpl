@@ -19,6 +19,12 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
             MYSQL_ROOT_HOST: "%"
         network_mode: service:app
+        healthcheck:
+            test: mysqladmin ping --silent --host 0.0.0.0
+            interval: 30s
+            timeout: 30s
+            retries: 3
+            start_period: 0s
 
     {{- else if .Vars.system.mariadb.version }}
 
@@ -32,7 +38,7 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
         network_mode: service:app
         healthcheck:
-            test: ["CMD", "mysqladmin" ,"ping", "--host", "0.0.0.0", "--silent"]
+            test: mysqladmin ping --silent --host 0.0.0.0
             interval: 30s
             timeout: 30s
             retries: 3
@@ -62,6 +68,12 @@ services:
             "{{- range $plugin := $.Vars.system.elasticsearch.plugins }}elasticsearch-plugin install --batch --verbose {{ $plugin }} && {{ end -}}
             exec docker-entrypoint.sh"
         network_mode: service:app
+        healthcheck:
+            test: curl --silent --fail --output /dev/null http://127.0.0.1:9200/_cat/health?h=st
+            interval: 30s
+            timeout: 30s
+            retries: 3
+            start_period: 0s
 
     {{- end }}
 

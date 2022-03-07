@@ -293,7 +293,7 @@ podTemplate(
             // - Drop databases
             container('{{ if .Vars.system.mysql.version }}mysql{{ else }}mariadb{{ end }}') {
                 sh label: 'Setup MySQL/MariaDB service', script: '''
-                    while ! mysqladmin ping --host 0.0.0.0 --silent; do
+                    while ! mysqladmin ping --silent --host 0.0.0.0; do
                         sleep 0.25
                     done
                     for database in $(mysql --execute "SHOW DATABASES" | egrep --invert-match "Database|mysql|information_schema|performance_schema"); do
@@ -309,7 +309,7 @@ podTemplate(
             // - Delete indexes
             container('elasticsearch') {
                 sh label: 'Setup Elasticsearch service', script: '''
-                    while ! [ $(curl --write-out %{http_code} --silent --output /dev/null http://127.0.0.1:9200/_cat/health?h=st) = 200 ]; do
+                    while ! curl --silent --fail --output /dev/null http://127.0.0.1:9200/_cat/health?h=st; do
                         sleep 0.25
                     done
                     curl --silent --request DELETE http://127.0.0.1:9200/_all
