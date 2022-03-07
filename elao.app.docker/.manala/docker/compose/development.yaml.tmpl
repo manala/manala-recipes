@@ -69,20 +69,26 @@ services:
            - /tmp
            - /run
         ports:
+            # MailHog
             - {{ include "project_port" (list .Vars.project 25) }}:8025
             {{- if .Vars.system.nginx.configs }}
+            # Nginx
             - {{ include "project_port" (list .Vars.project 80) }}:80
             - {{ include "project_port" (list .Vars.project 43) }}:443
             {{- end }}
             {{- if .Vars.system.supervisor.configs }}
+            # Supervisor
             - {{ include "project_port" (list .Vars.project 1) }}:9001
             {{- end }}
             {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
+            # MySQL / MariaDB
             - {{ include "project_port" (list .Vars.project 6) }}:3306
             {{- end }}
             {{- if .Vars.system.elasticsearch.version }}
+            # Elasticsearch
             - {{ include "project_port" (list .Vars.project 92) }}:9200
             {{- end }}
             {{- if .Vars.system.docker.services.app.ports }}
+            # App
             {{- .Vars.system.docker.services.app.ports | toYaml | nindent 12 }}
             {{- end }}
