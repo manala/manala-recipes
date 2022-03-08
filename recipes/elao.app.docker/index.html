@@ -525,7 +525,7 @@ using Github Action workflows.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
 <p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="7b32f21814f82a0708531a30fe331cd3"><span class="token comment">############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="38619fd15ed74fd5af4011c8daf61527"><span class="token comment">############</span>
 <span class="token comment"># Releases #</span>
 <span class="token comment">############</span>
 
@@ -533,9 +533,9 @@ using Github Action workflows.</p>
 
   <span class="token punctuation">-</span> <span class="token important">&amp;release</span>
     <span class="token comment">#app: api # Optional</span>
-    <span class="token key atrule">target</span><span class="token punctuation">:</span> production
+    <span class="token key atrule">tier</span><span class="token punctuation">:</span> production
     <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@git.elao.com<span class="token punctuation">:</span>&lt;vendor<span class="token punctuation">&gt;</span>/&lt;app<span class="token punctuation">&gt;</span><span class="token punctuation">-</span>release.git
-    <span class="token comment">#ref: master # Based on app/target by default</span>
+    <span class="token comment">#ref: master # Based on app/tier by default</span>
     <span class="token comment"># Release</span>
     <span class="token key atrule">release_tasks</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@production
@@ -590,7 +590,7 @@ using Github Action workflows.</p>
       <span class="token comment">#- shell: sudo /bin/systemctl restart supervisor</span>
 
   <span class="token punctuation">-</span> <span class="token key atrule">&lt;&lt;</span> <span class="token punctuation">:</span> <span class="token important">*release</span>
-    <span class="token key atrule">target</span><span class="token punctuation">:</span> staging
+    <span class="token key atrule">tier</span><span class="token punctuation">:</span> staging
     <span class="token key atrule">release_tasks</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@staging
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@staging
@@ -742,7 +742,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2022-03-08UTC14:41:50+00:00">Last modified: March 8, 2022 14:41</time>
+    <time datetime="2022-03-08UTC21:03:12+00:00">Last modified: March 8, 2022 21:03</time>
         </div>
 
         <footer class="footer">
