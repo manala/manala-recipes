@@ -2,26 +2,26 @@
 {{ define "release_target" -}}
     {{- if hasKey . "app" }}.{{ .app }}{{ end -}}
     @
-    {{- .target }}
+    {{- .tier }}
 {{- end }}
 
 {{/* Release makefile help */}}
 {{ define "release_help" -}}
     {{- if hasKey . "app" }}{{ .app }} {{ end -}}
-    in {{ .target }}
+    in {{ .tier }}
 {{- end }}
 
 {{/* Release ansible group */}}
 {{ define "release_group" -}}
     {{- if hasKey . "app" }}{{ .app }}_{{ end -}}
-    {{- regexReplaceAll "[^[:alnum:]_]" .target "_" }}
+    {{- regexReplaceAll "[^[:alnum:]_]" .tier "_" }}
 {{- end }}
 
 {{/* Release ansible host */}}
 {{ define "release_host" -}}
     {{- if hasKey . "app" }}.{{ .app }}{{ end -}}
     @
-    {{- .target }}
+    {{- .tier }}
 {{- end }}
 
 {{/* Release ansible tasks */}}

@@ -186,7 +186,7 @@ integration: {}
 #             "additionalProperties": false,
 #             "properties": {
 #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
-#                 "target": {"type": "string", "pattern": "^[\\w-/]+$"},
+#                 "tier": {"type": "string", "pattern": "^[\\w-/]+$"},
 #                 "repo": {"type": "string"},
 #                 "ref": {"type": "string", "pattern": "^[\\w-/]+$"},
 #                 "release_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
@@ -205,7 +205,7 @@ integration: {}
 #             "dependencies": {
 #                 "deploy_hosts": ["deploy_dir"]
 #             },
-#             "required": ["target", "repo"]
+#             "required": ["tier", "repo"]
 #         },
 #         "release_task": {"type": "object", "$id": "#release_task",
 #             "additionalProperties": false,

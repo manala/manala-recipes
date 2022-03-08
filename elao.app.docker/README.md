@@ -487,9 +487,9 @@ releases:
 
   - &release
     #app: api # Optional
-    target: production
+    tier: production
     repo: git@git.elao.com:<vendor>/<app>-release.git
-    #ref: master # Based on app/target by default
+    #ref: master # Based on app/tier by default
     # Release
     release_tasks:
       - shell: make install@production
@@ -544,7 +544,7 @@ releases:
       #- shell: sudo /bin/systemctl restart supervisor
 
   - << : *release
-    target: staging
+    tier: staging
     release_tasks:
       - shell: make install@staging
       - shell: make build@staging

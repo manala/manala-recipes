@@ -260,13 +260,13 @@ system:
 
 ### Releases
 
-`mode` key has been renamed to `target` in `.manala.yaml`.
+`mode` key has been renamed to `tier` in `.manala.yaml`.
 
 ```diff
 releases:
   - ...
 -   mode: production
-+   target: production
++   tier: production
     ...
 ```
 
