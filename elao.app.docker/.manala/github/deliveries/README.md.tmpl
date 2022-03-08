@@ -1,0 +1,126 @@
+# Deliveries
+
+{{- if not .Vars.deliveries }}
+
+¯\_(ツ)_/¯ Because it works on my machine...
+
+{{- else }}
+
+## Usage
+
+{{- /* Guess apps */ -}}
+{{- $apps := list -}}
+{{- range $delivery := .Vars.deliveries -}}
+{{- if hasKey $delivery "app" -}}
+{{- $apps = (append $apps $delivery.app) | uniq -}}
+{{- end -}}
+{{- end -}}
+
+{{- /* Guess tiers */ -}}
+{{- $tiers := list -}}
+{{- range $delivery := .Vars.deliveries -}}
+{{- $tiers = (append $tiers $delivery.tier) | uniq -}}
+{{- end }}
+
+`.github/workflows/release.yml`:
+
+```
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      {{- if $apps }}
+      app:
+        description: App
+        type: choice
+        options: [{{ $apps | join ", " }}]
+        default: {{ first $apps }}
+        required: true
+      {{- end }}
+      tier:
+        description: Tier
+        type: choice
+        options: [{{ $tiers | join ", " }}]
+        required: true
+      ref:
+        description: Git reference. Provide an explicit ref to release if it does not match your tier.
+        required: false
+      deploy:
+        description: Follow with a deployment if release succeeded
+        type: boolean
+        default: 'false'
+        required: false
+
+concurrency:
+  group: {{ `${{ github.workflow }}-${{ github.ref }}` }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: Release {{ `${{ github.event.inputs.app != '' && format('{0}@', github.event.inputs.app) || '' }}${{ github.event.inputs.tier }}` }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Release
+        uses: ./.manala/github/deliveries
+        with:
+          secrets: {{ `${{ toJSON(secrets) }}` }}
+          {{- if $apps }}
+          app: {{ `${{ github.event.inputs.app }}` }}
+          {{- end }}
+          tier: {{ `${{ github.event.inputs.tier }}` }}
+          ref: {{ `${{ github.event.inputs.ref }}` }}
+          release: true
+          deploy: {{ `${{ github.event.inputs.deploy }}` }}
+```
+
+`.github/workflows/deploy.yml`:
+
+```
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      {{- if $apps }}
+      app:
+        description: App
+        type: choice
+        options: [{{ $apps | join ", " }}]
+        default: {{ first $apps }}
+        required: true
+      {{- end }}
+      tier:
+        description: Tier
+        type: choice
+        options: [{{ $tiers | join ", " }}]
+        required: true
+      ref:
+        description: Git reference from the release repository. Do only provide to deploy another reference than the latest available version for the tier (deploy a previous release or a specific commit).
+        required: false
+
+concurrency:
+  group: {{ `${{ github.workflow }}-${{ github.ref }}` }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy {{ `${{ github.event.inputs.app != '' && format('{0}@', github.event.inputs.app) || '' }}${{ github.event.inputs.tier }}` }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy
+        uses: ./.manala/github/deliveries
+        with:
+          secrets: {{ `${{ toJSON(secrets) }}` }}
+          app: {{ `${{ github.event.inputs.app }}` }}
+          tier: {{ `${{ github.event.inputs.tier }}` }}
+          release: false
+          deploy: true
+          deploy_ref: {{ `${{ github.event.inputs.ref }}` }}
+```
+
+{{- end }}

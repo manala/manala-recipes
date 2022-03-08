@@ -172,6 +172,54 @@ deploy{{ include "delivery_target" $delivery }}:
 
 {{- end -}}
 
+{{ if and .Vars.deliveries .Vars.integration.github.jobs -}}
+#######################
+# Deliveries Triggers #
+#######################
+
+HELP += $(call help_section, Deliveries Triggers)
+
+{{ range $delivery := .Vars.deliveries }}
+
+{{- if hasKey $delivery "release_repo" -}}
+HELP += $(call help,trigger-release{{ include "delivery_target" $delivery }},Trigger release {{ include "delivery_help" $delivery }})
+trigger-release{{ include "delivery_target" $delivery }}:
+	gh workflow run release \
+		{{- if hasKey $delivery "app" }}
+		--field app={{ $delivery.app }} \
+		{{- end }}
+		--field tier={{ $delivery.tier }}
+
+{{ end -}}
+
+{{- if hasKey $delivery "deploy_hosts" -}}
+HELP += $(call help,trigger-deploy{{ include "delivery_target" $delivery }},Trigger deploy {{ include "delivery_help" $delivery }} (REF))
+trigger-deploy{{ include "delivery_target" $delivery }}:
+	gh workflow run deploy \
+		$(if $(REF),--field ref=$(REF)) \
+		{{- if hasKey $delivery "app" }}
+		--field app={{ $delivery.app }} \
+		{{- end }}
+		--field tier={{ $delivery.tier }}
+
+{{ end -}}
+
+{{- if and (hasKey $delivery "release_repo") (hasKey $delivery "deploy_hosts") -}}
+HELP += $(call help,trigger-release+deploy{{ include "delivery_target" $delivery }},Trigger release + deploy {{ include "delivery_help" $delivery }})
+trigger-release+deploy{{ include "delivery_target" $delivery }}:
+	gh workflow run release \
+		--field deploy=true \
+		{{- if hasKey $delivery "app" }}
+		--field app={{ $delivery.app }} \
+		{{- end }}
+		--field tier={{ $delivery.tier }}
+
+{{ end -}}
+
+{{ end }}
+
+{{- end -}}
+
 ########
 # Help #
 ########

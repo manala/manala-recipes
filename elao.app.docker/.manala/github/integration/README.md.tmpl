@@ -1,0 +1,64 @@
+# Integration
+
+{{- if not .Vars.integration.github.jobs }}
+
+¯\_(ツ)_/¯ Because testing is doubting...
+
+{{- else }}
+
+## Usage
+
+{{- /* Guess workflows */ -}}
+{{- $workflows := list -}}
+{{- range $job_id, $job := .Vars.integration.github.jobs -}}
+{{- $workflows = (append $workflows ($job_id | regexFind "^[a-z]+")) | uniq -}}
+{{- end -}}
+
+{{- range $workflow := $workflows }}
+
+{{- /* Guess apps */ -}}
+{{- $apps := list -}}
+{{- range $job_id, $job := $.Vars.integration.github.jobs }}
+{{- if and ($job_id | hasPrefix $workflow) (hasKey $job "app") }}
+{{- $apps = (append $apps $job.app) | uniq -}}
+{{- end -}}
+{{- end }}
+
+`.github/workflows/{{ $workflow }}.yml`:
+
+```
+on:
+  push:
+    branches: [master]
+    #branches: [master, staging]
+    #paths:[{{ range $app := $apps }}{{ $app }}/**, {{ end }}.github/**, .manala/**]
+    #paths: [{{ range $app := $apps }}{{ $app }}/composer.lock, {{ $app }}/package-lock.json, {{ $app }}/yarn.lock, {{ end }}.github/**, .manala/**]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  #schedule:
+  #  - cron: 0 0 * * 1 # Every Monday 00:00
+  #workflow_dispatch: ~
+
+concurrency:
+  group: {{ `${{ github.workflow }}-${{ github.ref }}` }}
+  cancel-in-progress: true
+
+jobs:
+
+{{- range $job_id, $job := $.Vars.integration.github.jobs }}
+{{- $job_name := $job_id | replace "_" " - " | title }}
+{{- if $job_id | hasPrefix $workflow }}
+  {{ $job_id }}:
+    name: {{ $job_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: {{ $job_name }}
+        uses: ./.manala/github/integration
+{{- end }}
+{{- end }}
+```
+{{- end }}
+
+{{- end }}
