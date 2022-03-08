@@ -243,7 +243,7 @@ system:
 
 ### Nginx
 
-Ensure nginx logs path are properly set on `/srv/log`.
+Ensure nginx logs path are properly set on `/srv/log` in `.manala.yaml`.
 
 ```yaml
 system:
@@ -256,6 +256,18 @@ system:
                 ...
                     access_log /srv/log/nginx.access.log;
                     error_log /srv/log/nginx.error.log;
+```
+
+### Releases
+
+`mode` key has been renamed to `target` in `.manala.yaml`.
+
+```diff
+releases:
+  - ...
+-   mode: production
++   target: production
+    ...
 ```
 
 ### Node-sass

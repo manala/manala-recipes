@@ -8,7 +8,7 @@ release:
                 localhost{{ include "release_host" $release }}:
                     ansible_connection: local
             vars:
-                release_dir: /srv/release/{{ if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.mode }}
+                release_dir: /srv/release/{{ if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.target }}
                 release_git_dir: /srv/app
                 {{- if hasKey $release "app" }}
                 release_target_dir: {{ $release.app }}
@@ -17,7 +17,7 @@ release:
                 release_version: {{ if hasKey $release "ref" }}
                   {{- $release.ref }}
                 {{- else }}
-                  {{- if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.mode }}
+                  {{- if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.target }}
                 {{- end }}
                 {{- if hasKey $release "release_tasks" }}
                 release_tasks:

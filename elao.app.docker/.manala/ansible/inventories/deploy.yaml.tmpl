@@ -28,7 +28,7 @@ deploy:
                 deploy_strategy_git_ref: {{ if hasKey $release "ref" }}
                   {{- $release.ref }}
                 {{- else }}
-                  {{- if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.mode }}
+                  {{- if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.target }}
                 {{- end }}
                 deploy_dir: {{ $release.deploy_dir }}
                 {{- if hasKey $release "deploy_tasks" }}
