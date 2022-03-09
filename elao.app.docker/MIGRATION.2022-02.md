@@ -35,6 +35,18 @@ manala:
 +    recipe: elao.app.docker
 ```
 
+### Reminder
+
+Reminder is now centered in `.manala.yaml`:
+
+```diff
+  ####################################################################
+- # !!! REMINDER !!!                                                 #
++ #                         !!! REMINDER !!!                         #
+  # Don't forget to run `manala up` each time you update this file ! #
+  ####################################################################
+```
+
 ### Project
 
 Replace system.hostname by project.name in `.manala.yaml`, without forgetting to remove the `.vm` extension!
