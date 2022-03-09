@@ -1,0 +1,9 @@
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        volumes:
+            - ${MANALA_GITHUB_CONFIG}:/home/app/.config/gh

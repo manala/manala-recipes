@@ -22,6 +22,7 @@ _MUTAGEN_COMPOSE = $(shell command -v mutagen-compose)
 #######
 
 _GIT_CONFIG = $(wildcard ~/.gitconfig)
+_GITHUB_CONFIG = $(wildcard ~/.config/gh)
 
 ##################
 # Docker Compose #
@@ -34,12 +35,14 @@ _DOCKER_COMPOSE = $(if $(_MUTAGEN_COMPOSE), \
 _DOCKER_COMPOSE_ENV = \
 	DOCKER_BUILDKIT=1 \
 	MANALA_HOST=$(OS) \
-	$(if $(_GIT_CONFIG),MANALA_GIT_CONFIG=$(_GIT_CONFIG))
+	$(if $(_GIT_CONFIG),MANALA_GIT_CONFIG=$(_GIT_CONFIG)) \
+	$(if $(_GITHUB_CONFIG),MANALA_GITHUB_CONFIG=$(_GITHUB_CONFIG))
 _DOCKER_COMPOSE_FILE = \
 	$(_DIR)/.manala/docker/compose.yaml \
  	$(_DIR)/.manala/docker/compose/development.yaml \
 	$(if $(_MUTAGEN_COMPOSE),$(_DIR)/.manala/docker/compose/mutagen.yaml) \
-	$(if $(_GIT_CONFIG),$(_DIR)/.manala/docker/compose/git.yaml)
+	$(if $(_GIT_CONFIG),$(_DIR)/.manala/docker/compose/git.yaml) \
+	$(if $(_GITHUB_CONFIG),$(_DIR)/.manala/docker/compose/github.yaml)
 _DOCKER_COMPOSE_PROJECT_NAME = $(PROJECT_NAME)
 _DOCKER_COMPOSE_PROJECT_DIRECTORY = $(_DIR)/.manala/docker
 _DOCKER_COMPOSE_PROFILE = development
