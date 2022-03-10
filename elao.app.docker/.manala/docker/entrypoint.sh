@@ -9,4 +9,12 @@ if [ -n "${SSH_AUTH_SOCK}" ] && [ -n "${MANALA_SSH_AUTH_SOCK_BIND}" ] && [ "${SS
     UNIX-CONNECT:${MANALA_SSH_AUTH_SOCK_BIND} &
 fi
 
+# Ssh key
+if [ -n "${MANALA_SSH_KEY}" ]; then
+  install --directory --group app --owner app --mode 700 /home/app/.ssh
+  printenv MANALA_SSH_KEY > /home/app/.ssh/id_rsa
+  chown app:app /home/app/.ssh/id_rsa
+  chmod 600 /home/app/.ssh/id_rsa
+fi
+
 exec "$@"

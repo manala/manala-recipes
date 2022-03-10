@@ -1,0 +1,9 @@
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        environment:
+            MANALA_SSH_KEY: ${MANALA_SSH_KEY}
