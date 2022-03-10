@@ -43,7 +43,7 @@ Edit the `Makefile` at the root directory of your project and add the following 
 -include .manala/Makefile
 ```
 
-Then update the `.manala.yaml` file (see [the releases example](#releases) below) and then run the `manala up` command:
+Then update the `.manala.yaml` file (see [the deliveries example](#deliveries) below) and then run the `manala up` command:
 
 ```shell
 manala up
@@ -474,23 +474,24 @@ test.jest@integration:
 
 ```
 
-## Releases
+## Deliveries
 
-Here is an example of a production/staging release configuration in `.manala.yaml`:
+Here is an example of a production/staging deliveries configuration in `.manala.yaml`:
 
 ```yaml
-############
-# Releases #
-############
+##############
+# Deliveries #
+##############
 
-releases:
+deliveries:
 
-  - &release
+  - &delivery
     #app: api # Optional
     tier: production
-    repo: git@git.elao.com:<vendor>/<app>-release.git
-    #ref: master # Based on app/tier by default
+    #ref: staging # Default to master
     # Release
+    release_repo: git@git.example.com:<vendor>/<app>-release.git
+    #release_ref: master # Based on app/tier by default
     release_tasks:
       - shell: make install@production
       - shell: make build@production
@@ -508,7 +509,7 @@ releases:
       - Makefile
 
     # Or you can include all by default and only list the paths you want to exclude
-    # release_removed:
+    # release_remove:
     #   - ansible
     #   - build
     #   - doc
@@ -537,13 +538,13 @@ releases:
       - shell: make warmup@production
       #- shell: make migration@production
       #  when: master | default # Conditions on custom host variables (jinja2 format)
-    #deploy_removed:
+    #deploy_remove:
     #  - web/app_dev.php
     deploy_post_tasks:
       - shell: sudo /bin/systemctl reload php8.1-fpm
       #- shell: sudo /bin/systemctl restart supervisor
 
-  - << : *release
+  - << : *delivery
     tier: staging
     release_tasks:
       - shell: make install@staging
@@ -715,7 +716,7 @@ parameters:
 See [Go Template syntax](https://docs.gomplate.ca/syntax/) for more info.
 
 !!! Warning
-    Make sure to include the `secrets` directory into your release, using the `release_add` entry.
+    Make sure to include the `secrets` directory into your deliveries, using the `release_add` entry.
 
 ## Https
 

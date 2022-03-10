@@ -48,12 +48,12 @@
   loop: "{{ query('deploy_tasks', deploy_tasks) }}"
   when: item.when
 
-# Removed
-- name: removed > Files
+# Remove
+- name: remove > Files
   file:
     path:  "{{ deploy_helper.new_release_path ~ '/' ~ item }}"
     state: absent
-  with_items: "{{ deploy_removed }}"
+  with_items: "{{ deploy_remove }}"
 
 # Finalize
 - name: finalize > Remove the unfinished file and create a symlink to the newly deployed release

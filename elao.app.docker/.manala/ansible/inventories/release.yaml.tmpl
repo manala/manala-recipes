@@ -1,31 +1,31 @@
 release:
     children:
-    {{- range $release := .Vars.releases }}
-    {{- if or (hasKey $release "release_tasks") (hasKey $release "release_add") (hasKey $release "release_removed") }}
+    {{- range $delivery := .Vars.deliveries }}
+    {{- if hasKey $delivery "release_repo" }}
 
-        {{ include "release_group" $release }}:
+        {{ include "delivery_group" $delivery }}:
             hosts:
-                localhost{{ include "release_host" $release }}:
+                localhost{{ include "delivery_host" $delivery }}:
                     ansible_connection: local
             vars:
-                release_dir: /srv/release/{{ if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.tier }}
+                release_dir: /srv/release/{{ if hasKey $delivery "app" }}{{ $delivery.app }}/{{ end }}{{ $delivery.tier }}
                 release_git_dir: /srv/app
-                {{- if hasKey $release "app" }}
-                release_target_dir: {{ $release.app }}
+                {{- if hasKey $delivery "app" }}
+                release_target_dir: {{ $delivery.app }}
                 {{- end }}
-                release_repo: {{ $release.repo }}
-                release_version: {{ if hasKey $release "ref" }}
-                  {{- $release.ref }}
+                release_repo: {{ $delivery.release_repo }}
+                release_ref: {{ if hasKey $delivery "release_ref" }}
+                  {{- $delivery.release_ref }}
                 {{- else }}
-                  {{- if hasKey $release "app" }}{{ $release.app }}/{{ end }}{{ $release.tier }}
+                  {{- if hasKey $delivery "app" }}{{ $delivery.app }}/{{ end }}{{ $delivery.tier }}
                 {{- end }}
-                {{- if hasKey $release "release_tasks" }}
+                {{- if hasKey $delivery "release_tasks" }}
                 release_tasks:
-                    {{- include "release_tasks" $release.release_tasks | nindent 18 }}
+                    {{- include "delivery_tasks" $delivery.release_tasks | nindent 18 }}
                 {{- end }}
-                {{- $release = pick $release "release_removed" "release_add" -}}
-                {{- if $release }}
-                {{- $release | toYaml | nindent 16 }}
+                {{- $delivery = pick $delivery "release_remove" "release_add" -}}
+                {{- if $delivery }}
+                {{- $delivery | toYaml | nindent 16 }}
                 {{- end }}
     {{- end }}
     {{- end }}

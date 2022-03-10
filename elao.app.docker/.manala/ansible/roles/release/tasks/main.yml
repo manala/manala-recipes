@@ -44,17 +44,17 @@
   loop: "{{ query('release_tasks', release_tasks) }}"
   when: item.when
 
-- name: git > Init "{{ release_repo }}" on branch "{{ release_version }}"
+- name: git > Init "{{ release_repo }}" on branch "{{ release_ref }}"
   ansible.builtin.shell: >
     git init
-    && git checkout -b {{ release_version }}
+    && git checkout -b {{ release_ref }}
     && git remote add origin {{ release_repo }}
     && git fetch
     && (
-      git show-ref -q origin/{{ release_version }} ; rc=$? ;
+      git show-ref -q origin/{{ release_ref }} ; rc=$? ;
       if [ $rc -eq 0 -o $rc -eq 1 ] ; then
         if [ $rc -eq 0 ] ; then
-          git update-ref HEAD origin/{{ release_version }} ;
+          git update-ref HEAD origin/{{ release_ref }} ;
         fi ;
       else
         return $rc ;
@@ -70,7 +70,7 @@
   args:
     warn: false
   tags: log_failed
-  loop: "{{ release_removed }}"
+  loop: "{{ release_remove }}"
 
 - name: git > Add all
   ansible.builtin.shell: >
@@ -105,9 +105,9 @@
     chdir: "{{ release_dir }}"
   tags: log_failed
 
-- name: git > Push "{{ release_version }}"
+- name: git > Push "{{ release_ref }}"
   ansible.builtin.shell: >
-    git push --set-upstream origin {{ release_version }}
+    git push --set-upstream origin {{ release_ref }}
     && git push origin HEAD
   args:
     chdir: "{{ release_dir }}"

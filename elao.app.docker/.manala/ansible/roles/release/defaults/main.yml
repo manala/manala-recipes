@@ -7,16 +7,14 @@ release_target_dir: ~
 # Git
 release_git_dir: ~
 release_repo:    ~
-release_version: master
+release_ref: master
 
 # Tasks
 release_tasks: []
 
-# Removed
-release_removed: []
-
-# Add
+# Add / Remove
 release_add: []
+release_remove: []
 
 # Regex (protocol|host|user|repository)
 release_git_url_regex: '^(?P<protocol>https|git)(:\/\/|@)(?P<host>[^\/:]+)[\/:](?P<user>[^\/:]+)\/(?P<repository>.+).git$'
