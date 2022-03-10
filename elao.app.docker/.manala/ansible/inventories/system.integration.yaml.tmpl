@@ -17,6 +17,8 @@ system:
                 # App
                 {{- .Vars.system.apt.packages | toYaml | nindent 16 }}
             {{- end }}
+            # Files
+            system_files: true
             # Git
             system_git: true
             # Locales
