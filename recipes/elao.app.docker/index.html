@@ -362,66 +362,70 @@ App:</code></pre>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
 <h3 id="jenkins">Jenkins<a href="#jenkins" class="anchor"></a></h3>
 <p>Here are some examples of integration configurations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> for Jenkins:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="ac20e7dd52ce8d45320e8fa8aa1d3bfa"><span class="token comment">###############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="54bfec975809f27d7fb285c5e092adf9"><span class="token comment">###############</span>
 <span class="token comment"># Integration #</span>
 <span class="token comment">###############</span>
 
 <span class="token key atrule">integration</span><span class="token punctuation">:</span>
-    <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
-      <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Integration
-        <span class="token key atrule">junit</span><span class="token punctuation">:</span> report/junit/<span class="token important">*.xml</span>
-        <span class="token key atrule">parallel</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-        <span class="token key atrule">warn</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-        <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-          <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Lint
+    <span class="token key atrule">jenkins</span><span class="token punctuation">:</span>
+        <span class="token key atrule">pipeline</span><span class="token punctuation">:</span>
             <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.php<span class="token punctuation">-</span>cs<span class="token punctuation">-</span>fixer@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.twig@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.yaml@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.eslint@integration
-          <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Security
-            <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.symfony@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.yarn@integration
-          <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Test
-            <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.phpunit@integration
-                <span class="token key atrule">artifacts</span><span class="token punctuation">:</span> var/log/<span class="token important">*.log</span>
-                <span class="token comment"># artifacts:</span>
-                <span class="token comment">#   - var/log/foo.log</span>
-                <span class="token comment">#   - var/log/bar.log</span>
-                <span class="token comment"># env:</span>
-                <span class="token comment">#     DATABASE_URL: mysql://root@127.0.0.1:3306/app</span></code></pre>
+              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Integration
+                <span class="token key atrule">junit</span><span class="token punctuation">:</span> report/junit/<span class="token important">*.xml</span>
+                <span class="token key atrule">parallel</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+                <span class="token key atrule">warn</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+                <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+                  <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Lint
+                    <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.php<span class="token punctuation">-</span>cs<span class="token punctuation">-</span>fixer@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.twig@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.yaml@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.eslint@integration
+                  <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Security
+                    <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.symfony@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.yarn@integration
+                  <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Test
+                    <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.phpunit@integration
+                        <span class="token key atrule">artifacts</span><span class="token punctuation">:</span> var/log/<span class="token important">*.log</span>
+                        <span class="token comment"># artifacts:</span>
+                        <span class="token comment">#   - var/log/foo.log</span>
+                        <span class="token comment">#   - var/log/bar.log</span>
+                        <span class="token comment"># env:</span>
+                        <span class="token comment">#     DATABASE_URL: mysql://root@127.0.0.1:3306/app</span></code></pre>
 <p>In this example we have two parallel stages: <code class="code-inline" id="8a5da52ed126447d359e70c05721a8aa">api</code> and <code class="code-inline" id="532c28d5412dd75bf975fb951c740a30">mobile</code>, corresponding to two different sub-apps.</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="e41f8490e6e309d6a46f5556bed8c19a"><span class="token comment">###############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="d4e3b1c39aae84c58115f1c1183903fc"><span class="token comment">###############</span>
 <span class="token comment"># Integration #</span>
 <span class="token comment">###############</span>
 
 <span class="token key atrule">integration</span><span class="token punctuation">:</span>
-    <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-      <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Integration <span class="token comment"># Optional</span>
-        <span class="token key atrule">parallel</span><span class="token punctuation">:</span> <span class="token boolean important">true</span> <span class="token comment"># ! Careful ! Could *NOT* be nested !</span>
-        <span class="token key atrule">junit</span><span class="token punctuation">:</span> report/junit/<span class="token important">*.xml</span>
-        <span class="token key atrule">artifacts</span><span class="token punctuation">:</span> var/log/<span class="token important">*.log</span>
-        <span class="token key atrule">warn</span><span class="token punctuation">:</span> <span class="token boolean important">true</span> <span class="token comment"># Turn errors into warnings (recursively applied)</span>
-        <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-          <span class="token punctuation">-</span> <span class="token key atrule">app</span><span class="token punctuation">:</span> api <span class="token comment"># Optional</span>
+    <span class="token key atrule">jenkins</span><span class="token punctuation">:</span>
+        <span class="token key atrule">pipeline</span><span class="token punctuation">:</span>
             <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.php<span class="token punctuation">-</span>cs<span class="token punctuation">-</span>fixer@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.symfony@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.phpunit@integration
+              <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Integration <span class="token comment"># Optional</span>
+                <span class="token key atrule">parallel</span><span class="token punctuation">:</span> <span class="token boolean important">true</span> <span class="token comment"># ! Careful ! Could *NOT* be nested !</span>
+                <span class="token key atrule">junit</span><span class="token punctuation">:</span> report/junit/<span class="token important">*.xml</span>
                 <span class="token key atrule">artifacts</span><span class="token punctuation">:</span> var/log/<span class="token important">*.log</span>
-                <span class="token comment"># env:</span>
-                <span class="token comment">#     DATABASE_URL: mysql://root@127.0.0.1:3306/app</span>
-          <span class="token punctuation">-</span> <span class="token key atrule">app</span><span class="token punctuation">:</span> mobile
-            <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.eslint@integration
-              <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.jest@integration</code></pre>
+                <span class="token key atrule">warn</span><span class="token punctuation">:</span> <span class="token boolean important">true</span> <span class="token comment"># Turn errors into warnings (recursively applied)</span>
+                <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+                  <span class="token punctuation">-</span> <span class="token key atrule">app</span><span class="token punctuation">:</span> api <span class="token comment"># Optional</span>
+                    <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.php<span class="token punctuation">-</span>cs<span class="token punctuation">-</span>fixer@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.symfony@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.phpunit@integration
+                        <span class="token key atrule">artifacts</span><span class="token punctuation">:</span> var/log/<span class="token important">*.log</span>
+                        <span class="token comment"># env:</span>
+                        <span class="token comment">#     DATABASE_URL: mysql://root@127.0.0.1:3306/app</span>
+                  <span class="token punctuation">-</span> <span class="token key atrule">app</span><span class="token punctuation">:</span> mobile
+                    <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.eslint@integration
+                      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.jest@integration</code></pre>
 <h3 id="github-actions">Github Actions<a href="#github-actions" class="anchor"></a></h3>
 <p>The recipes generates a <code class="code-inline" id="3254677a7917c6c01f55212f86c57fbf">Dockerfile</code> and a <code class="code-inline" id="eb672b1ddd3aa7dae5f2577f38daa271">docker-compose.yaml</code> file that can
 be used to provide a fully-fledged environnement according to your project needs.</p>
@@ -743,7 +747,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2022-03-14UTC10:23:14+00:00">Last modified: March 14, 2022 10:23</time>
+    <time datetime="2022-03-14UTC10:50:58+00:00">Last modified: March 14, 2022 10:50</time>
         </div>
 
         <footer class="footer">
