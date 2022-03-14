@@ -190,7 +190,7 @@ stage('{{ include "node_label" $node }}') {
 
 #!/usr/bin/env groovy
 
-{{- if not .Vars.integration }}
+{{- if not .Vars.integration.jenkins.pipeline }}
 
 stage('¯\\_(ツ)_/¯') {
     echo 'Because testing is doubting...'
@@ -322,7 +322,7 @@ podTemplate(
               "XDG_CACHE_HOME=${appCache}/app",
               "NPM_CONFIG_CACHE=\${XDG_CACHE_HOME}/npm",
             ]) {
-                {{- include "node" (dict "node" .Vars.integration) | trim | nindent 16 }}
+                {{- include "node" (dict "node" .Vars.integration.jenkins.pipeline) | trim | nindent 16 }}
             }
         }
     }
