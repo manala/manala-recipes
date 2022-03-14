@@ -130,34 +130,34 @@ provision.certificates: _ANSIBLE_PLAYBOOK_TAGS = certificates
 provision.certificates: _ANSIBLE_PLAYBOOK_EXTRA_VARS = certificates_prompt=true
 provision.certificates: provision
 
-{{ if .Vars.releases -}}
-############
-# Releases #
-############
+{{ if .Vars.deliveries -}}
+##############
+# Deliveries #
+##############
 
-HELP += $(call help_section, Releases)
+HELP += $(call help_section, Deliveries)
 
-{{ range $release := .Vars.releases }}
+{{ range $delivery := .Vars.deliveries }}
 
-{{- if or (hasKey $release "release_tasks") (hasKey $release "release_add") (hasKey $release "release_removed") -}}
-HELP += $(call help,release{{ include "release_target" $release }},Release {{ include "release_help" $release }})
-release{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
-release{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_INVENTORY = $(_DIR)/.manala/ansible/inventories/release.yaml
-release{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_LIMIT = {{ include "release_group" . }}
-release{{ include "release_target" $release }}:
+{{- if hasKey $delivery "release_repo" -}}
+HELP += $(call help,release{{ include "delivery_target" $delivery }},Release {{ include "delivery_help" $delivery }})
+release{{ include "delivery_target" $delivery }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+release{{ include "delivery_target" $delivery }}: _ANSIBLE_PLAYBOOK_INVENTORY = $(_DIR)/.manala/ansible/inventories/release.yaml
+release{{ include "delivery_target" $delivery }}: _ANSIBLE_PLAYBOOK_LIMIT = {{ include "delivery_group" . }}
+release{{ include "delivery_target" $delivery }}:
 	$(call log, Run ansible playbook)
 	$(_ansible_playbook) \
 		$(_DIR)/.manala/ansible/release.yaml
 
 {{ end -}}
 
-{{- if hasKey $release "deploy_hosts" -}}
-HELP += $(call help,deploy{{ include "release_target" $release }},Deploy {{ include "release_help" $release }} (REF))
-deploy{{ include "release_target" $release }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
-deploy{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_INVENTORY = $(_DIR)/.manala/ansible/inventories/deploy.yaml
-deploy{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_LIMIT = {{ include "release_group" $release }}
-deploy{{ include "release_target" $release }}: _ANSIBLE_PLAYBOOK_EXTRA_VARS = $(if $(REF),'{"deploy_strategy_git_ref": "$(REF)"}')
-deploy{{ include "release_target" $release }}:
+{{- if hasKey $delivery "deploy_hosts" -}}
+HELP += $(call help,deploy{{ include "delivery_target" $delivery }},Deploy {{ include "delivery_help" $delivery }} (REF))
+deploy{{ include "delivery_target" $delivery }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+deploy{{ include "delivery_target" $delivery }}: _ANSIBLE_PLAYBOOK_INVENTORY = $(_DIR)/.manala/ansible/inventories/deploy.yaml
+deploy{{ include "delivery_target" $delivery }}: _ANSIBLE_PLAYBOOK_LIMIT = {{ include "delivery_group" $delivery }}
+deploy{{ include "delivery_target" $delivery }}: _ANSIBLE_PLAYBOOK_EXTRA_VARS = $(if $(REF),'{"deploy_strategy_git_ref": "$(REF)"}')
+deploy{{ include "delivery_target" $delivery }}:
 	$(call log, Run ansible playbook)
 	$(_ansible_playbook) \
 		$(_DIR)/.manala/ansible/deploy.yaml

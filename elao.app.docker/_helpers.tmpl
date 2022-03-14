@@ -1,31 +1,31 @@
-{{/* Release makefile target */}}
-{{ define "release_target" -}}
+{{/* Delivery makefile target */}}
+{{ define "delivery_target" -}}
     {{- if hasKey . "app" }}.{{ .app }}{{ end -}}
     @
     {{- .tier }}
 {{- end }}
 
-{{/* Release makefile help */}}
-{{ define "release_help" -}}
+{{/* Delivery makefile help */}}
+{{ define "delivery_help" -}}
     {{- if hasKey . "app" }}{{ .app }} {{ end -}}
     in {{ .tier }}
 {{- end }}
 
-{{/* Release ansible group */}}
-{{ define "release_group" -}}
+{{/* Delivery ansible group */}}
+{{ define "delivery_group" -}}
     {{- if hasKey . "app" }}{{ .app }}_{{ end -}}
     {{- regexReplaceAll "[^[:alnum:]_]" .tier "_" }}
 {{- end }}
 
-{{/* Release ansible host */}}
-{{ define "release_host" -}}
+{{/* Delivery ansible host */}}
+{{ define "delivery_host" -}}
     {{- if hasKey . "app" }}.{{ .app }}{{ end -}}
     @
     {{- .tier }}
 {{- end }}
 
-{{/* Release ansible tasks */}}
-{{- define "release_tasks" -}}
+{{/* Delivery ansible tasks */}}
+{{- define "delivery_tasks" -}}
     {{- $tasks := list -}}
     {{- range $task := . -}}
       {{- if hasKey $task "when" -}}

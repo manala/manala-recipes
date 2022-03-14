@@ -34,8 +34,8 @@ deploy_shared_dirs:  []
 # Copied
 deploy_copied: []
 
-# Removed
-deploy_removed: []
+# Remove
+deploy_remove: []
 
 # Writable
 deploy_writable_dirs_default: # Ensure backward compatibility

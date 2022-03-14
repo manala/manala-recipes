@@ -270,15 +270,42 @@ system:
                     error_log /srv/log/nginx.error.log;
 ```
 
-### Releases
+### Releases / Deliveries
 
-`mode` key has been renamed to `tier` in `.manala.yaml`.
+"Releases" have been renamed to "Deliveries"
+
+Somes keys have also been renamed in `.manala.yaml`:
+- `mode` -> `tier`
+- `repo` -> `release_repo`
+- `ref` -> `release_ref`
+- `release_removed` -> `release_remove`
+- `deploy_removed` -> `deploy_remove`
 
 ```diff
-releases:
-  - ...
+- ############
+- # Releases #
+- ############
+
+- releases:
++ ##############
++ # Deliveries #
++ ##############
+
++ deliveries:
+- - &release_foo_bar
++ - &delivery_foo_bar
+    ...
 -   mode: production
 +   tier: production
+-   repo: git@git.example.com:foo/bar.git
+-   ref: staging
+    # Release
++   release_repo: git@git.example.com:foo/bar.git
++   release_ref: staging
+-   release_removed: [...]
++   release_remove: [...]
+-   deploy_removed: [...]
++   deploy_remove: [...]
     ...
 ```
 

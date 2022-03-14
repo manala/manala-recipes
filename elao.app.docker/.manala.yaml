@@ -176,45 +176,46 @@ system:
 # }
 integration: {}
 
-############
-# Releases #
-############
+##############
+# Deliveries #
+##############
 
 # @schema {
 #     "definitions": {
-#         "release": {"type": "object", "$id": "#release",
+#         "delivery": {"type": "object", "$id": "#delivery",
 #             "additionalProperties": false,
 #             "properties": {
 #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
 #                 "tier": {"type": "string", "pattern": "^[\\w-/]+$"},
-#                 "repo": {"type": "string"},
 #                 "ref": {"type": "string", "pattern": "^[\\w-/]+$"},
-#                 "release_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
+#                 "release_repo": {"type": "string"},
+#                 "release_ref": {"type": "string", "pattern": "^[\\w-/]+$"},
+#                 "release_tasks": {"type": "array", "items": {"$ref": "#delivery_task"}},
 #                 "release_add": {"type": "array", "items": {"type": "string"}},
-#                 "release_removed": {"type": "array", "items": {"type": "string"}},
-#                 "deploy_hosts": {"type": "array", "items": {"$ref": "#release_host"}},
+#                 "release_remove": {"type": "array", "items": {"type": "string"}},
+#                 "deploy_hosts": {"type": "array", "items": {"$ref": "#delivery_host"}},
 #                 "deploy_dir": {"type": "string"},
 #                 "deploy_releases": {"type": "integer"},
-#                 "deploy_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
-#                 "deploy_post_tasks": {"type": "array", "items": {"$ref": "#release_task"}},
+#                 "deploy_tasks": {"type": "array", "items": {"$ref": "#delivery_task"}},
+#                 "deploy_post_tasks": {"type": "array", "items": {"$ref": "#delivery_task"}},
 #                 "deploy_shared_files": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_shared_dirs": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_writable_dirs": {"type": "array", "items": {"type": "string"}},
-#                 "deploy_removed": {"type": "array", "items": {"type": "string"}}
+#                 "deploy_remove": {"type": "array", "items": {"type": "string"}}
 #             },
 #             "dependencies": {
 #                 "deploy_hosts": ["deploy_dir"]
 #             },
-#             "required": ["tier", "repo"]
+#             "required": ["tier"]
 #         },
-#         "release_task": {"type": "object", "$id": "#release_task",
+#         "delivery_task": {"type": "object", "$id": "#delivery_task",
 #             "additionalProperties": false,
 #             "properties": {
 #                 "shell": {"type": "string"},
 #                 "when": {"type": "string"}
 #             }
 #         },
-#         "release_host": {"type": "object", "$id": "#release_host",
+#         "delivery_host": {"type": "object", "$id": "#delivery_host",
 #             "additionalProperties": true,
 #             "properties": {
 #                 "ssh_host": {"type": "string", "format": "hostname"},
@@ -224,6 +225,6 @@ integration: {}
 #             "required": ["ssh_host"]
 #         }
 #     },
-#     "items": {"$ref": "#release"}
+#     "items": {"$ref": "#delivery"}
 # }
-releases: []
+deliveries: []
