@@ -90,7 +90,9 @@
 
 - name: git > Commit
   ansible.builtin.shell: |
-    git commit --allow-empty -m "{{
+    git {{
+      release_author|ternary(release_author|regex_replace(release_email_regex, '-c user.name="\g<name>" -c user.email="\g<email>"'), '')
+    }} commit --allow-empty --message "{{
       ansible_date_time.year
       ~ ansible_date_time.month
       ~ ansible_date_time.day

@@ -16,5 +16,9 @@ release_tasks: []
 release_add: []
 release_remove: []
 
-# Regex (protocol|host|user|repository)
+# Author
+release_author: ~
+
+# Regex
 release_git_url_regex: '^(?P<protocol>https|git)(:\/\/|@)(?P<host>[^\/:]+)[\/:](?P<user>[^\/:]+)\/(?P<repository>.+).git$'
+release_email_regex: '^(?P<name>.*) <(?P<email>.*)>$'

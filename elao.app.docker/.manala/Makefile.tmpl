@@ -140,10 +140,11 @@ HELP += $(call help_section, Deliveries)
 {{ range $delivery := .Vars.deliveries }}
 
 {{- if hasKey $delivery "release_repo" -}}
-HELP += $(call help,release{{ include "delivery_target" $delivery }},Release {{ include "delivery_help" $delivery }})
+HELP += $(call help,release{{ include "delivery_target" $delivery }},Release {{ include "delivery_help" $delivery }} (AUTHOR))
 release{{ include "delivery_target" $delivery }}: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
 release{{ include "delivery_target" $delivery }}: _ANSIBLE_PLAYBOOK_INVENTORY = $(_DIR)/.manala/ansible/inventories/release.yaml
 release{{ include "delivery_target" $delivery }}: _ANSIBLE_PLAYBOOK_LIMIT = {{ include "delivery_group" . }}
+release{{ include "delivery_target" $delivery }}: _ANSIBLE_PLAYBOOK_EXTRA_VARS = $(if $(AUTHOR),"release_author='$(AUTHOR)'")
 release{{ include "delivery_target" $delivery }}:
 	$(call log, Run ansible playbook)
 	$(_ansible_playbook) \
