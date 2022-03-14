@@ -92,7 +92,7 @@
                                                     </ul>
                                     </li>
                             <li>
-                    <a href="#releases">Releases</a>
+                    <a href="#deliveries">Deliveries</a>
                                     </li>
                             <li>
                     <a href="#makefile">Makefile</a>
@@ -139,7 +139,7 @@ Select the <span class="token string">"elao.app.docker"</span> recipe</code></pr
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="9373f17e5e68c64fb38756e6ecd46f7d"><span class="token builtin">.SILENT</span><span class="token punctuation">:</span>
 
 <span class="token keyword">-include</span> .manala/Makefile</code></pre>
-<p>Then update the <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> file (see <a href="#releases">the releases example</a> below) and then run the <code class="code-inline" id="5dd555b7998ff20d65ca5d7bc7328329">manala up</code> command:</p>
+<p>Then update the <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> file (see <a href="#deliveries">the deliveries example</a> below) and then run the <code class="code-inline" id="5dd555b7998ff20d65ca5d7bc7328329">manala up</code> command:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="5dd555b7998ff20d65ca5d7bc7328329">manala up</code></pre>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -523,20 +523,21 @@ using Github Action workflows.</p>
 <span class="token symbol">test.jest@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> JEST_JUNIT_OUTPUT_NAME <span class="token operator">=</span> jest.xml
 <span class="token symbol">test.jest@integration</span><span class="token punctuation">:</span>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
-<h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
-<p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="38619fd15ed74fd5af4011c8daf61527"><span class="token comment">############</span>
-<span class="token comment"># Releases #</span>
-<span class="token comment">############</span>
+<h2 id="deliveries">Deliveries<a href="#deliveries" class="anchor"></a></h2>
+<p>Here is an example of a production/staging deliveries configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="c9dd66ed606105938aebd21865ed5c3d"><span class="token comment">##############</span>
+<span class="token comment"># Deliveries #</span>
+<span class="token comment">##############</span>
 
-<span class="token key atrule">releases</span><span class="token punctuation">:</span>
+<span class="token key atrule">deliveries</span><span class="token punctuation">:</span>
 
-  <span class="token punctuation">-</span> <span class="token important">&amp;release</span>
+  <span class="token punctuation">-</span> <span class="token important">&amp;delivery</span>
     <span class="token comment">#app: api # Optional</span>
     <span class="token key atrule">tier</span><span class="token punctuation">:</span> production
-    <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@git.elao.com<span class="token punctuation">:</span>&lt;vendor<span class="token punctuation">&gt;</span>/&lt;app<span class="token punctuation">&gt;</span><span class="token punctuation">-</span>release.git
-    <span class="token comment">#ref: master # Based on app/tier by default</span>
+    <span class="token comment">#ref: staging # Default to master</span>
     <span class="token comment"># Release</span>
+    <span class="token key atrule">release_repo</span><span class="token punctuation">:</span> git@git.example.com<span class="token punctuation">:</span>&lt;vendor<span class="token punctuation">&gt;</span>/&lt;app<span class="token punctuation">&gt;</span><span class="token punctuation">-</span>release.git
+    <span class="token comment">#release_ref: master # Based on app/tier by default</span>
     <span class="token key atrule">release_tasks</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@production
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@production
@@ -554,7 +555,7 @@ using Github Action workflows.</p>
       <span class="token punctuation">-</span> Makefile
 
     <span class="token comment"># Or you can include all by default and only list the paths you want to exclude</span>
-    <span class="token comment"># release_removed:</span>
+    <span class="token comment"># release_remove:</span>
     <span class="token comment">#   - ansible</span>
     <span class="token comment">#   - build</span>
     <span class="token comment">#   - doc</span>
@@ -583,13 +584,13 @@ using Github Action workflows.</p>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make warmup@production
       <span class="token comment">#- shell: make migration@production</span>
       <span class="token comment">#  when: master | default # Conditions on custom host variables (jinja2 format)</span>
-    <span class="token comment">#deploy_removed:</span>
+    <span class="token comment">#deploy_remove:</span>
     <span class="token comment">#  - web/app_dev.php</span>
     <span class="token key atrule">deploy_post_tasks</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> sudo /bin/systemctl reload php8.1<span class="token punctuation">-</span>fpm
       <span class="token comment">#- shell: sudo /bin/systemctl restart supervisor</span>
 
-  <span class="token punctuation">-</span> <span class="token key atrule">&lt;&lt;</span> <span class="token punctuation">:</span> <span class="token important">*release</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">&lt;&lt;</span> <span class="token punctuation">:</span> <span class="token important">*delivery</span>
     <span class="token key atrule">tier</span><span class="token punctuation">:</span> staging
     <span class="token key atrule">release_tasks</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@staging
@@ -714,7 +715,7 @@ parameters:</span>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>
-    Make sure to include the <code class="code-inline" id="7de38f3c3d3baa7ca58a366f09577586">secrets</code> directory into your release, using the <code class="code-inline" id="0daf67ed1fa9305d63925bc08acf9c96">release_add</code> entry.
+    Make sure to include the <code class="code-inline" id="7de38f3c3d3baa7ca58a366f09577586">secrets</code> directory into your deliveries, using the <code class="code-inline" id="0daf67ed1fa9305d63925bc08acf9c96">release_add</code> entry.
 </p>
 </div>
 <h2 id="https">Https<a href="#https" class="anchor"></a></h2>
@@ -742,7 +743,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2022-03-10UTC15:44:30+00:00">Last modified: March 10, 2022 15:44</time>
+    <time datetime="2022-03-14UTC10:20:42+00:00">Last modified: March 14, 2022 10:20</time>
         </div>
 
         <footer class="footer">
