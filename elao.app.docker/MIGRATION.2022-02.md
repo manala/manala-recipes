@@ -270,6 +270,30 @@ system:
                     error_log /srv/log/nginx.error.log;
 ```
 
+### Integration - Jenkins
+
+Jenkins integration pipeline has now its dedicated entry in `.manala.yaml`:
+
+```diff
+###############
+# Integration #
+###############
+
+integration:
+-     app: foo
+-     tasks:
+-       - shell: make install@integration
+-       ...
+-     ...
++     jenkins:
++         pipeline:
++             app: foo
++             tasks:
++               - shell: make install@integration
++               ...
++             ...
+```
+
 ### Releases / Deliveries
 
 "Releases" have been renamed to "Deliveries"

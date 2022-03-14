@@ -303,32 +303,34 @@ Here are some examples of integration configurations in `.manala.yaml` for Jenki
 ###############
 
 integration:
-    tasks:
-      - shell: make install@integration
-      - label: Integration
-        junit: report/junit/*.xml
-        parallel: true
-        warn: true
-        tasks:
-          - label: Lint
+    jenkins:
+        pipeline:
             tasks:
-              - shell: make lint.php-cs-fixer@integration
-              - shell: make lint.twig@integration
-              - shell: make lint.yaml@integration
-              - shell: make lint.eslint@integration
-          - label: Security
-            tasks:
-              - shell: make security.symfony@integration
-              - shell: make security.yarn@integration
-          - label: Test
-            tasks:
-              - shell: make test.phpunit@integration
-                artifacts: var/log/*.log
-                # artifacts:
-                #   - var/log/foo.log
-                #   - var/log/bar.log
-                # env:
-                #     DATABASE_URL: mysql://root@127.0.0.1:3306/app
+              - shell: make install@integration
+              - label: Integration
+                junit: report/junit/*.xml
+                parallel: true
+                warn: true
+                tasks:
+                  - label: Lint
+                    tasks:
+                      - shell: make lint.php-cs-fixer@integration
+                      - shell: make lint.twig@integration
+                      - shell: make lint.yaml@integration
+                      - shell: make lint.eslint@integration
+                  - label: Security
+                    tasks:
+                      - shell: make security.symfony@integration
+                      - shell: make security.yarn@integration
+                  - label: Test
+                    tasks:
+                      - shell: make test.phpunit@integration
+                        artifacts: var/log/*.log
+                        # artifacts:
+                        #   - var/log/foo.log
+                        #   - var/log/bar.log
+                        # env:
+                        #     DATABASE_URL: mysql://root@127.0.0.1:3306/app
 ```
 
 In this example we have two parallel stages: `api` and `mobile`, corresponding to two different sub-apps.
@@ -339,29 +341,31 @@ In this example we have two parallel stages: `api` and `mobile`, corresponding t
 ###############
 
 integration:
-    tasks:
-      - label: Integration # Optional
-        parallel: true # ! Careful ! Could *NOT* be nested !
-        junit: report/junit/*.xml
-        artifacts: var/log/*.log
-        warn: true # Turn errors into warnings (recursively applied)
-        tasks:
-          - app: api # Optional
+    jenkins:
+        pipeline:
             tasks:
-              - shell: make install@integration
-              - shell: make build@integration
-              - shell: make lint.php-cs-fixer@integration
-              - shell: make security.symfony@integration
-              - shell: make test.phpunit@integration
+              - label: Integration # Optional
+                parallel: true # ! Careful ! Could *NOT* be nested !
+                junit: report/junit/*.xml
                 artifacts: var/log/*.log
-                # env:
-                #     DATABASE_URL: mysql://root@127.0.0.1:3306/app
-          - app: mobile
-            tasks:
-              - shell: make install@integration
-              - shell: make build@integration
-              - shell: make lint.eslint@integration
-              - shell: make test.jest@integration
+                warn: true # Turn errors into warnings (recursively applied)
+                tasks:
+                  - app: api # Optional
+                    tasks:
+                      - shell: make install@integration
+                      - shell: make build@integration
+                      - shell: make lint.php-cs-fixer@integration
+                      - shell: make security.symfony@integration
+                      - shell: make test.phpunit@integration
+                        artifacts: var/log/*.log
+                        # env:
+                        #     DATABASE_URL: mysql://root@127.0.0.1:3306/app
+                  - app: mobile
+                    tasks:
+                      - shell: make install@integration
+                      - shell: make build@integration
+                      - shell: make lint.eslint@integration
+                      - shell: make test.jest@integration
 ```
 
 ### Github Actions
