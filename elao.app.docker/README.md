@@ -112,7 +112,7 @@ Here is an example of a configuration in `.manala.yaml`:
 
 project:
     name: app
-    ports_prefix: 123 # >= 2000, <= 64000
+    ports_prefix: 123 # >= 20, <= 640
 
 ##########
 # System #
