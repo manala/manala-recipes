@@ -529,7 +529,7 @@ using Github Action workflows.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="deliveries">Deliveries<a href="#deliveries" class="anchor"></a></h2>
 <p>Here is an example of a production/staging deliveries configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="c9dd66ed606105938aebd21865ed5c3d"><span class="token comment">##############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="cc36d8b489ec9719df1c997177277a90"><span class="token comment">##############</span>
 <span class="token comment"># Deliveries #</span>
 <span class="token comment">##############</span>
 
@@ -580,6 +580,7 @@ using Github Action workflows.</p>
         <span class="token comment">#master: true # Any custom variable are welcomed</span>
       <span class="token punctuation">-</span> <span class="token key atrule">ssh_host</span><span class="token punctuation">:</span> foo<span class="token punctuation">-</span>02.bar.elao.local
     <span class="token key atrule">deploy_dir</span><span class="token punctuation">:</span> /srv/app
+    <span class="token comment">#deploy_url: https://foo.com # Url to visit after deploy</span>
     <span class="token key atrule">deploy_shared_files</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> config/parameters.yml
     <span class="token key atrule">deploy_shared_dirs</span><span class="token punctuation">:</span>
@@ -747,7 +748,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2022-03-14UTC10:50:58+00:00">Last modified: March 14, 2022 10:50</time>
+    <time datetime="2022-03-16UTC08:49:37+00:00">Last modified: March 16, 2022 08:49</time>
         </div>
 
         <footer class="footer">
