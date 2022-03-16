@@ -162,6 +162,9 @@ deploy{{ include "delivery_target" $delivery }}:
 	$(call log, Run ansible playbook)
 	$(_ansible_playbook) \
 		$(_DIR)/.manala/ansible/deploy.yaml
+	{{- if hasKey $delivery "deploy_url" }}
+	$(call message_success, Visit {{ $delivery.deploy_url }})
+	{{- end }}
 
 {{ end -}}
 

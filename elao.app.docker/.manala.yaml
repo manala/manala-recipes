@@ -203,7 +203,8 @@ integration:
 #                 "deploy_shared_files": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_shared_dirs": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_writable_dirs": {"type": "array", "items": {"type": "string"}},
-#                 "deploy_remove": {"type": "array", "items": {"type": "string"}}
+#                 "deploy_remove": {"type": "array", "items": {"type": "string"}},
+#                 "deploy_url": {"type": "string"}
 #             },
 #             "dependencies": {
 #                 "deploy_hosts": ["deploy_dir"]

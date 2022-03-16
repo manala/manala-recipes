@@ -534,6 +534,7 @@ deliveries:
         #master: true # Any custom variable are welcomed
       - ssh_host: foo-02.bar.elao.local
     deploy_dir: /srv/app
+    #deploy_url: https://foo.com # Url to visit after deploy
     deploy_shared_files:
       - config/parameters.yml
     deploy_shared_dirs:
