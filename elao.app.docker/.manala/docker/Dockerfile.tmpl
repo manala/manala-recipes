@@ -69,6 +69,8 @@ WORKDIR /srv/app
 # None
 FROM system AS init-none
 
+STOPSIGNAL SIGKILL
+
 CMD ["sleep", "9999999"]
 
 ENTRYPOINT ["/entrypoint.sh"]
