@@ -172,7 +172,15 @@ deploy{{ include "delivery_target" $delivery }}:
 
 {{- end -}}
 
-{{ if and .Vars.deliveries .Vars.integration.github.jobs -}}
+{{- /* Count deliveries triggers */ -}}
+{{- $deliveries_triggers_count := 0 -}}
+{{- range $delivery := .Vars.deliveries -}}
+	{{- if hasKey $delivery "github_ssh_key_secret" -}}
+		{{- $deliveries_triggers_count = $deliveries_triggers_count | add1 -}}
+	{{- end -}}
+{{- end -}}
+
+{{ if $deliveries_triggers_count -}}
 #######################
 # Deliveries Triggers #
 #######################
@@ -180,6 +188,8 @@ deploy{{ include "delivery_target" $delivery }}:
 HELP += $(call help_section, Deliveries Triggers)
 
 {{ range $delivery := .Vars.deliveries }}
+
+{{- if hasKey $delivery "github_ssh_key_secret" -}}
 
 {{- if hasKey $delivery "release_repo" -}}
 HELP += $(call help,trigger-release{{ include "delivery_target" $delivery }},Trigger release {{ include "delivery_help" $delivery }})
@@ -213,6 +223,8 @@ trigger-release+deploy{{ include "delivery_target" $delivery }}:
 		--field app={{ $delivery.app }} \
 		{{- end }}
 		--field tier={{ $delivery.tier }}
+
+{{ end -}}
 
 {{ end -}}
 
