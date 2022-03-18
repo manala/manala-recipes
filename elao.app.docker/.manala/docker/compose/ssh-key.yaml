@@ -6,4 +6,5 @@ services:
 
     app:
         environment:
+            SSH_AUTH_SOCK: /tmp/ssh-agent
             MANALA_SSH_KEY: ${MANALA_SSH_KEY}
