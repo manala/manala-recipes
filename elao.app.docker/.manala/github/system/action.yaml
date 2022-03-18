@@ -1,0 +1,105 @@
+name: System
+description: System
+author: Elao
+
+inputs:
+  setup:
+    description: Setup
+    default: 'false'
+    type: boolean
+    required: false
+  setup_group:
+    description: Shell group
+    required: false
+    default: 🚧 Setup
+  ssh_key:
+    description: Ssh Key
+    required: false
+  shell:
+    description: Shell
+    required: false
+  shell_group:
+    description: Shell group
+    required: false
+    default: 🐚 Shell
+  app:
+    description: App
+    required: false
+
+runs:
+  using: composite
+  steps:
+
+    #########
+    # Setup #
+    #########
+
+    - name: Cache Docker
+      if: inputs.setup != 'false'
+      uses: satackey/action-docker-layer-caching@v0.0.11
+      with:
+        key: app-docker-${{ hashFiles('.manala/**') }}-{hash}
+        restore-keys: app-docker-${{ hashFiles('.manala/**') }}
+    - name: Cache App
+      if: inputs.setup != 'false'
+      uses: actions/cache@v2
+      with:
+        path: .manala/.cache
+        key: app-${{ hashFiles('**/composer.lock', '**/package-lock.json', '**/yarn.lock') }}
+    - name: Docker Compose
+      if: inputs.setup != 'false'
+      shell: bash
+      env:
+        DOCKER_BUILDKIT: 1
+        BUILDKIT_PROGRESS: plain
+        MANALA_SSH_KEY: ${{ inputs.ssh_key }}
+      run: |
+        echo "::group::${{ inputs.setup_group }}"
+          MANALA_USER_ID=$(id -u) \
+          MANALA_GROUP_ID=$(id -g) \
+          docker-compose \
+            --project-directory ./.manala/docker \
+            --project-name app \
+            --profile integration \
+            --file ./.manala/docker/compose.yaml \
+            --file ./.manala/docker/compose/integration.yaml \
+            --file ./.manala/docker/compose/cache.yaml \
+            ${{ inputs.ssh_key != '' && '--file ./.manala/docker/compose/ssh-key.yaml' || '' }} \
+            up \
+            --detach
+        echo "::endgroup::"
+
+    #########
+    # Shell #
+    #########
+
+    - name: Shell
+      if: inputs.shell
+      shell: bash
+      run: |
+        echo "::group::${{ inputs.shell_group }}"
+          docker-compose \
+            --project-directory ./.manala/docker \
+            --project-name app \
+            --profile integration \
+            --file ./.manala/docker/compose.yaml \
+            --file ./.manala/docker/compose/integration.yaml \
+            --file ./.manala/docker/compose/cache.yaml \
+            exec \
+            -T \
+            ${{ inputs.app != '' && format('--workdir /srv/app/{0}', inputs.app) || '' }} \
+            ${{ inputs.app != '' && format('--env XDG_CACHE_HOME=/srv/cache/{0}', inputs.app) || '' }} \
+            --user app \
+            --env CI=${CI} \
+            --env GITHUB_ACTION=${GITHUB_ACTION} \
+            --env GITHUB_ACTION_REF=${GITHUB_ACTION_REF} \
+            --env GITHUB_ACTION_REPOSITORY=${GITHUB_ACTION_REPOSITORY} \
+            --env GITHUB_ACTIONS=${GITHUB_ACTIONS} \
+            --env GITHUB_ACTOR=${GITHUB_ACTOR} \
+            --env GITHUB_JOB=${GITHUB_JOB} \
+            --env GITHUB_WORKFLOW=${GITHUB_WORKFLOW} \
+            app \
+            sh -e << 'EOF'
+        ${{ inputs.shell }}
+        EOF
+        echo "::endgroup::"

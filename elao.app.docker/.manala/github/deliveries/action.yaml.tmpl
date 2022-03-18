@@ -1,0 +1,147 @@
+name: Release
+description: Release
+author: Elao
+
+inputs:
+  secrets:
+    description: Secrets
+    required: true
+  app:
+    description: App
+    required: false
+  tier:
+    description: Tier
+    required: true
+  ref:
+    description: Ref
+    required: false
+  release:
+    description: Release
+    type: boolean
+    default: {{ `${{ github.job == 'release' && 'true' || 'false' }}` }}
+  deploy:
+    description: Deploy
+    type: boolean
+    default: {{ `${{ github.job == 'deploy' && 'true' || 'false' }}` }}
+  deploy_ref:
+    description: Deploy Ref
+    required: false
+
+runs:
+  using: composite
+  steps:
+
+    {{- range $i, $delivery := .Vars.deliveries }}
+    {{- $delivery_name := (hasKey $delivery "app") | ternary
+      (printf "%s@%s" $delivery.app $delivery.tier)
+      $delivery.tier
+    }}
+    {{- $delivery_if := (hasKey $delivery "app") | ternary
+      (printf "inputs.app == '%s' && inputs.tier == '%s'" $delivery.app $delivery.tier)
+      (printf "inputs.tier == '%s'" $delivery.tier)
+    }}
+    {{- $delivery_ref := printf "${{ inputs.ref || '%s' }}" (or (get $delivery "ref") "master") }}
+
+    ##{{ repeat (len $delivery_name) "#" }}##
+    # {{ $delivery_name }} #
+    ##{{ repeat (len $delivery_name) "#" }}##
+
+    - name: Checkout {{ $delivery_name }} (ref "{{ $delivery_ref }}")
+      if: {{ $delivery_if }}
+      uses: actions/checkout@v3
+      with:
+        ref: {{ $delivery_ref }}
+
+    - name: Setup {{ $delivery_name }}
+      if: {{ $delivery_if }}
+      uses: ./.manala/github/system
+      with:
+        setup: true
+        {{- if hasKey $delivery "github_ssh_key_secret" }}
+        ssh_key: {{ printf "${{ fromJSON(inputs.secrets).%s }}" $delivery.github_ssh_key_secret }}
+        {{- end }}
+
+    - name: Release {{ $delivery_name }}
+      if: >
+        {{ $delivery_if }}
+        && inputs.release != 'false'
+      uses: ./.manala/github/system
+      with:
+        {{- if hasKey $delivery "app" }}
+        app: {{ $delivery.app }}
+        {{- end }}
+        shell_group: 📦 Release
+        shell: |
+          make release.{{ $delivery_name }} \
+            AUTHOR="manala-ci-releaser <{{ `${{ github.actor }}` }}+github@manala.io>"
+
+    - name: Create {{ $delivery_name }} GitHub Deployment
+      if: >
+        {{ $delivery_if }}
+        && inputs.deploy != 'false'
+      uses: chrnorm/deployment-action@releases/v1
+      id: github_deployment_{{ $i }}
+      with:
+        ref: {{ $delivery_ref }}
+        description: Deploy {{ $delivery_name }}
+        token: {{ `${{ fromJSON(inputs.secrets).GITHUB_TOKEN }}` }}
+        {{- if hasKey $delivery "deploy_url" }}
+        target_url: {{ $delivery.deploy_url }}
+        {{- end }}
+        environment: {{ $delivery.tier }}
+
+    - name: Deploy {{ $delivery_name }}
+      if: >
+        {{ $delivery_if }}
+        && inputs.deploy != 'false'
+      uses: ./.manala/github/system
+      with:
+        {{- if hasKey $delivery "app" }}
+        app: {{ $delivery.app }}
+        {{- end }}
+        shell_group: 🚀 Deploy
+        shell: |
+          make deploy.{{ $delivery_name }} \
+            {{ `${{ inputs.deploy_ref != '' && format('REF={0}', inputs.deploy_ref) || '' }}` }}
+
+    - name: Update {{ $delivery_name }} GitHub Deployment status (success)
+      if: >
+        {{ $delivery_if }}
+        && inputs.deploy != 'false'
+        && success() && steps.github_deployment_{{ $i }}.outcome == 'success'
+      uses: chrnorm/deployment-status@releases/v1
+      with:
+        token: {{ `${{ fromJSON(inputs.secrets).GITHUB_TOKEN }}` }}
+        description: Deployed {{ $delivery_name }}
+        {{- if hasKey $delivery "deploy_url" }}
+        target_url: {{ $delivery.deploy_url }}
+        environment_url: {{ $delivery.deploy_url }}
+        {{- end }}
+        state: success
+        deployment_id: {{ printf "${{ steps.github_deployment_%d.outputs.deployment_id }}" $i }}
+
+    - name: Update {{ $delivery_name }} GitHub Deployment status (failure)
+      if: >
+        {{ $delivery_if }}
+        && inputs.deploy != 'false'
+        && failure() && steps.github_deployment_{{ $i }}.outcome == 'success'
+      uses: chrnorm/deployment-status@releases/v1
+      with:
+        token: {{ `${{ fromJSON(inputs.secrets).GITHUB_TOKEN }}` }}
+        description: Failed to deploy {{ $delivery_name }}
+        state: failure
+        deployment_id: {{ printf "${{ steps.github_deployment_%d.outputs.deployment_id }}" $i }}
+
+    - name: Update {{ $delivery_name }} GitHub Deployment status (cancelled)
+      if: >
+        {{ $delivery_if }}
+        && inputs.deploy != 'false'
+        && cancelled() && steps.github_deployment_{{ $i }}.outcome == 'success'
+      uses: chrnorm/deployment-status@releases/v1
+      with:
+        token: {{ `${{ fromJSON(inputs.secrets).GITHUB_TOKEN }}` }}
+        description: Cancelled deploy {{ $delivery_name }}
+        state: inactive
+        deployment_id: {{ printf "${{ steps.github_deployment_%d.outputs.deployment_id }}" $i }}
+
+    {{- end }}

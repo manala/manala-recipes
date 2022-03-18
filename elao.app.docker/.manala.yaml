@@ -6,6 +6,7 @@ manala:
       - .manala/certificates/ca.crt
       - .manala/certificates/ca.key
       - .manala/docker
+      - .manala/github
       - .manala/jenkins
       - .manala/make
       - .manala/.dockerignore
@@ -176,6 +177,30 @@ integration:
         #     "$ref": "#pipeline"
         # }
         pipeline: {}
+    github:
+        # @schema {
+        #     "definitions": {
+        #         "job": {"type": "object", "$id": "#job",
+        #             "additionalProperties": false,
+        #             "properties": {
+        #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
+        #                 "tasks": {"type": "array", "items": {"$ref": "#task"}}
+        #             }
+        #         },
+        #         "task": {"type": "object", "$id": "#task",
+        #             "additionalProperties": false,
+        #             "properties": {
+        #                 "label": {"type": "string"},
+        #                 "shell": {"type": "string"}
+        #             }
+        #         }
+        #     },
+        #     "patternProperties": {
+        #         "": {"$ref": "#job"}
+        #     },
+        #     "propertyNames": {"pattern": "^[a-z_]+$"}
+        # }
+        jobs: {}
 
 ##############
 # Deliveries #
@@ -203,7 +228,8 @@ integration:
 #                 "deploy_shared_dirs": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_writable_dirs": {"type": "array", "items": {"type": "string"}},
 #                 "deploy_remove": {"type": "array", "items": {"type": "string"}},
-#                 "deploy_url": {"type": "string"}
+#                 "deploy_url": {"type": "string"},
+#                 "github_ssh_key_secret": {"type": "string"}
 #             },
 #             "dependencies": {
 #                 "deploy_hosts": ["deploy_dir"]

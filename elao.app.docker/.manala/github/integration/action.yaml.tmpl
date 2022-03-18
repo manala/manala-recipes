@@ -1,0 +1,48 @@
+name: Integration
+description: Integration
+author: Elao
+
+inputs:
+  job:
+    description: Job
+    required: true
+    default: {{ `${{ github.job }}` }}
+
+runs:
+  using: composite
+  steps:
+
+    - name: Setup
+      uses: ./.manala/github/system
+      with:
+        setup: true
+
+    {{- range $job_id, $job := .Vars.integration.github.jobs }}
+    {{- $job_name := $job_id | replace "_" " - " | title }}
+
+    ##{{ repeat (len $job_name) "#" }}##
+    # {{ $job_name }} #
+    ##{{ repeat (len $job_name) "#" }}##
+
+    {{- range $task := $job.tasks }}
+    {{- $task_name := "Task" }}
+    {{- if hasKey $task "label" }}
+      {{- $task_name = $task.label }}
+    {{- else if and (not (empty $task.shell)) (regexMatch "^make .+@integration$" $task.shell) }}
+      {{- $task_name = (regexReplaceAll "^make (.+)@integration$" $task.shell "${1}") | replace "." " - " | title }}
+    {{- end }}
+
+    {{ if $task.shell -}}
+    - name: {{ $task_name }}
+      if: {{ printf "inputs.job == '%s'" $job_id }}
+      uses: ./.manala/github/system
+      with:
+        {{- if $job.app }}
+        app: {{ $job.app }}
+        {{- end }}
+        shell_group: 🔘 {{ $task_name }}
+        shell: |
+          {{- $task.shell | nindent 10 }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
