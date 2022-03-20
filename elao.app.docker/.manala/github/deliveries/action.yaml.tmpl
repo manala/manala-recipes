@@ -32,14 +32,12 @@ runs:
   steps:
 
     {{- range $i, $delivery := .Vars.deliveries }}
-    {{- $delivery_name := (hasKey $delivery "app") | ternary
-      (printf "%s@%s" $delivery.app $delivery.tier)
-      $delivery.tier
-    }}
-    {{- $delivery_if := (hasKey $delivery "app") | ternary
-      (printf "inputs.app == '%s' && inputs.tier == '%s'" $delivery.app $delivery.tier)
-      (printf "inputs.tier == '%s'" $delivery.tier)
-    }}
+    {{- $delivery_name := $delivery.tier }}
+    {{- $delivery_if := printf "inputs.tier == '%s'" $delivery.tier }}
+    {{- if hasKey $delivery "app" }}
+      {{- $delivery_name = printf "%s@%s" $delivery.app $delivery.tier }}
+      {{- $delivery_if = printf "inputs.app == '%s' && inputs.tier == '%s'" $delivery.app $delivery.tier }}
+    {{- end }}
     {{- $delivery_ref := printf "${{ inputs.ref || '%s' }}" (or (get $delivery "ref") "master") }}
 
     ##{{ repeat (len $delivery_name) "#" }}##
