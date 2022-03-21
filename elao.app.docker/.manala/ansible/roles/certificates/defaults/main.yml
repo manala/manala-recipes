@@ -1,5 +1,10 @@
 ---
 
 certificates_name: ~
+certificates_ca: "{{ playbook_dir }}/../certificates/ca.crt"
+certificates_ca_key: "{{ playbook_dir }}/../certificates/ca.key"
 certificates_ca_key_passphrase: ~
+certificates_ssl_key: "{{ playbook_dir }}/../certificates/ssl.key"
+certificates_ssl_csr: "{{ playbook_dir }}/../certificates/ssl.csr"
+certificates_ssl_pem: "{{ playbook_dir }}/../certificates/ssl.pem"
 certificates_prompt: false

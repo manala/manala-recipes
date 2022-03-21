@@ -9,6 +9,19 @@
     update_cache: true
     cache_valid_time: 3600
 
+# Install ca certificate
+- name: certificates > Install ca
+  ansible.builtin.copy:
+    src: "{{ certificates_ca }}"
+    dest: /usr/local/share/ca-certificates/
+    remote_src: true
+  register: __certificates_install_ca_result
+
+# Update ca certificates
+- name: certificates > Update
+  ansible.builtin.command: update-ca-certificates
+  when: __certificates_install_ca_result is changed
+
 # Ca certificate key passphrase prompt
 - block:
     - name: certificates > Prompt ca key passphrase
@@ -25,15 +38,15 @@
 - block:
     - name: certificates > Generate ssl private key
       community.crypto.openssl_privatekey:
-        path: "{{ playbook_dir }}/../certificates/ssl.key"
+        path: "{{ certificates_ssl_key }}"
         force: true
         type: RSA
         size: 4096
         mode: 0644
     - name: certificates > Generate ssl certificate signing request
       community.crypto.openssl_csr:
-        path: "{{ playbook_dir }}/../certificates/ssl.csr"
-        privatekey_path: "{{ playbook_dir }}/../certificates/ssl.key"
+        path: "{{ certificates_ssl_csr }}"
+        privatekey_path: "{{ certificates_ssl_key }}"
         force: true
         common_name: |-
           {{ certificates_name }}
@@ -41,12 +54,12 @@
           DNS:{{ certificates_name }},DNS:*.{{ certificates_name }}
     - name: certificates > Generate ssl certificate
       community.crypto.x509_certificate:
-        path: "{{ playbook_dir }}/../certificates/ssl.pem"
-        csr_path: "{{ playbook_dir }}/../certificates/ssl.csr"
+        path: "{{ certificates_ssl_pem }}"
+        csr_path: "{{ certificates_ssl_csr }}"
         force: true
         provider: ownca
-        ownca_path: "{{ playbook_dir }}/../certificates/ca.crt"
-        ownca_privatekey_path: "{{ playbook_dir }}/../certificates/ca.key"
+        ownca_path: "{{ certificates_ca }}"
+        ownca_privatekey_path: "{{ certificates_ca_key }}"
         ownca_privatekey_passphrase: "{{ certificates_ca_key_passphrase }}"
         ownca_not_after: +825d
   when: (certificates_ca_key_passphrase)
@@ -55,15 +68,15 @@
 - block:
     - name: certificates > Copy ssl certificate
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/../certificates/{{ item[0] }}"
-        dest: /etc/ssl/{{ item[1] }}/{{ item[0] }}
+        src: "{{ item[0] }}"
+        dest: /etc/ssl/{{ item[1] }}/{{ item[0] | basename }}
       loop:
-        - [ssl.pem, certs]
-        - [ssl.key, private]
+        - ["{{ certificates_ssl_pem }}", certs]
+        - ["{{ certificates_ssl_key }}", private]
       notify:
         - nginx restart
-  when: ((playbook_dir ~ '/../certificates/ssl.key') is file)
-    and ((playbook_dir ~ '/../certificates/ssl.pem') is file)
+  when: (certificates_ssl_key is file)
+    and (certificates_ssl_pem is file)
 
 # Generate self signed ssl certificate
 - block:
@@ -90,5 +103,5 @@
         provider: selfsigned
       notify:
         - nginx restart
-  when: ((playbook_dir ~ '/../certificates/ssl.key') is not file)
-     or ((playbook_dir ~ '/../certificates/ssl.pem') is not file)
+  when: (certificates_ssl_key is not file)
+     or (certificates_ssl_pem is not file)
