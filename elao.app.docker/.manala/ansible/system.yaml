@@ -111,21 +111,6 @@
       user: "{{ system_app_user }}"
     manala_cron_files: "{{ system_cron_files }}"
 
-    ###############
-    # Environment #
-    ###############
-
-    manala_environment_files:
-      - zsh
-
-    manala_environment_variables: "{{ {}|combine(
-      system_env,
-      system_php_composer|ternary(
-        {'COMPOSER_MEMORY_LIMIT': -1,},
-        {}
-      )
-    ) }}"
-
     #########
     # Files #
     #########
@@ -271,7 +256,7 @@
             group: "{{ system_app_group }}"
             listen: /run/php-fpm.app.sock
             pm.max_children: 20
-            env: "{{ system_env }}"
+            env: "{{ system_php_env }}"
             php_admin_value:
               error_log: "{{ system_app_log_dir  }}/php.error.log"
 
@@ -346,11 +331,6 @@
         name: zsh
       when: system_zsh
       tags: [zsh]
-
-    - import_role:
-        name: environment
-      when: system_environment
-      tags: [environment, env]
 
     - import_role:
         name: apt

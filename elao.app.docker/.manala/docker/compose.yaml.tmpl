@@ -91,6 +91,11 @@ services:
                 MANALA_HOST: ${MANALA_HOST:-linux}
                 MANALA_USER_ID: ${MANALA_USER_ID:-1000}
                 MANALA_GROUP_ID: ${MANALA_GROUP_ID:-1000}
+        {{- $env := .Vars.system.env }}
+        {{- if .Vars.system.php.version }}
+          {{- $env = set $env "COMPOSER_MEMORY_LIMIT" -1 }}
+        {{- end }}
+        {{- dict "environment" $env | toYaml | nindent 8 }}
         volumes:
             - ../..:/srv/app
 

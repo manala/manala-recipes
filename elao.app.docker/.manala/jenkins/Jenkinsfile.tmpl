@@ -245,6 +245,15 @@ podTemplate(
         containerTemplate(
             name: 'app',
             image: "${env.DOCKER_REGISTRY_PULL}/app:${app}-${hash}",
+            {{- $env := .Vars.system.env }}
+            {{- if .Vars.system.php.version }}
+              {{- $env = set $env "COMPOSER_MEMORY_LIMIT" -1 }}
+            {{- end }}
+            envVars: [
+                {{- range $key, $value := $env }}
+                envVar(key: '{{ $key }}', value: '{{ $value }}'),
+                {{- end }}
+            ],
             runAsUser: '1000',
             runAsGroup: '1000',
         ),
@@ -256,7 +265,7 @@ podTemplate(
             envVars: [
                 envVar(key: 'MYSQL_ALLOW_EMPTY_PASSWORD', value: 'yes'),
                 envVar(key: 'MYSQL_ROOT_HOST', value: '%'),
-            ]
+            ],
         ),
         {{- else if .Vars.system.mariadb.version -}}
         {{- $mariadb := .Vars.system.mariadb }}
@@ -264,8 +273,8 @@ podTemplate(
             name: 'mariadb',
             image: 'mariadb:{{ $mariadb.version }}',
             envVars: [
-                envVar(key: 'MYSQL_ALLOW_EMPTY_PASSWORD', value: 'yes')
-            ]
+                envVar(key: 'MYSQL_ALLOW_EMPTY_PASSWORD', value: 'yes'),
+            ],
         ),
         {{- end }}
         {{- if .Vars.system.elasticsearch.version -}}
@@ -274,11 +283,11 @@ podTemplate(
             name: 'elasticsearch',
             image: 'docker.elastic.co/elasticsearch/elasticsearch:{{ include "elasticsearch_version" $elasticsearch }}',
             envVars: [
-                envVar(key: 'discovery.type', value: 'single-node')
+                envVar(key: 'discovery.type', value: 'single-node'),
             ],
             command: 'sh -c "
                 {{- range $plugin := $elasticsearch.plugins }}elasticsearch-plugin install --batch --verbose {{ $plugin }} && {{ end -}}
-                exec docker-entrypoint.sh"'
+                exec docker-entrypoint.sh"',
         ),
         {{- end }}
     ]
