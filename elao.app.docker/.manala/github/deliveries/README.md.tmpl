@@ -22,7 +22,7 @@
 {{- $tiers = (append $tiers $delivery.tier) | uniq -}}
 {{- end }}
 
-`.github/workflows/release.yml`:
+`.github/workflows/release.yaml`:
 
 ```
 name: Release
@@ -76,7 +76,7 @@ jobs:
           deploy: {{ `${{ github.event.inputs.deploy }}` }}
 ```
 
-`.github/workflows/deploy.yml`:
+`.github/workflows/deploy.yaml`:
 
 ```
 name: Deploy
