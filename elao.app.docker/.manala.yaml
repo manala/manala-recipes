@@ -184,7 +184,8 @@ integration:
         #             "additionalProperties": false,
         #             "properties": {
         #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
-        #                 "tasks": {"type": "array", "items": {"$ref": "#task"}}
+        #                 "tasks": {"type": "array", "items": {"$ref": "#task"}},
+        #                 "artifacts": {"type": ["string", "array"]}
         #             }
         #         },
         #         "task": {"type": "object", "$id": "#task",

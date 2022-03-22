@@ -19,6 +19,7 @@ runs:
 
     {{- range $job_id, $job := .Vars.integration.github.jobs }}
     {{- $job_name := $job_id | replace "_" " - " | title }}
+    {{- $job_if := printf "inputs.job == '%s'" $job_id }}
 
     ##{{ repeat (len $job_name) "#" }}##
     # {{ $job_name }} #
@@ -34,7 +35,7 @@ runs:
 
     {{ if $task.shell -}}
     - name: {{ $task_name }}
-      if: {{ printf "inputs.job == '%s'" $job_id }}
+      if: {{ $job_if }}
       uses: ./.manala/github/system
       with:
         {{- if hasKey $job "app" }}
@@ -45,4 +46,19 @@ runs:
           {{- $task.shell | nindent 10 }}
     {{- end }}
     {{- end }}
+
+    {{- if hasKey $job "artifacts" }}
+
+    - name: Artifacts
+      if: {{ $job_if }} && always()
+      uses: actions/upload-artifact@v3
+      with:
+          name: {{ $job_name }}
+          if-no-files-found: ignore
+          path: |
+            {{- range $artifact := $job.artifacts }}
+            {{ $artifact }}
+            {{- end }}
+    {{- end }}
+
     {{- end }}
