@@ -80,7 +80,7 @@ system:
         system_nodejs_version: {{ .Vars.system.nodejs.version | toYaml }}
         system_nodejs_npm: {{ `"{{ system_nodejs }}"` }}
         {{- dict "system_nodejs_packages" .Vars.system.nodejs.packages | toYaml | nindent 8 }}
-        system_nodejs_yarn: {{ `"{{ system_nodejs }}"` }}
+        system_nodejs_yarn: {{ not (empty .Vars.system.nodejs.yarn.version) | ternary "true" "false" }}
         # Oh my zsh
         system_ohmyzsh: false
         # Php
