@@ -86,6 +86,7 @@
                                                             <li><a href="#certificates">Certificates</a></li>
                                                             <li><a href="#mutagen">Mutagen</a></li>
                                                             <li><a href="#nginx">Nginx</a></li>
+                                                            <li><a href="#yarn">Yarn</a></li>
                                                             <li><a href="#integration-jenkins">Integration - Jenkins</a></li>
                                                             <li><a href="#releases-deliveries">Releases / Deliveries</a></li>
                                                             <li><a href="#node-sass">Node-sass</a></li>
@@ -286,6 +287,14 @@ An <code class="code-inline" id="1fbe7b8e67161c40a4df6ab0764aa5c8">apt_architect
                 ...
                     access_log /srv/log/nginx.access.log;
                     error_log /srv/log/nginx.error.log;</span></code></pre>
+<h3 id="yarn">Yarn<a href="#yarn" class="anchor"></a></h3>
+<p>Yarn is no more installed by default with nodejs. If you need it, in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="1c20b8240c89cf988ee56232c4d8c9f3"><span class="token key atrule">system</span><span class="token punctuation">:</span>
+    <span class="token punctuation">...</span>
+    <span class="token key atrule">nodejs</span><span class="token punctuation">:</span>
+        <span class="token punctuation">...</span>
+        <span class="token key atrule">yarn</span><span class="token punctuation">:</span>
+            <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">1</span></code></pre>
 <h3 id="integration-jenkins">Integration - Jenkins<a href="#integration-jenkins" class="anchor"></a></h3>
 <p>Jenkins integration pipeline has now its dedicated entry in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
 <pre class="code-multiline language-diff"><code class="language-diff" id="c47d6281e77c81ce688a58ede4d81bd6">###############
@@ -354,7 +363,7 @@ sass-migrator --migrate-deps division <span class="token string">"assets/**/*.sc
         </article>
     </section>
 
-    <time datetime="2022-03-23UTC12:58:49+00:00">Last modified: March 23, 2022 12:58</time>
+    <time datetime="2022-03-23UTC13:27:44+00:00">Last modified: March 23, 2022 13:27</time>
         </div>
 
         <footer class="footer">
