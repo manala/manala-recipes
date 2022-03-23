@@ -14,13 +14,18 @@ install:
 # Development #
 ###############
 
-## Start dev server
-start:
-	symfony server:start
+## Start the whole application for development purposes (local only)
+serve:
+	# https://www.npmjs.com/package/concurrently
+	npx concurrently "make serve.php" "make serve.assets" --names="Symfony,Webpack" --prefix=name --kill-others --kill-others-on-fail
 
-## Watch assets
-watch:
-	npm run watch
+## Start Symfony server
+serve.php:
+	symfony server:start --no-tls
+
+## Start webpack dev server with HMR (Hot reload)
+serve.assets:
+	npx encore dev-server --mode=development
 
 clear:
 	rm -rf build public/build
@@ -30,16 +35,16 @@ clear:
 #########
 
 ## Build assets
-build:
+build.assets:
 	npm run build
 
 ## Build static site
-build-static: export APP_ENV = prod
-build-static:
+build.static: export APP_ENV = prod
+build.static:
 	symfony console cache:clear
 	symfony console stenope:build
 
-serve-static:
+serve.static:
 	open http://localhost:8001
 	php -S localhost:8001 -t build
 

@@ -1,4 +1,7 @@
 {
+    "composer/pcre": {
+        "version": "3.0.0"
+    },
     "composer/semver": {
         "version": "3.2.5"
     },
@@ -37,9 +40,6 @@
     },
     "monolog/monolog": {
         "version": "2.1.1"
-    },
-    "php": {
-        "version": "7.4"
     },
     "php-cs-fixer/diff": {
         "version": "v2.0.2"
@@ -97,9 +97,6 @@
         "files": [
             "config/packages/dev/debug.yaml"
         ]
-    },
-    "symfony/debug-pack": {
-        "version": "v1.0.8"
     },
     "symfony/dependency-injection": {
         "version": "v5.1.7"
@@ -159,9 +156,6 @@
             "src/Kernel.php"
         ]
     },
-    "symfony/http-client-contracts": {
-        "version": "v2.2.0"
-    },
     "symfony/http-foundation": {
         "version": "v5.1.7"
     },
@@ -216,9 +210,6 @@
     "symfony/process": {
         "version": "v5.1.7"
     },
-    "symfony/profiler-pack": {
-        "version": "v1.0.5"
-    },
     "symfony/property-access": {
         "version": "v5.1.7"
     },
@@ -272,9 +263,6 @@
             "templates/base.html.twig"
         ]
     },
-    "symfony/twig-pack": {
-        "version": "v1.0.0"
-    },
     "symfony/var-dumper": {
         "version": "v5.1.7"
     },
@@ -319,9 +307,6 @@
     },
     "symfony/yaml": {
         "version": "v5.1.7"
-    },
-    "tom32i/content": {
-        "version": "1.x-dev"
     },
     "twig/extra-bundle": {
         "version": "v3.0.5"

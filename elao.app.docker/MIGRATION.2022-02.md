@@ -1,4 +1,4 @@
-# Migration - 2022-01
+# Migration from elao.app (Vagrant) - 2022-01
 
 How to migrate from `elao.app` recipe, and basically from a vagrant to a docker stack.
 
@@ -6,7 +6,7 @@ How to migrate from `elao.app` recipe, and basically from a vagrant to a docker 
 
 These are the tasks required to cleanup local environments for each `elao.app` based project, before switching to `elao.app.docker`.
 
-:warning: Ensure you're currently on a vagrant based git branch!
+⚠︎ Ensure you're currently on a vagrant based git branch!
 
 ```shell
 # Properly destroy vagrant machine
