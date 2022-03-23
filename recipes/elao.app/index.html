@@ -112,6 +112,21 @@
                                     </li>
                     </ul>
     
+        <section>
+        <header><h2>Migrations</h2></header>
+        <article>
+            If you're coming from a previous version of the recipe or another recipe, you might be interested reading the following migration guides:
+
+            <ul>
+                                <li>
+                    <a href="/manala-recipes/migrations/elao.app/MIGRATION.2021-04">
+                        Migration - 2021-04
+                    </a>
+                </li>
+                            </ul>
+        </article>
+    </section>
+    
     <section>
         <article>
             <body><h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
@@ -133,7 +148,7 @@ $ manala init -i elao.app [project]</code></pre>
 manala init
 Select the <span class="token string">"elao.app"</span> recipe</code></pre>
 <p>Edit the <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code> at the root directory of your project and add the following lines at the beginning of the file:</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="9373f17e5e68c64fb38756e6ecd46f7d"><span class="token builtin">.SILENT</span><span class="token punctuation">:</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="9373f17e5e68c64fb38756e6ecd46f7d"><span class="token builtin-target builtin">.SILENT</span><span class="token punctuation">:</span>
 
 <span class="token keyword">-include</span> .manala/Makefile</code></pre>
 <p>Then update the <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> file (see <a href="#releases">the releases example</a> below) and then run the <code class="code-inline" id="5dd555b7998ff20d65ca5d7bc7328329">manala up</code> command:</p>
@@ -152,7 +167,7 @@ Help:
   <span class="token builtin class-name">help</span> This <span class="token builtin class-name">help</span>
 
 Docker:
-  docker Run docker container
+  <span class="token function">docker</span> Run <span class="token function">docker</span> container
 
 App:</code></pre>
 <h2 id="vm-interaction">VM interaction<a href="#vm-interaction" class="anchor"></a></h2>
@@ -410,8 +425,8 @@ using Github Action workflows.</p>
 
 ...
 
-<span class="token symbol">install@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> APP_ENV <span class="token operator">=</span> test
-<span class="token symbol">install@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">install@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> APP_ENV <span class="token operator">=</span> test
+<span class="token target symbol">install@integration</span><span class="token punctuation">:</span>
     <span class="token comment"># Composer</span>
     composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
     <span class="token comment">#composer run-script symfony-scripts --ansi --verbose --no-interaction</span>
@@ -426,7 +441,7 @@ using Github Action workflows.</p>
 
 ...
 
-<span class="token symbol">build@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">build@integration</span><span class="token punctuation">:</span>
     <span class="token comment"># Webpack Encore</span>
     npx encore production --color<span class="token operator">=</span>always --no-progress
 
@@ -436,31 +451,31 @@ using Github Action workflows.</p>
 
 ...
 
-<span class="token symbol">lint.php-cs-fixer@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">lint.php-cs-fixer@integration</span><span class="token punctuation">:</span>
     mkdir -p report/junit
     vendor/bin/php-cs-fixer fix --dry-run --diff --format<span class="token operator">=</span>junit &gt; report/junit/php-cs-fixer.xml
 
-<span class="token symbol">lint.phpstan@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">lint.phpstan@integration</span><span class="token punctuation">:</span>
     mkdir -p report/junit
     vendor/bin/phpstan --error-format<span class="token operator">=</span>junit --no-progress --no-interaction analyse &gt; report/junit/phpstan.xml
 
-<span class="token symbol">lint.twig@integration</span><span class="token punctuation">:</span>
-<span class="token symbol">    bin/console lint</span><span class="token punctuation">:</span>twig templates --ansi --no-interaction
+<span class="token target symbol">lint.twig@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">    bin/console lint</span><span class="token punctuation">:</span>twig templates --ansi --no-interaction
 
-<span class="token symbol">lint.yaml@integration</span><span class="token punctuation">:</span>
-<span class="token symbol">    bin/console lint</span><span class="token punctuation">:</span>yaml config translations --ansi --no-interaction
+<span class="token target symbol">lint.yaml@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">    bin/console lint</span><span class="token punctuation">:</span>yaml config translations --ansi --no-interaction
 
-<span class="token symbol">lint.eslint@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">lint.eslint@integration</span><span class="token punctuation">:</span>
     npx eslint src --format junit --output-file report/junit/eslint.xml
 
-<span class="token symbol">lint.stylelint@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">lint.stylelint@integration</span><span class="token punctuation">:</span>
     mkdir -p report/junit
     npx stylelint <span class="token string">"assets/styles/**/*.scss"</span> \
         --syntax scss \
         --custom-formatter <span class="token string">"node_modules/stylelint-junit-formatter"</span> \
         &gt; report/junit/stylelint.xml
 
-<span class="token symbol">lint.flow@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">lint.flow@integration</span><span class="token punctuation">:</span>
     mkdir -p report/junit
     npx flow check --json <span class="token operator">|</span> npx flow-junit-transformer &gt; report/junit/flow.xml
 
@@ -470,13 +485,13 @@ using Github Action workflows.</p>
 
 ...
 
-<span class="token symbol">security.symfony@integration</span><span class="token punctuation">:</span>
-<span class="token symbol">    symfony check</span><span class="token punctuation">:</span>security
+<span class="token target symbol">security.symfony@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">    symfony check</span><span class="token punctuation">:</span>security
 
-<span class="token symbol">security.yarn@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">security.yarn@integration</span><span class="token punctuation">:</span>
     yarn audit <span class="token punctuation">;</span> RC<span class="token operator">=</span><span class="token variable">$$</span><span class="token punctuation">{</span>?<span class="token punctuation">}</span> <span class="token punctuation">;</span> [ <span class="token variable">$$</span><span class="token punctuation">{</span>RC<span class="token punctuation">}</span> -gt 2 ] &amp;&amp; exit <span class="token variable">$$</span><span class="token punctuation">{</span>RC<span class="token punctuation">}</span> <span class="token operator">|</span><span class="token operator">|</span> exit 0
 
-<span class="token symbol">security.npm@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">security.npm@integration</span><span class="token punctuation">:</span>
     npm audit --audit-level moderate
 
 <span class="token comment">########</span>
@@ -485,17 +500,17 @@ using Github Action workflows.</p>
 
 ...
 
-<span class="token symbol">test.phpunit@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> APP_ENV <span class="token operator">=</span> test
-<span class="token symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> APP_ENV <span class="token operator">=</span> test
+<span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
     <span class="token comment"># Db</span>
-<span class="token symbol">    bin/console doctrine</span><span class="token punctuation">:</span>database<span class="token punctuation">:</span>create --ansi
-<span class="token symbol">    bin/console doctrine</span><span class="token punctuation">:</span>schema<span class="token punctuation">:</span>create --ansi
+<span class="token target symbol">    bin/console doctrine</span><span class="token punctuation">:</span>database<span class="token punctuation">:</span>create --ansi
+<span class="token target symbol">    bin/console doctrine</span><span class="token punctuation">:</span>schema<span class="token punctuation">:</span>create --ansi
     <span class="token comment"># PHPUnit</span>
     bin/phpunit --colors<span class="token operator">=</span>always --log-junit report/junit/phpunit.xml
 
-<span class="token symbol">test.jest@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> JEST_JUNIT_OUTPUT_DIR <span class="token operator">=</span> report/junit
-<span class="token symbol">test.jest@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> JEST_JUNIT_OUTPUT_NAME <span class="token operator">=</span> jest.xml
-<span class="token symbol">test.jest@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">test.jest@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> JEST_JUNIT_OUTPUT_DIR <span class="token operator">=</span> report/junit
+<span class="token target symbol">test.jest@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> JEST_JUNIT_OUTPUT_NAME <span class="token operator">=</span> jest.xml
+<span class="token target symbol">test.jest@integration</span><span class="token punctuation">:</span>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="releases">Releases<a href="#releases" class="anchor"></a></h2>
 <p>Here is an example of a production/staging release configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
@@ -576,8 +591,8 @@ using Github Action workflows.</p>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make warmup@staging</code></pre>
 <h2 id="makefile">Makefile<a href="#makefile" class="anchor"></a></h2>
 <p>Makefile targets that are supposed to be runned via docker must be prefixed.</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="26eefa121751e343b4a2dd990d202594"><span class="token symbol">foo</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token symbol">foo</span><span class="token punctuation">:</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="26eefa121751e343b4a2dd990d202594"><span class="token target symbol">foo</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">foo</span><span class="token punctuation">:</span>
     <span class="token comment"># Do something really foo...</span></code></pre>
 <p>Ssh</p>
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="fff8ca7a134d45e620fa8df859671e74"><span class="token comment">#######</span>
@@ -585,45 +600,45 @@ using Github Action workflows.</p>
 <span class="token comment">#######</span>
 
 <span class="token comment">## Ssh to staging server</span>
-<span class="token symbol">ssh@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token symbol">ssh@staging</span><span class="token punctuation">:</span>
+<span class="token target symbol">ssh@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">ssh@staging</span><span class="token punctuation">:</span>
     ssh app<span class="token operator">@</span>foo.staging.elao.run
 
 <span class="token comment"># Single host...</span>
 
-<span class="token symbol">ssh@production</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token symbol">ssh@production</span><span class="token punctuation">:</span>
+<span class="token target symbol">ssh@production</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">ssh@production</span><span class="token punctuation">:</span>
     ...
 
 <span class="token comment"># Multi host...</span>
 
-<span class="token symbol">ssh@production-01</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token symbol">ssh@production-01</span><span class="token punctuation">:</span>
+<span class="token target symbol">ssh@production-01</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">ssh@production-01</span><span class="token punctuation">:</span>
     ...</code></pre>
 <p>Sync</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="238b5937ce83ac1228f809c183b529a9"><span class="token symbol">sync@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token symbol">sync@staging</span><span class="token punctuation">:</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="238b5937ce83ac1228f809c183b529a9"><span class="token target symbol">sync@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">sync@staging</span><span class="token punctuation">:</span>
     mkdir -p var
     rsync --archive --compress --verbose --delete-after \
-<span class="token symbol">        app@foo.staging.elao.run</span><span class="token punctuation">:</span>/srv/app/current/var/files/ \
+<span class="token target symbol">        app@foo.staging.elao.run</span><span class="token punctuation">:</span>/srv/app/current/var/files/ \
         var/files/
 
 <span class="token comment"># Multi targets...</span>
-<span class="token symbol">sync-uploads@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token symbol">sync-uploads@staging</span><span class="token punctuation">:</span>
+<span class="token target symbol">sync-uploads@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">sync-uploads@staging</span><span class="token punctuation">:</span>
   ...
 
 <span class="token comment"># Multi apps...</span>
-<span class="token symbol">sync.api-uploads@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token symbol">sync.api-uploads@staging</span><span class="token punctuation">:</span>
+<span class="token target symbol">sync.api-uploads@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">sync.api-uploads@staging</span><span class="token punctuation">:</span>
   ...</code></pre>
 <h3 id="git-tools">Git tools<a href="#git-tools" class="anchor"></a></h3>
 <p>This recipe contains some git helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app/.manala/make/git.mk" target="_blank"><code class="code-inline" id="e6c58e1556cef6518971d204931757e6">git_diff</code></a> function.</p>
 <p>This function is useful for example to apply <code class="code-inline" id="bb7790bfaa80da52ecba1a151b299b55">php-cs</code>, <code class="code-inline" id="84a40fcfe7ec43f029d5956efb08d1c2">php-cs-fix</code> or <code class="code-inline" id="b098e670cdbfc421583801f6038ae38d">PHPStan</code> checks only on the subset of updated PHP files and not on any PHP file of your project.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="e9821a313f802ec649b58e33a335fc7e"><span class="token symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span> DIFF <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">call</span> git_diff, php, src tests<span class="token punctuation">)</span>
-<span class="token symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span>
-    <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">if</span> <span class="token variable">$</span><span class="token punctuation">(</span>DIFF<span class="token punctuation">)</span>, \
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="e9821a313f802ec649b58e33a335fc7e"><span class="token target symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span> DIFF <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> git_diff, php, src tests<span class="token punctuation">)</span>
+<span class="token target symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span>
+    <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">if</span> <span class="token variable">$</span><span class="token punctuation">(</span>DIFF<span class="token punctuation">)</span>, \
         vendor/bin/php-cs-fixer fix --config<span class="token operator">=</span>.php_cs.dist --path-mode<span class="token operator">=</span>intersection --diff --dry-run <span class="token variable">$</span><span class="token punctuation">(</span>DIFF<span class="token punctuation">)</span>, \
         printf <span class="token string">"You have made no change in PHP files\n"</span> \
     <span class="token punctuation">)</span></code></pre>
@@ -631,11 +646,11 @@ using Github Action workflows.</p>
 <p>This recipe contains some try helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app/.manala/make/try.mk" target="_blank"><code class="code-inline" id="73691059dcea540103db82ad2b3c40f7">try_finally</code></a> function.</p>
 <p>This function is useful for example to run <code class="code-inline" id="85af727fd022d3a13e7972fd6a418582">phpunit</code> tests needing a started symfony server, and to stop this server regardless of the tests retur code.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="e0f9aa14ca8d2939a55c0be70ca37768"><span class="token symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
-<span class="token symbol">    symfony server</span><span class="token punctuation">:</span>start --ansi --no-humanize --daemon --no-tls --port<span class="token operator">=</span>8000
-    <span class="token variable">$</span><span class="token punctuation">(</span><span class="token keyword">call</span> try_finally, \
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="e0f9aa14ca8d2939a55c0be70ca37768"><span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">    symfony server</span><span class="token punctuation">:</span>start --ansi --no-humanize --daemon --no-tls --port<span class="token operator">=</span>8000
+    <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> try_finally, \
         bin/phpunit --colors<span class="token operator">=</span>always --log-junit report/junit/phpunit.xml, \
-<span class="token symbol">        symfony server</span><span class="token punctuation">:</span>stop --ansi \
+<span class="token target symbol">        symfony server</span><span class="token punctuation">:</span>stop --ansi \
     <span class="token punctuation">)</span></code></pre>
 <h2 id="secrets">Secrets<a href="#secrets" class="anchor"></a></h2>
 <p>In order to generate secrets, use <a href="https://docs.gomplate.ca" target="_blank">Gomplate</a>, called by a make task.
@@ -645,10 +660,10 @@ Gomplate takes a template, queries its values from a Vault server and renders a 
 <span class="token comment"># Secrets #</span>
 <span class="token comment">###########</span>
 
-<span class="token symbol">secrets@production</span><span class="token punctuation">:</span>
+<span class="token target symbol">secrets@production</span><span class="token punctuation">:</span>
     gomplate --input-dir<span class="token operator">=</span>secrets/production --output-map<span class="token operator">=</span><span class="token string">'{{ .in | replaceAll ".gohtml" "" }}'</span>
 
-<span class="token symbol">secrets@staging</span><span class="token punctuation">:</span>
+<span class="token target symbol">secrets@staging</span><span class="token punctuation">:</span>
     gomplate --input-dir<span class="token operator">=</span>secrets/staging --output-map<span class="token operator">=</span><span class="token string">'{{ .in | replaceAll ".gohtml" "" }}'</span></code></pre>
 <p>Put your templates in <code class="code-inline" id="1ca4b42ca90e819f64f33c96b270e1c1">.gohtml</code> files inside a <code class="code-inline" id="df9fb49a2fc451d46b4f322d61a159d5">secrets/[production|staging]</code> directory at the root of the project.<br>
 Respect destination file names, extensions, and paths:</p>
@@ -663,20 +678,20 @@ Respect destination file names, extensions, and paths:</p>
 <span class="token treeview-part"><span class="token entry-line line-v-gap">    </span><span class="token entry-line line-v-gap">    </span><span class="token entry-line line-v-last">└── </span><span class="token entry-name ext-yaml-gohtml ext-gohtml">parameters.yaml.gohtml</span></span></code></pre>
 <p>Here are some template examples:</p>
 <p><code class="code-inline" id="f2af2f04aef6d83d08a8b60fd1fb4e3b">production/.env.gohtml</code>:</p>
-<pre class="code-multiline language-twig"><code class="language-twig" id="f953d0deef67415a83b9abe850c4489e"><span class="token other"># This file was generated by Gomplate from Vault secrets for production</span>
-<span class="token tag"><span class="token ld"><span class="token punctuation">{{-</span></span> <span class="token property">range</span> $<span class="token property">key</span><span class="token punctuation">,</span> $<span class="token property">value</span> <span class="token punctuation">:</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token property">datasource</span> <span class="token string"><span class="token punctuation">"</span>vault:///foo_bar/data/env<span class="token punctuation">"</span></span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property">data</span> <span class="token rd"><span class="token punctuation">}}</span></span></span>
-<span class="token tag"><span class="token ld"><span class="token punctuation">{{</span></span> $<span class="token property">key</span> <span class="token rd"><span class="token punctuation">}}</span></span></span><span class="token other">=</span><span class="token tag"><span class="token ld"><span class="token punctuation">{{</span></span> $<span class="token property">value</span> <span class="token operator">|</span> <span class="token property">quote</span> <span class="token rd"><span class="token punctuation">}}</span></span></span>
-<span class="token tag"><span class="token ld"><span class="token punctuation">{{-</span></span> <span class="token property">end</span> <span class="token rd"><span class="token punctuation">}}</span></span></span></code></pre>
+<pre class="code-multiline language-twig"><code class="language-twig" id="f953d0deef67415a83b9abe850c4489e"># This file was generated by Gomplate from Vault secrets for production
+<span class="token twig language-twig"><span class="token delimiter punctuation">{{-</span> range $key<span class="token punctuation">,</span> $value <span class="token punctuation">:</span><span class="token operator">=</span> <span class="token punctuation">(</span>datasource <span class="token string"><span class="token punctuation">"</span>vault:///foo_bar/data/env<span class="token punctuation">"</span></span><span class="token punctuation">)</span><span class="token punctuation">.</span>data <span class="token delimiter punctuation">}}</span></span>
+<span class="token twig language-twig"><span class="token delimiter punctuation">{{</span> $key <span class="token delimiter punctuation">}}</span></span>=<span class="token twig language-twig"><span class="token delimiter punctuation">{{</span> $value <span class="token operator">|</span> quote <span class="token delimiter punctuation">}}</span></span>
+<span class="token twig language-twig"><span class="token delimiter punctuation">{{-</span> end <span class="token delimiter punctuation">}}</span></span></code></pre>
 <p><code class="code-inline" id="ace3554d73f8fcf79511d0c4a3377b0c">staging/.env.gohtml</code>:</p>
-<pre class="code-multiline language-twig"><code class="language-twig" id="c86051013d56a285694980972e2e28a3"><span class="token other"># This file was generated by Gomplate from Vault secrets for staging</span>
-<span class="token tag"><span class="token ld"><span class="token punctuation">{{-</span></span> <span class="token property">range</span> $<span class="token property">key</span><span class="token punctuation">,</span> $<span class="token property">value</span> <span class="token punctuation">:</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token property">datasource</span> <span class="token punctuation">(</span><span class="token property">print</span> <span class="token string"><span class="token punctuation">"</span>vault:///foo_bar/data/env<span class="token punctuation">"</span></span> <span class="token punctuation">(</span><span class="token property">has</span> <span class="token punctuation">.</span><span class="token property">Env</span> <span class="token string"><span class="token punctuation">"</span>STAGE<span class="token punctuation">"</span></span> <span class="token operator">|</span> <span class="token property">ternary</span> <span class="token punctuation">(</span><span class="token property">printf</span> <span class="token string"><span class="token punctuation">"</span>-%s<span class="token punctuation">"</span></span> <span class="token punctuation">(</span><span class="token property">getenv</span> <span class="token string"><span class="token punctuation">"</span>STAGE<span class="token punctuation">"</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token string"><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property">data</span> <span class="token rd"><span class="token punctuation">}}</span></span></span>
-<span class="token tag"><span class="token ld"><span class="token punctuation">{{</span></span> $<span class="token property">key</span> <span class="token rd"><span class="token punctuation">}}</span></span></span><span class="token other">=</span><span class="token tag"><span class="token ld"><span class="token punctuation">{{</span></span> $<span class="token property">value</span> <span class="token operator">|</span> <span class="token property">quote</span> <span class="token rd"><span class="token punctuation">}}</span></span></span>
-<span class="token tag"><span class="token ld"><span class="token punctuation">{{-</span></span> <span class="token property">end</span> <span class="token rd"><span class="token punctuation">}}</span></span></span></code></pre>
+<pre class="code-multiline language-twig"><code class="language-twig" id="c86051013d56a285694980972e2e28a3"># This file was generated by Gomplate from Vault secrets for staging
+<span class="token twig language-twig"><span class="token delimiter punctuation">{{-</span> range $key<span class="token punctuation">,</span> $value <span class="token punctuation">:</span><span class="token operator">=</span> <span class="token punctuation">(</span>datasource <span class="token punctuation">(</span>print <span class="token string"><span class="token punctuation">"</span>vault:///foo_bar/data/env<span class="token punctuation">"</span></span> <span class="token punctuation">(</span>has <span class="token punctuation">.</span>Env <span class="token string"><span class="token punctuation">"</span>STAGE<span class="token punctuation">"</span></span> <span class="token operator">|</span> ternary <span class="token punctuation">(</span>printf <span class="token string"><span class="token punctuation">"</span>-%s<span class="token punctuation">"</span></span> <span class="token punctuation">(</span>getenv <span class="token string"><span class="token punctuation">"</span>STAGE<span class="token punctuation">"</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token string"><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>data <span class="token delimiter punctuation">}}</span></span>
+<span class="token twig language-twig"><span class="token delimiter punctuation">{{</span> $key <span class="token delimiter punctuation">}}</span></span>=<span class="token twig language-twig"><span class="token delimiter punctuation">{{</span> $value <span class="token operator">|</span> quote <span class="token delimiter punctuation">}}</span></span>
+<span class="token twig language-twig"><span class="token delimiter punctuation">{{-</span> end <span class="token delimiter punctuation">}}</span></span></code></pre>
 <p>Note the <code class="code-inline" id="37e72e88b86734bddeb33b073fd443d1">STAGE</code> environnement variable usage, allowing to switch from <code class="code-inline" id="ff035a1dd7655da15295fa5fa89362a7">env</code> to <code class="code-inline" id="dbe9a0b5a22ed642b74b89f294df3eae">env-${STAGE}</code> vault secret, calling <code class="code-inline" id="5b1f62bc5f1bd2d9dd5a4dba03712824">make secrets@staging STAGE=foo</code>.</p>
 <p><code class="code-inline" id="aea29b0f092fc172aeb04f87eca66fe2">production/config/parameters.yaml.gohtml</code>:</p>
-<pre class="code-multiline language-twig"><code class="language-twig" id="ad18bf03d350b23f0543d983de4c1f0e"><span class="token other"># This file was generated by Gomplate from Vault secrets for production
-parameters:</span>
-<span class="token tag"><span class="token ld"><span class="token punctuation">{{</span></span> <span class="token punctuation">(</span><span class="token property">datasource</span> <span class="token string"><span class="token punctuation">"</span>vault:///foo_bar/data/parameters<span class="token punctuation">"</span></span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property">data</span> <span class="token operator">|</span> <span class="token property">toYAML</span> <span class="token operator">|</span> <span class="token property">indent</span> <span class="token number">4</span> <span class="token rd"><span class="token punctuation">-}}</span></span></span></code></pre>
+<pre class="code-multiline language-twig"><code class="language-twig" id="ad18bf03d350b23f0543d983de4c1f0e"># This file was generated by Gomplate from Vault secrets for production
+parameters:
+<span class="token twig language-twig"><span class="token delimiter punctuation">{{</span> <span class="token punctuation">(</span>datasource <span class="token string"><span class="token punctuation">"</span>vault:///foo_bar/data/parameters<span class="token punctuation">"</span></span><span class="token punctuation">)</span><span class="token punctuation">.</span>data <span class="token operator">|</span> toYAML <span class="token operator">|</span> indent <span class="token number">4</span> <span class="token delimiter punctuation">-}}</span></span></code></pre>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>
@@ -718,7 +733,7 @@ parameters:</span>
         </article>
     </section>
 
-    <time datetime="2022-03-23UTC10:20:14+00:00">Last modified: March 23, 2022 10:20</time>
+    <time datetime="2022-03-23UTC11:05:41+00:00">Last modified: March 23, 2022 11:05</time>
         </div>
 
         <footer class="footer">

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <!-- Enable responsiveness on mobile devices-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+        <title>    Manala Recipes - Migration from elao.app (Vagrant) - 2022-01 (Elao - App - Docker)
+</title>
+
+                    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+            <link rel="stylesheet" href="/manala-recipes/build/app.787aff7e.css">
+        
+                    <script src="/manala-recipes/build/runtime.9644eff8.js" defer></script><script src="/manala-recipes/build/app.5415922d.js" defer></script>
+            </head>
+    <body>
+
+        <header class="header">
+            <div class="navbar">
+    <div class="container">
+        <a href="/manala-recipes/" class="logo">Manala recipes</a>
+        <nav>
+            <ul>
+                <li><a href="https://github.com/manala/manala-recipes">Github</a></li>
+                <li>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" href="/manala-recipes/">Recipes</a>
+                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/elao.app.docker">Elao - App - Docker</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/elao.app">Elao - App</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.ansible">Lazy - Ansible</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.kubernetes">Lazy - Kubernetes</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.symfony">Lazy - Symfony</a>
+                                                    </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="manala">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="circle circle-5"></div>
+                            <div class="circle circle-6"></div>
+                            <img src="/manala-recipes/build/images/arms.b7d6de72.svg" class="arms" alt="Manala">
+                            <img src="/manala-recipes/build/images/manala.053e7ef8.svg" class="head" alt="Manala">
+                        </div>
+                    </div>
+                    <div class="lead col-sm-8">
+                        <p>Recipes for your projects</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+                <h1>Migration from elao.app (Vagrant) - 2022-01 (Elao - App - Docker)</h1>
+
+            <ul>
+                            <li>
+                    <a href="#on-a-per-machine-basis">On a per-machine basis</a>
+                                    </li>
+                            <li>
+                    <a href="#on-a-per-project-basis">On a per-project basis</a>
+                                            <ul class="sub-list">
+                                                            <li><a href="#manala">Manala</a></li>
+                                                            <li><a href="#reminder">Reminder</a></li>
+                                                            <li><a href="#project">Project</a></li>
+                                                            <li><a href="#system">System</a></li>
+                                                            <li><a href="#motd">Motd</a></li>
+                                                            <li><a href="#vagrant">Vagrant</a></li>
+                                                            <li><a href="#apt-packages">Apt packages</a></li>
+                                                            <li><a href="#docker">Docker</a></li>
+                                                            <li><a href="#multi-architecture">Multi architecture</a></li>
+                                                            <li><a href="#files">Files</a></li>
+                                                            <li><a href="#urls">Urls</a></li>
+                                                            <li><a href="#makefile">Makefile</a></li>
+                                                            <li><a href="#certificates">Certificates</a></li>
+                                                            <li><a href="#mutagen">Mutagen</a></li>
+                                                            <li><a href="#nginx">Nginx</a></li>
+                                                            <li><a href="#integration-jenkins">Integration - Jenkins</a></li>
+                                                            <li><a href="#releases-deliveries">Releases / Deliveries</a></li>
+                                                            <li><a href="#node-sass">Node-sass</a></li>
+                                                    </ul>
+                                    </li>
+                    </ul>
+    
+    <section>
+        <article>
+            <body><h1 id="migration-from-elao-app-vagrant-2022-01">Migration from elao.app (Vagrant) - 2022-01<a href="#migration-from-elao-app-vagrant-2022-01" class="anchor"></a></h1>
+<p>How to migrate from <code class="code-inline" id="69b98e33f6a5a028366525d1603ee777">elao.app</code> recipe, and basically from a vagrant to a docker stack.</p>
+<h2 id="on-a-per-machine-basis">On a per-machine basis<a href="#on-a-per-machine-basis" class="anchor"></a></h2>
+<p>These are the tasks required to cleanup local environments for each <code class="code-inline" id="69b98e33f6a5a028366525d1603ee777">elao.app</code> based project, before switching to <code class="code-inline" id="a2dc15b148e98f1eb3db05de87ad51ff">elao.app.docker</code>.</p>
+<p>:warning: Ensure you're currently on a vagrant based git branch!</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="b74cb271031e65f1d47b7ae55d66bdb0"><span class="token comment"># Properly destroy vagrant machine</span>
+<span class="token function">make</span> destroy
+<span class="token comment"># Remove local vagrant stuff</span>
+<span class="token function">rm</span> -Rf .manala/.vagrant
+<span class="token comment"># Remove local cache</span>
+<span class="token function">rm</span> -Rf .manala/.cache
+<span class="token comment"># Delete broken symlinks</span>
+<span class="token function">find</span> -L <span class="token builtin class-name">.</span> -type l -exec <span class="token function">rm</span> -i <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">\</span><span class="token punctuation">;</span></code></pre>
+<p>Once all of your local environment are clean, you can proudly uninstall vagrant, landrush and virtualbox if not needed elsewhere.</p>
+<h2 id="on-a-per-project-basis">On a per-project basis<a href="#on-a-per-project-basis" class="anchor"></a></h2>
+<p>These are the steps to migrate a project</p>
+<h3 id="manala">Manala<a href="#manala" class="anchor"></a></h3>
+<p>Change recipe name in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code></p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="e6203e4e82fe8b20016da7cb0f145745">manala:
+<span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">    recipe: elao.app
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">    recipe: elao.app.docker</span></span></code></pre>
+<h3 id="reminder">Reminder<a href="#reminder" class="anchor"></a></h3>
+<p>Reminder is now centered in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="9af3335130c3cd73eaf28ff8994a019d">####################################################################
+<span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line"> # !!! REMINDER !!!                                                 #
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line"> #                         !!! REMINDER !!!                         #
+</span></span><span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line"> # Don't forget to run `manala up` each time you update this file ! #
+</span><span class="token prefix unchanged"> </span><span class="token line"> ####################################################################</span></span></code></pre>
+<h3 id="project">Project<a href="#project" class="anchor"></a></h3>
+<p>Replace system.hostname by project.name in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>, without forgetting to remove the <code class="code-inline" id="20ffcfd4479f978e00c3143117d65f99">.vm</code> extension!</p>
+<p>Set project.ports_prefix, minimum 20, maximum 654</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="d860a657b52f585c3263ab974136dc5c">###########
+# Project #
+###########
+
+<span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">project:
+</span><span class="token prefix inserted">+</span><span class="token line">    name: foo-bar
+</span><span class="token prefix inserted">+</span><span class="token line">    ports_prefix: XXX  # 20 &lt; XXX &lt; 654
+</span></span>
+...
+
+system:
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">   ...
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">    hostname: foo-bar.vm</span></span></code></pre>
+<h3 id="system">System<a href="#system" class="anchor"></a></h3>
+<p>In <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> system:</p>
+<ul>
+<li><code class="code-inline" id="2af72f100c356273d46284f6fd1dfc08">version</code> 8 (jessie) is no more available (time to upgrade dude, debian jessie is no more maintained)</li>
+<li><code class="code-inline" id="2af72f100c356273d46284f6fd1dfc08">version</code> 11 (bullseye) is now available \o/</li>
+<li><code class="code-inline" id="cd69b4957f06cd818d7bf3d61980e291">memory</code> is no more available (vagrant related)</li>
+<li><code class="code-inline" id="fcfc94e6b1bfb9ce87817ed1db7117a6">cpus</code> is no more available (vagrant related)</li>
+</ul>
+<pre class="code-multiline language-diff"><code class="language-diff" id="52ee3f5d04b710d610a93361cccdff1f">system:
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">   ...
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">    version: 8
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">    version: 10  # 9|10|11
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">    memory: 4096
+</span><span class="token prefix deleted">-</span><span class="token line">    cpus: 2</span></span></code></pre>
+<h3 id="motd">Motd<a href="#motd" class="anchor"></a></h3>
+<p>Sorry, <code class="code-inline" id="8776dc2b7228908a1ba75b6547efede7">motd</code> is no more supported in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>... It was tightly coupled to <code class="code-inline" id="1787d7646304c5d987cf4e64a3973dc7">ssh</code>, which became useless using docker instead of vagrant.</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="c3be8bed91afcdb1e8db633e12e3a36a">system:
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">   ...
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">    motd:
+</span><span class="token prefix deleted">-</span><span class="token line">        ...</span></span></code></pre>
+<h3 id="vagrant">Vagrant<a href="#vagrant" class="anchor"></a></h3>
+<ul>
+<li>remove <code class="code-inline" id="c1964b21f576687592cd2cbef988930b">.manala/Vagrantfile</code> file</li>
+<li>remove <code class="code-inline" id="b28c6c417fcca6dc5f71342e29f54b4c">.manala/vagrant</code> directory</li>
+</ul>
+<p>Look for any references to <code class="code-inline" id="63623900c8bbf21c706c45dcb7a2c083">vagrant</code> in source code, especially in Makefiles, and find a way to fix them.</p>
+<h3 id="apt-packages">Apt packages<a href="#apt-packages" class="anchor"></a></h3>
+<p>You can remove <code class="code-inline" id="a22db6b9984d48fcdf4adcc9ff16c659">tcpdump</code> from system.apt.packages in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> as it's now available by default in the recipe</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="ee8e971fd3fc9fe87af11dbaba8840f0">system:
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">   ...
+</span><span class="token prefix unchanged"> </span><span class="token line">   apt:
+</span><span class="token prefix unchanged"> </span><span class="token line">       ...
+</span><span class="token prefix unchanged"> </span><span class="token line">       packages:
+</span><span class="token prefix unchanged"> </span><span class="token line">           ...
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">            - tcpdump</span></span></code></pre>
+<h3 id="docker">Docker<a href="#docker" class="anchor"></a></h3>
+<p>Remove <code class="code-inline" id="0df9542a6757fa7dafe2714b1c359f94">.manala/Dockerfile</code> file</p>
+<p>Replace system.docker.containers entry in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code> by system.docker.services</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="c78325b40962d9c14f0a586bc0b0c223">system:
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">     ...
+</span><span class="token prefix unchanged"> </span><span class="token line">     docker:
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">         containers:
+</span><span class="token prefix deleted">-</span><span class="token line">             - name: statsd-exporter
+</span><span class="token prefix deleted">-</span><span class="token line">               image: prom/statsd-exporter
+</span><span class="token prefix deleted">-</span><span class="token line">               state: started
+</span><span class="token prefix deleted">-</span><span class="token line">               restart_policy: unless-stopped
+</span><span class="token prefix deleted">-</span><span class="token line">               env:
+</span><span class="token prefix deleted">-</span><span class="token line">                   FOO: BAR
+</span><span class="token prefix deleted">-</span><span class="token line">               ports:
+</span><span class="token prefix deleted">-</span><span class="token line">                   - 9102:9102
+</span><span class="token prefix deleted">-</span><span class="token line">                   - 9125:9125
+</span><span class="token prefix deleted">-</span><span class="token line">                   - 9125:9125/udp
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">         services:
+</span><span class="token prefix inserted">+</span><span class="token line">             # statsd for metrics
+</span><span class="token prefix inserted">+</span><span class="token line">             statsd-exporter:
+</span><span class="token prefix inserted">+</span><span class="token line">                 image: prom/statsd-exporter:v0.22.4
+</span><span class="token prefix inserted">+</span><span class="token line">                 network_mode: service:app
+</span><span class="token prefix inserted">+</span><span class="token line">                 environment:
+</span><span class="token prefix inserted">+</span><span class="token line">                     FOO: BAR
+</span><span class="token prefix inserted">+</span><span class="token line">                 profiles:
+</span><span class="token prefix inserted">+</span><span class="token line">                     - development
+</span><span class="token prefix inserted">+</span><span class="token line">             app:
+</span><span class="token prefix inserted">+</span><span class="token line">                 ports:
+</span><span class="token prefix inserted">+</span><span class="token line">                     # statsd-exporter
+</span><span class="token prefix inserted">+</span><span class="token line">                     - 59402:9102</span></span></code></pre>
+<h3 id="multi-architecture">Multi architecture<a href="#multi-architecture" class="anchor"></a></h3>
+<p>The recipe is now supposed to support both <code class="code-inline" id="c71a96e493463b7d7437da5e490f56af">amd64</code> and <code class="code-inline" id="37d8832a2d6602cab9f78f30a301b230">arm64</code> architectures, but sometime, we needed to use apt packages having such architectures defined in their names.
+An <code class="code-inline" id="1fbe7b8e67161c40a4df6ab0764aa5c8">apt_architecture</code> ansible variable is now available to automatically switch between them:</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="a32d3ad4804d26abcad92259e1e33734">system:
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">   ...
+</span><span class="token prefix unchanged"> </span><span class="token line">   apt:
+</span><span class="token prefix unchanged"> </span><span class="token line">       ...
+</span><span class="token prefix unchanged"> </span><span class="token line">       packages:
+</span><span class="token prefix unchanged"> </span><span class="token line">           ...
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">            - https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">            - https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_{{ apt_architecture }}.deb</span></span></code></pre>
+<h3 id="files">Files<a href="#files" class="anchor"></a></h3>
+<p>You can remove a lot of system.files entries in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>, especially the ones related to previous vagrant symlink tricks with app cache &amp; logs.</p>
+<p>Don't forget to remove the related symlinks on host!</p>
+<p>Single app (remove all of them)</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="32d083b24b94b95acd0fdc855f927053">system:
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">     ...
+</span><span class="token prefix unchanged"> </span><span class="token line">     files:
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">         - path: /srv/app/var/log
+</span><span class="token prefix deleted">-</span><span class="token line">           src: /srv/log
+</span><span class="token prefix deleted">-</span><span class="token line">           state: link_directory
+</span><span class="token prefix deleted">-</span><span class="token line">           force: true
+</span><span class="token prefix deleted">-</span><span class="token line">         - path: /srv/app/var/cache
+</span><span class="token prefix deleted">-</span><span class="token line">           src: /srv/cache
+</span><span class="token prefix deleted">-</span><span class="token line">           state: link_directory
+</span><span class="token prefix deleted">-</span><span class="token line">           force: true</span></span></code></pre>
+<p>Multi app (just keep the log directories themselves)</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="eb1ddda6e7c6884651a940bb80ac0adc">system:
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">     ...
+</span><span class="token prefix unchanged"> </span><span class="token line">     files:
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">         - path: /srv/app/foo/var/log
+</span><span class="token prefix deleted">-</span><span class="token line">           src: /srv/log/foo
+</span><span class="token prefix deleted">-</span><span class="token line">           state: link_directory
+</span><span class="token prefix deleted">-</span><span class="token line">           force: true
+</span><span class="token prefix deleted">-</span><span class="token line">         - path: /srv/app/foo/var/cache
+</span><span class="token prefix deleted">-</span><span class="token line">           src: /srv/cache/foo
+</span><span class="token prefix deleted">-</span><span class="token line">           state: link_directory
+</span><span class="token prefix deleted">-</span><span class="token line">           force: true
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">         - path: /srv/log/foo
+</span><span class="token prefix inserted">+</span><span class="token line">           state: directory</span></span></code></pre>
+<h3 id="urls">Urls<a href="#urls" class="anchor"></a></h3>
+<p>Replace in your project any references to <code class="code-inline" id="20ffcfd4479f978e00c3143117d65f99">.vm</code> development url, and replace them by <code class="code-inline" id="0c0fa8637c5e7126197fe3b6a8c7508b">ela.ooo</code> references.</p>
+<p>For instance:</p>
+<ul>
+<li><code class="code-inline" id="b3b9f5f2eb552f5e178a42475892a987">http://foo.vm</code> -&gt; <code class="code-inline" id="28bf879a1369f70e5573ed0d9b6aa537">http://foo.ela.ooo:12345</code></li>
+</ul>
+<h3 id="makefile">Makefile<a href="#makefile" class="anchor"></a></h3>
+<p>Replace <code class="code-inline" id="ad100d423bd9a7c2c5d58cfd0a9c8a8d">VAGRANT_MAKE</code> by <code class="code-inline" id="93ac2cc26f1c841b1f93789c441955ae">DOCKER_MAKE</code></p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="7326ce047fb8db9fd367b41b16c0368a">define setup
+<span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">   $(VAGRANT_MAKE) --directory foo install build
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">   $(DOCKER_MAKE) --directory foo install build
+</span></span><span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line"> endef</span></span></code></pre>
+<h3 id="certificates">Certificates<a href="#certificates" class="anchor"></a></h3>
+<p>Regenerate certificates if necessary</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="23f13d83cc7b357b50c6b0225711925a"><span class="token function">make</span> provision.certificates</code></pre>
+<h3 id="mutagen">Mutagen<a href="#mutagen" class="anchor"></a></h3>
+<p>Mutagen in a great tool to sync files between host and guest, but could be tweaked a bit in some situations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="cfd0c548a9ff54224b0c61e1f56d58e8"><span class="token key atrule">system</span><span class="token punctuation">:</span>
+    <span class="token punctuation">...</span>
+    <span class="token key atrule">docker</span><span class="token punctuation">:</span>
+        <span class="token punctuation">...</span>
+        <span class="token key atrule">mutagen</span><span class="token punctuation">:</span>
+            <span class="token key atrule">ignore</span><span class="token punctuation">:</span>
+                <span class="token key atrule">paths</span><span class="token punctuation">:</span>
+                    <span class="token comment"># Single app</span>
+                    <span class="token punctuation">-</span> /var/cache
+                    <span class="token punctuation">-</span> /var/log
+                    <span class="token comment"># Multi app</span>
+                    <span class="token punctuation">-</span> /foo/var/cache
+                    <span class="token punctuation">-</span> /foo/var/log</code></pre>
+<h3 id="nginx">Nginx<a href="#nginx" class="anchor"></a></h3>
+<p>Ensure nginx logs path are properly set on <code class="code-inline" id="59ac7dd69b6e446cfabd13100ad77d14">/srv/log</code> in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>.</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="bd5e3db59e4cef90858c337106590e78"><span class="token key atrule">system</span><span class="token punctuation">:</span>
+    <span class="token punctuation">...</span>
+    <span class="token key atrule">nginx</span><span class="token punctuation">:</span>
+        <span class="token key atrule">configs</span><span class="token punctuation">:</span>
+          <span class="token punctuation">...</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">file</span><span class="token punctuation">:</span> app.conf
+            <span class="token key atrule">config</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">
+                ...
+                    access_log /srv/log/nginx.access.log;
+                    error_log /srv/log/nginx.error.log;</span></code></pre>
+<h3 id="integration-jenkins">Integration - Jenkins<a href="#integration-jenkins" class="anchor"></a></h3>
+<p>Jenkins integration pipeline has now its dedicated entry in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="c47d6281e77c81ce688a58ede4d81bd6">###############
+# Integration #
+###############
+
+integration:
+<span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">     app: foo
+</span><span class="token prefix deleted">-</span><span class="token line">     tasks:
+</span><span class="token prefix deleted">-</span><span class="token line">       - shell: make install@integration
+</span><span class="token prefix deleted">-</span><span class="token line">       ...
+</span><span class="token prefix deleted">-</span><span class="token line">     ...
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">     jenkins:
+</span><span class="token prefix inserted">+</span><span class="token line">         pipeline:
+</span><span class="token prefix inserted">+</span><span class="token line">             app: foo
+</span><span class="token prefix inserted">+</span><span class="token line">             tasks:
+</span><span class="token prefix inserted">+</span><span class="token line">               - shell: make install@integration
+</span><span class="token prefix inserted">+</span><span class="token line">               ...
+</span><span class="token prefix inserted">+</span><span class="token line">             ...</span></span></code></pre>
+<h3 id="releases-deliveries">Releases / Deliveries<a href="#releases-deliveries" class="anchor"></a></h3>
+<p>"Releases" have been renamed to "Deliveries"</p>
+<p>Somes keys have also been renamed in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
+<ul>
+<li><code class="code-inline" id="15d61712450a686a7f365adf4fef581f">mode</code> -&gt; <code class="code-inline" id="af2e53a7f8f14624d5c96d1188ac5443">tier</code></li>
+<li><code class="code-inline" id="89bb6900736548ebd6455d0ab07aa5fe">repo</code> -&gt; <code class="code-inline" id="a95798025823f6f013dae0f032f282b2">release_repo</code></li>
+<li><code class="code-inline" id="18389a4a9ad5795744699cff0ba66c15">ref</code> -&gt; <code class="code-inline" id="16e43ab7103130c73894243e27b41855">release_ref</code></li>
+<li><code class="code-inline" id="4aa46cbb35bb592594ec1702e0f2c84f">release_removed</code> -&gt; <code class="code-inline" id="51a056a927984a7cdc8ecfdf881ec52f">release_remove</code></li>
+<li><code class="code-inline" id="4b9cbf35cafe797b7d853bfc9250b54f">deploy_removed</code> -&gt; <code class="code-inline" id="58efb1a31575bfcf7a2e0b8fc0c6d87d">deploy_remove</code></li>
+</ul>
+<pre class="code-multiline language-diff"><code class="language-diff" id="1877ed77a8ca26c4ba1a48e8f004e12a"><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line"> ############
+</span><span class="token prefix deleted">-</span><span class="token line"> # Releases #
+</span><span class="token prefix deleted">-</span><span class="token line"> ############
+</span></span>
+<span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line"> releases:
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line"> ##############
+</span><span class="token prefix inserted">+</span><span class="token line"> # Deliveries #
+</span><span class="token prefix inserted">+</span><span class="token line"> ##############
+</span></span>
+<span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line"> deliveries:
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line"> - &amp;release_foo_bar
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line"> - &amp;delivery_foo_bar
+</span></span><span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">   ...
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">   mode: production
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">   tier: production
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">   repo: git@git.example.com:foo/bar.git
+</span><span class="token prefix deleted">-</span><span class="token line">   ref: staging
+</span></span><span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">   # Release
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">   release_repo: git@git.example.com:foo/bar.git
+</span><span class="token prefix inserted">+</span><span class="token line">   release_ref: staging
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">   release_removed: [...]
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">   release_remove: [...]
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">   deploy_removed: [...]
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">   deploy_remove: [...]
+</span></span><span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">   ...</span></span></code></pre>
+<h3 id="node-sass">Node-sass<a href="#node-sass" class="anchor"></a></h3>
+<p>node-sass is deprecated and could not work on arm64</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="c46cd6448a7211c6e6aa047199bb0697"><span class="token comment"># Npm</span>
+<span class="token function">npm</span> uninstall node-sass
+<span class="token function">npm</span> <span class="token function">add</span> sass <span class="token punctuation">[</span>--save-dev<span class="token punctuation">]</span>
+<span class="token comment"># Yarn</span>
+<span class="token function">yarn</span> remove node-sass
+<span class="token function">yarn</span> <span class="token function">add</span> sass <span class="token punctuation">[</span>--dev<span class="token punctuation">]</span>
+<span class="token comment"># Handle deprecations</span>
+<span class="token function">sudo</span> <span class="token function">npm</span> <span class="token function">install</span> -g sass-migrator
+sass-migrator --migrate-deps division <span class="token string">"assets/**/*.scss"</span></code></pre></body>
+        </article>
+    </section>
+
+    <time datetime="2022-03-23UTC11:05:13+00:00">Last modified: March 23, 2022 11:05</time>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4 no-pb">
+                        <a href="https://manala.io" class="manala"><img src="/manala-recipes/build/images/manala.053e7ef8.svg" width="56" height="56" title="Manala.io" alt="Manala.io"> Manala.io</a>
+                    </div>
+                    <div class="col-sm-4 no-pb github text-center">
+                        <a href="https://github.com/manala/manala-recipes" target="_blank"><img src="/manala-recipes/build/images/github.04ed74f3.svg" width="32" height="32" title="Manala on Github" alt="Manala recipes on Github"></a>
+                    </div>
+                    <div class="col-sm-4 no-pb elao">
+                        Made with love by <a href="https://www.elao.com" target="_blank"><img src="/manala-recipes/build/images/elao.91d6ac3c.svg" width="64" height="23" title="élao" alt="élao"></a>
+                        <small>(and <a target="_blank" href="https://www.rix.fr/"><strong>Rix</strong></a> !)</small>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <!-- Enable responsiveness on mobile devices-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+        <title>    Manala Recipes - Migration - 2021-04 (Elao - App)
+</title>
+
+                    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+            <link rel="stylesheet" href="/manala-recipes/build/app.787aff7e.css">
+        
+                    <script src="/manala-recipes/build/runtime.9644eff8.js" defer></script><script src="/manala-recipes/build/app.5415922d.js" defer></script>
+            </head>
+    <body>
+
+        <header class="header">
+            <div class="navbar">
+    <div class="container">
+        <a href="/manala-recipes/" class="logo">Manala recipes</a>
+        <nav>
+            <ul>
+                <li><a href="https://github.com/manala/manala-recipes">Github</a></li>
+                <li>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" href="/manala-recipes/">Recipes</a>
+                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/elao.app.docker">Elao - App - Docker</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/elao.app">Elao - App</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.ansible">Lazy - Ansible</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.kubernetes">Lazy - Kubernetes</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.symfony">Lazy - Symfony</a>
+                                                    </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="manala">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="circle circle-5"></div>
+                            <div class="circle circle-6"></div>
+                            <img src="/manala-recipes/build/images/arms.b7d6de72.svg" class="arms" alt="Manala">
+                            <img src="/manala-recipes/build/images/manala.053e7ef8.svg" class="head" alt="Manala">
+                        </div>
+                    </div>
+                    <div class="lead col-sm-8">
+                        <p>Recipes for your projects</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+                <h1>Migration - 2021-04 (Elao - App)</h1>
+
+            <ul>
+                            <li>
+                    <a href="#jenkins">Jenkins</a>
+                                    </li>
+                            <li>
+                    <a href="#nginx-configs">Nginx configs</a>
+                                            <ul class="sub-list">
+                                                            <li><a href="#cors">Cors</a></li>
+                                                            <li><a href="#gzip">Gzip</a></li>
+                                                            <li><a href="#no-index">No index</a></li>
+                                                            <li><a href="#php-fpm">Php fpm</a></li>
+                                                            <li><a href="#ssl">Ssl</a></li>
+                                                            <li><a href="#app">App</a></li>
+                                                            <li><a href="#content">Content</a></li>
+                                                    </ul>
+                                    </li>
+                            <li>
+                    <a href="#php-configs">Php configs</a>
+                                            <ul class="sub-list">
+                                                            <li><a href="#opcache">Opcache</a></li>
+                                                            <li><a href="#app">App</a></li>
+                                                    </ul>
+                                    </li>
+                            <li>
+                    <a href="#ssh-client-config">Ssh client config</a>
+                                    </li>
+                            <li>
+                    <a href="#redis-config">Redis config</a>
+                                    </li>
+                            <li>
+                    <a href="#influxdb-config">Influxdb config</a>
+                                    </li>
+                            <li>
+                    <a href="#cron-files">Cron files</a>
+                                    </li>
+                            <li>
+                    <a href="#supervisor-configs-programs">Supervisor configs programs</a>
+                                    </li>
+                    </ul>
+    
+    <section>
+        <article>
+            <body><h1 id="migration-2021-04">Migration - 2021-04<a href="#migration-2021-04" class="anchor"></a></h1>
+<h2 id="jenkins">Jenkins<a href="#jenkins" class="anchor"></a></h2>
+<ul>
+<li>remove <code class="code-inline" id="57bc7b80bed0216f25b0a9b2d58969a8">.manala/jenkins</code> directory</li>
+</ul>
+<h2 id="nginx-configs">Nginx configs<a href="#nginx-configs" class="anchor"></a></h2>
+<h3 id="cors">Cors<a href="#cors" class="anchor"></a></h3>
+<p>Before</p>
+<pre class="code-multiline"><code id="9cc5dfaa4a4c688bc10b0416733c9094"># Cors
+- file: app_cors
+  template: nginx/app_cors.j2</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="53ee98b13c2be97ebb597842be11a3f7">- template: nginx/cors.j2</code></pre>
+<h3 id="gzip">Gzip<a href="#gzip" class="anchor"></a></h3>
+<p>Before</p>
+<pre class="code-multiline"><code id="1ee165c90d5b14c6ba2fca2425aeac26"># Gzip
+- file: app_gzip
+  template: nginx/app_gzip.j2</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="4a93d38b7186ed46bfb5cfc94fbafbec">- template: nginx/gzip.j2</code></pre>
+<h3 id="no-index">No index<a href="#no-index" class="anchor"></a></h3>
+<p>Before</p>
+<pre class="code-multiline"><code id="70d9b04bcd44e7deba446c061011684a"># Gzip
+- file: app_no_index
+  template: nginx/app_no_index.j2</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="8b1190b389a0c8745772d61e15870a2d">- template: nginx/no_index.j2</code></pre>
+<h3 id="php-fpm">Php fpm<a href="#php-fpm" class="anchor"></a></h3>
+<p>Before</p>
+<pre class="code-multiline"><code id="d84b0692fb257aa63efcdad956a18a8c"># Php fpm
+- file: app_php_fpm
+  template: nginx/app_php_fpm.j2</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="a5cbbaad3c1c860c60dc2ffffa5e2613">- template: nginx/php_fpm_app.j2</code></pre>
+<h3 id="ssl">Ssl<a href="#ssl" class="anchor"></a></h3>
+<p>Before</p>
+<pre class="code-multiline"><code id="7af2a7c6a2b93f4f306cb26f9093925d"># Ssl
+- file: app_ssl.conf
+  template: nginx/app_ssl_offloading.conf.j2</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="d41d8cd98f00b204e9800998ecf8427e"></code></pre>
+<p>Notes:</p>
+<ul>
+<li>Ssl is now part of default nginx configuration</li>
+</ul>
+<h3 id="app">App<a href="#app" class="anchor"></a></h3>
+<p>Before</p>
+<pre class="code-multiline"><code id="b27140c5e635d58762ab080d99e1d769"># App
+- file: app.conf
+  config:
+    - server:
+      - server_name: ~.
+      - root: /srv/app/public
+      - access_log: /srv/log/nginx.access.log
+      - error_log: /srv/log/nginx.error.log
+      - include: conf.d/app_gzip
+      - location /:
+        - try_files: $uri /index.php$is_args$args
+      - location ~ ^/index\.php(/|$):
+        - include: conf.d/app_php_fpm
+        - internal;</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="a77811efa864408d2304b3442c5ff8fc"># App
+- file: app.conf
+  config: |
+      server {
+          server_name ~.;
+          root /srv/app/public;
+          access_log /srv/log/nginx.access.log;
+          error_log /srv/log/nginx.error.log;
+          include conf.d/gzip;
+          location / {
+              try_files $uri /index.php$is_args$args;
+          }
+          location ~ ^/index\.php(/|$) {
+              include conf.d/php_fpm_app;
+              internal;
+          }
+      }</code></pre>
+<p>Notes:</p>
+<ul>
+<li><code class="code-inline" id="089bf722bcf592f6c4a27868f8e47cc9">make provision TAGS=nginx DIFF=1</code></li>
+<li>indentation 4 spaces</li>
+<li>includes
+<ul>
+<li><code class="code-inline" id="22ed8d99f3ac9565faa0545fb72f3688">conf.d/app_cors</code> -&gt; <code class="code-inline" id="d7563c96170ce23cf87cb90487723bff">conf.d/cors</code></li>
+<li><code class="code-inline" id="4e5a49c56332b61def7ae33aa1af3d31">conf.d/app_gzip</code> -&gt; <code class="code-inline" id="ec5f4cf628fcc17a7dffd4a505acd8b6">conf.d/gzip</code></li>
+<li><code class="code-inline" id="340ede5f258ae8778b493d96aec4e991">conf.d/app_no_index</code> -&gt; <code class="code-inline" id="63095a7cbaeac917ad9b80aa93157745">conf.d/no_index</code></li>
+<li><code class="code-inline" id="0deafd8c446d233d2d5cc9e6a11a41fb">conf.d/app_php_fpm</code> -&gt; <code class="code-inline" id="5056c6e501af76d31af43d7527a06b09">conf.d/php_fpm_app</code></li>
+</ul></li>
+</ul>
+<h3 id="content">Content<a href="#content" class="anchor"></a></h3>
+<p>Before</p>
+<pre class="code-multiline"><code id="aa64e75ba7c11f9d25eb1ba9c118c8e0">- file: foo.conf
+  content: |
+    ...</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="24d62a0927af8b8f5dcc54c06eb50a1c">- file: foo.conf
+  config: |
+    ...</code></pre>
+<h2 id="php-configs">Php configs<a href="#php-configs" class="anchor"></a></h2>
+<h3 id="opcache">Opcache<a href="#opcache" class="anchor"></a></h3>
+<p>Before</p>
+<pre class="code-multiline"><code id="7abec774e466a59aa63a67cdb48cdbef">- file: app_opcache.ini
+  template: configs/app_opcache.dev.j2</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="09b437070c7f6abc513baa8c7c736303">- template: php/opcache.ini.j2</code></pre>
+<h3 id="app">App<a href="#app" class="anchor"></a></h3>
+<p>Before</p>
+<pre class="code-multiline"><code id="d52ed87c0e4e05bf8132f4610bc2b24e">- file: app.ini
+  template: configs/app.dev.j2
+  config:
+    - date.timezone: UTC</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="55e0701bf9812a7284f21ea22b5eb74f">- template: php/app.ini.j2
+  config:
+    date.timezone: UTC</code></pre>
+<p>Notes:</p>
+<ul>
+<li>config switch from array to dict</li>
+</ul>
+<h2 id="ssh-client-config">Ssh client config<a href="#ssh-client-config" class="anchor"></a></h2>
+<p>Before</p>
+<pre class="code-multiline"><code id="6f960deac3a3ff12a304e133a5be9743">config:
+  - Host *.elao.run:
+    - User: app
+    - ForwardAgent: true</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="813d9b9c1a5223aeb586c4d25856512b">config: |
+    Host *.elao.run
+        User app
+        ForwardAgent yes</code></pre>
+<h2 id="redis-config">Redis config<a href="#redis-config" class="anchor"></a></h2>
+<p>Before</p>
+<pre class="code-multiline"><code id="a9889f66cfc59a2b1b628c8385f09c85">config:
+    - save: '""'</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="2aacf2c5055327fc6715244b7355ae27">config:
+    save: '""'</code></pre>
+<h2 id="influxdb-config">Influxdb config<a href="#influxdb-config" class="anchor"></a></h2>
+<p>Before</p>
+<pre class="code-multiline"><code id="8557dcc2837814359df61a4839a7dcea">config:
+    - reporting-disabled: true</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="47aa566e32be8019184660be90e35214">config:
+    reporting-disabled: true</code></pre>
+<h2 id="cron-files">Cron files<a href="#cron-files" class="anchor"></a></h2>
+<p>Before</p>
+<pre class="code-multiline"><code id="6709559c3c8fb6dbb96c613a546b820a">- file: app
+  env:
+      SHELL: /bin/zsh
+      ZDOTDIR: /home/vagrant
+      HOME: /srv/app
+  jobs:
+      - name: foo-bar
+        job: bin/console app:foo:bar --no-interaction -vv &gt;&gt; /srv/log/cron.foo-bar.log 2&gt;&amp;1
+        minute: 0
+        hour: 3
+        # Dev
+        state: absent</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="5305f72e00da8c2906274b1643441b5a">- file: app
+  env:
+      HOME: /srv/app
+  jobs:
+      # Foo - Bar
+      - command: php bin/console app:foo:bar --no-interaction -vv &gt;&gt; /srv/log/cron.foo-bar.log 2&gt;&amp;1
+        minute: 0
+        hour: 3
+        # Dev
+        state: absent</code></pre>
+<h2 id="supervisor-configs-programs">Supervisor configs programs<a href="#supervisor-configs-programs" class="anchor"></a></h2>
+<p>Before</p>
+<pre class="code-multiline"><code id="ff9fe8c8a1d6878c50a689a7beebb2f1">foo-bar:
+  command: zsh -c "bin/console app:foo:bar --no-interaction -vv"</code></pre>
+<p>After</p>
+<pre class="code-multiline"><code id="604ab6620d4d0f727abe0ef90ffe9d8d">foo-bar:
+  command: php bin/console app:foo:bar --no-interaction -vv</code></pre></body>
+        </article>
+    </section>
+
+    <time datetime="2022-03-23UTC11:05:13+00:00">Last modified: March 23, 2022 11:05</time>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4 no-pb">
+                        <a href="https://manala.io" class="manala"><img src="/manala-recipes/build/images/manala.053e7ef8.svg" width="56" height="56" title="Manala.io" alt="Manala.io"> Manala.io</a>
+                    </div>
+                    <div class="col-sm-4 no-pb github text-center">
+                        <a href="https://github.com/manala/manala-recipes" target="_blank"><img src="/manala-recipes/build/images/github.04ed74f3.svg" width="32" height="32" title="Manala on Github" alt="Manala recipes on Github"></a>
+                    </div>
+                    <div class="col-sm-4 no-pb elao">
+                        Made with love by <a href="https://www.elao.com" target="_blank"><img src="/manala-recipes/build/images/elao.91d6ac3c.svg" width="64" height="23" title="élao" alt="élao"></a>
+                        <small>(and <a target="_blank" href="https://www.rix.fr/"><strong>Rix</strong></a> !)</small>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
