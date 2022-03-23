@@ -24,6 +24,25 @@
         </ul>
     {% endif %}
 
+    {% if migrations is not empty %}
+    <section>
+        <header><h2>Migrations</h2></header>
+        <article>
+            If you're coming from a previous version of the recipe or another recipe, you might be interested reading the following migration guides:
+
+            <ul>
+                {% for migration in migrations %}
+                <li>
+                    <a href="{{ path('migrations_show', { migration: migration.slug }) }}">
+                        {{ migration.title }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </article>
+    </section>
+    {% endif %}
+
     <section>
         <article>
             {{ recipe.content|raw }}

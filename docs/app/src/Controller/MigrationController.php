@@ -11,9 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route(path="/recipes", name="recipes_")
+ * @Route(path="/migrations", name="migrations_")
  */
-class RecipeController extends AbstractController
+class MigrationController extends AbstractController
 {
     private ContentManagerInterface $contentManager;
 
@@ -23,13 +23,13 @@ class RecipeController extends AbstractController
     }
 
     /**
-     * @Route(path="/{recipe}", name="show", requirements={"recipe"=".+"})
+     * @Route(path="/{migration}", name="show", requirements={"migration"=".+"})
      */
-    public function show(Recipe $recipe)
+    public function show(Migration $migration)
     {
-        return $this->render('recipes/show.html.twig', [
-           'recipe' => $recipe,
-           'migrations' => $this->contentManager->getContents(Migration::class, null, ['recipe' => $recipe->slug]),
+        return $this->render('migrations/show.html.twig', [
+           'recipe' => $this->contentManager->getContent(Recipe::class, $migration->recipe),
+           'migration' => $migration,
         ]);
     }
 }

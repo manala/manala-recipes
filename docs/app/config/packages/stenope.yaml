@@ -1,17 +1,24 @@
 stenope:
-  providers:
-    App\Model\DefaultPage: '%kernel.project_dir%/../content/pages'
+    shared_html_crawlers: true
+    providers:
+        App\Model\DefaultPage: '%kernel.project_dir%/../content/pages'
 
-    App\Model\Recipe:
-      type: readme_dir
-      path: '%kernel.project_dir%/../../'
-      excludes:
-        - docs/**
+        App\Model\Recipe:
+            type: readme_dir
+            path: '%kernel.project_dir%/../../'
+            excludes:
+                - docs/**
 
-  copy:
-    - src: '%kernel.project_dir%/public'
-      dest: .
-      fail_if_missing: true
-      ignore_dot_files: false
-      excludes:
-        - '*.php'
+        App\Model\Migration:
+            type: files
+            path: '%kernel.project_dir%/../../'
+            patterns:
+                - '*/MIGRATION.*.md'
+
+    copy:
+        - src: '%kernel.project_dir%/public'
+          dest: .
+          fail_if_missing: true
+          ignore_dot_files: false
+          excludes:
+              - '*.php'

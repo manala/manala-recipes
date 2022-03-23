@@ -19,7 +19,7 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Entity/'
+            - '../src/Model/'
             - '../src/Kernel.php'
             - '../src/Tests/'
             - '../src/Stenope/Provider/ReadmeDirProvider.php'
