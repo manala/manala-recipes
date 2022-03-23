@@ -270,6 +270,19 @@ system:
                     error_log /srv/log/nginx.error.log;
 ```
 
+### Yarn
+
+Yarn is no more installed by default with nodejs. If you need it, in `.manala.yaml`:
+
+```yaml
+system:
+    ...
+    nodejs:
+        ...
+        yarn:
+            version: 1
+```
+
 ### Integration - Jenkins
 
 Jenkins integration pipeline has now its dedicated entry in `.manala.yaml`:

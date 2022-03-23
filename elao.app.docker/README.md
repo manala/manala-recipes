@@ -200,6 +200,8 @@ system:
         # packages:
         #   - package: mjml
         #     version: 4.6.3
+        # yarn:
+        #     version: 1
     # cron:
     #     files:
     #       - file: app
