@@ -1,0 +1,14 @@
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        build:
+            args:
+                MANALA_INIT: systemd
+        tty: true
+        privileged: true
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:rw

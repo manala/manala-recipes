@@ -1,0 +1,14 @@
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        build:
+            args:
+                MANALA_INIT: sysv
+        tty: true
+        tmpfs:
+           - /tmp
+           - /run
