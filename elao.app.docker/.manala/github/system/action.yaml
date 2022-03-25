@@ -34,19 +34,43 @@ runs:
     # Setup #
     #########
 
-    - name: Cache Docker
+    - name: Docker pull
+      if: inputs.setup != 'false'
+      shell: bash
+      env:
+        DOCKER_BUILDKIT: 1
+        BUILDKIT_PROGRESS: plain
+      run: |
+        echo "::group::🐳 Docker pull"
+          docker-compose \
+            --project-directory ./.manala/docker \
+            --profile integration \
+            --file ./.manala/docker/compose.yaml \
+            --file ./.manala/docker/compose/integration.yaml \
+            pull
+        echo "::endgroup::"
+    - name: Cache docker
       if: inputs.setup != 'false'
       uses: satackey/action-docker-layer-caching@v0.0.11
       with:
-        key: app-docker-${{ hashFiles('.manala/**') }}-{hash}
-        restore-keys: app-docker-${{ hashFiles('.manala/**') }}
-    - name: Cache App
+        key: app-docker-${{ hashFiles('.manala/docker/Dockerfile', '.manala/Makefile', '.manala/ansible/**', '.manala/certificates/**') }}-{hash}
+        restore-keys: |
+          app-docker-${{ hashFiles('.manala/docker/Dockerfile', '.manala/Makefile', '.manala/ansible/**', '.manala/certificates/**') }}-
+    - name: Create dependencies cache dir
       if: inputs.setup != 'false'
-      uses: actions/cache@v2
+      shell: bash
+      run: mkdir -p .manala/.cache
+    - name: Cache dependencies
+      if: inputs.setup != 'false'
+      uses: actions/cache@v3
       with:
         path: .manala/.cache
-        key: app-${{ hashFiles('**/composer.lock', '**/package-lock.json', '**/yarn.lock') }}
-    - name: Docker Compose
+        key: app-dependencies-${{ hashFiles('**/composer.lock', '**/package-lock.json', '**/yarn.lock') }}-${{ github.workflow }}-${{ github.job }}
+        restore-keys: |
+          app-dependencies-${{ hashFiles('**/composer.lock', '**/package-lock.json', '**/yarn.lock') }}-${{ github.workflow }}-
+          app-dependencies-${{ hashFiles('**/composer.lock', '**/package-lock.json', '**/yarn.lock') }}-
+          app-dependencies-
+    - name: Docker up
       if: inputs.setup != 'false'
       shell: bash
       env:
