@@ -74,13 +74,8 @@ services:
     app:
         build:
             args:
-                MANALA_INIT: sysv
                 MANALA_PROVISION: ansible
                 MANALA_PROVISION_LIMIT: development
-        tty: true
-        tmpfs:
-           - /tmp
-           - /run
         ports:
             # Usuals
             - {{ include "project_port" (list .Vars.project 88) }}:8080

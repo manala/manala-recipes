@@ -39,6 +39,7 @@ _DOCKER_COMPOSE_ENV = \
 	$(if $(_GITHUB_CONFIG),MANALA_GITHUB_CONFIG=$(_GITHUB_CONFIG))
 _DOCKER_COMPOSE_FILE = \
 	$(_DIR)/.manala/docker/compose.yaml \
+	$(_DIR)/.manala/docker/compose/init.sysv.yaml \
  	$(_DIR)/.manala/docker/compose/development.yaml \
 	$(if $(_MUTAGEN_COMPOSE),$(_DIR)/.manala/docker/compose/mutagen.yaml) \
 	$(if $(_GIT_CONFIG),$(_DIR)/.manala/docker/compose/git.yaml) \

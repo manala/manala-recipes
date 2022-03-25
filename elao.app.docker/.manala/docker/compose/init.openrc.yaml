@@ -1,0 +1,17 @@
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        build:
+            args:
+                MANALA_INIT: openrc
+        tty: true
+        cap_add:
+            - SYS_BOOT
+        tmpfs:
+            - /run
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:rw
