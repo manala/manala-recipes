@@ -55,17 +55,14 @@ ifdef DEBUG
 _DOCKER_COMPOSE_ENV += BUILDKIT_PROGRESS=plain
 endif
 
-# MacOS
-ifdef OS_DARWIN
-# See: https://docs.docker.com/desktop/mac/networking/#ssh-agent-forwarding
-SSH_AUTH_SOCK = /run/host-services/ssh-auth.sock
-_DOCKER_COMPOSE_ENV += MANALA_SSH_AUTH_SOCK_BIND=$(SSH_AUTH_SOCK).bind
-endif
-
 # Ssh Agent
 ifdef SSH_AUTH_SOCK
 _DOCKER_COMPOSE_FILE += $(_DIR)/.manala/docker/compose/ssh-agent.yaml
-_DOCKER_COMPOSE_ENV += SSH_AUTH_SOCK=$(SSH_AUTH_SOCK)
+	# See: https://docs.docker.com/desktop/mac/networking/#ssh-agent-forwarding
+	ifdef OS_DARWIN
+_DOCKER_COMPOSE_ENV += SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+_DOCKER_COMPOSE_ENV += MANALA_SSH_AUTH_SOCK_BIND=/run/host-services/ssh-auth.sock.bind
+	endif
 endif
 
 # Internal usage:
