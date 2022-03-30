@@ -4,7 +4,7 @@ system:
 
         # Ansible
         ansible_connection: local
-        {{- if eq (.Vars.system.version|int) 10 }}
+        {{- if le (.Vars.system.version|int) 10 }}
         ansible_python_interpreter: /usr/bin/python3
         {{- end }}
 
