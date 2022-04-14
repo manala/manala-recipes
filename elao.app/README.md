@@ -605,7 +605,7 @@ lint.php-cs-fixer:
 
 This recipe contains some try helpers such as the [`try_finally`](./.manala/make/try.mk) function.
 
-This function is useful for example to run `phpunit` tests needing a started symfony server, and to stop this server regardless of the tests retur code.
+This function is useful for example to run `phpunit` tests needing a started symfony server, and to stop this server regardless of the tests return code.
 
 Usage (in your `Makefile`):
 

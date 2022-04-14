@@ -96,7 +96,7 @@ Custom docker compose command:
 make docker [COMMAND]
 ```
 
-:warning: separate hyphen based arguments or flags with `--` to avoid shell miss-interpretation:
+⚠︎ separate hyphen based arguments or flags with `--` to avoid shell miss-interpretation:
 ```shell
 make docker logs -- --follow
 ```
@@ -372,12 +372,48 @@ integration:
 
 ### Github Actions
 
-The recipes generates a `Dockerfile` and a `docker-compose.yaml` file that can
-be used to provide a fully-fledged environnement according to your project needs.
+The recipes can generate Github actions files you can use in your workflows.  
+Complete the `integration.github.jobs` according to your need, and consult the `.manala/github/integration/README.md` to
+learn how you can write your own workflows using these actions.
 
-The [Elao/manala-ci-action](https://github.com/Elao/manala-ci-action) rely on
-this to allow you running any CLI command in this environnement,
-using Github Action workflows.
+```yaml
+###############
+# Integration #
+###############
+
+integration:
+  github:
+    jobs:
+      # Lint
+      lint:
+        tasks:
+          - shell: make install@integration
+          - shell: make build@integration
+          - shell: make lint.twig@integration
+          - shell: make lint.yaml@integration
+          - shell: make lint.phpstan@integration
+          - shell: make lint.php-cs-fixer@integration
+          - shell: make lint.eslint@integration
+      # Security
+      security:
+        tasks:
+          - shell: make security.symfony@integration
+          - shell: make security.npm@integration
+      # Test
+      test:
+        tasks:
+          - label: Install
+            shell: |-
+              make install.php@integration
+              # Fake manifest.json
+              mkdir -p public/build/
+              echo {} > public/build/manifest.json
+              # Install phpunit
+              vendor/bin/simple-phpunit install
+          - shell: make test.phpunit@integration
+        artifacts:
+          - var/log/test.log
+```
 
 ### Common integration tasks
 
@@ -550,6 +586,8 @@ deliveries:
     deploy_post_tasks:
       - shell: sudo /bin/systemctl reload php8.1-fpm
       #- shell: sudo /bin/systemctl restart supervisor
+    # GitHub
+    github_ssh_key_secret: SSH_DEPLOY_KEY_PRODUCTION
 
   - << : *delivery
     tier: staging
@@ -561,7 +599,27 @@ deliveries:
       - ssh_host: foo.bar.elao.ninja.local
     deploy_tasks:
       - shell: make warmup@staging
+    # GitHub
+    github_ssh_key_secret: SSH_DEPLOY_KEY_STAGING
 ```
+
+### Github Actions
+
+Deliveries can be triggered through Github Actions as well.
+Consult the `.manala/github/deliveries/README.md` to learn how to write your own release & deploy workflows.
+
+!!! Note
+    The `github_ssh_key_secret` key must be set on each delivery, with the Github Secret key that holds the 
+    SSH private key used to access the release repository and the deployment server.
+
+Additionally, some `trigger.*` Make targets are generated to trigger Github workflows from your terminal.  
+It uses the [Github CLI tool](https://github.com/cli/cli) to make API calls, so be sure to execute:
+
+```shell
+gh login auth
+```
+
+at least once on your machine, if not already.
 
 ## Makefile
 
@@ -638,7 +696,7 @@ lint.php-cs-fixer:
 
 This recipe contains some try helpers such as the [`try_finally`](./.manala/make/try.mk) function.
 
-This function is useful for example to run `phpunit` tests needing a started symfony server, and to stop this server regardless of the tests retur code.
+This function is useful for example to run `phpunit` tests needing a started symfony server, and to stop this server regardless of the tests return code.
 
 Usage (in your `Makefile`):
 
