@@ -2,11 +2,11 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/manala-recipes/build/runtime.9644eff8.js",
-        "/manala-recipes/build/app.5415922d.js"
+        "/manala-recipes/build/runtime.e4df57b3.js",
+        "/manala-recipes/build/app.4fe7be59.js"
       ],
       "css": [
-        "/manala-recipes/build/app.787aff7e.css"
+        "/manala-recipes/build/app.53893635.css"
       ]
     }
   }
