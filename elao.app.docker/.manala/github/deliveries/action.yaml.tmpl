@@ -70,7 +70,7 @@ runs:
         {{- end }}
         shell_group: 📦 Release
         shell: |
-          make release.{{ $delivery_name }} \
+          make release{{ include "delivery_target" $delivery }} \
             AUTHOR="manala-ci-releaser <{{ `${{ github.actor }}` }}+github@manala.io>"
 
     - name: Create {{ $delivery_name }} GitHub Deployment
@@ -99,7 +99,7 @@ runs:
         {{- end }}
         shell_group: 🚀 Deploy
         shell: |
-          make deploy.{{ $delivery_name }} \
+          make deploy{{ include "delivery_target" $delivery }} \
             {{ `${{ inputs.deploy_ref != '' && format('REF={0}', inputs.deploy_ref) || '' }}` }}
 
     - name: Update {{ $delivery_name }} GitHub Deployment status (success)
