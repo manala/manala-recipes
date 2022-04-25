@@ -38,11 +38,14 @@ clear:
 build.assets:
 	npm run build
 
-## Build static site
-build.static: export APP_ENV = prod
-build.static:
+## Build static site content
+build.content: export APP_ENV = prod
+build.content:
 	symfony console cache:clear
 	symfony console stenope:build
+
+## Build static site content and assets
+build.static: build.assets build.content
 
 serve.static:
 	open http://localhost:8001
