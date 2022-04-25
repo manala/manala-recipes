@@ -90,6 +90,11 @@ system:
         #     }
         # }
         configs: []
+        # @schema {
+        #     "additionalProperties": {"type": ["string", "integer"]},
+        #     "propertyNames": {"pattern": "^[A-Z_]+$"}
+        # }
+        env: {}
         composer:
           # @schema {"enum": [null, 1]}
           version: ~

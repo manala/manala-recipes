@@ -36,9 +36,6 @@ system:
         system_elasticsearch: false
         system_elasticsearch_version: {{ .Vars.system.elasticsearch.version | toYaml }}
         {{- dict "system_elasticsearch_plugins" .Vars.system.elasticsearch.plugins | toYaml | nindent 8 }}
-        # Environment
-        system_environment: false
-        {{- dict "system_env" .Vars.system.env | toYaml | nindent 8 }}
         # Files
         system_files: false
         {{- dict "system_files_attributes" .Vars.system.files | toYaml | nindent 8 }}
@@ -93,6 +90,7 @@ system:
             - fpm
         {{- dict "system_php_extensions" .Vars.system.php.extensions | toYaml | nindent 8 }}
         {{- dict "system_php_configs" .Vars.system.php.configs | toYaml | nindent 8 }}
+        {{- dict "system_php_env" .Vars.system.php.env | toYaml | nindent 8 }}
         # Redis
         system_redis: false
         system_redis_version: {{ .Vars.system.redis.version | toYaml }}
