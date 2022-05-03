@@ -14,6 +14,10 @@ MacOS
 * Mutagen Compose 0.13.0+
 `brew install mutagen-io/mutagen/mutagen-compose`
 
+Linux
+
+* Docker 20.10.14+ See Docker [documentation](https://docs.docker.com/engine/install/) \
+
 ## Overview
 
 This recipe contains some helpful scripts in the context of a php/nodejs app, such as Makefile tasks in order to release and deploy your app.
