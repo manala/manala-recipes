@@ -93,7 +93,9 @@ RUN \
     curl -sSL https://get.helm.sh/helm-v{{ $helm.version }}-linux-amd64.tar.gz \
         | bsdtar -xvf - -C /usr/local/bin --strip-components=1 linux-amd64/helm \
     # Bash completion
-    && helm completion bash > /etc/bash_completion.d/helm
+    && helm completion bash > /etc/bash_completion.d/helm \
+    # Bash aliases
+    && printf "alias h='helm'\ncomplete -o default -F __start_helm h\n" > /etc/profile.d/helm.sh
 
 {{ end -}}
 
