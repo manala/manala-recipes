@@ -106,10 +106,8 @@ RUN \
     && curl -sSL https://getcomposer.org/installer \
         | php -- --install-dir /usr/local/bin --filename composer \
     # Symfony
-    && SYMFONY_VERSION=`curl -sSL https://get.symfony.com/cli/LATEST --fail` \
-    && curl -sSL https://github.com/symfony/cli/releases/download/v${SYMFONY_VERSION}/symfony_linux_amd64 \
-        -o /usr/local/bin/symfony \
-    && chmod +x /usr/local/bin/symfony
+    && curl -sSL https://github.com/symfony-cli/symfony-cli/releases/latest/download/symfony-cli_linux_amd64.tar.gz \
+        | bsdtar -xvf - -C /usr/local/bin symfony
 
 {{ $nodejs := .Vars.system.nodejs -}}
 {{ if $nodejs.version -}}
