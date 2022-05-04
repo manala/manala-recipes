@@ -84,7 +84,7 @@ RUN \
     # Bash completion
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
     # Bash aliases
-    && printf "alias k=kubectl\ncomplete -F __start_kubectl k" > /etc/profile.d/kubectl.sh
+    && printf "alias k=kubectl\ncomplete -F __start_kubectl k\n" > /etc/profile.d/kubectl.sh
 
 {{ $helm := .Vars.system.helm -}}
 {{ if $helm.version -}}
