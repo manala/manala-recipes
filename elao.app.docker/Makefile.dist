@@ -84,8 +84,8 @@ serve:
 # 	npx encore dev-server \
 # 		--host 0.0.0.0 \
 		--server-type https \
-		--server-options-cert ../.manala/certificates/ssl.pem \
-		--server-options-key ../.manala/certificates/ssl.key \
+		--server-options-cert $(_DIR)/.manala/certificates/ssl.pem \
+		--server-options-key $(_DIR)/.manala/certificates/ssl.key \
 		--client-web-socket-url https://$(call project_host, 88)/ws
 # else
 # 	npx encore dev-server \
