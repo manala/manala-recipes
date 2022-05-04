@@ -87,7 +87,7 @@ RUN \
     && printf "alias k=kubectl\ncomplete -F __start_kubectl k" > /etc/profile.d/kubectl.sh
 
 {{ $helm := .Vars.system.helm -}}
-{{ if .Vars.system.helm.version -}}
+{{ if $helm.version -}}
 # Helm
 RUN \
     curl -sSL https://get.helm.sh/helm-v{{ $helm.version }}-linux-amd64.tar.gz \
