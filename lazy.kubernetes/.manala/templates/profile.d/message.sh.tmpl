@@ -23,14 +23,6 @@ printf " \033[36m‣ k9s \033[35m{{ $k9s.version }}\033[0m\n"
 {{- if $stern.version }}
 printf " \033[36m‣ stern \033[35m{{ $stern.version }}\033[0m\n"
 {{- end }}
-{{- $kubespy := .Vars.system.kubespy }}
-{{- if $kubespy.version }}
-printf " \033[36m‣ kubespy \033[35m{{ $kubespy.version }}\033[0m\n"
-{{- end }}
-{{- $kubebox := .Vars.system.kubebox }}
-{{- if $kubebox.version }}
-printf " \033[36m‣ kubebox \033[35m{{ $kubebox.version }}\033[0m\n"
-{{- end }}
 {{- $kube_prompt := .Vars.system.kube_prompt }}
 {{- if $kube_prompt.version }}
 printf " \033[36m‣ kube-prompt \033[35m{{ $kube_prompt.version }}\033[0m\n"

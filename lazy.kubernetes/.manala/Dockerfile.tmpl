@@ -11,7 +11,6 @@ ARG USER_ID=1000
 ARG GROUP_ID=1000
 ARG GOSU_VERSION=1.14
 ARG GOMPLATE_VERSION=3.10.0
-ARG STARSHIP_VERSION=0.58.0
 
 # The 'container' environment variable tells systemd that it's running inside a
 # Docker container environment.
@@ -30,6 +29,7 @@ RUN \
         gnupg \
         libarchive-tools bzip2 \
         bash-completion \
+        git \
         make \
         less \
         vim \
@@ -39,19 +39,17 @@ RUN \
     && mkdir -p /run/user/${USER_ID} && chown lazy:lazy /run/user/${USER_ID} \
     && printf "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
     # Gosu
-    && curl -sSL https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-amd64 \
+    && curl -sSL https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }} \
         -o /usr/local/bin/gosu \
     && chmod +x /usr/local/bin/gosu \
     # Gomplate
-    && curl -sSL https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-amd64 \
+    && curl -sSL https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }} \
         -o /usr/local/bin/gomplate \
     && chmod +x /usr/local/bin/gomplate \
     # Bash completion
     && mkdir -p /etc/bash_completion.d \
-    # Starship
-    && curl -sSL https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-x86_64-unknown-linux-gnu.tar.gz \
-        | bsdtar -xvf - -C /usr/local/bin \
-    && printf "eval \"\$(starship init bash)\"\nexport STARSHIP_CONFIG=\"/etc/starship/config.toml\"" > /etc/profile.d/starship.sh
+    # Oh My Bash
+    && git clone https://github.com/ohmybash/oh-my-bash.git /usr/local/share/oh-my-bash
 
 ##########
 # System #
@@ -61,7 +59,6 @@ FROM base AS system
 
 ARG DEBIAN
 ARG VIM_GNUPG_VERSION=2.7.1
-ARG RUSH_VERSION=0.4.2
 
 RUN \
     apt-get install --yes --no-install-recommends \
@@ -70,28 +67,23 @@ RUN \
     && mkdir -p /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg \
     && curl -sSL https://github.com/jamessan/vim-gnupg/releases/download/v${VIM_GNUPG_VERSION}/vim-gnupg-v${VIM_GNUPG_VERSION}.tar.gz \
         | bsdtar -xvf - -C /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg --strip-components=1 vim-gnupg-${VIM_GNUPG_VERSION} \
-    && printf "let g:GPGPreferSymmetric = 1" >> /etc/vim/vimrc \
-    # Rush
-    && curl -sSL https://github.com/shenwei356/rush/releases/download/v${RUSH_VERSION}/rush_linux_amd64.tar.gz \
-        | bsdtar -xvf - -C /usr/local/bin
+    && printf "let g:GPGPreferSymmetric = 1" >> /etc/vim/vimrc
 
 # Kubectl
 {{ $kubectl := .Vars.system.kubectl -}}
 RUN \
-    curl -sSL https://storage.googleapis.com/kubernetes-release/release/v{{ $kubectl.version }}/bin/linux/amd64/kubectl \
+    curl -sSL https://storage.googleapis.com/kubernetes-release/release/v{{ $kubectl.version }}/bin/linux/{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/kubectl \
         -o /usr/local/bin/kubectl \
     && chmod +x /usr/local/bin/kubectl \
     # Bash completion
-    && kubectl completion bash > /etc/bash_completion.d/kubectl \
-    # Bash aliases
-    && printf "alias k=kubectl\ncomplete -F __start_kubectl k\n" > /etc/profile.d/kubectl.sh
+    && kubectl completion bash > /etc/bash_completion.d/kubectl
 
 {{ $helm := .Vars.system.helm -}}
 {{ if $helm.version -}}
 # Helm
 RUN \
-    curl -sSL https://get.helm.sh/helm-v{{ $helm.version }}-linux-amd64.tar.gz \
-        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 linux-amd64/helm \
+    curl -sSL https://get.helm.sh/helm-v{{ $helm.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz \
+        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/helm \
     # Bash completion
     && helm completion bash > /etc/bash_completion.d/helm \
     # Bash aliases
@@ -103,7 +95,7 @@ RUN \
 {{ if $k9s.version -}}
 # K9s
 RUN \
-    curl -sSL https://github.com/derailed/k9s/releases/download/v{{ $k9s.version }}/k9s_Linux_x86_64.tar.gz \
+    curl -sSL https://github.com/derailed/k9s/releases/download/v{{ $k9s.version }}/k9s_Linux_{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm64") }}.tar.gz \
         | bsdtar -xvf - -C /usr/local/bin k9s
 
 {{ end -}}
@@ -112,29 +104,10 @@ RUN \
 {{ if $stern.version -}}
 # Stern
 RUN \
-    curl -sSL https://github.com/stern/stern/releases/download/v{{ $stern.version }}/stern_{{ $stern.version }}_linux_amd64.tar.gz \
-        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 stern_{{ $stern.version }}_linux_amd64/stern \
+    curl -sSL https://github.com/stern/stern/releases/download/v{{ $stern.version }}/stern_{{ $stern.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz \
+        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 stern_{{ $stern.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/stern \
     # Bash completion
     && stern --completion=bash > /etc/bash_completion.d/stern
-
-{{ end -}}
-
-{{ $kubespy := .Vars.system.kubespy -}}
-{{ if $kubespy.version -}}
-# Kubespy
-RUN \
-    curl -sSL https://github.com/pulumi/kubespy/releases/download/v{{ $kubespy.version }}/kubespy-v{{ $kubespy.version }}-linux-amd64.tar.gz \
-        | bsdtar -xvf - -C /usr/local/bin kubespy
-
-{{ end -}}
-
-{{ $kubebox := .Vars.system.kubebox -}}
-{{ if $kubebox.version -}}
-# Kubebox
-RUN \
-    curl -sSL https://github.com/astefanutti/kubebox/releases/download/v{{ $kubebox.version }}/kubebox-linux \
-        -o /usr/local/bin/kubebox \
-    && chmod +x /usr/local/bin/kubebox
 
 {{ end -}}
 
@@ -142,7 +115,7 @@ RUN \
 {{ if $kube_prompt.version -}}
 # Kube Prompt
 RUN \
-    curl -sSL https://github.com/c-bata/kube-prompt/releases/download/v{{ $kube_prompt.version }}/kube-prompt_v{{ $kube_prompt.version }}_linux_amd64.zip \
+    curl -sSL https://github.com/c-bata/kube-prompt/releases/download/v{{ $kube_prompt.version }}/kube-prompt_v{{ $kube_prompt.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip \
         | bsdtar -xvf - -C /usr/local/bin \
     && chmod +x /usr/local/bin/kube-prompt
 
@@ -152,7 +125,7 @@ RUN \
 {{ if $popeye.version -}}
 # Popeye
 RUN \
-    curl -sSL https://github.com/derailed/popeye/releases/download/v{{ $popeye.version }}/popeye_Linux_x86_64.tar.gz \
+    curl -sSL https://github.com/derailed/popeye/releases/download/v{{ $popeye.version }}/popeye_Linux_{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm64") }}.tar.gz \
         | bsdtar -xvf - -C /usr/local/bin popeye
 
 {{ end -}}
@@ -170,7 +143,7 @@ RUN \
 {{ if $vault.version -}}
 # Vault
 RUN \
-    curl -sSL https://releases.hashicorp.com/vault/{{ $vault.version }}/vault_{{ $vault.version }}_linux_amd64.zip \
+    curl -sSL https://releases.hashicorp.com/vault/{{ $vault.version }}/vault_{{ $vault.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip \
         | bsdtar -xvf - -C /usr/local/bin \
     && chmod +x /usr/local/bin/vault \
     # Bash completion
@@ -182,8 +155,8 @@ RUN \
 {{ if $rclone.version -}}
 # Rclone
 RUN \
-    curl -sSL https://downloads.rclone.org/v{{ $rclone.version }}/rclone-v{{ $rclone.version }}-linux-amd64.zip \
-        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 rclone-v{{ $rclone.version }}-linux-amd64/rclone \
+    curl -sSL https://downloads.rclone.org/v{{ $rclone.version }}/rclone-v{{ $rclone.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip \
+        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 rclone-v{{ $rclone.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/rclone \
     && chmod +x /usr/local/bin/rclone \
     # Bash completion
     && rclone genautocomplete bash /etc/bash_completion.d/rclone
@@ -229,7 +202,7 @@ RUN \
 {{ if $scw.version -}}
 # Scaleway cli
 RUN \
-    curl -sSL https://github.com/scaleway/scaleway-cli/releases/download/v{{ $scw.version }}/scw-{{ $scw.version }}-linux-x86_64 \
+    curl -sSL https://github.com/scaleway/scaleway-cli/releases/download/v{{ $scw.version }}/scaleway-cli_{{ $scw.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }} \
         -o /usr/local/bin/scw \
     && chmod +x /usr/local/bin/scw \
     # Bash completion

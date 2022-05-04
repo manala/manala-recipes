@@ -1,0 +1,5 @@
+{{/* Architecture map */}}
+{{ define "arch_map" -}}
+$(case $(dpkg --print-architecture) in
+  {{- range $k, $v := . }} "{{ $k }}") echo "{{ $v }}" ;;{{ end }} esac)
+{{- end }}
