@@ -81,6 +81,7 @@ RUN \
 {{ $helm := .Vars.system.helm -}}
 {{ if $helm.version -}}
 # Helm
+ENV HELM_PLUGINS=/usr/local/share/helm/plugins
 RUN \
     curl -sSL https://get.helm.sh/helm-v{{ $helm.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz \
         | bsdtar -xvf - -C /usr/local/bin --strip-components=1 linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/helm \
@@ -88,6 +89,18 @@ RUN \
     && helm completion bash > /etc/bash_completion.d/helm \
     # Bash aliases
     && printf "alias h='helm'\ncomplete -o default -F __start_helm h\n" > /etc/profile.d/helm.sh
+    {{- if $helm.plugins }} \
+    # Plugins
+      {{- range $i, $plugin := $helm.plugins }}
+    && helm plugin install
+      {{- if hasKey $plugin "url" }} {{ $plugin.url }}{{ end -}}
+      {{- if hasKey $plugin "path" }} {{ $plugin.path }}{{ end -}}
+      {{- if hasKey $plugin "version" }} --version {{ $plugin.version }}{{ end -}}
+      {{- if ne $i (sub (len $helm.plugins) 1) }} \{{ end -}}
+      {{- end }}
+    {{- end }}
+
+{{ end -}}
 
 {{ end -}}
 

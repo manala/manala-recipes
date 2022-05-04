@@ -47,6 +47,21 @@ system:
         # @schema {"enum": [null, "3.8.0", "3.7.1"]}
         # @option {"label": "Helm version"}
         version: ~
+        # @schema {
+        #     "items": {"type": "object",
+        #         "additionalProperties": false,
+        #         "properties": {
+        #             "url": {"type": "string"},
+        #             "path": {"type": "string"},
+        #             "version": {"type": "string"}
+        #         },
+        #         "oneOf": [
+        #             {"required": ["url"]},
+        #             {"required": ["path"]}
+        #         ]
+        #     }
+        # }
+        plugins: []
     k9s:
         # @schema {"enum": [null, "0.24.15"]}
         # @option {"label": "K9s version"}
