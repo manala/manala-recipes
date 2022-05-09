@@ -22,6 +22,10 @@ printf "    \033[36m·
   \033[0m\n"
 {{- end }}
 {{- end }}
+{{- $helmfile := .Vars.system.helmfile }}
+{{- if $helmfile.version }}
+printf " \033[36m‣ helmfile \033[35m{{ $helmfile.version }}\033[0m\n"
+{{- end }}
 {{- $k9s := .Vars.system.k9s }}
 {{- if $k9s.version }}
 printf " \033[36m‣ k9s \033[35m{{ $k9s.version }}\033[0m\n"

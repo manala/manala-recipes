@@ -62,6 +62,10 @@ system:
         #     }
         # }
         plugins: []
+    helmfile:
+        # @schema {"enum": [null, "0.144.0"]}
+        # @option {"label": "Helmfile version"}
+        version: ~
     k9s:
         # @schema {"enum": [null, "0.24.15"]}
         # @option {"label": "K9s version"}
