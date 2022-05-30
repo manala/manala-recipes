@@ -1,0 +1,12 @@
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        environment:
+            # Forwards the SYMFONY_IDE env var from the host to the container if set
+            # https://symfony.com/blog/new-in-symfony-6-1-profiler-improvements-part-2#better-code-editor-selection
+            # https://symfony.com/doc/current/reference/configuration/framework.html#ide
+            SYMFONY_IDE: ${SYMFONY_IDE}

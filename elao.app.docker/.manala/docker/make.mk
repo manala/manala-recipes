@@ -36,6 +36,7 @@ _DOCKER_COMPOSE_ENV = \
 	DOCKER_BUILDKIT=1 \
 	MANALA_HOST_OS=$(OS) \
 	MANALA_HOST_PATH=$(abspath $(_DIR)) \
+	$(if $(SYMFONY_IDE),SYMFONY_IDE="$(SYMFONY_IDE)&/srv/app/>$(PROJECT_PATH)/") \
 	$(if $(_GIT_CONFIG),MANALA_GIT_CONFIG=$(_GIT_CONFIG)) \
 	$(if $(_GITHUB_CONFIG),MANALA_GITHUB_CONFIG=$(_GITHUB_CONFIG))
 _DOCKER_COMPOSE_FILE = \
@@ -44,7 +45,8 @@ _DOCKER_COMPOSE_FILE = \
  	$(_DIR)/.manala/docker/compose/development.yaml \
 	$(if $(_MUTAGEN_COMPOSE),$(_DIR)/.manala/docker/compose/mutagen.yaml) \
 	$(if $(_GIT_CONFIG),$(_DIR)/.manala/docker/compose/git.yaml) \
-	$(if $(_GITHUB_CONFIG),$(_DIR)/.manala/docker/compose/github.yaml)
+	$(if $(_GITHUB_CONFIG),$(_DIR)/.manala/docker/compose/github.yaml) \
+	$(if $(SYMFONY_IDE),$(_DIR)/.manala/docker/compose/symfony.yaml)
 _DOCKER_COMPOSE_PROJECT_NAME = $(PROJECT_NAME)
 _DOCKER_COMPOSE_PROJECT_DIRECTORY = $(_DIR)/.manala/docker
 _DOCKER_COMPOSE_PROFILE = development

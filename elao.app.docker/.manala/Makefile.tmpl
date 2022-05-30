@@ -10,6 +10,7 @@ _CURRENT_DIR = $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_DIR))%,%,$(C
 ###########
 
 PROJECT_NAME = {{ .Vars.project.name }}
+PROJECT_PATH = $(abspath $(_DIR))
 
 define project_host
 $(PROJECT_NAME).{{ .Vars.project.domain }}$(if $(1),:{{ .Vars.project.ports_prefix }}$(shell printf "%02d" $(1)))
