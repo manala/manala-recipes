@@ -54,12 +54,49 @@ build@staging:
 	# npx encore production --color
 
 #########
-# Watch #
+# Serve #
 #########
 
-## Watch application
-watch:
-	# npx encore dev --color --progress --watch --watch-options-poll=200
+## Serve project (assets, …)
+serve:
+	$(MAKE) serve.assets & \
+		wait
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Pick one of the folowing "watch.assets" targets
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# ## Runs webpack dev-server with HMR enabled (PORT) using HTTP
+# serve.assets:
+# ifdef DOCKER
+# 	npx encore dev-server \
+# 		--host 0.0.0.0 \
+# 		--client-web-socket-url http://$(call project_host, 88)/ws
+# else
+# 	npx encore dev-server \
+# 		--allowed-hosts all \
+# 		$(if $(PORT), --port $(PORT))
+# endif
+
+# ## Runs webpack dev-server with HMR enabled (PORT) using HTTPS
+# serve.assets:
+# ifdef DOCKER
+# 	npx encore dev-server \
+# 		--host 0.0.0.0 \
+		--server-type https \
+		--server-options-cert $(_DIR)/.manala/certificates/ssl.pem \
+		--server-options-key $(_DIR)/.manala/certificates/ssl.key \
+		--client-web-socket-url https://$(call project_host, 88)/ws
+# else
+# 	npx encore dev-server \
+# 		--allowed-hosts all \
+# 		$(if $(PORT), --port $(PORT))
+# endif
+
+# ## Runs webpack with files watching
+# serve.assets:
+# 	npx encore dev \
+# 		--watch
 
 ###########
 # Project #
