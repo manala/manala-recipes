@@ -90,6 +90,7 @@
                                                             <li><a href="#integration-jenkins">Integration - Jenkins</a></li>
                                                             <li><a href="#releases-deliveries">Releases / Deliveries</a></li>
                                                             <li><a href="#node-sass">Node-sass</a></li>
+                                                            <li><a href="#watch-webpack-encore">Watch / Webpack / Encore</a></li>
                                                     </ul>
                                     </li>
                     </ul>
@@ -359,11 +360,23 @@ integration:
 <span class="token function">yarn</span> <span class="token function">add</span> sass <span class="token punctuation">[</span>--dev<span class="token punctuation">]</span>
 <span class="token comment"># Handle deprecations</span>
 <span class="token function">sudo</span> <span class="token function">npm</span> <span class="token function">install</span> -g sass-migrator
-sass-migrator --migrate-deps division <span class="token string">"assets/**/*.scss"</span></code></pre></body>
+sass-migrator --migrate-deps division <span class="token string">"assets/**/*.scss"</span></code></pre>
+<h3 id="watch-webpack-encore">Watch / Webpack / Encore<a href="#watch-webpack-encore" class="anchor"></a></h3>
+<p>Remove vagrant related stuff in <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>:</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="852b6f7b837f3b5b3b0106c575a68139"><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line"> ifeq ($(container),vagrant)
+</span><span class="token prefix deleted">-</span><span class="token line">   VAGRANT = 1
+</span><span class="token prefix deleted">-</span><span class="token line"> endif</span></span></code></pre>
+<p>Remove useless dev server options in <code class="code-inline" id="11e9f7f953edc64ba14b0cc350ae7b9d">webpack.config.js</code>:</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="9f7fb6f3272c454b2ef721cb32d68fe6"><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line"> .configureDevServerOptions(options =&gt; {
+</span><span class="token prefix deleted">-</span><span class="token line">   // See: https://symfony.com/doc/current/frontend/encore/dev-server.html#cors-issues
+</span><span class="token prefix deleted">-</span><span class="token line">   options.allowedHosts = 'all';
+</span><span class="token prefix deleted">-</span><span class="token line">   options.port = 'auto';
+</span><span class="token prefix deleted">-</span><span class="token line"> })</span></span></code></pre>
+<p>Use <code class="code-inline" id="b935f4b52d8bb71497d62615e2601eb0">Makefile.dist</code> watch targets as a base to refactor own project's makefile targets.</p></body>
         </article>
     </section>
 
-    <time datetime="2022-05-09UTC05:38:40+00:00">Last modified: May 9, 2022 05:38</time>
+    <time datetime="2022-05-30UTC08:44:06+00:00">Last modified: May 30, 2022 08:44</time>
         </div>
 
         <footer class="footer">
