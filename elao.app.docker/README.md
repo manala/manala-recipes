@@ -808,6 +808,8 @@ In  order for https to work properly, you must:
 
 ## Extras
 
+Check the following sections for extra gems included with this recipe.
+
 ### Symfony
 
 #### IDE configuration
