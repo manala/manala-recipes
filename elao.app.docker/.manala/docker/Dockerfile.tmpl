@@ -13,13 +13,13 @@ FROM debian:{{ .version }}-slim AS system
 
 LABEL maintainer="Elao <contact@elao.com>"
 
-ARG MANALA_HOST=linux
+ARG MANALA_HOST_OS=linux
 ARG MANALA_USER_ID=1000
 ARG MANALA_GROUP_ID=1000
 
 # Used for checking we're running inside a container
 ENV container="docker"
-ENV MANALA_HOST=${MANALA_HOST}
+ENV MANALA_HOST_OS=${MANALA_HOST_OS}
 
 RUN \
     # Disable irrelevants apt-key warnings
