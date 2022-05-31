@@ -213,6 +213,7 @@ FROM init-${MANALA_INIT} AS provision-ansible
 
 ARG ANSIBLE_CORE_VERSION=2.11.8
 ARG MANALA_PROVISION_LIMIT
+ARG SYMFONY_IDE
 
 # Locale
 ENV LANG={{ .locales.default }}

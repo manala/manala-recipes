@@ -256,7 +256,9 @@
             group: "{{ system_app_group }}"
             listen: /run/php-fpm.app.sock
             pm.max_children: 20
-            env: "{{ system_php_env }}"
+            env: "{{ system_php_env | combine(
+              {'SYMFONY_IDE': lookup('env', 'SYMFONY_IDE')} if (lookup('env', 'SYMFONY_IDE')) else {},
+            ) }}"
             php_admin_value:
               error_log: "{{ system_app_log_dir  }}/php.error.log"
 
