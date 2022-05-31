@@ -9,10 +9,8 @@ _CURRENT_DIR = $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_DIR))%,%,$(C
 # Project #
 ###########
 
-PROJECT_NAME = {{ .Vars.project.name }}
-
 define project_host
-$(PROJECT_NAME).{{ .Vars.project.domain }}$(if $(1),:{{ .Vars.project.ports_prefix }}$(shell printf "%02d" $(1)))
+{{ .Vars.project.name }}.{{ .Vars.project.domain }}$(if $(1),:{{ .Vars.project.ports_prefix }}$(shell printf "%02d" $(1)))
 endef
 
 -include $(_DIR)/.manala/make/text.mk
