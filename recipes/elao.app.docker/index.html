@@ -10,7 +10,7 @@
 </title>
 
                     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
-            <link rel="stylesheet" href="/manala-recipes/build/app.53893635.css">
+            <link rel="stylesheet" href="/manala-recipes/build/app.f6b34eb2.css">
         
                     <script src="/manala-recipes/build/runtime.e4df57b3.js" defer></script><script src="/manala-recipes/build/app.4fe7be59.js" defer></script>
             </head>
@@ -109,6 +109,12 @@
                                     </li>
                             <li>
                     <a href="#https">Https</a>
+                                    </li>
+                            <li>
+                    <a href="#extras">Extras</a>
+                                            <ul class="sub-list">
+                                                            <li><a href="#symfony">Symfony</a></li>
+                                                    </ul>
                                     </li>
                             <li>
                     <a href="#caveats">Caveats</a>
@@ -815,6 +821,23 @@ parameters:
 <p>For firefox only, browse to <code class="code-inline" id="e43648ef7c80e1a6aa2fc5e3182ed187">about:config</code> and ensure <code class="code-inline" id="40169ca3c0758a897e82d7000d02abe3">security.enterprise_roots.enabled</code> value is set to true</p>
 </li>
 </ol>
+<h2 id="extras">Extras<a href="#extras" class="anchor"></a></h2>
+<p>Check the following sections for extra gems included with this recipe.</p>
+<h3 id="symfony">Symfony<a href="#symfony" class="anchor"></a></h3>
+<h4 id="ide-configuration">IDE configuration<a href="#ide-configuration" class="anchor"></a></h4>
+<p>As of <a href="https://symfony.com/blog/new-in-symfony-6-1-profiler-improvements-part-2#better-code-editor-selection" target="_blank">Symfony &gt;= 6.1</a>,
+a <code class="code-inline" id="fe8bbdd9762eed82d6c37972f0876d22">SYMFONY_IDE</code> env var allows you to <a href="https://symfony.com/doc/current/reference/configuration/framework.html#ide" target="_blank">configure your IDE</a>
+once on your machine:</p>
+<p>PhpStorm:</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="1b8b9ba6e8e995cd90c711ac6f616edb"><span class="token builtin class-name">printf</span> <span class="token string">"SYMFONY_IDE=<span class="token entity" title='\"'>\"</span>phpstorm://open?file=%%f&amp;line=%%l<span class="token entity" title='\"'>\"</span>"</span> <span class="token operator">&gt;&gt;</span> ~/.zshrc</code></pre>
+<p>Sublime:</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="96ff8142a43ae489fd21c4c29b2fa250"><span class="token builtin class-name">printf</span> <span class="token string">"SYMFONY_IDE=<span class="token entity" title='\"'>\"</span>subl://open?url=file://%%f&amp;line=%%l<span class="token entity" title='\"'>\"</span>"</span> <span class="token operator">&gt;&gt;</span> ~/.zshrc</code></pre>
+<p>However, since the paths in the container differs from the ones on your machine, you need an extra mapping per project.
+Hopefully, the Manala recipe will detect your host <code class="code-inline" id="fe8bbdd9762eed82d6c37972f0876d22">SYMFONY_IDE</code> env var and forwards it to the container automatically
+with the proper paths mapping.</p>
+<p>As of Symfony &lt; 6.1, you can configure the same behavior with:</p>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="bc41f673d97c39c49b03e7442529f36e"><span class="token key atrule">framework</span><span class="token punctuation">:</span>
+    <span class="token key atrule">ide</span><span class="token punctuation">:</span> <span class="token string">'%env(string:default::SYMFONY_IDE)%'</span></code></pre>
 <h2 id="caveats">Caveats<a href="#caveats" class="anchor"></a></h2>
 <ul>
 <li>MySQL 5.7 docker images are not available on arm64, that's why amd64 architecture is forced. Expect rare speed and stability issues.</li>
@@ -825,7 +848,7 @@ parameters:
         </article>
     </section>
 
-    <time datetime="2022-05-31UTC14:05:59+00:00">Last modified: May 31, 2022 14:05</time>
+    <time datetime="2022-06-01UTC07:20:25+00:00">Last modified: June 1, 2022 07:20</time>
         </div>
 
         <footer class="footer">
