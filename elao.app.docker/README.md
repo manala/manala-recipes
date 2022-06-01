@@ -806,6 +806,39 @@ In  order for https to work properly, you must:
 
 3. For firefox only, browse to `about:config` and ensure `security.enterprise_roots.enabled` value is set to true
 
+## Extras
+
+Check the following sections for extra gems included with this recipe.
+
+### Symfony
+
+#### IDE configuration
+
+As of [Symfony >= 6.1](https://symfony.com/blog/new-in-symfony-6-1-profiler-improvements-part-2#better-code-editor-selection), 
+a `SYMFONY_IDE` env var allows you to [configure your IDE](https://symfony.com/doc/current/reference/configuration/framework.html#ide) 
+once on your machine:
+
+PhpStorm:
+```shell
+printf "SYMFONY_IDE=\"phpstorm://open?file=%%f&line=%%l\"" >> ~/.zshrc
+```
+
+Sublime:
+```shell
+printf "SYMFONY_IDE=\"subl://open?url=file://%%f&line=%%l\"" >> ~/.zshrc
+```
+
+However, since the paths in the container differs from the ones on your machine, you need an extra mapping per project.
+Hopefully, the Manala recipe will detect your host `SYMFONY_IDE` env var and forwards it to the container automatically
+with the proper paths mapping.
+
+As of Symfony < 6.1, you can configure the same behavior with:
+
+```yaml
+framework:
+    ide: '%env(string:default::SYMFONY_IDE)%'
+```
+
 ## Caveats
 
 - MySQL 5.7 docker images are not available on arm64, that's why amd64 architecture is forced. Expect rare speed and stability issues.
