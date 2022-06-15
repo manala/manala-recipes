@@ -46,8 +46,6 @@ _DOCKER_COMPOSE_FILE = \
 	$(if $(_GIT_CONFIG),$(_DIR)/.manala/docker/compose/git.yaml) \
 	$(if $(_GITHUB_CONFIG),$(_DIR)/.manala/docker/compose/github.yaml) \
 	$(if $(SYMFONY_IDE),$(_DIR)/.manala/docker/compose/symfony.yaml)
-_DOCKER_COMPOSE_PROJECT_NAME = $(PROJECT_NAME)
-_DOCKER_COMPOSE_PROJECT_DIRECTORY = $(_DIR)/.manala/docker
 _DOCKER_COMPOSE_PROFILE = development
 _DOCKER_COMPOSE_EXEC_SERVICE = app
 _DOCKER_COMPOSE_EXEC_USER = app
@@ -74,9 +72,7 @@ endif
 ifndef DOCKER
 define _docker_compose
 	$(_DOCKER_COMPOSE_ENV) \
-	$(if $(_DOCKER_COMPOSE_PROJECT_NAME),COMPOSE_PROJECT_NAME=$(_DOCKER_COMPOSE_PROJECT_NAME)) \
 	$(_DOCKER_COMPOSE) \
-		$(if $(_DOCKER_COMPOSE_PROJECT_DIRECTORY),--project-directory $(_DOCKER_COMPOSE_PROJECT_DIRECTORY)) \
 		$(if $(_DOCKER_COMPOSE_PROFILE),--profile $(_DOCKER_COMPOSE_PROFILE)) \
 		$(foreach FILE, $(_DOCKER_COMPOSE_FILE), \
 			--file $(FILE) \
