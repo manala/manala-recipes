@@ -131,7 +131,7 @@ RUN \
 # Stern
 RUN \
     curl -sSL https://github.com/stern/stern/releases/download/v{{ $stern.version }}/stern_{{ $stern.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz \
-        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 stern_{{ $stern.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/stern \
+        | bsdtar -xvf - -C /usr/local/bin stern \
     # Bash completion
     && stern --completion=bash > /etc/bash_completion.d/stern
 
