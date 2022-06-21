@@ -257,7 +257,7 @@
     # Gomplate #
     ############
 
-    manala_gomplate_version: 3.11.0
+    manala_gomplate_version: 3.11.1
 
     ############
     # InfluxDB #
