@@ -36,6 +36,6 @@ system:
     mount: []
     docker: false
     ansible:
-        # @schema {"enum": ["2.11.5"]}
+        # @schema {"enum": ["2.11.12"]}
         # @option {"label": "Ansible version"}
         version: ~
