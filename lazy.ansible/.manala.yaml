@@ -34,6 +34,7 @@ system:
     env_file: ""
     # @schema {"items": {"type": "string"}}
     mount: []
+    docker: false
     ansible:
         # @schema {"enum": ["2.11.5"]}
         # @option {"label": "Ansible version"}

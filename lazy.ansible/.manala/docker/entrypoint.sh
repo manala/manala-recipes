@@ -7,6 +7,13 @@ if [[ ${SSH_AUTH_SOCK} == "/run/host-services/ssh-auth.sock" && -S ${SSH_AUTH_SO
     chmod 777 ${SSH_AUTH_SOCK}
 fi
 
+# If docker bind differs from sock, establish an unprivileged relay
+if [ -n "${MANALA_DOCKER_SOCK}" ] && [ -n "${MANALA_DOCKER_SOCK_BIND}" ] && [ "${MANALA_DOCKER_SOCK}" != "${MANALA_DOCKER_SOCK_BIND}" ]; then
+  socat \
+    UNIX-LISTEN:${MANALA_DOCKER_SOCK},fork,mode=777 \
+    UNIX-CONNECT:${MANALA_DOCKER_SOCK_BIND} &
+fi
+
 # As a consequence of running the container as root user,
 # tty is not writable by sued user
 if [[ -t 1 ]] ; then

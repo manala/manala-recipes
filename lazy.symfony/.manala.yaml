@@ -35,6 +35,7 @@ system:
     env_file: ""
     # @schema {"items": {"type": "string"}}
     mount: []
+    docker: false
     nginx:
         # @option {"label": "Nginx version"}
         # @schema {"enum": ["1.20"]}

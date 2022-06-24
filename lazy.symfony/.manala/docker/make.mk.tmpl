@@ -38,6 +38,13 @@ ifdef DEBUG
 _DOCKER_COMPOSE_ENV += BUILDKIT_PROGRESS=plain
 endif
 
+{{- if .Vars.system.docker }}
+# Docker
+_DOCKER_COMPOSE_FILE += $(_DIR)/.manala/docker/compose/docker.yaml
+_DOCKER_COMPOSE_ENV += MANALA_DOCKER_SOCK=/var/run/docker.sock
+_DOCKER_COMPOSE_ENV += MANALA_DOCKER_SOCK_BIND=/var/run/docker.sock.bind
+{{- end }}
+
 # Internal usage:
 #   $(_docker_compose) [COMMAND] [ARGS...]
 
