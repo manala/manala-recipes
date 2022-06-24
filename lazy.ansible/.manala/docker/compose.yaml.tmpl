@@ -1,6 +1,6 @@
 {{- $now := dateInZone "20060102150405" (now) "UTC" -}}
 
-version: "3.7"
+name: {{ .Vars.project.name }}
 
 services:
 
@@ -15,9 +15,9 @@ services:
             target: system
         image: {{ .Vars.project.name }}:{{ $now }}
         volumes:
-            - ..:${DIR}
+            - ../..:${DIR}
             {{- range $mount := .Vars.system.mount }}
-            - ../{{ $mount }}:${DIR}/{{ $mount }}
+            - ../../{{ $mount }}:${DIR}/{{ $mount }}
             {{- end }}
         environment:
             DIR: ${DIR}
@@ -29,13 +29,13 @@ services:
         {{- if kindIs "slice" .Vars.system.env_file }}
         env_file:
             {{- range $file := .Vars.system.env_file }}
-            - ../{{ $file }}
+            - ../../{{ $file }}
             {{- end }}
         {{- else }}
-        env_file: ../{{ .Vars.system.env_file }}
+        env_file: ../../{{ .Vars.system.env_file }}
         {{- end }}
         {{- end }}
         working_dir: ${DIR}
-        entrypoint: .manala/docker/entrypoint
+        entrypoint: .manala/docker/entrypoint.sh
         # Use default docker bridge network
         network_mode: bridge
