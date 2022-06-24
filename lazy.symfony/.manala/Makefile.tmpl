@@ -19,16 +19,6 @@ include $(_DIR)/.manala/docker/make.mk
 
 ifneq ($(container),docker)
 
-_DOCKER_COMPOSE_PROJECT_NAME = {{ .Vars.project.name }}
-_DOCKER_COMPOSE_FILE = $(_DIR)/.manala/docker-compose.yaml $(_DIR)/.manala/docker-compose.$(OS).yaml
-_DOCKER_COMPOSE_SERVICE = system
-_DOCKER_COMPOSE_USER = lazy
-_DOCKER_COMPOSE_ENV = \
-	DIR=$(realpath $(_DIR)) \
-	CACHE_DIR=$(realpath $(_CACHE_DIR)) \
-	USER_ID=$(shell id -u) \
-	GROUP_ID=$(shell id -g) \
-
 HELP += $(call help_section, System)
 
 HELP += $(call help,up,   Create and start local system)

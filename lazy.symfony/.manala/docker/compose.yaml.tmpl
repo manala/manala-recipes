@@ -1,6 +1,6 @@
 {{- $now := dateInZone "20060102150405" (now) "UTC" -}}
 
-version: '3.5'
+name: {{ .Vars.project.name }}
 
 {{- if .Vars.system.mariadb.version }}
 
@@ -88,9 +88,9 @@ services:
             - {{ $port }}
             {{- end }}
         volumes:
-            - ..:${DIR}
+            - ../..:${DIR}
             {{- range $mount := .Vars.system.mount }}
-            - ../{{ $mount }}:${DIR}/{{ $mount }}
+            - ../../{{ $mount }}:${DIR}/{{ $mount }}
             {{- end }}
         environment:
             DIR: ${DIR}
@@ -102,14 +102,14 @@ services:
         {{- if kindIs "slice" .Vars.system.env_file }}
         env_file:
             {{- range $file := .Vars.system.env_file }}
-            - ../{{ $file }}
+            - ../../{{ $file }}
             {{- end }}
         {{- else }}
-        env_file: ../{{ .Vars.system.env_file }}
+        env_file: ../../{{ .Vars.system.env_file }}
         {{- end }}
         {{- end }}
         working_dir: ${DIR}
-        entrypoint: .manala/docker/entrypoint
+        entrypoint: .manala/docker/entrypoint.sh
         {{- if or .Vars.system.mariadb.version .Vars.system.maildev.version }}
         links:
             {{- if .Vars.system.mariadb.version }}
