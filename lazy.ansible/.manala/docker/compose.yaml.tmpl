@@ -17,7 +17,11 @@ services:
         volumes:
             - ../..:${DIR}
             {{- range $mount := .Vars.system.mount }}
+              {{- if isAbs $mount }}
+            - {{ $mount }}:{{ $mount }}
+              {{- else }}
             - ../../{{ $mount }}:${DIR}/{{ $mount }}
+              {{- end }}
             {{- end }}
         environment:
             DIR: ${DIR}
