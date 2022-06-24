@@ -42,7 +42,7 @@ runs:
         BUILDKIT_PROGRESS: plain
       run: |
         echo "::group::🐳 Docker pull"
-          docker-compose \
+          docker compose \
             --profile integration \
             --file ./.manala/docker/compose.yaml \
             --file ./.manala/docker/compose/integration.yaml \
@@ -80,7 +80,7 @@ runs:
         echo "::group::${{ inputs.setup_group }}"
           MANALA_USER_ID=$(id -u) \
           MANALA_GROUP_ID=$(id -g) \
-          docker-compose \
+          docker compose \
             --profile integration \
             --file ./.manala/docker/compose.yaml \
             --file ./.manala/docker/compose/integration.yaml \
@@ -99,7 +99,7 @@ runs:
       shell: bash
       run: |
         echo "::group::${{ inputs.shell_group }}"
-          docker-compose \
+          docker compose \
             --profile integration \
             --file ./.manala/docker/compose.yaml \
             --file ./.manala/docker/compose/integration.yaml \
