@@ -23,8 +23,13 @@ endif
 _DOCKER_COMPOSE = $(shell command -v docker) compose
 _DOCKER_COMPOSE_ENV = \
 	DOCKER_BUILDKIT=1 \
+{{- if .Vars.system.dir }}
+	DIR={{ .Vars.system.dir }} \
+	CACHE_DIR={{ .Vars.system.dir }}/$(shell dir=$(_DIR)/$(_CACHE_DIR) ; mkdir -p $${dir} ; echo $(_CACHE_DIR)) \
+{{- else }}
 	DIR=$(realpath $(_DIR)) \
-	CACHE_DIR=$(realpath $(_CACHE_DIR)) \
+	CACHE_DIR=$(realpath $(shell dir=$(_DIR)/$(_CACHE_DIR) ; mkdir -p $${dir} ; echo $${dir})) \
+{{- end }}
 	USER_ID=$(shell id -u) \
 	GROUP_ID=$(shell id -g)
 _DOCKER_COMPOSE_FILE = \

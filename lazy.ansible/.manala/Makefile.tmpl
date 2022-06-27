@@ -4,8 +4,8 @@ _DIR := $(patsubst ./%,%,$(patsubst %/.manala/Makefile,%,./$(filter %.manala/Mak
 _ROOT = $(if $(filter .,$(_DIR)),1)
 # Relative current dir ("."|"foo"|"foo/bar"|…)
 _CURRENT_DIR = $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_DIR))%,%,$(CURDIR)))
-# Relative cache dir ("./.manala/.cache"|"../.manala/.cache"|"../../.manala/.cache"|…)
-_CACHE_DIR = $(shell dir=$(_DIR)/.manala/.cache ; mkdir -p $${dir} ; echo $${dir})
+# Cache dir
+_CACHE_DIR = .manala/.cache
 
 include $(_DIR)/.manala/make/text.mk
 include $(_DIR)/.manala/make/help.mk
@@ -39,7 +39,7 @@ clean:
 		--format "{{ `{{.ID}}` }}" \
 			| xargs $(_docker) rmi --force
 	@$(call log, Delete cache dir…)
-	rm -Rf $(_CACHE_DIR)
+	rm -Rf $(_DIR)/$(_CACHE_DIR)
 .PHONY: clean
 
 endif

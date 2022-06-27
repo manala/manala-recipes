@@ -25,6 +25,7 @@ project:
 ##########
 
 system:
+    dir: ~
     # @schema {
     #     "additionalProperties": {"type": ["string", "integer"]},
     #     "propertyNames": {"pattern": "^[A-Z_]+$"}
