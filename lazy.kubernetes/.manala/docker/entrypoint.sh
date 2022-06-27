@@ -33,7 +33,7 @@ usermod --home "${HOME_DIR}" lazy 2>/dev/null
 GOMPLATE_LOG_FORMAT=simple gomplate --input-dir=.manala/templates --output-dir=/etc 2>/dev/null
 
 # Services
-if [ -z "$@" ] && [ -d /etc/services ]; then
+if [ $# -eq 0 ] && [ -d "/etc/services" ]; then
     exec s6-svscan /etc/services
 fi
 
