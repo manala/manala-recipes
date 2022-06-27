@@ -33,6 +33,7 @@ RUN \
         make \
         less \
         vim \
+        socat \
     # User
     && addgroup --gid ${GROUP_ID} lazy \
     && adduser --home /home/lazy --shell /bin/bash --uid ${USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
