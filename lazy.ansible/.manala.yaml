@@ -39,3 +39,7 @@ system:
         # @schema {"enum": ["2.11.12"]}
         # @option {"label": "Ansible version"}
         version: ~
+    ansible_lint:
+        # @schema {"enum": [null, "6.3.0"]}
+        # @option {"label": "Ansible Lint version"}
+        version: ~

@@ -80,6 +80,11 @@ RUN \
 {{- end}}
 
 {{ $ansible := .Vars.system.ansible -}}
+{{ $ansible_lint := .Vars.system.ansible_lint -}}
 RUN \
     # Ansible
     pip3 install ansible-core=={{ $ansible.version }}
+    {{- if $ansible_lint.version }} \
+    # Ansible Lint
+    && pip3 install ansible-lint=={{ $ansible_lint.version }}
+    {{- end }}
