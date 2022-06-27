@@ -43,3 +43,11 @@ system:
         # @schema {"enum": [null, "6.3.0"]}
         # @option {"label": "Ansible Lint version"}
         version: ~
+    molecule:
+        # @schema {"enum": [null, "4.0.0"]}
+        # @option {"label": "Molecule version"}
+        version: ~
+        docker:
+          # @schema {"enum": [null, "1.1.0"]}
+          # @option {"label": "Molecule Docker version"}
+          version: ~

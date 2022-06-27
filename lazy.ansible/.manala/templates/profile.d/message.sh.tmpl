@@ -15,3 +15,10 @@ printf " \033[36m‣ ansible \033[35m{{ $ansible.version }}\033[0m\n"
 {{- if $ansible_lint.version }}
 printf " \033[36m‣ ansible-lint \033[35m{{ $ansible_lint.version }}\033[0m\n"
 {{- end }}
+{{- $molecule := .Vars.system.molecule }}
+{{- if $molecule.version }}
+printf " \033[36m‣ molecule \033[35m{{ $molecule.version }}\033[0m\n"
+{{- if $molecule.docker.version }}
+printf " \033[36m‣ molecule-docker \033[35m{{ $molecule.docker.version }}\033[0m\n"
+{{- end }}
+{{- end }}

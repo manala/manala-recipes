@@ -65,6 +65,8 @@ RUN \
       sshpass \
       python3 python3-pip \
       python3-argcomplete \
+      python3-docker \
+      shellcheck \
     # Bash completion
     && activate-global-python-argcomplete3 --dest /etc/bash_completion.d
 
@@ -81,10 +83,19 @@ RUN \
 
 {{ $ansible := .Vars.system.ansible -}}
 {{ $ansible_lint := .Vars.system.ansible_lint -}}
+{{ $molecule := .Vars.system.molecule -}}
 RUN \
     # Ansible
     pip3 install ansible-core=={{ $ansible.version }}
     {{- if $ansible_lint.version }} \
     # Ansible Lint
     && pip3 install ansible-lint=={{ $ansible_lint.version }}
+    {{- end }}
+    {{- if $molecule.version }} \
+    # Molecule
+    && pip3 install molecule=={{ $molecule.version }} \
+    && _MOLECULE_COMPLETE=bash_source molecule > /etc/bash_completion.d/molecule
+    {{- if $molecule.docker.version }} \
+    && pip3 install molecule-docker=={{ $molecule.docker.version }}
+    {{- end }}
     {{- end }}
