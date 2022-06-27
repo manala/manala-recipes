@@ -20,7 +20,7 @@ endif
 # Docker Compose #
 ##################
 
-_DOCKER_COMPOSE = $(shell command -v docker) compose
+_DOCKER_COMPOSE = $(shell which docker) compose
 _DOCKER_COMPOSE_ENV = \
 	DOCKER_BUILDKIT=1 \
 {{- if .Vars.system.dir }}
