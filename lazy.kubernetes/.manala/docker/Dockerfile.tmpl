@@ -70,16 +70,17 @@ RUN \
         | bsdtar -xvf - -C /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg --strip-components=1 vim-gnupg-${VIM_GNUPG_VERSION} \
     && printf "let g:GPGPreferSymmetric = 1" >> /etc/vim/vimrc
 
-{{- if .Vars.system.docker }}
+{{ if .Vars.system.docker -}}
+# Docker
 RUN \
     printf "deb https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
     && curl -sSL https://download.docker.com/linux/debian/gpg \
         | apt-key add - \
     && apt-get update \
     && apt-get install --yes --no-install-recommends \
-        socat \
         docker-ce-cli
-{{- end}}
+
+{{ end -}}
 
 # Kubectl
 {{ $kubectl := .Vars.system.kubectl -}}

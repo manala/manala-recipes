@@ -71,7 +71,8 @@ RUN \
     # Bash completion
     && activate-global-python-argcomplete3 --dest /etc/bash_completion.d
 
-{{- if .Vars.system.docker }}
+{{ if .Vars.system.docker -}}
+# Docker
 RUN \
     printf "deb https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
     && curl -sSL https://download.docker.com/linux/debian/gpg \
@@ -79,8 +80,8 @@ RUN \
     && apt-get update \
     && apt-get install --yes --no-install-recommends \
         docker-ce-cli
-{{- end}}
 
+{{ end -}}
 {{ $ansible := .Vars.system.ansible -}}
 {{ $ansible_lint := .Vars.system.ansible_lint -}}
 {{ $molecule := .Vars.system.molecule -}}
