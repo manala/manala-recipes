@@ -82,21 +82,35 @@ RUN \
         docker-ce-cli
 
 {{ end -}}
+
+# Ansible
 {{ $ansible := .Vars.system.ansible -}}
+RUN \
+    pip3 install ansible-core=={{ $ansible.version }}
+
 {{ $ansible_lint := .Vars.system.ansible_lint -}}
 {{ $molecule := .Vars.system.molecule -}}
+{{ if or $ansible_lint.version $molecule.version -}}
 RUN \
-    # Ansible
-    pip3 install ansible-core=={{ $ansible.version }}
-    {{- if $ansible_lint.version }} \
+    BUILD_PACKAGES="pipx
+      {{- if $ansible_lint.version }} python3-dev gcc {{- end -}}
+    " \
+    export PIPX_HOME="/usr/local" \
+    export PIPX_BIN_DIR="/usr/local/bin" \
+    && apt-get install --yes --no-install-recommends \
+      ${BUILD_PACKAGES} \
+    {{- if $ansible_lint.version }}
     # Ansible Lint
-    && pip3 install ansible-lint=={{ $ansible_lint.version }}
+    && pipx install ansible-lint=={{ $ansible_lint.version }} \
     {{- end }}
-    {{- if $molecule.version }} \
+    {{- if $molecule.version }}
     # Molecule
-    && pip3 install molecule=={{ $molecule.version }} \
-    && _MOLECULE_COMPLETE=bash_source molecule > /etc/bash_completion.d/molecule
-    {{- if $molecule.docker.version }} \
-    && pip3 install molecule-docker=={{ $molecule.docker.version }}
+    && pipx install molecule=={{ $molecule.version }} \
+    && _MOLECULE_COMPLETE=bash_source molecule > /etc/bash_completion.d/molecule \
+    {{- if $molecule.docker.version }}
+    && pipx inject molecule molecule-docker=={{ $molecule.docker.version }} \
     {{- end }}
     {{- end }}
+    && apt-get purge --yes --autoremove ${BUILD_PACKAGES}
+
+{{ end -}}
