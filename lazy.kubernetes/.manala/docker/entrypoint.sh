@@ -11,7 +11,7 @@ fi
 
 # If docker bind differs from sock, establish an unprivileged relay
 if [ -n "${MANALA_DOCKER_SOCK}" ] && [ -n "${MANALA_DOCKER_SOCK_BIND}" ] && [ "${MANALA_DOCKER_SOCK}" != "${MANALA_DOCKER_SOCK_BIND}" ]; then
-  socat -t100 \
+  socat -t600 \
     UNIX-LISTEN:"${MANALA_DOCKER_SOCK}",fork,mode=777 \
     UNIX-CONNECT:"${MANALA_DOCKER_SOCK_BIND}" &
 fi
