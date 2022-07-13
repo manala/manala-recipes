@@ -187,7 +187,7 @@
           - 1979:80
       - name: phpredisadmin
         image: erikdubbelboer/phpredisadmin
-        state: "{{ 'started' if (system_redis) else 'absent' }}"
+        state: "{{ 'started' if ((system_redis) and (system_redis_phpredisadmin)) else 'absent' }}"
         restart_policy: unless-stopped
         env:
           # Default docker host ip

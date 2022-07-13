@@ -105,6 +105,7 @@ system:
         # Redis
         system_redis: false
         system_redis_version: {{ .redis.version | toYaml }}
+        system_redis_phpredisadmin: {{ .redis.phpredisadmin | toYaml }}
         {{- dict "system_redis_server_config" .redis.config | toYaml | nindent 8 }}
         # Ssh
         system_ssh: false

@@ -123,6 +123,7 @@ system:
         # @schema {"enum": [null, "*"]}
         version: ~
         config: {}
+        phpredisadmin: true
     elasticsearch:
         # @option {"label": "Elasticsearch version"}
         # @schema {"enum": [null, 7, 6, 5, 2, 1.7, 1.6, 1.5]}
