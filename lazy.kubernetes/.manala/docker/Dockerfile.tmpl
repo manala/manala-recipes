@@ -119,11 +119,10 @@ RUN \
 {{ if $helmfile.version -}}
 # Helmfile
 RUN \
-    curl -sSL https://github.com/roboll/helmfile/releases/download/v{{ $helmfile.version }}/helmfile_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }} \
-        -o /usr/local/bin/helmfile \
-    && chmod +x /usr/local/bin/helmfile \
+    curl -sSL https://github.com/helmfile/helmfile/releases/download/v{{ $helmfile.version }}/helmfile_{{ $helmfile.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz \
+        | bsdtar -xvf - -C /usr/local/bin helmfile \
     # Bash completion
-    && curl -sSL https://raw.githubusercontent.com/roboll/helmfile/v{{ $helmfile.version }}/autocomplete/helmfile_bash_autocomplete \
+    && curl -sSL https://raw.githubusercontent.com/helmfile/helmfile/v{{ $helmfile.version }}/autocomplete/helmfile_bash_autocomplete \
         -o /etc/bash_completion.d/helmfile \
     # Bash aliases
     && printf "alias hf='helmfile'\nalias hfi='helmfile --interactive'\n" > /etc/profile.d/helmfile.sh
