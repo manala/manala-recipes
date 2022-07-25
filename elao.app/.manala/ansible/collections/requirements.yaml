@@ -1,4 +1,5 @@
 ---
 
 collections:
-  - manala.roles
+  - name: manala.roles
+    version: <2.0.0
