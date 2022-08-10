@@ -11,9 +11,9 @@ printf "\033[34m    =- =- -=.--\"\033[0m\n"
 printf "\n"
 {{- $ansible := .Vars.system.ansible }}
 printf " \033[36m‣ ansible \033[35m{{ $ansible.version }}\033[0m\n"
-{{- $ansible_lint := .Vars.system.ansible_lint }}
-{{- if $ansible_lint.version }}
-printf " \033[36m‣ ansible-lint \033[35m{{ $ansible_lint.version }}\033[0m\n"
+{{- $ansibleLint := index .Vars.system "ansible-lint" }}
+{{- if $ansibleLint.version }}
+printf " \033[36m‣ ansible-lint \033[35m{{ $ansibleLint.version }}\033[0m\n"
 {{- end }}
 {{- $molecule := .Vars.system.molecule }}
 {{- if $molecule.version }}

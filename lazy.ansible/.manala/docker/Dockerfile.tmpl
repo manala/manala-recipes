@@ -88,20 +88,20 @@ RUN \
 RUN \
     pip3 install ansible-core=={{ $ansible.version }}
 
-{{ $ansible_lint := .Vars.system.ansible_lint -}}
+{{ $ansibleLint := index .Vars.system "ansible-lint" -}}
 {{ $molecule := .Vars.system.molecule -}}
-{{ if or $ansible_lint.version $molecule.version -}}
+{{ if or $ansibleLint.version $molecule.version -}}
 RUN \
     BUILD_PACKAGES="pipx
-      {{- if $ansible_lint.version }} python3-dev gcc {{- end -}}
+      {{- if $ansibleLint.version }} python3-dev gcc {{- end -}}
     " \
     export PIPX_HOME="/usr/local" \
     export PIPX_BIN_DIR="/usr/local/bin" \
     && apt-get install --yes --no-install-recommends \
       ${BUILD_PACKAGES} \
-    {{- if $ansible_lint.version }}
+    {{- if $ansibleLint.version }}
     # Ansible Lint
-    && pipx install ansible-lint=={{ $ansible_lint.version }} \
+    && pipx install ansible-lint=={{ $ansibleLint.version }} \
     {{- end }}
     {{- if $molecule.version }}
     # Molecule
