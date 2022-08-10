@@ -33,7 +33,7 @@ system:
     # }
     env: {}
     # @schema {"type": ["string", "array"]}
-    env_file: ""
+    env_file: []
     # @schema {"items": {"type": "string"}}
     mount: []
     docker: false
