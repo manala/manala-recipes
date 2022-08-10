@@ -71,9 +71,9 @@ system:
         # @schema {"enum": [null, "1.21.0"]}
         # @option {"label": "Stern version"}
         version: ~
-    kube_prompt:
+    kube-prompt:
         # @schema {"enum": [null, "1.0.11"]}
-        # @option {"label": "Kube Prompt version"}
+        # @option {"label": "Kube-prompt version"}
         version: ~
     popeye:
         # @schema {"enum": [null, "0.10.1"]}
