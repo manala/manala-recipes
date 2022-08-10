@@ -34,9 +34,9 @@ printf " \033[36m‣ k9s \033[35m{{ $k9s.version }}\033[0m\n"
 {{- if $stern.version }}
 printf " \033[36m‣ stern \033[35m{{ $stern.version }}\033[0m\n"
 {{- end }}
-{{- $kube_prompt := .Vars.system.kube_prompt }}
-{{- if $kube_prompt.version }}
-printf " \033[36m‣ kube-prompt \033[35m{{ $kube_prompt.version }}\033[0m\n"
+{{- $kubePrompt := index .Vars.system "kube-prompt" }}
+{{- if $kubePrompt.version }}
+printf " \033[36m‣ kube-prompt \033[35m{{ $kubePrompt.version }}\033[0m\n"
 {{- end }}
 {{- $popeye := .Vars.system.popeye }}
 {{- if $popeye.version }}

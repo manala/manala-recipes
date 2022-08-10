@@ -32,9 +32,10 @@ system:
     stern:
         version: {{ .Vars.system.stern.version | toYaml }}
     {{- end }}
-    {{- if .Vars.system.kube_prompt.version }}
-    kube_prompt:
-        version: {{ .Vars.system.kube_prompt.version | toYaml }}
+    {{- $kubePrompt := index .Vars.system "kube-prompt" -}}
+    {{- if $kubePrompt.version }}
+    kube-prompt:
+        version: {{ $kubePrompt.version | toYaml }}
     {{- end }}
     {{- if .Vars.system.popeye.version }}
     popeye:
