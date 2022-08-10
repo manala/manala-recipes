@@ -20,3 +20,16 @@ project:
 system:
     ansible:
         version: {{ .Vars.system.ansible.version | toYaml }}
+    {{- $ansibleLint := index .Vars.system "ansible-lint" }}
+    {{- if $ansibleLint.version }}
+    ansible-lint:
+        version: {{ $ansibleLint.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.molecule.version }}
+    molecule:
+        version: {{ .Vars.system.molecule.version | toYaml }}
+        {{- if .Vars.system.molecule.docker.version }}
+        docker:
+            version: {{ .Vars.system.molecule.docker.version | toYaml }}
+        {{- end }}
+    {{- end }}
