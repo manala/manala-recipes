@@ -792,19 +792,40 @@ See [Go Template syntax](https://docs.gomplate.ca/syntax/) for more info.
 
 In  order for https to work properly, you must:
 
+### MacOS
+
 1. ensure elao ca certificate has been added to your local keychain (one time for *all* projects)
 
     ```shell
     $ sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" .manala/certificates/ca.crt
     ```
 
-2. generate a project certificate (one time *by* project, remember to commit them right after)
+2. For firefox only, browse to `about:config` and ensure `security.enterprise_roots.enabled` value is set to true (one time for *all* projects)
+
+3. generate a project certificate (one time *by* project, remember to commit them right after)
 
     ```shell
     ⇒  make provision.certificates
     ```
 
-3. For firefox only, browse to `about:config` and ensure `security.enterprise_roots.enabled` value is set to true
+### Ubuntu
+
+1. ensure elao ca certificate has been added to your local keychain (one time for *all* projects)
+
+   ```shell
+    $ sudo cp .manala/certificates/ca.crt /usr/local/share/ca-certificates
+    $ sudo update-ca-certificates
+    ```
+
+2. For Chrone and Firefox, add .manala/certificates/ca.crt certificate on Security and Privacy (one time for *all* projects).
+   * On Chrome, `chrome://settings/certificates` > Authorities, import `.manala/certificates/ca.crt`.
+   * On Firefox, `about:preferences#privacy` > View Certificate... > Authorities, import `.manala/certificates/ca.crt`.
+
+3. generate a project certificate (one time *by* project, remember to commit them right after)
+
+    ```shell
+    ⇒  make provision.certificates
+    ```
 
 ## Extras
 
