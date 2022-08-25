@@ -107,3 +107,7 @@ system:
         # @schema {"enum": [null, "2.5.4"]}
         # @option {"label": "Scaleway cli version"}
       version: ~
+    sops:
+        # @schema {"enum": [null, "3.7.3"]}
+        # @option {"label": "Sops version"}
+      version: ~
