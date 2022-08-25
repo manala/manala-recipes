@@ -120,7 +120,7 @@ system:
         version: ~
     redis:
         # @option {"label": "Redis version"}
-        # @schema {"enum": [null, "*"]}
+        # @schema {"enum": [null, "*", "5.0", "6.0"]}
         version: ~
         config: {}
         phpredisadmin: true
