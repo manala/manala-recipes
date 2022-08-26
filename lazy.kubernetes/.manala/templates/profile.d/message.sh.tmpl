@@ -68,7 +68,7 @@ printf " \033[36m‣ swift \033[35m{{ $swift.version }}\033[0m
 {{- if $scw.version }}
 printf " \033[36m‣ scw \033[35m{{ $scw.version }}\033[0m\n"
 {{- end }}
-{{- $scw := .Vars.system.sops }}
+{{- $sops := .Vars.system.sops }}
 {{- if $sops.version }}
 printf " \033[36m‣ sops \033[35m{{ $sops.version }}\033[0m\n"
 {{- end }}
