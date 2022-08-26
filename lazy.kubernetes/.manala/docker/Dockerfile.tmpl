@@ -247,3 +247,13 @@ RUN \
     && scw autocomplete script shell=/bin/bash > /etc/bash_completion.d/scw
 
 {{ end -}}
+
+{{ $sops := .Vars.system.sops -}}
+{{ if $sops.version -}}
+# Sops
+RUN \
+    curl -sSL https://github.com/mozilla/sops/releases/download/v{{ $sops.version }}/sops-v{{ $sops.version }}.linux.{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }} \
+        -o /usr/local/bin/sops \
+    && chmod +x /usr/local/bin/sops
+
+{{ end -}}
