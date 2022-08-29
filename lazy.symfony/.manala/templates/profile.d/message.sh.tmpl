@@ -38,3 +38,11 @@ php-xdebug () {
     fi
   fi
 }
+
+{{- $help := .Vars.project.help }}
+{{- if $help }}
+printf "\n"
+cat << EOF
+{{ $help }}
+EOF
+{{- end }}

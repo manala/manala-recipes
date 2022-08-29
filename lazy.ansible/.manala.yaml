@@ -19,6 +19,8 @@ project:
     # @schema {"type": "string", "minLength": 1}
     # @option {"label": "Project name"}
     name: ~
+    # @schema {"type": ["null", "string"]}
+    help: ~
 
 ##########
 # System #
