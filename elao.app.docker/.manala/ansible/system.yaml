@@ -139,9 +139,13 @@
         state: directory
       - path: "{{ system_app_release_dir }}"
         state: directory
+      - path: /usr/share/nginx/html
+        state: directory
+        mode: "0755"
       - path: /usr/share/nginx/html/404.html
         template: nginx/html/404.html.j2
         mode: "0644"
+        parents: false
       - "{{ system_files_attributes }}"
 
     #######
