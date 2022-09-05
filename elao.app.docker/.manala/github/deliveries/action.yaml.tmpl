@@ -26,6 +26,10 @@ inputs:
   deploy_ref:
     description: Deploy Ref
     required: false
+  env:
+    description: Env vars as a single string
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -55,6 +59,7 @@ runs:
       uses: ./.manala/github/system
       with:
         setup: true
+        env: {{ `${{ inputs.env }}` }}
         {{- if hasKey $delivery "github_ssh_key_secret" }}
         ssh_key: {{ printf "${{ fromJSON(inputs.secrets).%s }}" $delivery.github_ssh_key_secret }}
         {{- end }}
