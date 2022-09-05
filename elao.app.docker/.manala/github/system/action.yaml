@@ -8,6 +8,10 @@ inputs:
     default: 'false'
     type: boolean
     required: false
+  env:
+      description: Env vars as a single string. Must be used before/during setup.
+      required: false
+      default: ''
   setup_group:
     description: Shell group
     required: false
@@ -25,10 +29,6 @@ inputs:
   app:
     description: App
     required: false
-  env:
-    description: Env vars as a single string
-    required: false
-    default: ''
 
 runs:
   using: composite
@@ -38,10 +38,12 @@ runs:
     # Env #
     #######
 
+    # Configure the env vars from the env input provided during setup if any.
     - name: Configure env vars
       if: inputs.setup != 'false' && inputs.env != ''
-      shell: bash
-      run: echo "${{ inputs.env }}" >> .manala/docker/.env
+      uses: ./.manala/github/env
+      with:
+        env: ${{ inputs.env }}
 
     #########
     # Setup #
@@ -99,7 +101,7 @@ runs:
             --file ./.manala/docker/compose/integration.yaml \
             --file ./.manala/docker/compose/cache.yaml \
             ${{ inputs.ssh_key != '' && '--file ./.manala/docker/compose/ssh-key.yaml' || '' }} \
-            ${{ inputs.env != '' && '--file ./.manala/docker/compose/env.yaml' || '' }} \
+            ${{ env.MANALA_ENV_FILE && '--file ./.manala/docker/compose/env.yaml' || '' }} \
             up \
             --detach
         echo "::endgroup::"
