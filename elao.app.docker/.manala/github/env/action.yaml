@@ -1,0 +1,26 @@
+name: Env
+description: Env
+author: Elao
+
+inputs:
+  env:
+    description: Env vars as a single string
+
+runs:
+  using: composite
+  steps:
+
+    #######
+    # Env #
+    #######
+
+    - name: Configure env vars
+      shell: bash
+      run: |
+        cat >> ${RUNNER_TEMP}/.env <<EOF
+        ${{ inputs.env }}
+        EOF
+
+    - name: Save dotenv path
+      shell: bash
+      run: echo "MANALA_ENV_FILE=${RUNNER_TEMP}/.env" >> $GITHUB_ENV

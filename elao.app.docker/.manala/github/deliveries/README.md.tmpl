@@ -74,6 +74,9 @@ jobs:
           ref: {{ `${{ github.event.inputs.ref }}` }}
           release: true
           deploy: {{ `${{ github.event.inputs.deploy }}` }}
+          #env: |
+          #  {{ `SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \` }}
+          #  {{ `COMPOSER_AUTH=${{ secrets.COMPOSER_AUTH }}` }}
 ```
 
 `.github/workflows/deploy.yaml`:
@@ -121,6 +124,45 @@ jobs:
           release: false
           deploy: true
           deploy_ref: {{ `${{ github.event.inputs.ref }}` }}
+```
+
+### Exposing secrets
+
+In case you need to expose secrets as env vars, for instance to provide an auth token during the release process,
+you can use the `with.env` key to provide a string of env vars to be forwarded, as shown above.
+
+Use Github [steps conditions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsif)
+and the `./.manala/github/env` action in order to expose different secrets depending on the app / tier:
+
+```yaml
+jobs:
+  release:
+    # […]
+    steps:
+      # […]
+      - name: Configure staging secrets
+        uses: ./.manala/github/env
+        if: {{ `${{ github.event.inputs.tier == 'staging' }}` }}
+        with:
+          env: {{ `SENTRY_AUTH_TOKEN=${{ secrets.STAGING_SENTRY_AUTH_TOKEN }}` }}
+
+      - name: Configure production secrets
+        uses: ./.manala/github/env
+        if: {{ `${{ github.event.inputs.tier == 'production' }}` }}
+        with:
+          env: {{ `SENTRY_AUTH_TOKEN=${{ secrets.production_SENTRY_AUTH_TOKEN }}` }}
+
+      - name: Release
+        uses: ./.manala/github/deliveries
+        with:
+          secrets: {{ `${{ toJSON(secrets) }}` }}
+          {{- if $apps }}
+          app: {{ `${{ github.event.inputs.app }}` }}
+          {{- end }}
+          tier: {{ `${{ github.event.inputs.tier }}` }}
+          ref: {{ `${{ github.event.inputs.ref }}` }}
+          release: true
+          deploy: {{ `${{ github.event.inputs.deploy }}` }}
 ```
 
 {{- end }}
