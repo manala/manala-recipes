@@ -276,7 +276,7 @@ system:
     ssh:
         client:
             config: |
-                Host *.elao.run
+                Host *.rix.link
                     User app
                     ForwardAgent yes
     docker:
@@ -645,7 +645,7 @@ Ssh
 ## Ssh to staging server
 ssh@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
 ssh@staging:
-	ssh app@foo.staging.elao.run
+	ssh app@foo.staging.rix.link
 
 # Single host...
 
@@ -666,7 +666,7 @@ sync@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
 sync@staging:
 	mkdir -p var
 	rsync --archive --compress --verbose --delete-after \
-		app@foo.staging.elao.run:/srv/app/current/var/files/ \
+		app@foo.staging.rix.link:/srv/app/current/var/files/ \
 		var/files/
 
 # Multi targets...
