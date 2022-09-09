@@ -291,6 +291,15 @@ system:
                 ports:
                     # whoami
                     - 12345:80
+        # Optimizes Mutagen sync performances (adapt to your project structure)
+        mutagen:
+            ignore:
+                paths:
+                    # Webpack build files
+                    - /public/build/
+                    # Symfony log & cache files
+                    - /var/cache
+                    - /var/log
 ```
 
 Details:

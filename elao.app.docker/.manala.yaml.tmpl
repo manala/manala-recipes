@@ -106,4 +106,15 @@ system:
     #                 User app
     #                 ForwardAgent yes
 
+    # docker:
+    #     # Optimizes Mutagen sync performances (adapt to your project structure)
+    #     mutagen:
+    #         ignore:
+    #             paths:
+    #                 # Webpack build files
+    #                 - /public/build/
+    #                 # Symfony log & cache files
+    #                 - /var/cache
+    #                 - /var/log
+
 {{- end }}
