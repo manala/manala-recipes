@@ -207,7 +207,7 @@ App:</code></pre>
 <pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- --follow</code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="bbdfb1c0aeca8d9aba26f4832f587107"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="c08ae45ea1635686f789cf4b8ec9a2b5"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
@@ -386,7 +386,16 @@ App:</code></pre>
             app:
                 ports:
                     # whoami
-                    - 12345:80</span></code></pre>
+                    - 12345:80
+        # Optimizes Mutagen sync performances (adapt to your project structure)
+        mutagen:
+            ignore:
+                paths:
+                    # Webpack build files
+                    - /public/build/
+                    # Symfony log &amp; cache files
+                    - /var/cache
+                    - /var/log</span></code></pre>
 <p>Details:</p>
 <ul>
 <li><code class="code-inline" id="46f86faa6bbf9ac94a7e459509a20ed0">project</code>
@@ -872,7 +881,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2022-09-06UTC07:25:44+00:00">Last modified: September 6, 2022 07:25</time>
+    <time datetime="2022-09-09UTC12:14:13+00:00">Last modified: September 9, 2022 12:14</time>
         </div>
 
         <footer class="footer">
