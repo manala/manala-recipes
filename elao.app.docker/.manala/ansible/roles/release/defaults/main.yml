@@ -9,6 +9,10 @@ release_git_dir: ~
 release_repo:    ~
 release_ref: master
 
+# Whether to markup releases on original repository.
+# If true, a commit referencing the release repository commit will be pushed to the original repository.
+release_markup: false
+
 # Tasks
 release_tasks: []
 

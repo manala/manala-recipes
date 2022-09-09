@@ -19,6 +19,9 @@ release:
                 {{- else }}
                   {{- if hasKey $delivery "app" }}{{ $delivery.app }}/{{ end }}{{ $delivery.tier }}
                 {{- end }}
+                {{- if hasKey $delivery "release_markup" }}
+                release_markup: {{ $delivery.release_markup }}
+                {{- end }}
                 {{- if hasKey $delivery "release_tasks" }}
                 release_tasks:
                     {{- include "delivery_tasks" $delivery.release_tasks | nindent 18 }}

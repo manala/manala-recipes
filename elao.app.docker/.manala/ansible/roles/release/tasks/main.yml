@@ -115,37 +115,5 @@
     chdir: "{{ release_dir }}"
   tags: log_failed
 
-# Next steps are pushing an empty commit to the original repository,
-# so that the release repository commit are easily identifiable.
-- name: git > Get release repo informations
-  ansible.builtin.git:
-    repo: "{{ release_repo }}"
-    dest: "{{ release_dir }}"
-    clone: false
-    update: false
-  register: __release_repo_git_info
-
-- name: git > Commit to original repository
-  ansible.builtin.shell: |
-    git {{
-      release_author|ternary(release_author|regex_replace(release_email_regex, '-c user.name="\g<name>" -c user.email="\g<email>"'), '')
-    }} commit --allow-empty --message "Released {{
-      ansible_date_time.year
-      ~ ansible_date_time.month
-      ~ ansible_date_time.day
-      ~ ansible_date_time.hour
-      ~ ansible_date_time.minute
-      ~ ansible_date_time.second
-    }}
-    Release repository commit: https://{{
-      release_repo|regex_replace(release_git_url_regex, '\g<host>/\g<user>/\g<repository>')
-    }}/commit/{{ __release_repo_git_info.after }}"
-  tags: log_failed
-
-- name: git > Push to original repository
-  ansible.builtin.shell: >
-    git push --set-upstream origin
-    && git push origin HEAD
-  args:
-    chdir: "{{ release_git_dir }}"
-  tags: log_failed
+- include_tasks: markup.yml
+  when: release_markup

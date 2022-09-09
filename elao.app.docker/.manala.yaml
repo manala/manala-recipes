@@ -228,6 +228,7 @@ integration:
 #                 "release_tasks": {"type": "array", "items": {"$ref": "#delivery_task"}},
 #                 "release_add": {"type": "array", "items": {"type": "string"}},
 #                 "release_remove": {"type": "array", "items": {"type": "string"}},
+#                 "release_markup": {"type": "boolean"},
 #                 "deploy_hosts": {"type": "array", "items": {"$ref": "#delivery_host"}},
 #                 "deploy_dir": {"type": "string"},
 #                 "deploy_releases": {"type": "integer"},

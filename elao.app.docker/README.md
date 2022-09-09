@@ -539,6 +539,9 @@ deliveries:
     # Release
     release_repo: git@git.example.com:<vendor>/<app>-release.git
     #release_ref: master # Based on app/tier by default
+    # Whether to markup releases on original repository.
+    # If true, a commit referencing the release repository commit will be pushed to the original repository.
+    #release_markup: true
     release_tasks:
       - shell: make install@production
       - shell: make build@production
