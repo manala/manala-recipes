@@ -105,7 +105,9 @@ RUN \
     # Bash completion
     && helm completion bash > /etc/bash_completion.d/helm \
     # Bash aliases
-    && printf "alias h='helm'\ncomplete -o default -F __start_helm h\n" > /etc/profile.d/helm.sh
+    && printf "alias h='helm'\n\
+complete -F __start_helm h\n\
+" > /etc/profile.d/helm.sh
     {{- if $helm.plugins }} \
     # Plugins
       {{- range $i, $plugin := $helm.plugins }}
