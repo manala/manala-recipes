@@ -128,10 +128,13 @@ RUN \
     curl -sSL https://github.com/helmfile/helmfile/releases/download/v{{ $helmfile.version }}/helmfile_{{ $helmfile.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz \
         | bsdtar -xvf - -C /usr/local/bin helmfile \
     # Bash completion
-    && curl -sSL https://raw.githubusercontent.com/helmfile/helmfile/v{{ $helmfile.version }}/autocomplete/helmfile_bash_autocomplete \
-        -o /etc/bash_completion.d/helmfile \
+    && helmfile completion bash > /etc/bash_completion.d/helmfile \
     # Bash aliases
-    && printf "alias hf='helmfile'\nalias hfi='helmfile --interactive'\n" > /etc/profile.d/helmfile.sh
+    && printf "alias hf='helmfile'\n\
+complete -F __start_helmfile hf\n\
+alias hfi='helmfile --interactive'\n\
+complete -F __start_helmfile hfi\n\
+" > /etc/profile.d/helmfile.sh
 
 {{ end -}}
 
