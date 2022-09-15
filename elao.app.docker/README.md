@@ -5,6 +5,7 @@ tableOfContent: 3
 
 ## Requirements
 
+* [Manala CLI](https://manala.github.io/manala/installation/) to update the recipe
 * Make
 
 MacOS
