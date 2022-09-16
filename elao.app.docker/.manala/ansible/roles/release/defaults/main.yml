@@ -20,5 +20,5 @@ release_remove: []
 release_author: ~
 
 # Regex
-release_git_url_regex: '^(?P<protocol>https|git)(:\/\/|@)(?P<host>[^\/:]+)[\/:](?P<user>[^\/:]+)\/(?P<repository>.+).git$'
+release_git_url_regex: '^(?P<protocol>https|git)(:\/\/|@)(?P<host>[^\/:]+)[\/:](?P<user>[^\/:]+)\/(?P<repository>.+)(?P<extension>.git)?$'
 release_email_regex: '^(?P<name>.*) <(?P<email>.*)>$'
