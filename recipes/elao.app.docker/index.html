@@ -208,7 +208,7 @@ App:</code></pre>
 <pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- --follow</code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="c08ae45ea1635686f789cf4b8ec9a2b5"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="39ab43fae632c60db2f7999e00adfc43"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
@@ -373,7 +373,7 @@ App:</code></pre>
     ssh:
         client:
             config: |
-                Host *.elao.run
+                Host *.rix.link
                     User app
                     ForwardAgent yes
     docker:
@@ -708,14 +708,14 @@ It uses the <a href="https://github.com/cli/cli" target="_blank">Github CLI tool
 <span class="token target symbol">foo</span><span class="token punctuation">:</span>
     <span class="token comment"># Do something really foo...</span></code></pre>
 <p>Ssh</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="fff8ca7a134d45e620fa8df859671e74"><span class="token comment">#######</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="f8f42fe950b7fccdc08fae7f283c8b92"><span class="token comment">#######</span>
 <span class="token comment"># Ssh #</span>
 <span class="token comment">#######</span>
 
 <span class="token comment">## Ssh to staging server</span>
 <span class="token target symbol">ssh@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">ssh@staging</span><span class="token punctuation">:</span>
-    ssh app<span class="token operator">@</span>foo.staging.elao.run
+    ssh app<span class="token operator">@</span>foo.staging.rix.link
 
 <span class="token comment"># Single host...</span>
 
@@ -729,11 +729,11 @@ It uses the <a href="https://github.com/cli/cli" target="_blank">Github CLI tool
 <span class="token target symbol">ssh@production-01</span><span class="token punctuation">:</span>
     ...</code></pre>
 <p>Sync</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="238b5937ce83ac1228f809c183b529a9"><span class="token target symbol">sync@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="69d00deec442223ce7247f0538aff887"><span class="token target symbol">sync@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">sync@staging</span><span class="token punctuation">:</span>
     mkdir -p var
     rsync --archive --compress --verbose --delete-after \
-<span class="token target symbol">        app@foo.staging.elao.run</span><span class="token punctuation">:</span>/srv/app/current/var/files/ \
+<span class="token target symbol">        app@foo.staging.rix.link</span><span class="token punctuation">:</span>/srv/app/current/var/files/ \
         var/files/
 
 <span class="token comment"># Multi targets...</span>
@@ -882,7 +882,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2022-09-15UTC13:56:17+00:00">Last modified: September 15, 2022 13:56</time>
+    <time datetime="2022-09-16UTC13:15:52+00:00">Last modified: September 16, 2022 13:15</time>
         </div>
 
         <footer class="footer">
