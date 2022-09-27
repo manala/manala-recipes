@@ -26,6 +26,7 @@
 
 ```yaml
 name: Release
+run-name: {{ `${{ format('Release{0} of {1} on {2}', github.event.inputs.deploy == 'true' && ' & Deploy' || '', github.event.inputs.app, github.event.inputs.tier) }}` }}
 
 on:
   workflow_dispatch:
