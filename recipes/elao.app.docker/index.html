@@ -608,7 +608,7 @@ learn how you can write your own workflows using these actions.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="deliveries">Deliveries<a href="#deliveries" class="anchor"></a></h2>
 <p>Here is an example of a production/staging deliveries configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="92561c399266ba1e9ee8d17b65868c89"><span class="token comment">##############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="c050e2ec0f6fe5b9255e55d407bda715"><span class="token comment">##############</span>
 <span class="token comment"># Deliveries #</span>
 <span class="token comment">##############</span>
 
@@ -621,6 +621,9 @@ learn how you can write your own workflows using these actions.</p>
     <span class="token comment"># Release</span>
     <span class="token key atrule">release_repo</span><span class="token punctuation">:</span> git@git.example.com<span class="token punctuation">:</span>&lt;vendor<span class="token punctuation">&gt;</span>/&lt;app<span class="token punctuation">&gt;</span><span class="token punctuation">-</span>release.git
     <span class="token comment">#release_ref: master # Based on app/tier by default</span>
+    <span class="token comment"># Whether to markup releases on original repository.</span>
+    <span class="token comment"># If true, a commit referencing the release repository commit will be pushed to the original repository.</span>
+    <span class="token comment">#release_markup: true</span>
     <span class="token key atrule">release_tasks</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@production
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@production
@@ -882,7 +885,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2022-09-27UTC08:09:00+00:00">Last modified: September 27, 2022 08:09</time>
+    <time datetime="2022-09-28UTC14:52:40+00:00">Last modified: September 28, 2022 14:52</time>
         </div>
 
         <footer class="footer">
