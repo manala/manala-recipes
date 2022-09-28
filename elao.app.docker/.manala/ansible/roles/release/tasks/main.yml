@@ -6,15 +6,15 @@
   args:
     chdir: "{{ release_git_dir }}"
   tags: log_failed
-  register: __release_git_url
+  register: __original_repo
 
 - name: git > Get informations
   ansible.builtin.git:
-    repo: "{{ __release_git_url.stdout }}"
+    repo: "{{ __original_repo.stdout }}"
     dest: "{{ release_git_dir }}"
     clone: false
     update: false
-  register: __release_git
+  register: __original_repo_git_info
 
 - name: Release directory "{{ release_dir }}"
   ansible.builtin.shell: >
@@ -101,8 +101,8 @@
       ~ ansible_date_time.second
     }}
     Original commit: https://{{
-      __release_git_url.stdout|regex_replace(release_git_url_regex, '\g<host>/\g<user>/\g<repository>')
-    }}/commit/{{ __release_git.after }}"
+      __original_repo.stdout|regex_replace(release_git_url_regex, '\g<host>/\g<user>/\g<repository>')
+    }}/commit/{{ __original_repo_git_info.after }}"
   args:
     chdir: "{{ release_dir }}"
   tags: log_failed
@@ -114,3 +114,6 @@
   args:
     chdir: "{{ release_dir }}"
   tags: log_failed
+
+- include_tasks: markup.yml
+  when: release_markup
