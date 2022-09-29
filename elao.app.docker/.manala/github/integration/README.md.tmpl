@@ -130,9 +130,16 @@ jobs:
         uses: actions/checkout@v3
       - name: {{ $job_name }}
         uses: ./.manala/github/integration
+        with:
+          #env: |
+          #  {{ `COMPOSER_AUTH='{ "github-oauth": { "github.com": "${{ secrets.COMPOSER_AUTH_TOKEN }}" } }'` }}
 {{- end }}
 {{- end }}
 ```
 {{- end }}
+
+## Exposing secrets
+
+Read more about [exposing secrets to Manala actions](../env/README.md).
 
 {{- end }}
