@@ -7,6 +7,10 @@ inputs:
     description: Job
     required: true
     default: {{ `${{ github.job }}` }}
+  env:
+    description: Env vars as a single string
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -16,6 +20,7 @@ runs:
       uses: ./.manala/github/system
       with:
         setup: true
+        env: {{ `${{ inputs.env }}` }}
 
     {{- range $job_id, $job := .Vars.integration.github.jobs }}
     {{- $job_name := $job_id | replace "_" " - " | title }}
