@@ -8,6 +8,13 @@
     update: false
   register: __release_repo_git_info
 
+# Pull the original repository changes to prevent concurrent releases issues
+- name: git > Pull original repository
+  ansible.builtin.shell: git pull --rebase origin
+  args:
+    chdir: "{{ release_git_dir }}"
+  tags: log_failed
+
 - name: git > Commit to original repository
   ansible.builtin.shell: |
     git {{
