@@ -69,7 +69,7 @@ services:
             exec docker-entrypoint.sh"
         network_mode: service:app
         healthcheck:
-            test: curl --silent --fail --output /dev/null http://127.0.0.1:9200/_cat/health?h=st
+            test: curl --silent --fail --output /dev/null http://127.0.0.1:9200/_cluster/health?wait_for_status=yellow
             interval: 30s
             timeout: 30s
             retries: 3
