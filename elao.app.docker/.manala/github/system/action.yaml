@@ -103,6 +103,7 @@ runs:
             ${{ inputs.ssh_key != '' && '--file ./.manala/docker/compose/ssh-key.yaml' || '' }} \
             ${{ env.MANALA_ENV_FILE && '--file ./.manala/docker/compose/env.yaml' || '' }} \
             up \
+            --wait
         echo "::endgroup::"
 
     #########
