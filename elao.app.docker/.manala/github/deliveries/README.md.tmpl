@@ -22,6 +22,8 @@
 {{- $tiers = (append $tiers $delivery.tier) | uniq -}}
 {{- end }}
 
+### Release Workflow
+
 `.github/workflows/release.yaml`:
 
 ```yaml
@@ -50,7 +52,7 @@ on:
       deploy:
         description: Follow with a deployment if release succeeded
         type: boolean
-        default: 'false'
+        default: false
         required: false
 
 concurrency:
@@ -74,16 +76,27 @@ jobs:
           tier: {{ `${{ github.event.inputs.tier }}` }}
           ref: {{ `${{ github.event.inputs.ref }}` }}
           release: true
-          deploy: {{ `${{ github.event.inputs.deploy }}` }}
           #env: |
           #  {{ `SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}` }}
           #  {{ `COMPOSER_AUTH='{ "github-oauth": { "github.com": "${{ secrets.COMPOSER_AUTH_TOKEN }}" } }'` }}
+
+      - name: 'Trigger deployment workflow'
+        if: success() && github.event.inputs.deploy == 'true'
+        env:
+          GH_TOKEN: {{ `${{ secrets.GITHUB_TOKEN }}` }}
+        run: |
+          gh workflow run deploy \
+              --field app={{ `${{ github.event.inputs.app }}` }} \
+              --field tier={{ `${{ github.event.inputs.tier }}` }}
 ```
+
+### Deploy Workflow
 
 `.github/workflows/deploy.yaml`:
 
 ```yaml
 name: Deploy
+run-name: {{ `${{ format('Deploy {0} on {1}', github.event.inputs.app, github.event.inputs.tier) }}` }}
 
 on:
   workflow_dispatch:
@@ -126,6 +139,7 @@ jobs:
           deploy: true
           deploy_ref: {{ `${{ github.event.inputs.ref }}` }}
 ```
+
 ## Exposing secrets
 
 Read more about [exposing secrets to Manala actions](../env/README.md).
