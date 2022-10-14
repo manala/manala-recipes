@@ -298,6 +298,8 @@ system:
                 paths:
                     # Webpack build files
                     - /public/build/
+                    # Node modules cache (Babel, ...)
+                    - /node_modules/.cache
                     # Symfony log & cache files
                     - /var/cache
                     - /var/log
