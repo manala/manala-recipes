@@ -208,7 +208,7 @@ App:</code></pre>
 <pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- --follow</code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="39ab43fae632c60db2f7999e00adfc43"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="75f1471f06c3341a3c15ab5ecf6ca860"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
@@ -394,6 +394,8 @@ App:</code></pre>
                 paths:
                     # Webpack build files
                     - /public/build/
+                    # Node modules cache (Babel, ...)
+                    - /node_modules/.cache
                     # Symfony log &amp; cache files
                     - /var/cache
                     - /var/log</span></code></pre>
@@ -885,7 +887,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2022-10-13UTC13:54:47+00:00">Last modified: October 13, 2022 13:54</time>
+    <time datetime="2022-10-14UTC07:59:31+00:00">Last modified: October 14, 2022 07:59</time>
         </div>
 
         <footer class="footer">
