@@ -610,16 +610,16 @@ learn how you can write your own workflows using these actions.</p>
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="deliveries">Deliveries<a href="#deliveries" class="anchor"></a></h2>
 <p>Here is an example of a production/staging deliveries configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="c050e2ec0f6fe5b9255e55d407bda715"><span class="token comment">##############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="3eedc12b892ced1c81f96c7e516fb194"><span class="token comment">##############</span>
 <span class="token comment"># Deliveries #</span>
 <span class="token comment">##############</span>
 
 <span class="token key atrule">deliveries</span><span class="token punctuation">:</span>
 
   <span class="token punctuation">-</span> <span class="token important">&amp;delivery</span>
-    <span class="token comment">#app: api # Optional</span>
+    <span class="token comment">#app: api # Optional. Useful for multi-app projects (api, front, backend, etc.)</span>
     <span class="token key atrule">tier</span><span class="token punctuation">:</span> production
-    <span class="token comment">#ref: staging # Default to master</span>
+    <span class="token comment">#ref: master # Git reference to deliver (can be a branch or a commit). Default value is "master"</span>
     <span class="token comment"># Release</span>
     <span class="token key atrule">release_repo</span><span class="token punctuation">:</span> git@git.example.com<span class="token punctuation">:</span>&lt;vendor<span class="token punctuation">&gt;</span>/&lt;app<span class="token punctuation">&gt;</span><span class="token punctuation">-</span>release.git
     <span class="token comment">#release_ref: master # Based on app/tier by default</span>
@@ -683,6 +683,7 @@ learn how you can write your own workflows using these actions.</p>
 
   <span class="token punctuation">-</span> <span class="token key atrule">&lt;&lt;</span> <span class="token punctuation">:</span> <span class="token important">*delivery</span>
     <span class="token key atrule">tier</span><span class="token punctuation">:</span> staging
+    <span class="token key atrule">ref</span><span class="token punctuation">:</span> staging
     <span class="token key atrule">release_tasks</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@staging
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@staging
@@ -887,7 +888,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2022-10-14UTC07:59:31+00:00">Last modified: October 14, 2022 07:59</time>
+    <time datetime="2022-10-14UTC08:13:00+00:00">Last modified: October 14, 2022 08:13</time>
         </div>
 
         <footer class="footer">
