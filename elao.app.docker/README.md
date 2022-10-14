@@ -545,9 +545,9 @@ Here is an example of a production/staging deliveries configuration in `.manala.
 deliveries:
 
   - &delivery
-    #app: api # Optional
+    #app: api # Optional. Useful for multi-app projects (api, front, backend, etc.)
     tier: production
-    #ref: staging # Default to master
+    #ref: master # Git reference to deliver (can be a branch or a commit). Default value is "master"
     # Release
     release_repo: git@git.example.com:<vendor>/<app>-release.git
     #release_ref: master # Based on app/tier by default
@@ -611,6 +611,7 @@ deliveries:
 
   - << : *delivery
     tier: staging
+    ref: staging
     release_tasks:
       - shell: make install@staging
       - shell: make build@staging
