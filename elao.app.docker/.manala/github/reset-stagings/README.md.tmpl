@@ -2,7 +2,7 @@
 
 {{- if not .Vars.deliveries }}
 
-¯\_(ツ)_/¯ No delivery configured...
+¯\_(ツ)_/¯ No delivery configured…
 
 {{- else }}
 
@@ -33,20 +33,38 @@
 {{- end }}
 {{- $tiers = without $tiers "production" -}}
 
+{{- if eq (len $tiers) 0 }}
+
+¯\_(ツ)_/¯ No staging…
+
+{{- else }}
+
+{{- $tierRef := $tiers | first -}}
+{{- $singleTier := eq (len $tiers) 1 -}}
+{{- if not $singleTier }}
+{{- $tierRef = `${{ matrix.tier }}` -}}
+{{- end }}
+
 `.github/workflows/reset-stagings.yaml`:
 
 ```yaml
 name: Reset stagings
+{{- if $singleTier }}
+run-name: 'Reset {{ $tierRef }} branch'
+{{- else }}
 run-name: {{ `${{ format('Reset {0} branche(s)', github.event.inputs.tiers == 'all' && 'all stagings' || github.event.inputs.tiers) }}` }}
+{{- end }}
 
 on:
   workflow_dispatch:
     inputs:
+      {{- if not $singleTier }}
       tiers:
         description: Tier branches to reset
         type: choice
         options: [all, {{ $tiers | join ", " }}]
         required: true
+      {{- end }}
       ref:
         description: Git reference.
         default: {{ $mainBranch }}
@@ -63,10 +81,15 @@ on:
         required: false
 
 concurrency:
+  {{- if $singleTier }}
+  group: {{ `${{ github.workflow }}-${{ github.ref }}` }}
+  {{- else }}
   group: {{ `${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.tiers }}` }}
+  {{- end }}
   cancel-in-progress: true
 
 jobs:
+  {{- if not $singleTier }}
   matrix:
     name: 'Compute matrix'
     runs-on: ubuntu-latest
@@ -81,59 +104,66 @@ jobs:
           echo $matrix
           echo $matrix | jq .
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
+  {{- end }}
 
   reset:
+    name: 'Reset {{ $tierRef }} branch'
+    {{- if not $singleTier }}
     needs: matrix
-    name: 'Reset {{ `${{ matrix.tier }}` }} branch'
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/#new-fromjson-method-in-expressions
       matrix: {{ `${{ fromJson(needs.matrix.outputs.matrix) }}` }}
+    {{- end }}
+    runs-on: ubuntu-latest
     env:
       GH_TOKEN: {{ `${{ secrets.GITHUB_TOKEN }}` }}
 
     steps:
-      - name: {{ `'Reset hard ${{ matrix.tier }} branch on ${{ github.event.inputs.ref }}'` }}
+      - name: {{ `'Reset hard $tierRef branch on ${{ github.event.inputs.ref }}'` | replace "$tierRef" $tierRef }}
         uses: nicksnell/action-reset-repo@master
         with:
           github_token: {{ `${{ secrets.GITHUB_TOKEN }}` }}
           base_branch: {{ `${{ github.event.inputs.ref }}` }}
-          reset_branch: {{ `${{ matrix.tier }}` }}
+          reset_branch: {{ $tierRef }}
 
-      - name: 'Find PRs with label {{ `${{ matrix.tier }}` }}'
+      - name: 'Find PRs with label {{ $tierRef }}'
         id: find-prs
         run: |
-          prs=$(gh pr list --label '{{ `${{ matrix.tier }}` }}' --json=number --state open | jq -cr '.|map(.number)')
+          prs=$(gh pr list --label '{{ $tierRef }}' --json=number --state open | jq -cr '.|map(.number)')
           echo $prs
           echo $prs | jq .
           echo "prs=$prs" >> $GITHUB_OUTPUT
 
-      - name: 'Labelize opened PRs with label {{ `${{ matrix.tier }}` }}'
+      - name: 'Labelize opened PRs with label {{ $tierRef }}'
         run: |
           echo {{ `${{ steps.find-prs.outputs.prs }}` }} | jq -c '.[]' | while read pr; do
             gh pr view $pr --json=number,title || true
-            gh pr edit $pr --remove-label {{ `${{ matrix.tier }}` }} || true
-            gh pr edit $pr --add-label {{ `${{ matrix.tier }}` }}-reset || true
+            gh pr edit $pr --remove-label {{ $tierRef }} || true
+            gh pr edit $pr --add-label {{ $tierRef }}-reset || true
           done
 
-      - name: 'Notify opened PRs with label {{ `${{ matrix.tier }}` }}'
+      - name: 'Notify opened PRs with label {{ $tierRef}}'
         if: success() && github.event.inputs.comment == 'true'
         run: |
           echo {{ `${{ steps.find-prs.outputs.prs }}` }} | jq -c '.[]' | while read pr; do
             gh pr view $pr --json=number,title
-            {{ `gh pr comment $pr --body "> **Warning** la branche ^b^${{ matrix.tier }}^b^ a été reset. Cette PR doit à nouveau être mergée sur ^b^${{ matrix.tier }}^b^"`| replace "^b^" "\\`" }}
+            {{ `gh pr comment $pr --body "> **Warning** la branche ^b^$tierRef^b^ a été reset. Cette PR doit à nouveau être mergée sur ^b^$tierRef^b^"`| replace "^b^" "\\`" | replace "$tierRef" $tierRef }}
           done
 
   deploy:
+    name: 'Re-release & deploy {{ $tierRef }} branch'
     if: success() && github.event.inputs.deploy == 'true'
+    {{- if not $singleTier }}
     needs: [matrix, reset]
-    name: 'Re-release & deploy {{ `${{ matrix.tier }}` }} branch'
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/#new-fromjson-method-in-expressions
       matrix: {{ `${{ fromJson(needs.matrix.outputs.matrix) }}` }}
+    {{- else }}
+    needs: reset
+    {{- end }}
+    runs-on: ubuntu-latest
     env:
       GH_TOKEN: {{ `${{ secrets.GITHUB_TOKEN }}` }}
 
@@ -141,12 +171,13 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v3
 
-      - name: 'Trigger release workflow for back@{{ `${{ matrix.tier }}` }}'
+      - name: 'Trigger release workflow for back@{{ $tierRef }}'
         run: |
           gh workflow run release \
               --field deploy=true \
               --field app=back \
-              --field tier={{ `${{ matrix.tier }}` }}
+              --field tier={{ $tierRef }}
 ```
 
+{{- end }}
 {{- end }}
