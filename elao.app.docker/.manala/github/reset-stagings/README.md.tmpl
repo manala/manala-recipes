@@ -178,13 +178,22 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
+      {{- range $app := $apps }}
 
-      - name: 'Trigger release workflow for back@{{ $tierRef }}'
+      - name: 'Trigger release workflow for {{ $app }}@{{ $tierRef }}'
         run: |
           gh workflow run release \
               --field deploy=true \
-              --field app=back \
+              --field app={{ $app }} \
               --field tier={{ $tierRef }}
+      {{- else }}
+
+      - name: 'Trigger release workflow for {{ $tierRef }}'
+        run: |
+          gh workflow run release \
+              --field deploy=true \
+              --field tier={{ $tierRef }}
+      {{- end }}
 ```
 
 {{- end }}
