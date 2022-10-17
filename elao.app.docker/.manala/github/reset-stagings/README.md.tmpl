@@ -45,7 +45,15 @@
 {{- $tierRef = `${{ matrix.tier }}` -}}
 {{- end }}
 
-`.github/workflows/reset-stagings.yaml`:
+In order to properly detect and notify PRs already merged in a staging branch,
+you might want to add the following labels to your GitHub repository:
+
+{{ range $tier := $tiers -}}
+* `{{ $tier }}`
+* `{{ $tier }}-reset`
+{{- end }}
+
+Create the `.github/workflows/reset-stagings.yaml` workflow file:
 
 ```yaml
 name: Reset stagings
