@@ -21,8 +21,8 @@ manala:
 ###########
 
 project:
-    # @schema {"type": "string", "minLength": 1}
     # @option {"label": "Project name"}
+    # @schema {"type": "string", "minLength": 1}
     name: ~
     domain: ela.ooo
     # @schema {"type": "integer", "minimum": 20, "maximum": 654}
@@ -36,10 +36,10 @@ system:
     # @option {"label": "System version"}
     # @schema {"enum": [11, 10, 9]}
     version: ~
-    # @schema {"type": ["string"], "pattern": "^[a-zA-Z]+/[a-zA-Z]+$"}
+    # @schema {"type": "string", "pattern": "^[a-zA-Z]+/[a-zA-Z]+$"}
     timezone: Etc/UTC
     locales:
-        # @schema {"type": ["string"]}
+        # @schema {"type": "string"}
         default: C.UTF-8
         # @schema {"items": {"type": "string"}}
         codes: []
