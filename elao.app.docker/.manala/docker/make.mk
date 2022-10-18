@@ -71,7 +71,7 @@ endif
 
 ifndef DOCKER
 define _docker_compose
-	$(_DOCKER_COMPOSE_ENV) \
+	env $(_DOCKER_COMPOSE_ENV) \
 	$(_DOCKER_COMPOSE) \
 		$(if $(_DOCKER_COMPOSE_PROFILE),--profile $(_DOCKER_COMPOSE_PROFILE)) \
 		$(foreach FILE, $(_DOCKER_COMPOSE_FILE), \
