@@ -91,6 +91,7 @@ ifneq ($(container),docker)
 define docker_run
 	$(_docker_compose) run \
 		--rm \
+		--service-ports \
 		$(if $(strip $(2)), \
 			$(strip $(1)) $(_DOCKER_COMPOSE_SERVICE) sh -c '$(strip $(2))', \
 			$(_DOCKER_COMPOSE_SERVICE) sh -c '$(subst ','\'',$(strip $(1)))' \

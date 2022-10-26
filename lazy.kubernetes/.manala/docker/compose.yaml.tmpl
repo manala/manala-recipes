@@ -23,6 +23,12 @@ services:
             - ../../{{ $mount }}:${DIR}/{{ $mount }}
               {{- end }}
             {{- end }}
+        {{- if .Vars.system.ports }}
+        ports:
+            {{- range $ports := .Vars.system.ports }}
+            - {{ $ports }}
+            {{- end }}
+        {{- end }}
         environment:
             DIR: ${DIR}
             CACHE_DIR: ${CACHE_DIR}
