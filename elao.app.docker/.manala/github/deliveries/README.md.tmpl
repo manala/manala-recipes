@@ -47,8 +47,7 @@ on:
       {{- end }}
       tier:
         description: Tier
-        type: choice
-        options: [{{ $tiers | join ", " }}]
+        type: environment
         required: true
       ref:
         description: Git reference. Provide an explicit ref to release if it does not match your tier.
@@ -72,9 +71,10 @@ jobs:
     name: Release {{ `${{ github.event.inputs.app != '' && format('{0}@', github.event.inputs.app) || '' }}${{ github.event.inputs.tier }}` }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 'Checkout'
         uses: actions/checkout@v3
-      - name: Release
+
+      - name: 'Release'
         uses: ./.manala/github/deliveries
         with:
           secrets: {{ `${{ toJSON(secrets) }}` }}
@@ -123,8 +123,7 @@ on:
       {{- end }}
       tier:
         description: Tier
-        type: choice
-        options: [{{ $tiers | join ", " }}]
+        type: environment
         required: true
       ref:
         description: Git reference from the release repository. Do only provide to deploy another reference than the latest available version for the tier (deploy a previous release or a specific commit).
@@ -142,11 +141,18 @@ jobs:
   deploy:
     name: Deploy {{ `${{ github.event.inputs.app != '' && format('{0}@', github.event.inputs.app) || '' }}${{ github.event.inputs.tier }}` }}
     runs-on: ubuntu-latest
+
+    environment:
+      name: {{ `${{ github.event.inputs.tier }}` }}
+      url: {{ `${{ steps.deploy.outputs.deployment_url }}` }}
+
     steps:
-      - name: Checkout
+      - name: 'Checkout'
         uses: actions/checkout@v3
-      - name: Deploy
+
+      - name: 'Deploy'
         uses: ./.manala/github/deliveries
+        id: deploy
         with:
           secrets: {{ `${{ toJSON(secrets) }}` }}
           app: {{ `${{ github.event.inputs.app }}` }}
