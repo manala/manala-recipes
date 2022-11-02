@@ -1,3 +1,10 @@
+{{- $apps := list -}}
+{{- range $delivery := .Vars.deliveries -}}
+{{- if hasKey $delivery "app" -}}
+{{- $apps = (append $apps $delivery.app) | uniq -}}
+{{- end -}}
+{{- end -}}
+
 name: Release
 description: Release
 author: Elao
@@ -31,6 +38,15 @@ inputs:
     required: false
     default: ''
 
+outputs:
+  deployment_url:
+    description: The deployed app URL
+    {{- if $apps }}
+    value: {{ `${{ steps[format('deployment_url_{0}_{1}', inputs.app, inputs.tier)].outputs.deployment_url }}` }}
+    {{- else }}
+    value: {{ `${{ steps[format('deployment_url_{0}', inputs.tier)].outputs.deployment_url }}` }}
+    {{- end }}
+
 runs:
   using: composite
   steps:
@@ -38,9 +54,11 @@ runs:
     {{- range $i, $delivery := .Vars.deliveries }}
     {{- $delivery_name := $delivery.tier }}
     {{- $delivery_if := printf "inputs.tier == '%s'" $delivery.tier }}
+    {{- $delivery_id_suffix := $delivery.tier }}
     {{- if hasKey $delivery "app" }}
       {{- $delivery_name = printf "%s@%s" $delivery.app $delivery.tier }}
       {{- $delivery_if = printf "inputs.app == '%s' && inputs.tier == '%s'" $delivery.app $delivery.tier }}
+      {{- $delivery_id_suffix = printf "%s_%s" $delivery.app $delivery.tier }}
     {{- end }}
     {{- $delivery_ref := printf "${{ inputs.ref || '%s' }}" (or (get $delivery "ref") "master") }}
 
@@ -78,20 +96,13 @@ runs:
           make release{{ include "delivery_target" $delivery }} \
             AUTHOR="manala-ci-releaser <{{ `${{ github.actor }}` }}+github@manala.io>"
 
-    - name: Create {{ $delivery_name }} GitHub Deployment
+    - name: Set deployment URL for {{ $delivery_name }}
       if: >
         {{ $delivery_if }}
         && inputs.deploy != 'false'
-      uses: chrnorm/deployment-action@releases/v1
-      id: github_deployment_{{ $i }}
-      with:
-        ref: {{ $delivery_ref }}
-        description: Deploy {{ $delivery_name }}
-        token: {{ `${{ fromJSON(inputs.secrets).GITHUB_TOKEN }}` }}
-        {{- if hasKey $delivery "deploy_url" }}
-        target_url: {{ $delivery.deploy_url }}
-        {{- end }}
-        environment: {{ $delivery.tier }}
+      id: deployment_url_{{ $delivery_id_suffix }}
+      shell: bash
+      run: echo "deployment_url={{ $delivery.deploy_url }}" >> $GITHUB_OUTPUT
 
     - name: Deploy {{ $delivery_name }}
       if: >
@@ -106,45 +117,5 @@ runs:
         shell: |
           make deploy{{ include "delivery_target" $delivery }} \
             {{ `${{ inputs.deploy_ref != '' && format('REF={0}', inputs.deploy_ref) || '' }}` }}
-
-    - name: Update {{ $delivery_name }} GitHub Deployment status (success)
-      if: >
-        {{ $delivery_if }}
-        && inputs.deploy != 'false'
-        && success() && steps.github_deployment_{{ $i }}.outcome == 'success'
-      uses: chrnorm/deployment-status@releases/v1
-      with:
-        token: {{ `${{ fromJSON(inputs.secrets).GITHUB_TOKEN }}` }}
-        description: Deployed {{ $delivery_name }}
-        {{- if hasKey $delivery "deploy_url" }}
-        target_url: {{ $delivery.deploy_url }}
-        environment_url: {{ $delivery.deploy_url }}
-        {{- end }}
-        state: success
-        deployment_id: {{ printf "${{ steps.github_deployment_%d.outputs.deployment_id }}" $i }}
-
-    - name: Update {{ $delivery_name }} GitHub Deployment status (failure)
-      if: >
-        {{ $delivery_if }}
-        && inputs.deploy != 'false'
-        && failure() && steps.github_deployment_{{ $i }}.outcome == 'success'
-      uses: chrnorm/deployment-status@releases/v1
-      with:
-        token: {{ `${{ fromJSON(inputs.secrets).GITHUB_TOKEN }}` }}
-        description: Failed to deploy {{ $delivery_name }}
-        state: failure
-        deployment_id: {{ printf "${{ steps.github_deployment_%d.outputs.deployment_id }}" $i }}
-
-    - name: Update {{ $delivery_name }} GitHub Deployment status (cancelled)
-      if: >
-        {{ $delivery_if }}
-        && inputs.deploy != 'false'
-        && cancelled() && steps.github_deployment_{{ $i }}.outcome == 'success'
-      uses: chrnorm/deployment-status@releases/v1
-      with:
-        token: {{ `${{ fromJSON(inputs.secrets).GITHUB_TOKEN }}` }}
-        description: Cancelled deploy {{ $delivery_name }}
-        state: inactive
-        deployment_id: {{ printf "${{ steps.github_deployment_%d.outputs.deployment_id }}" $i }}
 
     {{- end }}
