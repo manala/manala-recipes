@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <!-- Enable responsiveness on mobile devices-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+        <title>    Manala Recipes - Use GHA deployment environments through workflows - 2022-11 (Elao - App - Docker)
+</title>
+
+                    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+            <link rel="stylesheet" href="/manala-recipes/build/app.f6b34eb2.css">
+        
+                    <script src="/manala-recipes/build/runtime.e4df57b3.js" defer></script><script src="/manala-recipes/build/app.4fe7be59.js" defer></script>
+            </head>
+    <body>
+
+        <header class="header">
+            <div class="navbar">
+    <div class="container">
+        <a href="/manala-recipes/" class="logo">Manala recipes</a>
+        <nav>
+            <ul>
+                <li><a href="https://github.com/manala/manala-recipes">Github</a></li>
+                <li>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" href="/manala-recipes/">Recipes</a>
+                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/elao.app.docker">Elao - App - Docker</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/elao.app">Elao - App</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.ansible">Lazy - Ansible</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.kubernetes">Lazy - Kubernetes</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.symfony">Lazy - Symfony</a>
+                                                    </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="manala">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="circle circle-5"></div>
+                            <div class="circle circle-6"></div>
+                            <img src="/manala-recipes/build/images/arms.b7d6de72.svg" class="arms" alt="Manala">
+                            <img src="/manala-recipes/build/images/manala.053e7ef8.svg" class="head" alt="Manala">
+                        </div>
+                    </div>
+                    <div class="lead col-sm-8">
+                        <p>Recipes for your projects</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+                <h1>Use GHA deployment environments through workflows - 2022-11 (Elao - App - Docker)</h1>
+
+            <ul>
+                            <li>
+                    <a href="#context">Context</a>
+                                    </li>
+                            <li>
+                    <a href="#migrate">Migrate</a>
+                                    </li>
+                    </ul>
+    
+    <section>
+        <article>
+            <body><h1 id="use-gha-deployment-environments-through-workflows-2022-11">Use GHA deployment environments through workflows - 2022-11<a href="#use-gha-deployment-environments-through-workflows-2022-11" class="anchor"></a></h1>
+<h2 id="context">Context<a href="#context" class="anchor"></a></h2>
+<p>Since November 2022, the <strong>deploy</strong> workflow sampled in <code class="code-inline" id="f04b542e973164f9c88bf55021f5da97">.manala/github/deliveries/README.md</code> handles the creation of
+GitHub deployments objects through the <code class="code-inline" id="5b677769de0b1f68de50c49f8e11bf27">jobs.environment</code> key instead of using the API from
+the <code class="code-inline" id="66b6bcf2af44a57eb69c9e5d6049665b">.manala/github/deliveries/action.yaml</code>.</p>
+<p>These deployments objects are used notably to trigger notifications on Slack and to expose the deployment URL in the
+GitHub UI.</p>
+<h2 id="migrate">Migrate<a href="#migrate" class="anchor"></a></h2>
+<p>Simply update the recipe in your project and adapt the <code class="code-inline" id="119080786fc51b98f6a3ed888678047e">.github/workflows/deploy.yaml</code> workflow according to the <code class="code-inline" id="f04b542e973164f9c88bf55021f5da97">.manala/github/deliveries/README.md</code> content.</p>
+<p>The changes should look like:</p>
+<pre class="code-multiline language-diff"><code class="language-diff" id="1cf920f532c81cc58da40525090de18d">required: true
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">      tier:
+</span><span class="token prefix unchanged"> </span><span class="token line">        description: Tier
+</span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">        type: choice
+</span><span class="token prefix deleted">-</span><span class="token line">        options: [production, staging]
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">        type: environment
+</span></span><span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">        required: true
+</span><span class="token prefix unchanged"> </span><span class="token line">      ref:
+</span><span class="token prefix unchanged"> </span><span class="token line">        description: Git reference from the release repository. Do only provide to deploy another reference than the latest available version for the tier (deploy a previous release or a specific commit).
+</span></span>
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">  deploy:
+</span><span class="token prefix unchanged"> </span><span class="token line">    name: Deploy ${{ github.event.inputs.app != '' &amp;&amp; format('{0}@', github.event.inputs.app) || '' }}${{ github.event.inputs.tier }}
+</span><span class="token prefix unchanged"> </span><span class="token line">    runs-on: ubuntu-latest
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">
+</span><span class="token prefix inserted">+</span><span class="token line">    environment:
+</span><span class="token prefix inserted">+</span><span class="token line">      name: ${{ github.event.inputs.tier }}
+</span><span class="token prefix inserted">+</span><span class="token line">      url: ${{ steps.deploy.outputs.deployment_url }}
+</span><span class="token prefix inserted">+</span><span class="token line">
+</span></span><span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">    steps:
+</span><span class="token prefix unchanged"> </span><span class="token line">      - name: 'Checkout'
+</span><span class="token prefix unchanged"> </span><span class="token line">        uses: actions/checkout@v3
+</span></span>
+<span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">      - name: 'Deploy'
+</span><span class="token prefix unchanged"> </span><span class="token line">        uses: ./.manala/github/deliveries
+</span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">        id: deploy
+</span></span><span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">        with:
+</span><span class="token prefix unchanged"> </span><span class="token line">          secrets: ${{ toJSON(secrets) }}
+</span><span class="token prefix unchanged"> </span><span class="token line">          app: ${{ github.event.inputs.app }}
+</span><span class="token prefix unchanged"> </span><span class="token line">          tier: ${{ github.event.inputs.tier }}</span></span></code></pre></body>
+        </article>
+    </section>
+
+    <time datetime="2022-11-02UTC09:38:41+00:00">Last modified: November 2, 2022 09:38</time>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4 no-pb">
+                        <a href="https://manala.io" class="manala"><img src="/manala-recipes/build/images/manala.053e7ef8.svg" width="56" height="56" title="Manala.io" alt="Manala.io"> Manala.io</a>
+                    </div>
+                    <div class="col-sm-4 no-pb github text-center">
+                        <a href="https://github.com/manala/manala-recipes" target="_blank"><img src="/manala-recipes/build/images/github.04ed74f3.svg" width="32" height="32" title="Manala on Github" alt="Manala recipes on Github"></a>
+                    </div>
+                    <div class="col-sm-4 no-pb elao">
+                        Made with love by <a href="https://www.elao.com" target="_blank"><img src="/manala-recipes/build/images/elao.91d6ac3c.svg" width="64" height="23" title="élao" alt="élao"></a>
+                        <small>(and <a target="_blank" href="https://www.rix.fr/"><strong>Rix</strong></a> !)</small>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
