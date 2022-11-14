@@ -83,6 +83,9 @@ serve:
 # ifdef DOCKER
 # 	npx encore dev-server \
 # 		--host 0.0.0.0 \
+                --port 8080 \
+                --public https://$(call project_host, 88) \
+		--allowed-hosts all \
 		--server-type https \
 		--server-options-cert $(_DIR)/.manala/certificates/ssl.pem \
 		--server-options-key $(_DIR)/.manala/certificates/ssl.key \
