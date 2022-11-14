@@ -1,15 +1,21 @@
 {
     "devDependencies": {
-        "@symfony/stimulus-bridge": "^2.0.0",
-        "@symfony/webpack-encore": "^1.0.0",
+        "@babel/core": "^7.20.2",
+        "@babel/eslint-parser": "^7.19.1",
+        "@babel/preset-env": "^7.20.2",
+        "@symfony/stimulus-bridge": "^3.0.0",
+        "@symfony/webpack-encore": "^4.1.1",
         "autoprefixer": "^9.8.6",
         "core-js": "^3.15.2",
         "file-loader": "^6.2.0",
-        "postcss-loader": "^5.3.0",
+        "node-sass": "^8.0.0",
+        "postcss-loader": "^7.0.1",
         "prismjs": "^1.27.0",
         "regenerator-runtime": "^0.13.2",
-        "sass-loader": "^12.1.0",
+        "sass-loader": "^13.2.0",
         "stimulus": "^2.0.0",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^4.10.0",
         "webpack-notifier": "^1.6.0"
     },
     "engines": {
@@ -23,8 +29,5 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
-    },
-    "dependencies": {
-        "node-sass": "^7.0.3"
     }
 }
