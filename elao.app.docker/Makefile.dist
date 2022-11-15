@@ -80,20 +80,25 @@ serve:
 
 # ## Runs webpack dev-server with HMR enabled (PORT) using HTTPS
 # serve.assets:
+#	$(call message_success, Will be available at https://$(call project_host, 43) )
 # ifdef DOCKER
 # 	npx encore dev-server \
 # 		--host 0.0.0.0 \
-                --port 8080 \
-                --public https://$(call project_host, 88) \
-		--allowed-hosts all \
-		--server-type https \
-		--server-options-cert $(_DIR)/.manala/certificates/ssl.pem \
-		--server-options-key $(_DIR)/.manala/certificates/ssl.key \
-		--client-web-socket-url https://$(call project_host, 88)/ws
+#		--port 8080 \
+#		--public https://$(call project_host, 88) \
+#		--allowed-hosts .$(call project_host) \
+#		--server-type https \
+#		--server-options-cert $(_DIR)/.manala/certificates/ssl.pem \
+#		--server-options-key $(_DIR)/.manala/certificates/ssl.key \
+#		--client-web-socket-url https://$(call project_host, 88)/ws
 # else
 # 	npx encore dev-server \
-# 		--allowed-hosts all \
-# 		$(if $(PORT), --port $(PORT))
+#		--host $(call project_host) \
+# 		$(if $(PORT), --port $(PORT)) \
+#		--allowed-hosts .$(call project_host) \
+#		--server-type https \
+#		--server-options-cert $(_DIR)/.manala/certificates/ssl.pem \
+#		--server-options-key $(_DIR)/.manala/certificates/ssl.key
 # endif
 
 # ## Runs webpack with files watching

@@ -75,7 +75,7 @@ services:
                 MANALA_PROVISION: ansible
                 MANALA_PROVISION_LIMIT: development
         ports:
-            # Usuals
+            # Usuals (Webpack dev-server, …)
             - {{ include "project_port" (list .Vars.project 88) }}:8080
             # MailHog
             - {{ include "project_port" (list .Vars.project 25) }}:8025
