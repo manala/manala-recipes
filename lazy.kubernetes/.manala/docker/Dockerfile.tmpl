@@ -10,7 +10,7 @@ ARG DEBIAN
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 ARG GOSU_VERSION=1.14
-ARG GOMPLATE_VERSION=3.11.1
+ARG GOMPLATE_VERSION=3.11.3
 
 # The 'container' environment variable tells systemd that it's running inside a
 # Docker container environment.
@@ -124,6 +124,7 @@ complete -F __start_helm h\n\
 {{ $helmfile := .Vars.system.helmfile -}}
 {{ if $helmfile.version -}}
 # Helmfile
+ENV HELMFILE_UPGRADE_NOTICE_DISABLED=1
 RUN \
     curl -sSL https://github.com/helmfile/helmfile/releases/download/v{{ $helmfile.version }}/helmfile_{{ $helmfile.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz \
         | bsdtar -xvf - -C /usr/local/bin helmfile \
