@@ -806,7 +806,15 @@ See [Go Template syntax](https://docs.gomplate.ca/syntax/) for more info.
 
 ## Https
 
-In  order for https to work properly, you must:
+If the project wasn't already setup for HTTPS, generate a project certificate
+
+```shell
+⇒  make provision.certificates
+```
+
+and commit the new files (It has to be done 1 time per project, usually when creating the repository and introducing the recipe).
+
+In order for HTTPS to work properly on your host, you must:
 
 ### MacOS
 
@@ -817,12 +825,6 @@ In  order for https to work properly, you must:
     ```
 
 2. For firefox only, browse to `about:config` and ensure `security.enterprise_roots.enabled` value is set to true (one time for *all* projects)
-
-3. generate a project certificate (one time *by* project, remember to commit them right after)
-
-    ```shell
-    ⇒  make provision.certificates
-    ```
 
 ### Ubuntu
 
@@ -836,12 +838,6 @@ In  order for https to work properly, you must:
 2. For Chrone and Firefox, add .manala/certificates/ca.crt certificate on Security and Privacy (one time for *all* projects).
    * On Chrome, `chrome://settings/certificates` > Authorities, import `.manala/certificates/ca.crt`.
    * On Firefox, `about:preferences#privacy` > View Certificate... > Authorities, import `.manala/certificates/ca.crt`.
-
-3. generate a project certificate (one time *by* project, remember to commit them right after)
-
-    ```shell
-    ⇒  make provision.certificates
-    ```
 
 ## Extras
 
