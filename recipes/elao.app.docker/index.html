@@ -832,7 +832,10 @@ parameters:
 </p>
 </div>
 <h2 id="https">Https<a href="#https" class="anchor"></a></h2>
-<p>In  order for https to work properly, you must:</p>
+<p>If the project wasn't already setup for HTTPS, generate a project certificate</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="eeb3e472903f3360f248e70679e0438b">⇒  <span class="token function">make</span> provision.certificates</code></pre>
+<p>and commit the new files (It has to be done 1 time per project, usually when creating the repository and introducing the recipe).</p>
+<p>In order for HTTPS to work properly on your host, you must:</p>
 <h3 id="macos">MacOS<a href="#macos" class="anchor"></a></h3>
 <ol>
 <li>
@@ -841,10 +844,6 @@ parameters:
 </li>
 <li>
 <p>For firefox only, browse to <code class="code-inline" id="e43648ef7c80e1a6aa2fc5e3182ed187">about:config</code> and ensure <code class="code-inline" id="40169ca3c0758a897e82d7000d02abe3">security.enterprise_roots.enabled</code> value is set to true (one time for <em>all</em> projects)</p>
-</li>
-<li>
-<p>generate a project certificate (one time <em>by</em> project, remember to commit them right after)</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="eeb3e472903f3360f248e70679e0438b">⇒  <span class="token function">make</span> provision.certificates</code></pre>
 </li>
 </ol>
 <h3 id="ubuntu">Ubuntu<a href="#ubuntu" class="anchor"></a></h3>
@@ -860,10 +859,6 @@ $ <span class="token function">sudo</span> update-ca-certificates</code></pre>
 <li>On Chrome, <code class="code-inline" id="d818e6420763dd36884485a66574c58d">chrome://settings/certificates</code> &gt; Authorities, import <code class="code-inline" id="ddaeba1b1c054558b73cebc4da876c1b">.manala/certificates/ca.crt</code>.</li>
 <li>On Firefox, <code class="code-inline" id="eaae46a4b07ab3d521e4ec6beddc7eaf">about:preferences#privacy</code> &gt; View Certificate... &gt; Authorities, import <code class="code-inline" id="ddaeba1b1c054558b73cebc4da876c1b">.manala/certificates/ca.crt</code>.</li>
 </ul>
-</li>
-<li>
-<p>generate a project certificate (one time <em>by</em> project, remember to commit them right after)</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="eeb3e472903f3360f248e70679e0438b">⇒  <span class="token function">make</span> provision.certificates</code></pre>
 </li>
 </ol>
 <h2 id="extras">Extras<a href="#extras" class="anchor"></a></h2>
@@ -893,7 +888,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2022-11-18UTC13:40:23+00:00">Last modified: November 18, 2022 13:40</time>
+    <time datetime="2022-11-18UTC16:12:43+00:00">Last modified: November 18, 2022 16:12</time>
         </div>
 
         <footer class="footer">
