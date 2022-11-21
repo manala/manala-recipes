@@ -74,7 +74,11 @@ concurrency:
 
 jobs:
   release:
-    name: Release {{ `${{ github.event.inputs.app != '' && format('{0}@', github.event.inputs.app) || '' }}${{ github.event.inputs.tier }}` }}
+    {{- if $apps }}
+    name: {{ `${{ format('Release {0}@{1}', github.event.inputs.app, github.event.inputs.tier) }}` }}
+    {{- else }}
+    name: {{ `${{ format('Release on {0}', github.event.inputs.tier) }}` }}
+    {{- end }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -145,7 +149,11 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy {{ `${{ github.event.inputs.app != '' && format('{0}@', github.event.inputs.app) || '' }}${{ github.event.inputs.tier }}` }}
+    {{- if $apps }}
+    name: {{ `${{ format('Deploy {0}@{1}', github.event.inputs.app, github.event.inputs.tier) }}` }}
+    {{- else }}
+    name: {{ `${{ format('Deploy on {0}', github.event.inputs.tier) }}` }}
+    {{- end }}
     runs-on: ubuntu-latest
 
     environment:
@@ -161,7 +169,9 @@ jobs:
         id: deploy
         with:
           secrets: {{ `${{ toJSON(secrets) }}` }}
+          {{- if $apps }}
           app: {{ `${{ github.event.inputs.app }}` }}
+          {{- end }}
           tier: {{ `${{ github.event.inputs.tier }}` }}
           release: false
           deploy: true
