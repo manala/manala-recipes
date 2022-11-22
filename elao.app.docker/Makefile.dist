@@ -64,8 +64,14 @@ db.migrate:
 db.diff:
 	symfony console doctrine:migrations:diff
 
-## Database - Update (alias for migrate)
-db.update: db.migrate
+## Database - Update. Use FORCE=1 to force the schema update rather than using migrations
+db.update: export FORCE ?= 0
+db.update:
+	if [ $(FORCE) -eq 1 ]; then \
+		$(DOCKER_MAKE) db.update-force; \
+	else \
+		$(DOCKER_MAKE) db.migrate; \
+	fi
 
 ## Database - Force update the database schema
 db.update-force: db.create
