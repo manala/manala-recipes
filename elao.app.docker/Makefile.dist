@@ -44,7 +44,7 @@ db.install: db.create db.update-force
 db.create:
 	symfony console doctrine:database:create --if-not-exists
 
-## Database - Migrate (run migrations)
+# Database - Migrate (run migrations)
 db.migrate:
 	# If you use Messenger, without auto-setup nor a migration:
 	# Messenger:
@@ -58,15 +58,9 @@ db.diff:
 	symfony console doctrine:migrations:diff
 
 ## Database - Update. Use FORCE=1 to force the schema update rather than using migrations
-db.update: export FORCE ?= 0
-db.update:
-	if [ $(FORCE) -eq 1 ]; then \
-		$(DOCKER_MAKE) db.update-force; \
-	else \
-		$(DOCKER_MAKE) db.migrate; \
-	fi
+db.update: $(if $(FORCE), db.update-force, db.migrate)
 
-## Database - Force update the database schema
+# Database - Force update the database schema
 db.update-force: db.create
 	# If you use Messenger, without auto-setup nor a migration:
 	# Messenger:
