@@ -11,7 +11,7 @@ endef
 ###########
 
 ## Install application
-install: install.composer install.npm install.yarn
+install: install.composer install.npm
 
 install.composer:
 	# symfony composer install --ansi --verbose
@@ -19,17 +19,12 @@ install.composer:
 install.npm:
 	# npm install --color=always
 
-install.yarn:
-	# yarn install --color=always
-
 install@production: export APP_ENV = prod
 install@production:
 	# # Composer
 	# composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --no-dev
 	# # Npm
 	# npm install --color=always --no-progress --no-audit --no-fund
-	# # Yarn
-	# yarn install --color=always --no-progress
 
 install@staging: export APP_ENV = prod
 install@staging:
@@ -37,8 +32,6 @@ install@staging:
 	# composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts
 	# # Npm
 	# npm install --color=always --no-progress --no-audit --no-fund
-	# # Yarn
-	# yarn install --color=always --no-progress
 
 ############
 # Database #
