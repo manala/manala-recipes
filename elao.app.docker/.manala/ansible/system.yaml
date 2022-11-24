@@ -214,14 +214,6 @@
       - template: nginx/ssl_offloading.conf.j2
       - "{{ system_nginx_configs }}"
 
-    #########
-    # Ngrok #
-    #########
-
-    manala_ngrok_configs_exclusive: true
-    manala_ngrok_configs:
-        - template: ngrok/ngrok.yml.j2
-
     #######
     # Npm #
     #######
