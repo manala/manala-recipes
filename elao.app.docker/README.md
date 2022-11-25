@@ -875,6 +875,5 @@ framework:
 ## Caveats
 
 - MySQL 5.7 docker images are not available on arm64, that's why amd64 architecture is forced. Expect rare speed and stability issues.
-- Nginx official debian packages for stretch are not available on arm64, that's why debian packages are used in version `1.10`. Expect rare configuration issues.
 - OpenSSL debian packages for buster are broken on arm64, that's why bullseye ones are used. Expect rare behavior issues.
 - Firefox is blocking some ports like `10080`. Try to avoid them.

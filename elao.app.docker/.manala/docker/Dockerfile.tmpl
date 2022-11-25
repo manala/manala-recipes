@@ -28,17 +28,10 @@ RUN \
     export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
     && export DEBIAN_FRONTEND="noninteractive" \
-    {{- if eq (.version|int) 9 }}
-    && apt-get --quiet update \
-    {{- else }}
     && apt-get --quiet --allow-releaseinfo-change update \
-    {{- end }}
     && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --purge --auto-remove dist-upgrade \
     && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
         gnupg \
-        {{- if eq (.version|int) 9 }}
-        dirmngr \
-        {{- end }}
         ca-certificates \
         sudo \
         curl \
@@ -104,10 +97,7 @@ RUN \
     # Useless services
     && insserv --remove \
         # rcS / rc2
-        {{- if eq (.version|int) 9 }}
-        mountall-bootclean.sh mountall.sh checkroot-bootclean.sh checkfs.sh checkroot.sh motd bootlogs hostname.sh \
-        hwclock.sh mountdevsubfs.sh mountkernfs.sh \
-        {{- else if eq (.version|int) 10 }}
+        {{- if eq (.version|int) 10 }}
         mountall-bootclean.sh mountall.sh checkroot-bootclean.sh checkfs.sh checkroot.sh bootlogs hostname.sh \
         hwclock.sh mountdevsubfs.sh mountkernfs.sh \
         brightness \
@@ -150,18 +140,8 @@ RUN \
     # Disable all debian user interaction
     && export DEBIAN_FRONTEND="noninteractive" \
     && rm -f /etc/init.d/hwclock.sh \
-    {{- if eq (.version|int) 9 }}
-    # Note: package is missing openrc-init binary on stretch, install it from buster
-    && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
-        insserv librc1 \
-    && curl -sSL http://snapshot.debian.org/archive/debian/20190203T151428Z/pool/main/o/openrc/openrc_0.40.3-1_$(dpkg --print-architecture).deb \
-        -o /var/cache/apt/archives/openrc.deb \
-    && dpkg --install \
-        /var/cache/apt/archives/openrc.deb
-    {{- else }}
     && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
         openrc
-    {{- end }}
 
 STOPSIGNAL SIGINT
 
