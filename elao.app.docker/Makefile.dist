@@ -3,7 +3,7 @@
 -include .manala/Makefile
 
 define setup
-	$(DOCKER_MAKE) install build
+	$(DOCKER_MAKE) install db.install build
 endef
 
 ###########
@@ -11,40 +11,85 @@ endef
 ###########
 
 ## Install application
-install:
-	# # Composer
-	# composer install --ansi --verbose
-	# # Doctrine
-	# bin/console doctrine:database:create --ansi --if-not-exists
-	# # Npm
+install: install.composer install.npm
+
+install.composer:
+	# symfony composer install --ansi --verbose
+
+install.npm:
 	# npm install --color=always
-	# # Yarn
-	# yarn install --color=always
 
 install@production: export APP_ENV = prod
 install@production:
 	# # Composer
 	# composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --no-dev
 	# # Npm
-	# npm install --color=always --no-progress --no-audit
-	# # Yarn
-	# yarn install --color=always --no-progress
+	# npm install --color=always --no-progress --no-audit --no-fund
 
 install@staging: export APP_ENV = prod
 install@staging:
 	# # Composer
 	# composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts
 	# # Npm
-	# npm install --color=always --no-progress --no-audit
-	# # Yarn
-	# yarn install --color=always --no-progress
+	# npm install --color=always --no-progress --no-audit --no-fund
+
+############
+# Database #
+############
+
+## Database - Init (create+schema)
+db.install: db.create db.update-force
+
+## Database - Create (db only)
+db.create:
+	symfony console doctrine:database:create --if-not-exists
+
+# Database - Migrate (run migrations)
+db.migrate:
+	# If you use Messenger, without auto-setup nor a migration:
+	# Messenger:
+	# symfony console messenger:setup-transports
+	# Doctrine:
+	symfony console doctrine:migrations:sync-metadata-storage
+	symfony console doctrine:migration:migrate --no-interaction
+
+## Database - Generate a migration from current db schema diff
+db.diff:
+	symfony console doctrine:migrations:diff
+
+## Database - Update. Use FORCE=1 to force the schema update rather than using migrations
+db.update: $(if $(FORCE), db.update-force, db.migrate)
+
+# Database - Force update the database schema
+db.update-force: db.create
+	# If you use Messenger, without auto-setup nor a migration:
+	# Messenger:
+	# symfony console messenger:setup-transports
+	# Doctrine:
+	symfony console doctrine:schema:update --force
+	symfony console doctrine:migrations:sync-metadata-storage
+	symfony console doctrine:migrations:version --add --all --no-interaction
+
+## Database - Drop
+db.drop:
+	symfony console doctrine:database:drop --force --if-exists
+
+## Database - Reset
+db.reset: db.drop db.install
+
+## Database - Load data fixtures
+db.fixtures:
+	symfony console doctrine:fixtures:load --no-interaction
 
 #########
 # Build #
 #########
 
 ## Build application
-build:
+build: build.assets
+
+## Build assets
+build.assets:
 	# npx encore dev --color --progress
 
 build@production:
@@ -105,6 +150,14 @@ serve:
 # serve.assets:
 # 	npx encore dev \
 # 		--watch
+
+###########
+# Release #
+###########
+
+## Bump version
+version:
+	$(call semver_bump,VERSION,$(VERSION))
 
 ###########
 # Project #
