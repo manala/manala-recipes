@@ -39,7 +39,7 @@ system:
     mount: []
     docker: false
     ansible:
-        # @schema {"enum": ["2.11.12"]}
+        # @schema {"enum": ["2.14.0"]}
         # @option {"label": "Ansible version"}
         version: ~
     ansible-lint:
@@ -51,6 +51,6 @@ system:
         # @option {"label": "Molecule version"}
         version: ~
         docker:
-          # @schema {"enum": [null, "1.1.0"]}
+          # @schema {"enum": [null, "2.0.0"]}
           # @option {"label": "Molecule Docker version"}
           version: ~
