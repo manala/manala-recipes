@@ -2,6 +2,12 @@
 
 - hosts: system
 
+  module_defaults:
+    ansible.builtin.setup:
+      gather_subset:
+        - all
+        - "!hardware"
+
   collections:
     - manala.roles
 

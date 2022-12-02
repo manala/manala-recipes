@@ -191,34 +191,46 @@ FROM init-${MANALA_INIT} AS provision-none
 # Ansible
 FROM init-${MANALA_INIT} AS provision-ansible
 
-ARG ANSIBLE_CORE_VERSION=2.11.12
+ARG ANSIBLE_CORE_VERSION=2.14.0
 ARG MANALA_PROVISION_LIMIT
 ARG SYMFONY_IDE
 
 # Locale
 ENV LANG={{ .locales.default }}
 
+# As managed node
 RUN \
     # Disable irrelevants apt-key warnings
     export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
     && export DEBIAN_FRONTEND="noninteractive" \
     && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
-        python3 python3-pip \
-        {{- if le (.version|int) 10 }}
-        python3-setuptools python3-wheel python3-cryptography \
-        {{- end }}
-        python3-apt \
+        python3 \
+        python3-apt
+
+# As controller node
+{{- if eq (.version|int) 10 }}
+COPY --from=python:3.9.2-slim-buster /usr/local/bin/python3.9 /usr/local/bin/
+COPY --from=python:3.9.2-slim-buster /usr/local/lib/libpython3.9.so.1.0 /usr/local/lib/
+COPY --from=python:3.9.2-slim-buster /usr/local/lib/python3.9/ /usr/local/lib/python3.9/
+RUN \
+    ldconfig \
+    && python3.9 -m pip install --disable-pip-version-check ansible-core==${ANSIBLE_CORE_VERSION} \
+{{- else }}
+RUN \
+    # Disable irrelevants apt-key warnings
+    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
+    # Disable all debian user interaction
+    && export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
+        python3-pip \
     && pip3 install ansible-core==${ANSIBLE_CORE_VERSION} \
+{{- end }}
     && mkdir -p /etc/ansible/ \
     && printf "\
 [defaults]\n\
 force_color = True\n\
-gather_subset = all,!hardware\n\
 display_skipped_hosts = False\n\
-{{- if le (.version|int) 10 }}
-deprecation_warnings = False\n\
-{{- end }}
 retry_files_enabled = False\n\
 stdout_callback = yaml\n\
 [ssh_connection]\n\
