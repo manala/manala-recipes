@@ -51,13 +51,7 @@
         state: "{{ 'present' if (system_influxdb) else 'ignore' }}"
       # Nginx
       - preference: nginx@nginx
-        state: "{{ 'present' if (system_nginx and (ansible_distribution_release not in ['stretch'])) else 'ignore' }}"
-      # Supervisor
-      - preference: "supervisor@{{
-          'backports' if (ansible_distribution_release in ['stretch']) else
-          'default'
-        }}"
-        state: "{{ 'present' if (system_supervisor and (ansible_distribution_release in ['stretch'])) else 'ignore' }}"
+        state: "{{ 'present' if (system_nginx) else 'ignore' }}"
       # MariaDB
       - preference: "mariadb@{{
           'mariadb_' ~ system_mariadb_version|string|replace('.', '_') if (system_mariadb) else
@@ -67,8 +61,7 @@
       # Redis
       - preference: redis@backports
         state: "{{ 'present' if (
-          (system_redis_version|string == '5.0') and (ansible_distribution_release in ['stretch'])
-          or (system_redis_version|string == '6.0') and (ansible_distribution_release in ['buster'])
+          (system_redis_version|string == '6.0') and (ansible_distribution_release in ['buster'])
         ) else 'ignore' }}"
       # GitHub CLI
       - preference: gh@github_cli

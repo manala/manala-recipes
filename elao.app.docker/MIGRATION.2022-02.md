@@ -81,7 +81,7 @@ In `.manala.yaml` system:
 system:
     ...
 -    version: 8
-+    version: 10  # 9|10|11
++    version: 10  # 10|11
 -    memory: 4096
 -    cpus: 2
 ```
