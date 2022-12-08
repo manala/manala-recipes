@@ -20,8 +20,6 @@
   ansible.builtin.shell: >
     rm --recursive --force {{ release_dir }}
     && mkdir -p {{ release_dir }}
-  args:
-    warn: false
   tags: log_failed
 
 - name: git > Export repository
@@ -67,8 +65,6 @@
 - name: Remove
   ansible.builtin.shell: >
     rm --recursive --force --verbose {{ [release_dir, item]|join('/') }}
-  args:
-    warn: false
   tags: log_failed
   loop: "{{ release_remove }}"
 
