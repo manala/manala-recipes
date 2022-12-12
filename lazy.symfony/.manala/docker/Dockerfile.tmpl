@@ -29,6 +29,7 @@ RUN \
         gnupg \
         libarchive-tools bzip2 \
         bash-completion \
+        rsync \
         git \
         make \
         less \
@@ -62,8 +63,7 @@ ARG DEBIAN
 
 RUN \
     apt-get install --yes --no-install-recommends \
-      unzip \
-      rsync
+      unzip
 
 {{ if .Vars.system.docker -}}
 # Docker
