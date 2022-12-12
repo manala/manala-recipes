@@ -63,7 +63,6 @@ ARG DEBIAN
 RUN \
     apt-get install --yes --no-install-recommends \
       unzip \
-      git \
       rsync
 
 {{ if .Vars.system.docker -}}
