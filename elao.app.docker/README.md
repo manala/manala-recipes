@@ -183,7 +183,7 @@ system:
         #               }
         #           }
     php:
-        version: 8.1
+        version: 8.2
         # composer:
         #   version: 1 # Optional
         extensions:
@@ -604,7 +604,7 @@ deliveries:
     #deploy_remove:
     #  - web/app_dev.php
     deploy_post_tasks:
-      - shell: sudo /bin/systemctl reload php8.1-fpm
+      - shell: sudo /bin/systemctl reload php8.2-fpm
       #- shell: sudo /bin/systemctl restart supervisor
     # GitHub
     github_ssh_key_secret: SSH_DEPLOY_KEY_PRODUCTION
