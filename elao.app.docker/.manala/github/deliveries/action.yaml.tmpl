@@ -102,7 +102,11 @@ runs:
         && inputs.deploy != 'false'
       id: deployment_url_{{ $delivery_id_suffix }}
       shell: bash
+      {{- if hasKey $delivery "deploy_url" }}
       run: echo "deployment_url={{ $delivery.deploy_url }}" >> $GITHUB_OUTPUT
+      {{- else }}
+      run: echo "deployment_url=" >> $GITHUB_OUTPUT
+      {{- end }}
 
     - name: Deploy {{ $delivery_name }}
       if: >
