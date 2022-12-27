@@ -104,7 +104,9 @@ jobs:
           GH_TOKEN: {{ `${{ secrets.GITHUB_TOKEN }}` }}
         run: |
           gh workflow run deploy \
+          {{- if $apps }}
               --field app={{ `${{ github.event.inputs.app }}` }} \
+          {{- end }}
               --field tier={{ `${{ github.event.inputs.tier }}` }}
 ```
 
