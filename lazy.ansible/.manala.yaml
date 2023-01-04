@@ -39,15 +39,15 @@ system:
     mount: []
     docker: false
     ansible:
-        # @schema {"enum": ["2.14.0"]}
+        # @schema {"enum": ["2.14.1", "2.13.7", "2.12.10"]}
         # @option {"label": "Ansible version"}
         version: ~
     ansible-lint:
-        # @schema {"enum": [null, "6.9.0"]}
+        # @schema {"enum": [null, "6.10.2", "6.9.1"]}
         # @option {"label": "Ansible-lint version"}
         version: ~
     molecule:
-        # @schema {"enum": [null, "4.0.3"]}
+        # @schema {"enum": [null, "4.0.4"]}
         # @option {"label": "Molecule version"}
         version: ~
         docker:
