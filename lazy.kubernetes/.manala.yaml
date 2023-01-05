@@ -39,11 +39,11 @@ system:
     mount: []
     docker: false
     kubectl:
-        # @schema {"enum": ["1.25.4", "1.24.8", "1.23.14", "1.22.16", "1.21.14", "1.20.15", "1.19.16", "1.18.20"]}
+        # @schema {"enum": ["1.25.5", "1.24.9", "1.23.15", "1.22.17", "1.21.14", "1.20.15", "1.19.16", "1.18.20"]}
         # @option {"label": "Kubectl version"}
         version: ~
     helm:
-        # @schema {"enum": [null, "3.10.2", "3.9.4", "3.8.2"]}
+        # @schema {"enum": [null, "3.10.3", "3.9.4", "3.8.2"]}
         # @option {"label": "Helm version"}
         version: ~
         # @schema {
@@ -62,7 +62,7 @@ system:
         # }
         plugins: []
     helmfile:
-        # @schema {"enum": [null, "0.148.1"]}
+        # @schema {"enum": [null, "0.149.0"]}
         # @option {"label": "Helmfile version"}
         version: ~
     k9s:
@@ -86,11 +86,11 @@ system:
         # @option {"label": "Kubernetes namespace killer version"}
         version: ~
     vault:
-        # @schema {"enum": [null, "1.12.1", "1.11.5", "1.10.8", "1.9.10"]}
+        # @schema {"enum": [null, "1.12.2", "1.11.6", "1.10.9", "1.9.10"]}
         # @option {"label": "Vault version"}
         version: ~
     rclone:
-        # @schema {"enum": [null, "1.60.0"]}
+        # @schema {"enum": [null, "1.61.1"]}
         # @option {"label": "Rclone version"}
       version: ~
     openstack:
@@ -106,7 +106,7 @@ system:
         # @option {"label": "Swift keystone client version"}
         version: ~
     scw:
-        # @schema {"enum": [null, "2.6.2"]}
+        # @schema {"enum": [null, "2.8.0"]}
         # @option {"label": "Scaleway cli version"}
       version: ~
     sops:
