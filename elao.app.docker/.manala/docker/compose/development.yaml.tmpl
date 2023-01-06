@@ -5,11 +5,11 @@ services:
     ###########
 
     mailhog:
-        image: mailhog/mailhog:v1.0.1
+        image: jcalonso/mailhog:v1.0.1
         entrypoint:
-            - /bin/sh
-            - -c
-            - MailHog -smtp-bind-addr 0.0.0.0:25 &>/dev/null
+            - /MailHog
+            - -smtp-bind-addr
+            - 0.0.0.0:25
         network_mode: service:app
 
     {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
@@ -19,7 +19,7 @@ services:
     ##############
 
     phpmyadmin:
-        image: phpmyadmin:5.1.3
+        image: phpmyadmin:5.2.0
         environment:
             PMA_USER: root
             PMA_HOST: app
@@ -42,7 +42,7 @@ services:
     #################
 
     phpredisadmin:
-        image: erikdubbelboer/phpredisadmin:v1.17.0
+        image: erikdubbelboer/phpredisadmin:v1.18.0
         environment:
             REDIS_1_HOST: app
         ports:
@@ -59,7 +59,7 @@ services:
     ##############
 
     elasticvue :
-        image: cars10/elasticvue:0.39.0
+        image: cars10/elasticvue:0.44.0
         ports:
             - {{ include "project_port" (list .Vars.project 78) }}:8080
 
