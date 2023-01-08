@@ -28,8 +28,11 @@ system:
     {{- if .Vars.system.molecule.version }}
     molecule:
         version: {{ .Vars.system.molecule.version | toYaml }}
-        {{- if .Vars.system.molecule.docker.version }}
-        docker:
-            version: {{ .Vars.system.molecule.docker.version | toYaml }}
+        {{- if .Vars.system.molecule.plugins.version }}
+        plugins:
+            version: {{ .Vars.system.molecule.plugins.version | toYaml }}
+            azure: false
+            docker: false
+            gce: false
         {{- end }}
     {{- end }}
