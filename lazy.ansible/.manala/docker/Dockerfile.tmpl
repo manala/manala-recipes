@@ -108,8 +108,17 @@ RUN \
     # Molecule
     && pipx install molecule=={{ $molecule.version }} \
     && _MOLECULE_COMPLETE=bash_source molecule > /etc/bash_completion.d/molecule \
-    {{- if $molecule.docker.version }}
-    && pipx inject molecule molecule-docker=={{ $molecule.docker.version }} \
+    {{- if $molecule.plugins.version }}
+    && pipx inject molecule molecule-plugins=={{ $molecule.plugins.version }} \
+    {{- if $molecule.plugins.azure }}
+    && pipx inject molecule molecule-plugins[azure]=={{ $molecule.plugins.version }} \
+    {{- end }}
+    {{- if $molecule.plugins.docker }}
+    && pipx inject molecule molecule-plugins[docker]=={{ $molecule.plugins.version }} \
+    {{- end }}
+    {{- if $molecule.plugins.gce }}
+    && pipx inject molecule molecule-plugins[gce]=={{ $molecule.plugins.version }} \
+    {{- end }}
     {{- end }}
     {{- end }}
     && apt-get purge --yes --autoremove ${BUILD_PACKAGES}

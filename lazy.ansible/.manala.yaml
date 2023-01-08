@@ -50,7 +50,10 @@ system:
         # @schema {"enum": [null, "4.0.4"]}
         # @option {"label": "Molecule version"}
         version: ~
-        docker:
-          # @schema {"enum": [null, "2.0.0"]}
-          # @option {"label": "Molecule Docker version"}
+        plugins:
+          # @schema {"enum": [null, "22.0.0"]}
+          # @option {"label": "Molecule Plugins version"}
           version: ~
+          azure: false
+          docker: false
+          gce: false
