@@ -202,7 +202,7 @@ system:
                 upload_max_filesize: 16M
                 post_max_size: 16M
     nodejs:
-        version: 16
+        version: 18
         # packages:
         #   - package: mjml
         #     version: 4.6.3
