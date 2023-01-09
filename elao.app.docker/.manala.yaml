@@ -106,7 +106,7 @@ system:
         configs: []
     nodejs:
         # @option {"label": "Nodejs version"}
-        # @schema {"enum": [null, 16, 14, 12, 10, 8, 6]}
+        # @schema {"enum": [null, 18, 16, 14, 12, 10, 8, 6]}
         version: ~
         # @schema {"items": {"type": "object"}}
         packages: []
