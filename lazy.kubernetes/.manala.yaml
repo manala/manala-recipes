@@ -113,3 +113,7 @@ system:
         # @schema {"enum": [null, "3.7.3"]}
         # @option {"label": "Sops version"}
       version: ~
+    aws:
+        # @schema {"type": "string", "pattern": "^2\\.\\d+\\.\\d+$"}
+        # @option {"label": "AWS cli version"}
+      version: ~

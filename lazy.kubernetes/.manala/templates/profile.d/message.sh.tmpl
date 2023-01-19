@@ -72,6 +72,10 @@ printf " \033[36m‣ scw \033[35m{{ $scw.version }}\033[0m\n"
 {{- if $sops.version }}
 printf " \033[36m‣ sops \033[35m{{ $sops.version }}\033[0m\n"
 {{- end }}
+{{- $aws := .Vars.system.aws }}
+{{- if $aws.version }}
+printf " \033[36m‣ aws \033[35m{{ $aws.version }}\033[0m\n"
+{{- end }}
 
 {{- $help := .Vars.project.help }}
 {{- if $help }}
