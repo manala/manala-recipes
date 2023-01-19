@@ -277,7 +277,7 @@ RUN \
         unzip \
         less \
         groff \
-    && curl -sSL https://awscli.amazonaws.com/awscli-exe-linux-$(case $(dpkg --print-architecture) in "amd64") echo "x86_64" ;; "arm64") echo "aarch64" ;; esac)-{{ $aws.version }}.zip \
+    && curl -sSL https://awscli.amazonaws.com/awscli-exe-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-{{ $aws.version }}.zip \
         -o "awscli.zip" \
     && unzip awscli.zip \
     && ./aws/install --bin-dir /usr/local/bin \
