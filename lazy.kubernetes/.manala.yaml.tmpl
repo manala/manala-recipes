@@ -41,3 +41,7 @@ system:
     popeye:
         version: {{ .Vars.system.popeye.version | toYaml }}
     {{- end }}
+    {{- if .Vars.system.aws.version }}
+    aws:
+        version: {{ .Vars.system.aws.version | toYaml }}
+    {{- end }}
