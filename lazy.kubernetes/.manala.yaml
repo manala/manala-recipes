@@ -114,6 +114,6 @@ system:
         # @option {"label": "Sops version"}
       version: ~
     aws:
-        # @schema {"type": "string", "pattern": "^2\\.\\d+\\.\\d+$"}
+        # @schema {"enum": [null, "2.9.16"]}
         # @option {"label": "AWS cli version"}
       version: ~
