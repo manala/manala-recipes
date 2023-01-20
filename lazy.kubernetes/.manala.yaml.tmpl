@@ -24,6 +24,10 @@ system:
     helm:
         version: {{ .Vars.system.helm.version | toYaml }}
     {{- end }}
+    {{- if .Vars.system.helmfile.version }}
+    helmfile:
+        version: {{ .Vars.system.helmfile.version | toYaml }}
+    {{- end }}
     {{- if .Vars.system.k9s.version }}
     k9s:
         version: {{ .Vars.system.k9s.version | toYaml }}
@@ -40,6 +44,34 @@ system:
     {{- if .Vars.system.popeye.version }}
     popeye:
         version: {{ .Vars.system.popeye.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.knsk.version }}
+    knsk:
+        version: {{ .Vars.system.knsk.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.vault.version }}
+    vault:
+        version: {{ .Vars.system.vault.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.rclone.version }}
+    rclone:
+        version: {{ .Vars.system.rclone.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.openstack.version }}
+    openstack:
+        version: {{ .Vars.system.openstack.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.swift.version }}
+    swift:
+        version: {{ .Vars.system.swift.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.scw.version }}
+    scw:
+        version: {{ .Vars.system.scw.version | toYaml }}
+    {{- end }}
+    {{- if .Vars.system.sops.version }}
+    sops:
+        version: {{ .Vars.system.sops.version | toYaml }}
     {{- end }}
     {{- if .Vars.system.aws.version }}
     aws:
