@@ -268,3 +268,21 @@ RUN \
     && chmod +x /usr/local/bin/sops
 
 {{ end -}}
+
+{{ $aws := .Vars.system.aws -}}
+{{ if $aws.version -}}
+# AWS cli
+RUN \
+    apt-get install --yes --no-install-recommends \
+        groff \
+    && curl -sSL https://awscli.amazonaws.com/awscli-exe-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-{{ $aws.version }}.zip \
+        -o aws.zip \
+    && bsdtar -xvf aws.zip \
+    && aws/install \
+        --install-dir /usr/local/aws-cli \
+        --bin-dir /usr/local/bin \
+    && rm -rf aws* \
+    # Bash completion
+    && printf "complete -C /usr/local/bin/aws_completer aws" > /etc/bash_completion.d/aws
+
+{{ end -}}
