@@ -18,10 +18,13 @@ ARG GOMPLATE_VERSION=3.11.3
 ENV container="docker"
 
 RUN \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
     # Backports
-    printf "deb http://deb.debian.org/debian ${DEBIAN}-backports main" > /etc/apt/sources.list.d/backports.list \
-    && apt-get update \
-    && apt-get install --yes --no-install-recommends \
+    && printf "deb http://deb.debian.org/debian ${DEBIAN}-backports main" > /etc/apt/sources.list.d/backports.list \
+    && apt-get --quiet --allow-releaseinfo-change update \
+    && apt-get --quiet --yes --purge --auto-remove dist-upgrade \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         s6 \
         sudo \
         curl \
@@ -63,7 +66,9 @@ ARG DEBIAN
 ARG VIM_GNUPG_VERSION=2.7.1
 
 RUN \
-    apt-get install --yes --no-install-recommends \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         jq \
     # Vim Gnupg
     && mkdir -p /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg \
@@ -74,11 +79,13 @@ RUN \
 {{ if .Vars.system.docker -}}
 # Docker
 RUN \
-    printf "deb https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && printf "deb https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
     && curl -sSL https://download.docker.com/linux/debian/gpg \
         | apt-key add - \
-    && apt-get update \
-    && apt-get install --yes --no-install-recommends \
+    && apt-get --quiet update \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         docker-ce-cli
 
 {{ end -}}
@@ -219,11 +226,13 @@ RUN \
     BUILD_PACKAGES="pipx python3-venv gcc libpython3-dev" \
     export PIPX_HOME="/usr/local" \
     export PIPX_BIN_DIR="/usr/local/bin" \
-    && apt-get install --yes --no-install-recommends \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
       python3 \
       ${BUILD_PACKAGES} \
     && pipx install python-openstackclient=={{ $openstack.version }} \
-    && apt-get purge --yes --autoremove ${BUILD_PACKAGES} \
+    && apt-get --quiet --yes --autoremove purge ${BUILD_PACKAGES} \
     # Bash completion
     && openstack complete > /etc/bash_completion.d/openstack
 
@@ -236,14 +245,16 @@ RUN \
     BUILD_PACKAGES="pipx python3-venv gcc libpython3-dev" \
     export PIPX_HOME="/usr/local" \
     export PIPX_BIN_DIR="/usr/local/bin" \
-    && apt-get install --yes --no-install-recommends \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
       python3 \
       ${BUILD_PACKAGES} \
     && pipx install python-swiftclient=={{ $swift.version }} \
     {{ if $swift.keystone.version -}}
     && pipx inject python-swiftclient python-keystoneclient=={{ $swift.keystone.version }} \
     {{ end -}}
-    && apt-get purge --yes --autoremove ${BUILD_PACKAGES}
+    && apt-get --quiet --yes --autoremove purge ${BUILD_PACKAGES}
 
 {{ end -}}
 

@@ -24,13 +24,11 @@ ENV MANALA_HOST_OS=${MANALA_HOST_OS}
 ENV MANALA_HOST_PATH=${MANALA_HOST_PATH}
 
 RUN \
-    # Disable irrelevants apt-key warnings
-    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
-    && export DEBIAN_FRONTEND="noninteractive" \
+    export DEBIAN_FRONTEND="noninteractive" \
     && apt-get --quiet --allow-releaseinfo-change update \
-    && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --purge --auto-remove dist-upgrade \
-    && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
+    && apt-get --quiet --yes --purge --auto-remove dist-upgrade \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         gnupg \
         ca-certificates \
         sudo \
@@ -74,14 +72,12 @@ ENTRYPOINT ["/entrypoint.sh"]
 FROM system AS init-sysv
 
 RUN \
-    # Disable irrelevants apt-key warnings
-    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
-    && export DEBIAN_FRONTEND="noninteractive" \
+    export DEBIAN_FRONTEND="noninteractive" \
     # Work around chroot check to avoid sysvinit restart after install
     && mv /usr/bin/ischroot /usr/bin/ischroot_ \
     && ln -s /bin/true /usr/bin/ischroot \
-    && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         sysvinit-core \
     && mv /usr/bin/ischroot_ /usr/bin/ischroot \
     # Disable getty
@@ -135,12 +131,10 @@ ENTRYPOINT ["/entrypoint.sh"]
 FROM system AS init-openrc
 
 RUN \
-    # Disable irrelevants apt-key warnings
-    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
-    && export DEBIAN_FRONTEND="noninteractive" \
+    export DEBIAN_FRONTEND="noninteractive" \
     && rm -f /etc/init.d/hwclock.sh \
-    && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         openrc
 
 STOPSIGNAL SIGINT
@@ -153,11 +147,9 @@ ENTRYPOINT ["/entrypoint.sh"]
 FROM system AS init-systemd
 
 RUN \
-    # Disable irrelevants apt-key warnings
-    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
-    && export DEBIAN_FRONTEND="noninteractive" \
-    && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
+    export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         systemd dbus \
     && systemctl set-default multi-user.target \
     && sed -i 's/#\(ForwardToConsole=\).*$/\1yes/' \
@@ -200,11 +192,9 @@ ENV LANG={{ .locales.default }}
 
 # As managed node
 RUN \
-    # Disable irrelevants apt-key warnings
-    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
-    && export DEBIAN_FRONTEND="noninteractive" \
-    && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
+    export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         python3 \
         python3-apt
 
@@ -218,11 +208,9 @@ RUN \
     && python3.9 -m pip install --disable-pip-version-check ansible-core==${ANSIBLE_CORE_VERSION} \
 {{- else }}
 RUN \
-    # Disable irrelevants apt-key warnings
-    export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1" \
     # Disable all debian user interaction
-    && export DEBIAN_FRONTEND="noninteractive" \
-    && apt-get --quiet --yes -o=Dpkg::Use-Pty=0 --no-install-recommends --verbose-versions install \
+    export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         python3-pip \
     && pip3 install ansible-core==${ANSIBLE_CORE_VERSION} \
 {{- end }}
