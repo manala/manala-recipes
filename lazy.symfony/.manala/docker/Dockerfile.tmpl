@@ -38,6 +38,8 @@ RUN \
         less \
         vim \
         socat \
+    # Apt keyrings (debian < bookworm)
+    && mkdir -p 755 /etc/apt/keyrings \
     # User
     && addgroup --gid ${GROUP_ID} lazy \
     && adduser --home /home/lazy --shell /bin/bash --uid ${USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
@@ -75,9 +77,9 @@ RUN \
 RUN \
     # Disable all debian user interaction
     export DEBIAN_FRONTEND="noninteractive" \
-    && printf "deb https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
     && curl -sSL https://download.docker.com/linux/debian/gpg \
-        | apt-key add - \
+        | gpg --dearmor --output /etc/apt/keyrings/docker.gpg \
+    && printf "deb [signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
     && apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         docker-ce-cli
@@ -89,9 +91,9 @@ RUN \
 RUN \
     # Disable all debian user interaction
     export DEBIAN_FRONTEND="noninteractive" \
-    && printf "deb http://nginx.org/packages/debian/ ${DEBIAN} nginx" > /etc/apt/sources.list.d/nginx.list \
     && curl -sSL http://nginx.org/keys/nginx_signing.key \
-        | apt-key add - \
+        | gpg --dearmor --output /etc/apt/keyrings/nginx.gpg \
+    && printf "deb [signed-by=/etc/apt/keyrings/nginx.gpg] http://nginx.org/packages/debian/ ${DEBIAN} nginx" > /etc/apt/sources.list.d/nginx.list \
     && apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         nginx={{ $nginx.version }}.*
@@ -136,12 +138,12 @@ RUN \
 RUN \
     # Disable all debian user interaction
     export DEBIAN_FRONTEND="noninteractive" \
-    && printf "deb https://deb.nodesource.com/node_{{ $nodejs.version }}.x ${DEBIAN} main" > /etc/apt/sources.list.d/node.list \
     && curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
-        | apt-key add - \
-    && printf "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
+        | gpg --dearmor --output /etc/apt/keyrings/nodesource.gpg \
+    && printf "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_{{ $nodejs.version }}.x ${DEBIAN} main" > /etc/apt/sources.list.d/node.list \
     && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg \
-        | apt-key add - \
+        | gpg --dearmor --output /etc/apt/keyrings/yarn.gpg \
+    && printf "deb [signed-by=/etc/apt/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
     && apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         nodejs \
