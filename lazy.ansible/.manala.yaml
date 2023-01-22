@@ -38,10 +38,15 @@ system:
     # @schema {"items": {"type": "string"}}
     mount: []
     docker: false
+    ssh:
+        # @schema {"type": ["null", "string"]}
+        config: ~
     ansible:
         # @schema {"enum": ["2.14.1", "2.13.7", "2.12.10"]}
         # @option {"label": "Ansible version"}
         version: ~
+        # @schema {"type": ["null", "string"]}
+        config: ~
     ansible-lint:
         # @schema {"enum": [null, "6.11.0", "6.10.2", "6.9.1"]}
         # @option {"label": "Ansible-lint version"}
