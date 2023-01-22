@@ -4,8 +4,8 @@ manala:
     sync:
       - .manala/ansistrano
       - .manala/docker
+      - .manala/etc
       - .manala/make
-      - .manala/templates
       - .manala/.dockerignore
       - .manala/.gitignore
       - .manala/Makefile.tmpl
