@@ -116,7 +116,6 @@ services:
         {{- end }}
         {{- end }}
         working_dir: ${DIR}
-        entrypoint: .manala/docker/entrypoint.sh
         {{- if or .Vars.system.mariadb.version .Vars.system.maildev.version }}
         links:
             {{- if .Vars.system.mariadb.version }}
