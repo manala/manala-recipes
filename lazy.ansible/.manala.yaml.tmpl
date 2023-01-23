@@ -18,8 +18,30 @@ project:
 ##########
 
 system:
+    ssh:
+        config: |
+            # Allow host autocompletion by disabling hashing in known_hosts file
+            #HashKnownHosts no
+            # Automatically accept host keys
+            #StrictHostKeyChecking no
+            # Reduce log level
+            #LogLevel ERROR
+
+            # Example
+            Host *.example.com
+                User foo
+                ForwardAgent yes
     ansible:
         version: {{ .Vars.system.ansible.version | toYaml }}
+        config: |
+            [defaults]
+            #force_color = True
+            #retry_files_enabled = False
+            [ssh_connection]
+            # Improve performance
+            #pipelining = True
+            # Avoid issues on ssh too long socket path and/or invalid permissions
+            #control_path_dir = /tmp/ansible/cp
     {{- $ansibleLint := index .Vars.system "ansible-lint" }}
     {{- if $ansibleLint.version }}
     ansible-lint:
