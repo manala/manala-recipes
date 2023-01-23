@@ -18,10 +18,13 @@ ARG GOMPLATE_VERSION=3.11.3
 ENV container="docker"
 
 RUN \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
     # Backports
-    printf "deb http://deb.debian.org/debian ${DEBIAN}-backports main" > /etc/apt/sources.list.d/backports.list \
-    && apt-get update \
-    && apt-get install --yes --no-install-recommends \
+    && printf "deb http://deb.debian.org/debian ${DEBIAN}-backports main" > /etc/apt/sources.list.d/backports.list \
+    && apt-get --quiet --allow-releaseinfo-change update \
+    && apt-get --quiet --yes --purge --auto-remove dist-upgrade \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         s6 \
         sudo \
         curl \
@@ -62,17 +65,21 @@ FROM base AS system
 ARG DEBIAN
 
 RUN \
-    apt-get install --yes --no-install-recommends \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
       unzip
 
 {{ if .Vars.system.docker -}}
 # Docker
 RUN \
-    printf "deb https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && printf "deb https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
     && curl -sSL https://download.docker.com/linux/debian/gpg \
         | apt-key add - \
-    && apt-get update \
-    && apt-get install --yes --no-install-recommends \
+    && apt-get --quiet update \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         docker-ce-cli
 
 {{ end -}}
@@ -80,21 +87,25 @@ RUN \
 # Nginx
 {{ $nginx := .Vars.system.nginx -}}
 RUN \
-    printf "deb http://nginx.org/packages/debian/ ${DEBIAN} nginx" > /etc/apt/sources.list.d/nginx.list \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && printf "deb http://nginx.org/packages/debian/ ${DEBIAN} nginx" > /etc/apt/sources.list.d/nginx.list \
     && curl -sSL http://nginx.org/keys/nginx_signing.key \
         | apt-key add - \
-    && apt-get update \
-    && apt-get install --yes --no-install-recommends \
+    && apt-get --quiet update \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         nginx={{ $nginx.version }}.*
 
 # Php
 {{ $php := .Vars.system.php -}}
 RUN \
-    printf "deb https://packages.sury.org/php/ ${DEBIAN} main" > /etc/apt/sources.list.d/php.list \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && printf "deb https://packages.sury.org/php/ ${DEBIAN} main" > /etc/apt/sources.list.d/php.list \
     && curl -sSL https://packages.sury.org/php/apt.gpg \
         -o /etc/apt/trusted.gpg.d/php.gpg \
-    && apt-get update \
-    && apt-get install --yes --no-install-recommends \
+    && apt-get --quiet update \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         php{{ $php.version }}-cli \
         php{{ $php.version }}-fpm \
         php{{ $php.version }}-opcache \
@@ -123,14 +134,16 @@ RUN \
 {{ if $nodejs.version -}}
 # Nodejs
 RUN \
-    printf "deb https://deb.nodesource.com/node_{{ $nodejs.version }}.x ${DEBIAN} main" > /etc/apt/sources.list.d/node.list \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && printf "deb https://deb.nodesource.com/node_{{ $nodejs.version }}.x ${DEBIAN} main" > /etc/apt/sources.list.d/node.list \
     && curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
         | apt-key add - \
     && printf "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
     && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg \
         | apt-key add - \
-    && apt-get update \
-    && apt-get install --yes --no-install-recommends \
+    && apt-get --quiet update \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         nodejs \
         yarn
 
@@ -139,7 +152,9 @@ RUN \
 {{ if .Vars.deploy.inventory -}}
 # Ansistrano
 RUN \
-    apt-get install --yes --no-install-recommends \
+    # Disable all debian user interaction
+    export DEBIAN_FRONTEND="noninteractive" \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         openssh-client \
         ansible \
     && ansible-galaxy install --roles-path /usr/share/ansible/roles \
