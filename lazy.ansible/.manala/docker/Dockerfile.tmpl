@@ -135,3 +135,7 @@ RUN \
     && apt-get --quiet --yes --autoremove purge ${BUILD_PACKAGES}
 
 {{ end -}}
+
+# Entrypoint
+COPY docker/entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]

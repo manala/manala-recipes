@@ -299,3 +299,7 @@ RUN \
     && printf "complete -C /usr/local/bin/aws_completer aws" > /etc/bash_completion.d/aws
 
 {{ end -}}
+
+# Entrypoint
+COPY docker/entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
