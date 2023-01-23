@@ -39,11 +39,11 @@ system:
     mount: []
     docker: false
     kubectl:
-        # @schema {"enum": ["1.25.5", "1.24.9", "1.23.15", "1.22.17", "1.21.14", "1.20.15", "1.19.16", "1.18.20"]}
+        # @schema {"enum": ["1.26.1", "1.25.6", "1.24.10", "1.23.16", "1.22.17", "1.21.14", "1.20.15", "1.19.16", "1.18.20"]}
         # @option {"label": "Kubectl version"}
         version: ~
     helm:
-        # @schema {"enum": [null, "3.10.3", "3.9.4", "3.8.2"]}
+        # @schema {"enum": [null, "3.11.0", "3.10.3", "3.9.4", "3.8.2"]}
         # @option {"label": "Helm version"}
         version: ~
         # @schema {
@@ -62,7 +62,7 @@ system:
         # }
         plugins: []
     helmfile:
-        # @schema {"enum": [null, "0.149.0"]}
+        # @schema {"enum": [null, "0.150.0"]}
         # @option {"label": "Helmfile version"}
         version: ~
     k9s:
@@ -114,6 +114,6 @@ system:
         # @option {"label": "Sops version"}
       version: ~
     aws:
-        # @schema {"enum": [null, "2.9.16"]}
+        # @schema {"enum": [null, "2.9.17"]}
         # @option {"label": "AWS cli version"}
       version: ~
