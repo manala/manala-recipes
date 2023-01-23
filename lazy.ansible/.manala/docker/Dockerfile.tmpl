@@ -38,6 +38,8 @@ RUN \
         less \
         vim \
         socat \
+    # Apt keyrings (debian < bookworm)
+    && mkdir -p 755 /etc/apt/keyrings \
     # User
     && addgroup --gid ${GROUP_ID} lazy \
     && adduser --home /home/lazy --shell /bin/bash --uid ${USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
@@ -82,9 +84,9 @@ RUN \
 RUN \
     # Disable all debian user interaction
     export DEBIAN_FRONTEND="noninteractive" \
-    && printf "deb https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
     && curl -sSL https://download.docker.com/linux/debian/gpg \
-        | apt-key add - \
+        | gpg --dearmor --output /etc/apt/keyrings/docker.gpg \
+    && printf "deb [signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian ${DEBIAN} stable" > /etc/apt/sources.list.d/docker.list \
     && apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         docker-ce-cli
