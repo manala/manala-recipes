@@ -11,7 +11,8 @@ services:
     system:
         hostname: {{ .Vars.project.name }}
         build:
-            context: .
+            context: ..
+            dockerfile: docker/Dockerfile
             target: system
         image: {{ .Vars.project.name }}:{{ $now }}
         volumes:
@@ -23,6 +24,8 @@ services:
             - ../../{{ $mount }}:${DIR}/{{ $mount }}
               {{- end }}
             {{- end }}
+        tmpfs:
+          - /tmp
         environment:
             DIR: ${DIR}
             CACHE_DIR: ${CACHE_DIR}
