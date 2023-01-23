@@ -3,8 +3,8 @@ manala:
     template: .manala.yaml.tmpl
     sync:
       - .manala/docker
+      - .manala/etc
       - .manala/make
-      - .manala/templates
       - .manala/.dockerignore
       - .manala/.gitignore
       - .manala/Makefile.tmpl
