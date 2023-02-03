@@ -80,7 +80,6 @@ services:
         build:
             context: ..
             dockerfile: docker/Dockerfile
-            target: system
         image: {{ .Vars.project.name }}:{{ $now }}
         restart: always
         ports:
