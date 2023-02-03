@@ -1,0 +1,47 @@
+package:
+  # System
+  openssh-client:
+    installed: true
+  sshpass:
+    installed: true
+  shellcheck:
+    installed: true
+  # Docker
+  docker-ce-cli:
+    installed: true
+
+group:
+  # Base
+  lazy:
+    exists: true
+    gid: 1000
+
+user:
+  # Base
+  lazy:
+    exists: true
+    uid: 1000
+    groups:
+      - lazy
+    home: /home/lazy
+    shell: /bin/bash
+
+command:
+  # Ansible
+  ansible --version:
+    exit-status: 0
+    stdout:
+      - ansible [core {{ .Vars.system.ansible.version }}]
+  # Ansible Lint
+  ansible-lint --version:
+    exit-status: 0
+    stdout:
+      - ansible-lint {{ (index .Vars.system "ansible-lint").version }}
+  # Molecule
+  molecule --version:
+    exit-status: 0
+    stdout:
+      - molecule {{ .Vars.system.molecule.version }} using python 3.9
+      - azure:{{ .Vars.system.molecule.plugins.version }} from molecule_plugin
+      - docker:{{ .Vars.system.molecule.plugins.version }} from molecule_plugin
+      - gce:{{ .Vars.system.molecule.plugins.version }} from molecule_plugin

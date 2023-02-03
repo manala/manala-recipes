@@ -1,0 +1,97 @@
+package:
+  # System
+  jq:
+    installed: true
+  # Docker
+  docker-ce-cli:
+    installed: true
+
+group:
+  # Base
+  lazy:
+    exists: true
+    gid: 1000
+
+user:
+  # Base
+  lazy:
+    exists: true
+    uid: 1000
+    groups:
+      - lazy
+    home: /home/lazy
+    shell: /bin/bash
+
+command:
+  # Kubectl
+  kubectl version --client false --short:
+    exit-status: 0
+    stdout:
+      - "Client Version: v{{ .Vars.system.kubectl.version }}"
+  # Helm
+  helm version --short:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.helm.version }}
+  helm plugin list:
+    exit-status: 0
+    stdout:
+      - diff	{{ (index .Vars.system.helm.plugins 0).version }}
+  # Helmfile
+  helmfile --version:
+    exit-status: 0
+    stdout:
+      - helmfile version {{ .Vars.system.helmfile.version }}
+  # K9s
+  k9s version --short:
+    exit-status: 0
+    stdout:
+      - "Version              v{{ .Vars.system.k9s.version }}"
+  # Stern
+  stern --version:
+    exit-status: 0
+    stdout:
+      - "version: {{ .Vars.system.stern.version }}"
+  # Popeye
+  popeye version:
+    exit-status: 0
+    stdout:
+      - {{ .Vars.system.popeye.version }}
+  # Knsk
+  knsk.sh --help:
+    exit-status: 0
+  # Vault
+  vault version:
+    exit-status: 0
+    stdout:
+      - Vault v{{ .Vars.system.vault.version }}
+  # Rclone
+  rclone version:
+    exit-status: 0
+    stdout:
+      - rclone v{{ .Vars.system.rclone.version }}
+  # Openstack
+  openstack --version:
+    exit-status: 0
+    stdout:
+      - openstack {{ .Vars.system.openstack.version }}
+  # Swift
+  swift --version:
+    exit-status: 0
+    stdout:
+      - python-swiftclient {{ .Vars.system.swift.version }}
+  # Scaleway cli
+  scw version:
+    exit-status: 0
+    stdout:
+      - Version    {{ .Vars.system.scw.version }}
+  # Sops
+  sops --version:
+    exit-status: 0
+    stdout:
+      - sops {{ .Vars.system.sops.version }}
+  # AWS cli
+  aws --version:
+    exit-status: 0
+    stdout:
+      - aws-cli/{{ .Vars.system.aws.version }}

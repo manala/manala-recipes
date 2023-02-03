@@ -1,0 +1,44 @@
+name: Lazy - Kubernetes
+
+on:
+  pull_request:
+    paths:
+      - lazy.kubernetes/**
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: lazy.kubernetes
+
+jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up manala
+        run: curl -sfL https://raw.githubusercontent.com/manala/manala/main/godownloader.sh | sudo sh -s -- -b /usr/local/bin
+
+      - name: Lint
+        run: |
+          make lint \
+            VERBOSE=1
+
+  test:
+    name: Test
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up manala
+        run: curl -sfL https://raw.githubusercontent.com/manala/manala/main/godownloader.sh | sudo sh -s -- -b /usr/local/bin
+
+      - name: Test
+        run: |
+          make test

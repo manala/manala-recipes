@@ -1,0 +1,25 @@
+manala:
+    repository: ..
+    recipe: lazy.ansible
+
+project:
+    name: test
+
+system:
+    docker: true
+    ssh:
+        config: |
+            # Ssh config
+    ansible:
+        version: 2.14.1
+        config: |
+            # Ansible config
+    ansible-lint:
+        version: 6.11.0
+    molecule:
+        version: 4.0.4
+        plugins:
+            version: 23.0.0
+            azure: true
+            docker: true
+            gce: true
