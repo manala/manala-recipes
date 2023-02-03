@@ -1,0 +1,52 @@
+package:
+  # System
+  unzip:
+    installed: true
+  # Docker
+  docker-ce-cli:
+    installed: true
+
+group:
+  # Base
+  lazy:
+    exists: true
+    gid: 1000
+
+user:
+  # Base
+  lazy:
+    exists: true
+    uid: 1000
+    groups:
+      - lazy
+    home: /home/lazy
+    shell: /bin/bash
+
+command:
+  # Nginx
+  nginx -V:
+    exit-status: 0
+    stderr:
+      - "nginx version: nginx/{{ .Vars.system.nginx.version }}"
+  # Php
+  php --version:
+    exit-status: 0
+    stdout:
+      - PHP {{ .Vars.system.php.version }}
+  php -m:
+    exit-status: 0
+    stdout:
+      # Base
+      - Zend OPcache
+      # Symfony
+      - intl
+      - curl
+      - mbstring
+      - xml
+      # Project
+      - {{ index .Vars.system.php.extensions 0 }}
+  # Nodejs
+  node --version:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.nodejs.version }}

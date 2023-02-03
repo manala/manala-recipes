@@ -1,0 +1,17 @@
+manala:
+    repository: ..
+    recipe: lazy.symfony
+
+project:
+    name: test
+
+system:
+    docker: true
+    nginx:
+        version: "1.20"
+    php:
+        version: 8.1
+        extensions:
+            - bcmath
+    nodejs:
+        version: 16
