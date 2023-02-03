@@ -1,24 +1,22 @@
-name: CI
+name: Docs - Test
 
 on:
-  workflow_dispatch: ~
   push:
     branches:
       - master
     paths:
-      - 'docs/**'
-      - '.github/**'
+      - docs/**
       - '**/README.md'
   pull_request:
     paths:
-      - 'docs/**'
-      - '.github/**'
+      - docs/**
       - '**/README.md'
+  workflow_dispatch:
 
 jobs:
 
-  ci:
-    name: CI
+  test:
+    name: Test
     runs-on: ubuntu-latest
 
     env:
@@ -29,16 +27,16 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
     steps:
-      - name: 'Checkout'
+      - name: Checkout
         uses: actions/checkout@v2
 
       # https://github.com/actions/setup-node
-      - name: 'Setup node'
+      - name: Set up node
         uses: actions/setup-node@v2
         with:
             node-version: 16
 
-      - name: 'Setup PHP'
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           coverage: "none"
@@ -46,25 +44,25 @@ jobs:
           ini-values: "memory_limit=-1"
           php-version: "8.0"
 
-      - name: 'Determine composer cache directory'
+      - name: Determine composer cache directory
         id: composer-cache
         run: echo "directory=$(composer config cache-dir)" >> $GITHUB_OUTPUT
 
-      - name: 'Cache composer dependencies'
+      - name: Cache composer dependencies
         uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.directory }}
           key: composer-${{ hashFiles('docs/app/composer.lock') }}
           restore-keys: composer-
 
-      - name: 'Cache NPM dependencies'
+      - name: Cache NPM dependencies
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: node-${{ hashFiles('docs/app/package-lock.json') }}
           restore-keys: node-
 
-      - name: 'Install dependencies'
+      - name: Install dependencies
         id: deps
         run: |
           echo "::group::composer install"
@@ -75,7 +73,7 @@ jobs:
             npm install --color=always --no-progress
           echo "::endgroup::"
 
-      - name: 'Warmup'
+      - name: Warmup
         run: |
           npx encore production --color
           bin/console cache:clear --ansi
@@ -83,27 +81,27 @@ jobs:
         env:
           APP_ENV: prod
 
-      - name: 'Composer validate'
+      - name: Composer validate
         if: always() && steps.deps.outcome == 'success'
         run: composer validate --no-check-publish --ansi --no-interaction
 
-      - name: 'Lint YAML'
+      - name: Lint YAML
         if: always() && steps.deps.outcome == 'success'
         run: bin/console lint:yaml config --parse-tags --ansi --no-interaction
 
-      - name: 'Lint Twig'
+      - name: Lint Twig
         if: always() && steps.deps.outcome == 'success'
         run: bin/console lint:twig templates --show-deprecations --ansi --no-interaction
 
-      - name: 'Lint Parameters and Services'
+      - name: Lint Parameters and Services
         if: always() && steps.deps.outcome == 'success'
         run: bin/console lint:container --ansi --no-interaction
 
-      - name: 'PHP CS Fixer'
+      - name: PHP CS Fixer
         if: always() && steps.deps.outcome == 'success'
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
-      - name: 'Check static build'
+      - name: Check static build
         if: always() && steps.deps.outcome == 'success'
         run: bin/console stenope:build --no-interaction -vv --ansi
         env:
