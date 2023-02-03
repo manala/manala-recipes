@@ -42,13 +42,13 @@ system:
         # @schema {"type": ["null", "string"]}
         config: ~
     ansible:
-        # @schema {"enum": ["2.14.1", "2.13.7", "2.12.10"]}
+        # @schema {"enum": ["2.14.2", "2.13.7", "2.12.10"]}
         # @option {"label": "Ansible version"}
         version: ~
         # @schema {"type": ["null", "string"]}
         config: ~
     ansible-lint:
-        # @schema {"enum": [null, "6.11.0", "6.10.2", "6.9.1"]}
+        # @schema {"enum": [null, "6.12.1", "6.11.0", "6.10.2"]}
         # @option {"label": "Ansible-lint version"}
         version: ~
     molecule:
