@@ -11,11 +11,11 @@ system:
         config: |
             # Ssh config
     ansible:
-        version: 2.14.1
+        version: 2.14.2
         config: |
             # Ansible config
     ansible-lint:
-        version: 6.11.0
+        version: 6.12.1
     molecule:
         version: 4.0.4
         plugins:
