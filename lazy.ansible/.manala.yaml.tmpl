@@ -31,8 +31,10 @@ system:
             Host *.example.com
                 User foo
                 ForwardAgent yes
+    
+    {{- $ansible := .Vars.system.ansible }}
     ansible:
-        version: {{ .Vars.system.ansible.version | toYaml }}
+        version: {{ $ansible | toYaml }}
         config: |
             [defaults]
             #force_color = True
@@ -42,17 +44,20 @@ system:
             #pipelining = True
             # Avoid issues on ssh too long socket path and/or invalid permissions
             #control_path_dir = /tmp/ansible/cp
+    
     {{- $ansibleLint := index .Vars.system "ansible-lint" }}
     {{- if $ansibleLint.version }}
     ansible-lint:
         version: {{ $ansibleLint.version | toYaml }}
     {{- end }}
-    {{- if .Vars.system.molecule.version }}
+
+    {{- $molecule := .Vars.system.molecule }}
+    {{- if $molecule.version }}
     molecule:
-        version: {{ .Vars.system.molecule.version | toYaml }}
-        {{- if .Vars.system.molecule.plugins.version }}
+        version: {{ $molecule.version | toYaml }}
+        {{- if $molecule.plugins.version }}
         plugins:
-            version: {{ .Vars.system.molecule.plugins.version | toYaml }}
+            version: {{ $molecule.plugins.version | toYaml }}
             azure: false
             docker: false
             gce: false
