@@ -23,8 +23,6 @@ services:
             - ../../{{ $mount }}:${DIR}/{{ $mount }}
               {{- end }}
             {{- end }}
-        tmpfs:
-            - /tmp
         environment:
             DIR: ${DIR}
             CACHE_DIR: ${CACHE_DIR}
