@@ -1,9 +1,9 @@
 manala:
-    repository: ..
+    repository: ../..
     recipe: lazy.ansible
 
 project:
-    name: test
+    name: lazy.ansible.test
 
 system:
     docker: true

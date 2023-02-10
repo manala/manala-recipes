@@ -14,16 +14,13 @@ group:
   # Base
   lazy:
     exists: true
-    gid: 1000
 
 user:
   # Base
   lazy:
     exists: true
-    uid: 1000
     groups:
       - lazy
-    home: /home/lazy
     shell: /bin/bash
 
 command:
@@ -38,15 +35,15 @@ command:
     stdout:
       - ansible [core {{ .Vars.system.ansible.version }}]
   # Ansible Lint
-  ansible-lint --version:
+  ansible-lint --nocolor --version:
     exit-status: 0
     stdout:
       - ansible-lint {{ (index .Vars.system "ansible-lint").version }}
   # Molecule
-  molecule --version:
+  FORCE_COLOR=0 molecule --version:
     exit-status: 0
     stdout:
-      - molecule {{ .Vars.system.molecule.version }} using python 3.9
+      - molecule {{ .Vars.system.molecule.version }}
       - azure:{{ .Vars.system.molecule.plugins.version }} from molecule_plugin
       - docker:{{ .Vars.system.molecule.plugins.version }} from molecule_plugin
       - gce:{{ .Vars.system.molecule.plugins.version }} from molecule_plugin

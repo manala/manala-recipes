@@ -10,16 +10,13 @@ group:
   # Base
   lazy:
     exists: true
-    gid: 1000
 
 user:
   # Base
   lazy:
     exists: true
-    uid: 1000
     groups:
       - lazy
-    home: /home/lazy
     shell: /bin/bash
 
 command:
@@ -55,3 +52,31 @@ command:
     exit-status: 0
     stdout:
       - v{{ .Vars.system.nodejs.version }}
+
+process:
+  # Nginx
+  nginx:
+    running: true
+  # Php
+  php-fpm:
+    running: true
+
+http:
+  http://localhost:
+    status: 200
+    body:
+      - Foo
+  # PhpMyAdmin
+  http://phpmyadmin:
+    status: 200
+  # MailDev
+  http://maildev:1080:
+    status: 200
+
+addr:
+  # MariaDB
+  tcp://mariadb:3306:
+    reachable: true
+  # MailDev
+  tcp://maildev:25:
+    reachable: true

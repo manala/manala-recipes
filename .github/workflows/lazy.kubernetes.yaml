@@ -6,9 +6,8 @@ on:
       - lazy.kubernetes/**
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: lazy.kubernetes
+env:
+  directory: lazy.kubernetes/test
 
 jobs:
 
@@ -20,10 +19,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up manala
-        run: curl -sfL https://raw.githubusercontent.com/manala/manala/main/godownloader.sh | sudo sh -s -- -b /usr/local/bin
+      - name: Manala update
+        uses: manala/github-action-manala@v1
+        with:
+          directory: ${{ env.directory }}
 
       - name: Lint
+        working-directory: ${{ env.directory }}
         run: |
           make lint \
             VERBOSE=1
@@ -36,9 +38,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up manala
-        run: curl -sfL https://raw.githubusercontent.com/manala/manala/main/godownloader.sh | sudo sh -s -- -b /usr/local/bin
+      - name: Manala update
+        uses: manala/github-action-manala@v1
+        with:
+          directory: ${{ env.directory }}
 
       - name: Test
+        working-directory: ${{ env.directory }}
         run: |
           make test

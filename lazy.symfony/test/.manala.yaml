@@ -1,9 +1,9 @@
 manala:
-    repository: ..
+    repository: ../..
     recipe: lazy.symfony
 
 project:
-    name: test
+    name: lazy.symfony.test
 
 system:
     docker: true
@@ -17,3 +17,9 @@ system:
             - bcmath
     nodejs:
         version: 16
+    mariadb:
+        version: 10.4
+    phpmyadmin:
+        version: 5.1
+    maildev:
+        version: 2.0.5
