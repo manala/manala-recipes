@@ -23,6 +23,11 @@ user:
     shell: /bin/bash
 
 command:
+  # Goss
+  goss --version:
+    exit-status: 0
+    stdout:
+      - goss version v{{ .Vars.system.goss.version }}
   # Nginx
   nginx -V:
     exit-status: 0

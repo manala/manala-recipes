@@ -38,6 +38,9 @@ system:
     # @schema {"items": {"type": "string"}}
     mount: []
     docker: false
+    goss:
+        # @schema {"enum": [null, "0.3.21"]}
+        version: ~
     ssh:
         # @schema {"type": ["null", "string"]}
         config: ~

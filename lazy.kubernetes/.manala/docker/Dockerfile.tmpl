@@ -95,6 +95,16 @@ RUN \
 
 {{ end -}}
 
+{{ $goss := .Vars.system.goss -}}
+{{ if $goss.version -}}
+# Goss
+RUN \
+    curl -sSL "https://github.com/goss-org/goss/releases/download/v{{ $goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+        --output /usr/local/bin/goss \
+    && chmod +x /usr/local/bin/goss
+
+{{ end -}}
+
 # Kubectl
 {{ $kubectl := .Vars.system.kubectl -}}
 RUN \
