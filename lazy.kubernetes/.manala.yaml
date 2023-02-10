@@ -38,6 +38,9 @@ system:
     # @schema {"items": {"type": "string"}}
     mount: []
     docker: false
+    goss:
+        # @schema {"enum": [null, "0.3.21"]}
+        version: ~
     kubectl:
         # @schema {"enum": ["1.26.1", "1.25.6", "1.24.10", "1.23.16", "1.22.17", "1.21.14", "1.20.15", "1.19.16", "1.18.20"]}
         # @option {"label": "Kubectl version"}

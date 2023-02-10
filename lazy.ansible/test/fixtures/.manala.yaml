@@ -7,6 +7,8 @@ project:
 
 system:
     docker: true
+    goss:
+        version: 0.3.21
     ssh:
         config: |
             # Ssh config

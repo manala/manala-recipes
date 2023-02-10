@@ -27,6 +27,11 @@ user:
     shell: /bin/bash
 
 command:
+  # Goss
+  goss --version:
+    exit-status: 0
+    stdout:
+      - goss version v{{ .Vars.system.goss.version }}
   # Ansible
   ansible --version:
     exit-status: 0
