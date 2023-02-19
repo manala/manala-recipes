@@ -26,6 +26,7 @@ HELP += $(call help,up,   Create and start local system (WAIT))
 up:
 	@$(call log, Builds$(,) creates and starts docker containers…)
 	$(_docker_compose) up \
+		--build \
 		$(if $(WAIT), --wait)
 .PHONY: up
 
