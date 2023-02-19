@@ -26,7 +26,7 @@ services:
         volumes:
             - mariadb:/var/lib/mysql
         environment:
-            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
             MYSQL_DATABASE: project
             MYSQL_USER: project
             MYSQL_PASSWORD: project
