@@ -39,7 +39,7 @@ services:
 
     phpmyadmin:
         hostname: phpmyadmin.{{ .Vars.project.name }}
-        image: phpmyadmin/phpmyadmin:{{ .Vars.system.phpmyadmin.version | toString }}
+        image: phpmyadmin:{{ .Vars.system.phpmyadmin.version | toString }}
         restart: always
         ports:
             - {{ .Vars.system.phpmyadmin.port }}:80
