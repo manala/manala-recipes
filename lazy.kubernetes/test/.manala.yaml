@@ -1,9 +1,9 @@
 manala:
-    repository: ..
+    repository: ../..
     recipe: lazy.kubernetes
 
 project:
-    name: test
+    name: lazy.kubernetes.test
 
 system:
     docker: true

@@ -10,16 +10,13 @@ group:
   # Base
   lazy:
     exists: true
-    gid: 1000
 
 user:
   # Base
   lazy:
     exists: true
-    uid: 1000
     groups:
       - lazy
-    home: /home/lazy
     shell: /bin/bash
 
 command:
