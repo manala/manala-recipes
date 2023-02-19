@@ -43,7 +43,7 @@ services:
         restart: always
         ports:
             - {{ .Vars.system.phpmyadmin.port }}:80
-        links:
+        depends_on:
             - mariadb
         environment:
             PMA_HOST: mariadb
