@@ -30,6 +30,12 @@ services:
             MYSQL_DATABASE: project
             MYSQL_USER: project
             MYSQL_PASSWORD: project
+        healthcheck:
+            test: mysqladmin ping --silent --host 0.0.0.0
+            interval: 30s
+            timeout: 30s
+            retries: 3
+            start_period: 0s
 
 {{- if .Vars.system.phpmyadmin.version }}
 
@@ -66,8 +72,8 @@ services:
         restart: always
         user: root
         ports:
-            - {{ .Vars.system.maildev.port }}:80
-        command: ["--web", "80", "--smtp", "25"]
+            - {{ .Vars.system.maildev.port }}:1080
+        command: ["--smtp", "25"]
 
 {{- end }}
 

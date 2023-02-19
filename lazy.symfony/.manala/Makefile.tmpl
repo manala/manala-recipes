@@ -22,11 +22,18 @@ ifndef DOCKER
 
 HELP += $(call help_section, System)
 
-HELP += $(call help,up,   Create and start local system)
+HELP += $(call help,up,   Create and start local system (WAIT))
 up:
 	@$(call log, Builds$(,) creates and starts docker containers…)
-	$(_docker_compose) up
+	$(_docker_compose) up \
+		$(if $(WAIT), --wait)
 .PHONY: up
+
+HELP += $(call help,stop, Stop local system)
+stop:
+	@$(call log, Stop docker containers…)
+	$(_docker_compose) stop
+.PHONY: stop
 
 HELP += $(call help,sh,   Open a local system shell)
 sh:
