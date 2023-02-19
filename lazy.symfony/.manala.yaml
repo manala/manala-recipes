@@ -72,7 +72,7 @@ system:
         port: 8300
     maildev:
         # @option {"label": "MailDev version"}
-        # @schema {"enum": [null, "2.0.0-beta3"]}
+        # @schema {"enum": [null, "2.0.5"]}
         version: ~
         # @schema {"type": "integer", "exclusiveMinimum": 1024, "maximum": 65535}
         port: 8025
