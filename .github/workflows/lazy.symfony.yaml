@@ -55,8 +55,8 @@ jobs:
       - name: Test
         working-directory: ${{ env.directory }}
         env:
-          MANALA_DOCKER_CACHE_FROM: type=gha,scope=lazy.symfony
-          MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=lazy.symfony
+          MANALA_DOCKER_CACHE_FROM: type=gha,scope=docker.lazy.symfony
+          MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=docker.lazy.symfony
         run: |
           make up WAIT=1
           make test

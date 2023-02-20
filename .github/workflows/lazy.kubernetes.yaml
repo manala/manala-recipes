@@ -55,7 +55,7 @@ jobs:
       - name: Test
         working-directory: ${{ env.directory }}
         env:
-          MANALA_DOCKER_CACHE_FROM: type=gha,scope=lazy.kubernetes
-          MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=lazy.kubernetes
+          MANALA_DOCKER_CACHE_FROM: type=gha,scope=docker.lazy.kubernetes
+          MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=docker.lazy.kubernetes
         run: |
           make test

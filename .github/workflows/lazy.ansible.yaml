@@ -55,7 +55,7 @@ jobs:
       - name: Test
         working-directory: ${{ env.directory }}
         env:
-          MANALA_DOCKER_CACHE_FROM: type=gha,scope=lazy.ansible
-          MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=lazy.ansible
+          MANALA_DOCKER_CACHE_FROM: type=gha,scope=docker.lazy.ansible
+          MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=docker.lazy.ansible
         run: |
           make test
