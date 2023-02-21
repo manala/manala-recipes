@@ -33,6 +33,9 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-22.04
+    env:
+      MANALA_DOCKER_CACHE_FROM: type=gha,scope=docker.lazy.ansible
+      MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=docker.lazy.ansible
     steps:
 
       - name: Checkout
@@ -54,8 +57,5 @@ jobs:
 
       - name: Test
         working-directory: ${{ env.directory }}
-        env:
-          MANALA_DOCKER_CACHE_FROM: type=gha,scope=docker.lazy.ansible
-          MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=docker.lazy.ansible
         run: |
           make test
