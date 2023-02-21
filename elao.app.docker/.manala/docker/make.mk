@@ -60,7 +60,7 @@ endif
 ifdef SSH_AUTH_SOCK
 _DOCKER_COMPOSE_FILE += $(_DIR)/.manala/docker/compose/ssh-agent.yaml
 	# See: https://docs.docker.com/desktop/mac/networking/#ssh-agent-forwarding
-	ifdef OS_DARWIN
+	ifneq ($(OS_DARWIN),)
 _DOCKER_COMPOSE_ENV += SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
 _DOCKER_COMPOSE_ENV += MANALA_SSH_AUTH_SOCK_BIND=/run/host-services/ssh-auth.sock.bind
 	endif
