@@ -53,14 +53,14 @@ runs:
       if: inputs.setup != 'false'
       shell: bash
       env:
-        DOCKER_BUILDKIT: 1
+        DOCKER_BUILDKIT: "1"
         BUILDKIT_PROGRESS: plain
       run: |
         echo "::group::🐳 Docker pull"
           docker compose \
             --profile integration \
             --file ./.manala/docker/compose.yaml \
-            --file ./.manala/docker/compose/integration.yaml \
+            --file ./.manala/docker/compose/profile.integration.yaml \
             pull
         echo "::endgroup::"
     - name: Cache docker
@@ -88,7 +88,7 @@ runs:
       if: inputs.setup != 'false'
       shell: bash
       env:
-        DOCKER_BUILDKIT: 1
+        DOCKER_BUILDKIT: "1"
         BUILDKIT_PROGRESS: plain
         MANALA_SSH_KEY: ${{ inputs.ssh_key }}
       run: |
@@ -98,10 +98,10 @@ runs:
           docker compose \
             --profile integration \
             --file ./.manala/docker/compose.yaml \
-            --file ./.manala/docker/compose/integration.yaml \
-            --file ./.manala/docker/compose/cache.yaml \
+            --file ./.manala/docker/compose/profile.integration.yaml \
+            --file ./.manala/docker/compose/app.cache.yaml \
             ${{ inputs.ssh_key != '' && '--file ./.manala/docker/compose/ssh-key.yaml' || '' }} \
-            ${{ env.MANALA_ENV_FILE && '--file ./.manala/docker/compose/env.yaml' || '' }} \
+            ${{ env.MANALA_ENV_FILE && '--file ./.manala/docker/compose/app.env.yaml' || '' }} \
             up \
             --wait
         echo "::endgroup::"
@@ -118,8 +118,8 @@ runs:
           docker compose \
             --profile integration \
             --file ./.manala/docker/compose.yaml \
-            --file ./.manala/docker/compose/integration.yaml \
-            --file ./.manala/docker/compose/cache.yaml \
+            --file ./.manala/docker/compose/profile.integration.yaml \
+            --file ./.manala/docker/compose/app.cache.yaml \
             exec \
             -T \
             ${{ inputs.app != '' && format('--workdir /srv/app/{0}', inputs.app) || '' }} \

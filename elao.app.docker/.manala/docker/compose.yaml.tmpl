@@ -89,7 +89,7 @@ services:
             target: app
             args:
                 MANALA_HOST_OS: ${MANALA_HOST_OS:-linux}
-                MANALA_HOST_PATH: ${MANALA_HOST_PATH:-}
+                MANALA_HOST_DIR: ${MANALA_HOST_DIR:-}
                 MANALA_USER_ID: ${MANALA_USER_ID:-1000}
                 MANALA_GROUP_ID: ${MANALA_GROUP_ID:-1000}
         {{- $env := .Vars.system.env }}

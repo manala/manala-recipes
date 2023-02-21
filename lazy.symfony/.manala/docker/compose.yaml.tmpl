@@ -94,17 +94,17 @@ services:
             - {{ $port }}
             {{- end }}
         volumes:
-            - ../..:${DIR}
+            - ../..:${MANALA_DIR}
             {{- range $mount := .Vars.system.mount }}
               {{- if isAbs $mount }}
             - {{ $mount }}:{{ $mount }}
               {{- else }}
-            - ../../{{ $mount }}:${DIR}/{{ $mount }}
+            - ../../{{ $mount }}:${MANALA_DIR}/{{ $mount }}
               {{- end }}
             {{- end }}
         environment:
-            DIR: ${DIR}
-            CACHE_DIR: ${CACHE_DIR}
+            MANALA_DIR: ${MANALA_DIR}
+            MANALA_CACHE_DIR: ${MANALA_CACHE_DIR}
             {{- if .Vars.system.env }}
             {{- .Vars.system.env | toYaml | nindent 12 }}
             {{- end }}
@@ -118,7 +118,7 @@ services:
         env_file: ../../{{ .Vars.system.env_file }}
         {{- end }}
         {{- end }}
-        working_dir: ${DIR}
+        working_dir: ${MANALA_DIR}
         {{- if or .Vars.system.mariadb.version .Vars.system.maildev.version }}
         links:
             {{- if .Vars.system.mariadb.version }}

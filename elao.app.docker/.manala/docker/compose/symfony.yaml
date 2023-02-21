@@ -10,6 +10,6 @@ services:
     app:
         build:
             args:
-                SYMFONY_IDE: ${SYMFONY_IDE}&/srv/app/>${MANALA_HOST_PATH}/
+                SYMFONY_IDE: ${SYMFONY_IDE}&/srv/app/>${MANALA_HOST_DIR}/
         environment:
-            SYMFONY_IDE: ${SYMFONY_IDE}&/srv/app/>${MANALA_HOST_PATH}/
+            SYMFONY_IDE: ${SYMFONY_IDE}&/srv/app/>${MANALA_HOST_DIR}/

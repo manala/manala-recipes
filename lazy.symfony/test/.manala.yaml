@@ -3,7 +3,7 @@ manala:
     recipe: lazy.symfony
 
 project:
-    name: lazy.symfony.test
+    name: lazy-symfony-test
 
 system:
     docker: true

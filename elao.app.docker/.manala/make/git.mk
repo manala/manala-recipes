@@ -1,3 +1,8 @@
+MANALA_GIT_BIN = git
+
+MANALA_GIT_CONFIG = $(wildcard ~/.gitconfig)
+MANALA_GITHUB_CONFIG = $(wildcard ~/.config/gh)
+
 ########
 # Diff #
 ########
@@ -11,15 +16,15 @@
 #
 # Example #1: list PHP and Javascript files changed in the src and test folders
 #
-#   $(call git_diff, php js, src test)
+#   $(call manala_git_diff, php js, src test)
 
-define git_diff
+define manala_git_diff
 $(shell \
 	for ext in $(if $(strip $(1)),$(strip $(1)),"") ; \
 	do \
 		for dir in $(if $(strip $(2)),$(strip $(2)),"") ; \
 		do \
-			git --no-pager diff --name-status "$$(git merge-base HEAD origin/master)" \
+			$(MANALA_GIT_BIN) --no-pager diff --name-status "$$(git merge-base HEAD origin/master)" \
 				| grep "$${ext}\$$" \
 				| grep "\\s$${dir}" \
 				| grep -v '^D' \

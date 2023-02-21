@@ -1,61 +1,85 @@
-# Relative root dir ("."|".."|"../.."|…)
-_DIR := $(patsubst ./%,%,$(patsubst %/.manala/Makefile,%,./$(filter %.manala/Makefile,$(MAKEFILE_LIST))))
-# Is current dir root ? (""|"1")
-_ROOT = $(if $(filter .,$(_DIR)),1)
-# Relative current dir ("."|"foo"|"foo/bar"|…)
-_CURRENT_DIR = $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(_DIR))%,%,$(CURDIR)))
-# Cache dir
-_CACHE_DIR = .manala/.cache
+# Project root dir, relative to current dir (.|..|../..|…)
+MANALA_DIR := $(patsubst %/.,%,$(patsubst %.manala/..,%.,$(patsubst %Makefile,%..,$(lastword $(MAKEFILE_LIST)))))
+# Current dir, relative to project root dir (.|dir|dir/dir|…)
+MANALA_CURRENT_DIR = $(patsubst ./%,%,.$(patsubst $(realpath $(CURDIR)/$(MANALA_DIR))%,%,$(CURDIR)))
+# Is current dir root ? (|1)
+MANALA_CURRENT_ROOT = $(if $(filter .,$(MANALA_CURRENT_DIR)),1)
+# Cache dir, relative to project dir
+MANALA_CACHE_DIR = .manala/.cache
 
-include $(_DIR)/.manala/make/text.mk
-include $(_DIR)/.manala/make/help.mk
-include $(_DIR)/.manala/make/os.mk
-include $(_DIR)/.manala/make/math.mk
-include $(_DIR)/.manala/docker/make.mk
+###########
+# Project #
+###########
+
+include $(MANALA_DIR)/.manala/make/text.mk
+include $(MANALA_DIR)/.manala/make/help.mk
+include $(MANALA_DIR)/.manala/make/os.mk
+include $(MANALA_DIR)/.manala/make/math.mk
+include $(MANALA_DIR)/.manala/docker/docker.mk
+
+##########
+# Docker #
+##########
+
+MANALA_DOCKER_COMPOSE_ENV += \
+{{- if .Vars.system.dir }}
+	MANALA_DIR={{ .Vars.system.dir }} \
+	MANALA_CACHE_DIR={{ .Vars.system.dir }}/$(shell dir=$(MANALA_DIR)/$(MANALA_CACHE_DIR) ; mkdir -p $${dir} ; echo $(MANALA_CACHE_DIR))
+{{- else }}
+	MANALA_DIR=$(realpath $(MANALA_DIR)) \
+	MANALA_CACHE_DIR=$(realpath $(shell dir=$(MANALA_DIR)/$(MANALA_CACHE_DIR) ; mkdir -p $${dir} ; echo $${dir}))
+{{- end }}
+
+define manala_docker_command
+	$(manala_docker_compose) exec \
+		--user lazy \
+		$(1) \
+		system
+endef
 
 ##########
 # System #
 ##########
 
 # Docker commands only available *OUTSIDE* docker environment
-ifndef DOCKER
+ifndef MANALA_DOCKER
 
-HELP += $(call help_section, System)
+MANALA_HELP += $(call manala_help_section, System)
 
-HELP += $(call help,up,   Create and start local system (WAIT))
+MANALA_HELP += $(call manala_help,up,   Create and start local system (WAIT))
 up:
-	@$(call log, Builds$(,) creates and starts docker containers…)
-	$(_docker_compose) up \
+	@$(call manala_log, Builds$(,) creates and starts docker containers…)
+	$(manala_docker_compose) up \
 		--build \
 		$(if $(WAIT), --wait)
 .PHONY: up
 
-HELP += $(call help,stop, Stop local system)
+MANALA_HELP += $(call manala_help,stop, Stop local system)
 stop:
-	@$(call log, Stop docker containers…)
-	$(_docker_compose) stop
+	@$(call manala_log, Stop docker containers…)
+	$(manala_docker_compose) stop
 .PHONY: stop
 
-HELP += $(call help,sh,   Open a local system shell)
+MANALA_HELP += $(call manala_help,sh,   Open a local system shell)
 sh:
-	$(call docker_exec, exec bash --login)
+	$(manala_docker_command) bash --login
 .PHONY: sh
 
-HELP += $(call help,clean,Clean local system)
+MANALA_HELP += $(call manala_help,clean,Clean local system)
 clean:
-	@$(call confirm, Confirm system cleaning)
-	@$(call log, Stops and removes docker containers$(,) networks$(,) volumes$(,) images…)
-	$(_docker_compose) down \
+	@$(call manala_confirm, Confirm system cleaning)
+	@$(call manala_log, Stops and removes docker containers$(,) networks$(,) volumes$(,) images…)
+	$(manala_docker_compose) down \
 		--rmi all \
 		--volumes \
 		--remove-orphans
-	@$(call log, Removes old docker images…)
-	$(_docker) images \
+	@$(call manala_log, Removes old docker images…)
+	$(manala_docker) images \
 		--filter reference='{{ .Vars.project.name }}:*' \
 		--format "{{ `{{.ID}}` }}" \
-			| xargs $(_docker) rmi --force
-	@$(call log, Delete cache dir…)
-	rm -Rf $(_DIR)/$(_CACHE_DIR)
+			| xargs $(manala_docker) rmi --force
+	@$(call manala_log, Delete cache dir…)
+	rm -Rf $(MANALA_DIR)/$(MANALA_CACHE_DIR)
 .PHONY: clean
 
 endif
@@ -66,14 +90,14 @@ endif
 # Deploy #
 ##########
 
-HELP += $(call help_section, Deploy)
+MANALA_HELP += $(call manala_help_section, Deploy)
 
 {{- range $group, $hosts := .Vars.deploy.inventory }}
 {{- range $host, $vars := $hosts }}
 
-HELP += $(call help,ssh@{{ $host }},Ssh to {{ $host }})
+MANALA_HELP += $(call manala_help,ssh@{{ $host }},Ssh to {{ $host }})
 ssh@{{ $host }}:
-	$(docker_exec) ssh {{ $vars.user }}@{{ $vars.host }}
+	$(manala_docker_command) ssh {{ $vars.user }}@{{ $vars.host }}
 .PHONY: ssh@{{ $host }}
 
 {{- end }}
@@ -81,10 +105,10 @@ ssh@{{ $host }}:
 
 {{- range $group, $hosts := .Vars.deploy.inventory }}
 
-HELP += $(call help,deploy@{{ $group }},Deploy to {{ $group }} (VERBOSE))
+MANALA_HELP += $(call manala_help,deploy@{{ $group }},Deploy to {{ $group }} (VERBOSE))
 deploy@{{ $group }}:
-	$(docker_exec) ansible-playbook $(_DIR)/.manala/ansistrano/playbook.yaml \
-		--inventory $(_DIR)/.manala/ansistrano/inventory.yaml \
+	$(manala_docker_command) ansible-playbook $(MANALA_DIR)/.manala/ansistrano/playbook.yaml \
+		--inventory $(MANALA_DIR)/.manala/ansistrano/inventory.yaml \
 		--limit {{ $group}} \
 		$(if $(VERBOSE),-vvv)
 .PHONY: deploy@{{ $group }}

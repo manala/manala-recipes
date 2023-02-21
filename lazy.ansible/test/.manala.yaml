@@ -3,7 +3,7 @@ manala:
     recipe: lazy.ansible
 
 project:
-    name: lazy.ansible.test
+    name: lazy-ansible-test
 
 system:
     docker: true
