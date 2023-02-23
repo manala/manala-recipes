@@ -23,3 +23,17 @@ system:
         version: 5.1
     maildev:
         version: 2.0.5
+
+##########
+# Deploy #
+##########
+
+deploy:
+    inventory:
+        foo: {}
+    includes: []
+    excludes: []
+    shared_paths: []
+    shared_files: []
+    hooks:
+        before_symlink: []

@@ -5,6 +5,11 @@ package:
   # Docker
   docker-ce-cli:
     installed: true
+  # Deploy
+  openssh-client:
+    installed: true
+  ansible:
+    installed: true
 
 group:
   # Base
@@ -52,6 +57,13 @@ command:
     exit-status: 0
     stdout:
       - v{{ .Vars.system.nodejs.version }}
+  # Deploy
+  ansible-galaxy role list:
+    exit-status: 0
+    stdout:
+      - # /usr/share/ansible/roles
+      - "- ansistrano.deploy, 3.10.0"
+      - "- ansistrano.rollback, 3.1.0"
 
 process:
   # Nginx
