@@ -39,8 +39,8 @@ if [ -d ".manala/etc" ]; then
 fi
 
 # Services
-if [ $# -eq 0 ] && [ -d "/etc/services" ]; then
-    exec s6-svscan /etc/services
+if [ $# -eq 0 ] && [ -d "/etc/services.d" ]; then
+    exec s6-svscan /etc/services.d
 fi
 
 # Command
