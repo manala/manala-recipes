@@ -97,6 +97,12 @@ services:
           {{- $env = set $env "COMPOSER_MEMORY_LIMIT" -1 }}
         {{- end }}
         {{- dict "environment" $env | toYaml | nindent 8 }}
+        {{- if .Vars.system.network.hosts }}
+        extra_hosts:
+            {{- range $ip, $host := .Vars.system.network.hosts }}
+            - "{{ $host }}:{{ $ip }}"
+            {{- end }}
+        {{- end }}
         volumes:
             - ../..:/srv/app
 
