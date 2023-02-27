@@ -141,6 +141,11 @@
                         Use GHA deployment environments through workflows - 2022-11
                     </a>
                 </li>
+                                <li>
+                    <a href="/manala-recipes/migrations/elao.app.docker/MIGRATION.2023-02">
+                        Makefile variables refactoring - 2023-02
+                    </a>
+                </li>
                             </ul>
         </article>
     </section>
@@ -715,32 +720,32 @@ It uses the <a href="https://github.com/cli/cli" target="_blank">Github CLI tool
 <p>at least once on your machine, if not already.</p>
 <h2 id="makefile">Makefile<a href="#makefile" class="anchor"></a></h2>
 <p>Makefile targets that are supposed to be runned via docker must be prefixed.</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="26eefa121751e343b4a2dd990d202594"><span class="token target symbol">foo</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="5befc441f6580e670658d8808eb4d0ca"><span class="token target symbol">foo</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">foo</span><span class="token punctuation">:</span>
     <span class="token comment"># Do something really foo...</span></code></pre>
 <p>Ssh</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="f8f42fe950b7fccdc08fae7f283c8b92"><span class="token comment">#######</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="9bfdf568655da64bd1d472c7b7d98e59"><span class="token comment">#######</span>
 <span class="token comment"># Ssh #</span>
 <span class="token comment">#######</span>
 
 <span class="token comment">## Ssh to staging server</span>
-<span class="token target symbol">ssh@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">ssh@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">ssh@staging</span><span class="token punctuation">:</span>
     ssh app<span class="token operator">@</span>foo.staging.rix.link
 
 <span class="token comment"># Single host...</span>
 
-<span class="token target symbol">ssh@production</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">ssh@production</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">ssh@production</span><span class="token punctuation">:</span>
     ...
 
 <span class="token comment"># Multi host...</span>
 
-<span class="token target symbol">ssh@production-01</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">ssh@production-01</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">ssh@production-01</span><span class="token punctuation">:</span>
     ...</code></pre>
 <p>Sync</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="69d00deec442223ce7247f0538aff887"><span class="token target symbol">sync@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="b7879d57b170db132938f548fd9d298c"><span class="token target symbol">sync@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">sync@staging</span><span class="token punctuation">:</span>
     mkdir -p var
     rsync --archive --compress --verbose --delete-after \
@@ -748,31 +753,31 @@ It uses the <a href="https://github.com/cli/cli" target="_blank">Github CLI tool
         var/files/
 
 <span class="token comment"># Multi targets...</span>
-<span class="token target symbol">sync-uploads@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">sync-uploads@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">sync-uploads@staging</span><span class="token punctuation">:</span>
   ...
 
 <span class="token comment"># Multi apps...</span>
-<span class="token target symbol">sync.api-uploads@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">sync.api-uploads@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">sync.api-uploads@staging</span><span class="token punctuation">:</span>
   ...</code></pre>
 <h3 id="git-tools">Git tools<a href="#git-tools" class="anchor"></a></h3>
-<p>This recipe contains some git helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app.docker/.manala/make/git.mk" target="_blank"><code class="code-inline" id="e6c58e1556cef6518971d204931757e6">git_diff</code></a> function.</p>
+<p>This recipe contains some git helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app.docker/.manala/make/git.mk" target="_blank"><code class="code-inline" id="47af118f85e5080692eb4c9e5b8e46ee">manala_git_diff</code></a> function.</p>
 <p>This function is useful for example to apply <code class="code-inline" id="bb7790bfaa80da52ecba1a151b299b55">php-cs</code>, <code class="code-inline" id="84a40fcfe7ec43f029d5956efb08d1c2">php-cs-fix</code> or <code class="code-inline" id="b098e670cdbfc421583801f6038ae38d">PHPStan</code> checks only on the subset of updated PHP files and not on any PHP file of your project.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="e9821a313f802ec649b58e33a335fc7e"><span class="token target symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span> DIFF <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> git_diff, php, src tests<span class="token punctuation">)</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="9d5bcf1164670f5f8afc6b80e182b5ef"><span class="token target symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span> DIFF <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> manala_git_diff, php, src tests<span class="token punctuation">)</span>
 <span class="token target symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span>
     <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">if</span> <span class="token variable">$</span><span class="token punctuation">(</span>DIFF<span class="token punctuation">)</span>, \
         vendor/bin/php-cs-fixer fix --config<span class="token operator">=</span>.php_cs.dist --path-mode<span class="token operator">=</span>intersection --diff --dry-run <span class="token variable">$</span><span class="token punctuation">(</span>DIFF<span class="token punctuation">)</span>, \
         printf <span class="token string">"You have made no change in PHP files\n"</span> \
     <span class="token punctuation">)</span></code></pre>
 <h3 id="try-tools">Try tools<a href="#try-tools" class="anchor"></a></h3>
-<p>This recipe contains some try helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app.docker/.manala/make/try.mk" target="_blank"><code class="code-inline" id="73691059dcea540103db82ad2b3c40f7">try_finally</code></a> function.</p>
+<p>This recipe contains some try helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app.docker/.manala/make/try.mk" target="_blank"><code class="code-inline" id="844a849d3b1c1f2b318c37a8afbb32b9">manala_try_finally</code></a> function.</p>
 <p>This function is useful for example to run <code class="code-inline" id="85af727fd022d3a13e7972fd6a418582">phpunit</code> tests needing a started symfony server, and to stop this server regardless of the tests return code.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="e0f9aa14ca8d2939a55c0be70ca37768"><span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="71f30a117e209f2744480fb56642732e"><span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
 <span class="token target symbol">    symfony server</span><span class="token punctuation">:</span>start --ansi --no-humanize --daemon --no-tls --port<span class="token operator">=</span>8000
-    <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> try_finally, \
+    <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> manala_try_finally, \
         bin/phpunit --colors<span class="token operator">=</span>always --log-junit report/junit/phpunit.xml, \
 <span class="token target symbol">        symfony server</span><span class="token punctuation">:</span>stop --ansi \
     <span class="token punctuation">)</span></code></pre>
@@ -887,7 +892,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2023-02-23UTC16:25:30+00:00">Last modified: February 23, 2023 16:25</time>
+    <time datetime="2023-02-27UTC20:36:29+00:00">Last modified: February 27, 2023 20:36</time>
         </div>
 
         <footer class="footer">

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <!-- Enable responsiveness on mobile devices-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+        <title>    Manala Recipes - Makefile variables refactoring - 2023-02 (Elao - App - Docker)
+</title>
+
+                    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+            <link rel="stylesheet" href="/manala-recipes/build/app.6e1927d4.css">
+        
+                    <script src="/manala-recipes/build/runtime.e4df57b3.js" defer></script><script src="/manala-recipes/build/app.4fe7be59.js" defer></script>
+            </head>
+    <body>
+
+        <header class="header">
+            <div class="navbar">
+    <div class="container">
+        <a href="/manala-recipes/" class="logo">Manala recipes</a>
+        <nav>
+            <ul>
+                <li><a href="https://github.com/manala/manala-recipes">Github</a></li>
+                <li>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" href="/manala-recipes/">Recipes</a>
+                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/elao.app.docker">Elao - App - Docker</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/elao.app">Elao - App</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.ansible">Lazy - Ansible</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.kubernetes">Lazy - Kubernetes</a>
+                                                            <a class="dropdown-item" href="/manala-recipes/recipes/lazy.symfony">Lazy - Symfony</a>
+                                                    </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="manala">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="circle circle-5"></div>
+                            <div class="circle circle-6"></div>
+                            <img src="/manala-recipes/build/images/arms.b7d6de72.svg" class="arms" alt="Manala">
+                            <img src="/manala-recipes/build/images/manala.053e7ef8.svg" class="head" alt="Manala">
+                        </div>
+                    </div>
+                    <div class="lead col-sm-8">
+                        <p>Recipes for your projects</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+                <h1>Makefile variables refactoring - 2023-02 (Elao - App - Docker)</h1>
+
+            <ul>
+                            <li>
+                    <a href="#dir">Dir</a>
+                                    </li>
+                            <li>
+                    <a href="#os">Os</a>
+                                    </li>
+                            <li>
+                    <a href="#docker">Docker</a>
+                                    </li>
+                            <li>
+                    <a href="#text">Text</a>
+                                    </li>
+                            <li>
+                    <a href="#help">Help</a>
+                                    </li>
+                            <li>
+                    <a href="#project">Project</a>
+                                    </li>
+                            <li>
+                    <a href="#git">Git</a>
+                                    </li>
+                            <li>
+                    <a href="#semver">Semver</a>
+                                    </li>
+                            <li>
+                    <a href="#try">Try</a>
+                                    </li>
+                            <li>
+                    <a href="#ansible">Ansible</a>
+                                    </li>
+                    </ul>
+    
+    <section>
+        <article>
+            <body><h1 id="makefile-variables-refactoring-2023-02">Makefile variables refactoring - 2023-02<a href="#makefile-variables-refactoring-2023-02" class="anchor"></a></h1>
+<p>In order to ease maintenance across recipes, some makefile variables have been renamed, please adjust your Makefiles(s) in your project(s).</p>
+<h2 id="dir">Dir<a href="#dir" class="anchor"></a></h2>
+<p>_DIR         -&gt; MANALA_DIR
+_ROOT        -&gt; MANALA_CURRENT_ROOT
+_CURRENT_DIR -&gt; MANALA_CURRENT_DIR
+_CACHE_DIR   -&gt; MANALA_CACHE_DIR</p>
+<h2 id="os">Os<a href="#os" class="anchor"></a></h2>
+<p>OS         -&gt; MANALA_OS
+OS_LINUX   -&gt; MANALA_OS_LINUX
+OS_DARWIN  -&gt; MANALA_OS_DARWIN
+OS_WINDOWS -&gt; MANALA_OS_WINDOWS</p>
+<h2 id="docker">Docker<a href="#docker" class="anchor"></a></h2>
+<p>DOCKER                       -&gt; MANALA_DOCKER
+DOCKER_SHELL                 -&gt; MANALA_DOCKER_SHELL
+DOCKER_MAKE                  -&gt; MANALA_DOCKER_MAKE
+_docker                      -&gt; manala_docker
+docker_run                   -&gt; manala_docker_shell
+docker_exec                  -&gt; manala_docker_shell
+_docker_compose_exec         -&gt; manala_docker_shell
+_docker_compose              -&gt; manala_docker_compose
+_DOCKER_COMPOSE              -&gt; MANALA_DOCKER_COMPOSE_BIN
+_DOCKER_COMPOSE_ENV          -&gt; MANALA_DOCKER_COMPOSE_ENV
+_DOCKER_COMPOSE_FILE         -&gt; MANALA_DOCKER_COMPOSE_FILE
+_DOCKER_COMPOSE_PROFILE      -&gt; MANALA_DOCKER_COMPOSE_PROFILE
+_DOCKER_COMPOSE_SERVICE      -&gt; [dropped]
+_DOCKER_COMPOSE_USER         -&gt; [dropped]
+_DOCKER_COMPOSE_EXEC_SERVICE -&gt; [dropped]
+_DOCKER_COMPOSE_EXEC_USER    -&gt; [dropped]
+_DOCKER_COMPOSE_EXEC_WORKDIR -&gt; [dropped]</p>
+<h2 id="text">Text<a href="#text" class="anchor"></a></h2>
+<p>COLOR_RESET     -&gt; MANALA_COLOR_RESET
+COLOR_ERROR     -&gt; MANALA_COLOR_ERROR
+COLOR_INFO      -&gt; MANALA_COLOR_INFO
+COLOR_WARNING   -&gt; MANALA_COLOR_WARNING
+COLOR_COMMENT   -&gt; MANALA_COLOR_COMMENT
+time            -&gt; manala_time
+message         -&gt; manala_message
+message_success -&gt; manala_message_success
+message_warning -&gt; manala_message_warning
+message_error   -&gt; manala_message_error
+log             -&gt; manala_log
+log_warning     -&gt; manala_log_warning
+log_error       -&gt; manala_log_error
+confirm         -&gt; manala_confirm
+confirm_if      -&gt; manala_confirm_if
+confirm_if_not  -&gt; manala_confirm_if_not
+error_if_not    -&gt; manala_error_if_not
+rand            -&gt; manala_rand</p>
+<h2 id="help">Help<a href="#help" class="anchor"></a></h2>
+<p>HELP         -&gt; MANALA_HELP
+HELP_PROJECT -&gt; MANALA_HELP_PROJECT
+help         -&gt; manala_help
+help_section -&gt; manala_help_section</p>
+<h2 id="project">Project<a href="#project" class="anchor"></a></h2>
+<p>project_host -&gt; manala_project_host</p>
+<h2 id="git">Git<a href="#git" class="anchor"></a></h2>
+<p>git_diff -&gt; manala_git_diff</p>
+<h2 id="semver">Semver<a href="#semver" class="anchor"></a></h2>
+<p>semver_bump -&gt; manala_semver_bump</p>
+<h2 id="try">Try<a href="#try" class="anchor"></a></h2>
+<p>try_finally -&gt; manala_try_finally</p>
+<h2 id="ansible">Ansible<a href="#ansible" class="anchor"></a></h2>
+<p>_ANSIBLE_PLAYBOOK_INVENTORY        -&gt; MANALA_ANSIBLE_PLAYBOOK_INVENTORY
+_ANSIBLE_PLAYBOOK_BECOME           -&gt; MANALA_ANSIBLE_PLAYBOOK_BECOME
+_ANSIBLE_PLAYBOOK_LIMIT            -&gt; MANALA_ANSIBLE_PLAYBOOK_LIMIT
+_ANSIBLE_PLAYBOOK_EXTRA_VARS       -&gt; MANALA_ANSIBLE_PLAYBOOK_EXTRA_VARS
+_ANSIBLE_PLAYBOOK_TAGS             -&gt; MANALA_ANSIBLE_PLAYBOOK_TAGS
+_ANSIBLE_PLAYBOOK_CHECK            -&gt; MANALA_ANSIBLE_PLAYBOOK_CHECK
+_ANSIBLE_PLAYBOOK_DIFF             -&gt; MANALA_ANSIBLE_PLAYBOOK_DIFF
+_ANSIBLE_PLAYBOOK_VERBOSE_MORE     -&gt; MANALA_ANSIBLE_PLAYBOOK_VERBOSE_MORE
+_ansible_galaxy_collection_install -&gt; manala_ansible_galaxy_collection_install
+_ansible_playbook                  -&gt; manala_ansible_playbook</p></body>
+        </article>
+    </section>
+
+    <time datetime="2023-02-27UTC20:35:59+00:00">Last modified: February 27, 2023 20:35</time>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4 no-pb">
+                        <a href="https://manala.io" class="manala"><img src="/manala-recipes/build/images/manala.053e7ef8.svg" width="56" height="56" title="Manala.io" alt="Manala.io"> Manala.io</a>
+                    </div>
+                    <div class="col-sm-4 no-pb github text-center">
+                        <a href="https://github.com/manala/manala-recipes" target="_blank"><img src="/manala-recipes/build/images/github.04ed74f3.svg" width="32" height="32" title="Manala on Github" alt="Manala recipes on Github"></a>
+                    </div>
+                    <div class="col-sm-4 no-pb elao">
+                        Made with love by <a href="https://www.elao.com" target="_blank"><img src="/manala-recipes/build/images/elao.91d6ac3c.svg" width="64" height="23" title="élao" alt="élao"></a>
+                        <small>(and <a target="_blank" href="https://www.rix.fr/"><strong>Rix</strong></a> !)</small>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

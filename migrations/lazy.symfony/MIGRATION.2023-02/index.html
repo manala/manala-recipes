@@ -6,7 +6,7 @@
         <!-- Enable responsiveness on mobile devices-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <title>    Manala Recipes - Lazy - Symfony
+        <title>    Manala Recipes - Makefile variables refactoring - 2023-02 (Lazy - Symfony)
 </title>
 
                     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
@@ -62,55 +62,91 @@
         </header>
 
         <div class="container">
-                <h1>Lazy - Symfony</h1>
+                <h1>Makefile variables refactoring - 2023-02 (Lazy - Symfony)</h1>
 
             <ul>
                             <li>
-                    <a href="#requirements">Requirements</a>
+                    <a href="#dir">Dir</a>
                                     </li>
                             <li>
-                    <a href="#setup">Setup</a>
+                    <a href="#os">Os</a>
+                                    </li>
+                            <li>
+                    <a href="#docker">Docker</a>
+                                    </li>
+                            <li>
+                    <a href="#text">Text</a>
+                                    </li>
+                            <li>
+                    <a href="#help">Help</a>
+                                    </li>
+                            <li>
+                    <a href="#math">Math</a>
                                     </li>
                     </ul>
     
-        <section>
-        <header><h2>Migrations</h2></header>
-        <article>
-            If you're coming from a previous version of the recipe or another recipe, you might be interested reading the following migration guides:
-
-            <ul>
-                                <li>
-                    <a href="/manala-recipes/migrations/lazy.symfony/MIGRATION.2023-02">
-                        Makefile variables refactoring - 2023-02
-                    </a>
-                </li>
-                            </ul>
-        </article>
-    </section>
-    
     <section>
         <article>
-            <body><h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
-<ul>
-<li><a href="https://manala.github.io/manala/installation/" target="_blank">Manala CLI</a> to update the recipe</li>
-<li>Make</li>
-<li>Docker Desktop 2.2.0+ or Docker Engine + Docker Compose</li>
-</ul>
-<h2 id="setup">Setup<a href="#setup" class="anchor"></a></h2>
-<p>Ok, let's init a <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application:</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="69c12abcfaed39a59514c2ea971375df">manala init -i lazy.symfony foo
-<span class="token builtin class-name">cd</span> foo</code></pre>
-<p>Up the system and open a shell into an another terminal:</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="e3bf9cd354412ccf8475b26f1132a3f8"><span class="token function">make</span> up
-<span class="token function">make</span> <span class="token function">sh</span></code></pre>
-<p>Create the <code class="code-inline" id="acbd18db4cc2f85cedef654fccc4a4d8">foo</code> symfony demo application into <code class="code-inline" id="d42b9c57d24cf5db3bd8d332dc35437f">/tmp</code> and move files into your project (<em>symfony can't create application in a non-empty dir</em>):</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="55951e413e5515e83a1357c3fa2e7142">symfony new /tmp/foo --no-git --demo
-<span class="token function">rsync</span> -a /tmp/foo/ ./</code></pre>
-<p>Browse <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> and enjoy :)</p></body>
+            <body><h1 id="makefile-variables-refactoring-2023-02">Makefile variables refactoring - 2023-02<a href="#makefile-variables-refactoring-2023-02" class="anchor"></a></h1>
+<p>In order to ease maintenance across recipes, some makefile variables have been renamed, please adjust your Makefiles(s) in your project(s).</p>
+<h2 id="dir">Dir<a href="#dir" class="anchor"></a></h2>
+<p>_DIR         -&gt; MANALA_DIR
+_ROOT        -&gt; MANALA_CURRENT_ROOT
+_CURRENT_DIR -&gt; MANALA_CURRENT_DIR
+_CACHE_DIR   -&gt; MANALA_CACHE_DIR</p>
+<h2 id="os">Os<a href="#os" class="anchor"></a></h2>
+<p>OS         -&gt; MANALA_OS
+OS_LINUX   -&gt; MANALA_OS_LINUX
+OS_DARWIN  -&gt; MANALA_OS_DARWIN
+OS_WINDOWS -&gt; MANALA_OS_WINDOWS</p>
+<h2 id="docker">Docker<a href="#docker" class="anchor"></a></h2>
+<p>DOCKER                       -&gt; MANALA_DOCKER
+DOCKER_SHELL                 -&gt; MANALA_DOCKER_SHELL
+DOCKER_MAKE                  -&gt; MANALA_DOCKER_MAKE
+_docker                      -&gt; manala_docker
+docker_run                   -&gt; manala_docker_shell
+docker_exec                  -&gt; manala_docker_shell
+_docker_compose_exec         -&gt; manala_docker_shell
+_docker_compose              -&gt; manala_docker_compose
+_DOCKER_COMPOSE              -&gt; MANALA_DOCKER_COMPOSE_BIN
+_DOCKER_COMPOSE_ENV          -&gt; MANALA_DOCKER_COMPOSE_ENV
+_DOCKER_COMPOSE_FILE         -&gt; MANALA_DOCKER_COMPOSE_FILE
+_DOCKER_COMPOSE_PROFILE      -&gt; MANALA_DOCKER_COMPOSE_PROFILE
+_DOCKER_COMPOSE_SERVICE      -&gt; [dropped]
+_DOCKER_COMPOSE_USER         -&gt; [dropped]
+_DOCKER_COMPOSE_EXEC_SERVICE -&gt; [dropped]
+_DOCKER_COMPOSE_EXEC_USER    -&gt; [dropped]
+_DOCKER_COMPOSE_EXEC_WORKDIR -&gt; [dropped]</p>
+<h2 id="text">Text<a href="#text" class="anchor"></a></h2>
+<p>COLOR_RESET     -&gt; MANALA_COLOR_RESET
+COLOR_ERROR     -&gt; MANALA_COLOR_ERROR
+COLOR_INFO      -&gt; MANALA_COLOR_INFO
+COLOR_WARNING   -&gt; MANALA_COLOR_WARNING
+COLOR_COMMENT   -&gt; MANALA_COLOR_COMMENT
+time            -&gt; manala_time
+message         -&gt; manala_message
+message_success -&gt; manala_message_success
+message_warning -&gt; manala_message_warning
+message_error   -&gt; manala_message_error
+log             -&gt; manala_log
+log_warning     -&gt; manala_log_warning
+log_error       -&gt; manala_log_error
+confirm         -&gt; manala_confirm
+confirm_if      -&gt; manala_confirm_if
+confirm_if_not  -&gt; manala_confirm_if_not
+error_if_not    -&gt; manala_error_if_not
+rand            -&gt; manala_rand</p>
+<h2 id="help">Help<a href="#help" class="anchor"></a></h2>
+<p>HELP         -&gt; MANALA_HELP
+HELP_PROJECT -&gt; MANALA_HELP_PROJECT
+help         -&gt; manala_help
+help_section -&gt; manala_help_section</p>
+<h2 id="math">Math<a href="#math" class="anchor"></a></h2>
+<p>plus -&gt; manala_plus</p></body>
         </article>
     </section>
 
-    <time datetime="2023-02-27UTC20:36:29+00:00">Last modified: February 27, 2023 20:36</time>
+    <time datetime="2023-02-27UTC20:35:59+00:00">Last modified: February 27, 2023 20:35</time>
         </div>
 
         <footer class="footer">
