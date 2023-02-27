@@ -1,0 +1,31 @@
+name: Elao - App - Docker
+
+on:
+  pull_request:
+    paths:
+      - elao.app.docker/**
+  workflow_dispatch:
+
+env:
+  directory: elao.app.docker/test
+
+jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Manala update
+        uses: manala/github-action-manala@v1
+        with:
+          directory: ${{ env.directory }}
+
+      - name: Lint
+        working-directory: ${{ env.directory }}
+        run: |
+          make lint \
+            VERBOSE=1

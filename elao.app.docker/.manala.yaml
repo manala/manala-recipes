@@ -60,7 +60,7 @@ system:
     # @schema {"items": {"type": "object"}}
     files: []
     network:
-      hosts: {}
+        hosts: {}
     nginx:
         # @schema {
         #     "items": {"type": "object",
@@ -96,8 +96,8 @@ system:
         # }
         env: {}
         composer:
-          # @schema {"enum": [null, 1]}
-          version: ~
+            # @schema {"enum": [null, 1]}
+            version: ~
     cron:
         # @schema {"items": {"type": "object"}}
         files: []
@@ -111,8 +111,8 @@ system:
         # @schema {"items": {"type": "object"}}
         packages: []
         yarn:
-          # @schema {"enum": [null, 1]}
-          version: ~
+            # @schema {"enum": [null, 1]}
+            version: ~
     mariadb:
         # @option {"label": "MariaDB version"}
         # @schema {"enum": [null, 10.6, 10.5, 10.4, 10.3, 10.2, 10.1]}
