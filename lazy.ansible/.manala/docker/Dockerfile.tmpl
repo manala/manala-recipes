@@ -108,7 +108,7 @@ RUN \
 # Ansible
 {{ $ansible := .Vars.system.ansible -}}
 RUN \
-    pip3 --no-cache-dir install \
+    pip3 --no-cache-dir --disable-pip-version-check install \
         ansible-core=={{ $ansible.version }}
 
 {{ $ansibleLint := index .Vars.system "ansible-lint" -}}
@@ -126,22 +126,28 @@ RUN \
         "${BUILD_PACKAGES[@]}" \
     {{- if $ansibleLint.version }}
     # Ansible Lint
-    && pipx install ansible-lint=={{ $ansibleLint.version }} \
+    && pipx install \
+        ansible-lint=={{ $ansibleLint.version }} \
     {{- end }}
     {{- if $molecule.version }}
     # Molecule
-    && pipx install molecule=={{ $molecule.version }} \
+    && pipx install \
+        molecule=={{ $molecule.version }} \
     && _MOLECULE_COMPLETE=bash_source molecule > /etc/bash_completion.d/molecule \
     {{- if $molecule.plugins.version }}
-    && pipx inject molecule molecule-plugins=={{ $molecule.plugins.version }} \
+    && pipx inject molecule \
+        molecule-plugins=={{ $molecule.plugins.version }} \
     {{- if $molecule.plugins.azure }}
-    && pipx inject molecule molecule-plugins[azure]=={{ $molecule.plugins.version }} \
+    && pipx inject molecule \
+        molecule-plugins[azure]=={{ $molecule.plugins.version }} \
     {{- end }}
     {{- if $molecule.plugins.docker }}
-    && pipx inject molecule molecule-plugins[docker]=={{ $molecule.plugins.version }} \
+    && pipx inject molecule \
+        molecule-plugins[docker]=={{ $molecule.plugins.version }} \
     {{- end }}
     {{- if $molecule.plugins.gce }}
-    && pipx inject molecule molecule-plugins[gce]=={{ $molecule.plugins.version }} \
+    && pipx inject molecule \
+        molecule-plugins[gce]=={{ $molecule.plugins.version }} \
     {{- end }}
     {{- end }}
     {{- end }}

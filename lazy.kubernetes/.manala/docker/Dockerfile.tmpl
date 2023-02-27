@@ -246,7 +246,8 @@ RUN \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         python3 \
         "${BUILD_PACKAGES[@]}" \
-    && pipx install python-openstackclient=={{ $openstack.version }} \
+    && pipx install \
+        python-openstackclient=={{ $openstack.version }} \
     # Bash completion
     && openstack complete > /etc/bash_completion.d/openstack \
     # Clean
@@ -268,9 +269,11 @@ RUN \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         python3 \
         "${BUILD_PACKAGES[@]}" \
-    && pipx install python-swiftclient=={{ $swift.version }} \
+    && pipx install \
+        python-swiftclient=={{ $swift.version }} \
     {{ if $swift.keystone.version -}}
-    && pipx inject python-swiftclient python-keystoneclient=={{ $swift.keystone.version }} \
+    && pipx inject python-swiftclient \
+        python-keystoneclient=={{ $swift.keystone.version }} \
     {{ end -}}
     # Clean
     && apt-get --quiet --yes --autoremove purge \
