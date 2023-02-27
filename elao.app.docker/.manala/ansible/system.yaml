@@ -319,14 +319,14 @@
   tasks:
 
     - import_role:
-        name: zsh
-      when: system_zsh
-      tags: [zsh]
-
-    - import_role:
         name: apt
       when: system_apt
       tags: [apt]
+
+    - import_role:
+        name: zsh
+      when: system_zsh
+      tags: [zsh]
 
     - import_role:
         name: locales
