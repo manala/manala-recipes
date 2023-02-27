@@ -12,9 +12,9 @@
 #
 # Example #1: Run tests and remove artefacts
 #
-#   $(call try_finally, phpunit, rm -Rf artefacts)
+#   $(call manala_try_finally, phpunit, rm -Rf artefacts)
 
-define try_finally
+define manala_try_finally
 ( \
 	$(strip $(1)) \
 ) ; RC=$${?} \

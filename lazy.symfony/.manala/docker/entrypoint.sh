@@ -25,8 +25,8 @@ if [ -t 1 ]; then
 fi
 
 # Home cache
-if [ -n "${CACHE_DIR}" ]; then
-  HOME_DIR=${CACHE_DIR}/home
+if [ -n "${MANALA_CACHE_DIR}" ]; then
+  HOME_DIR=${MANALA_CACHE_DIR}/home
   if [ ! -d "${HOME_DIR}" ]; then
     cp --archive /home/lazy/. "${HOME_DIR}"
   fi

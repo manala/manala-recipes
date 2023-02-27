@@ -3,7 +3,7 @@ manala:
     recipe: lazy.kubernetes
 
 project:
-    name: lazy.kubernetes.test
+    name: lazy-kubernetes-test
 
 system:
     docker: true

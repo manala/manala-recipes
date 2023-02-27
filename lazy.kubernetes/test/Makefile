@@ -30,7 +30,7 @@ lint: .manala
 ## Test - Gomplate validation
 test: .manala
 	printf "\033[36mTest\033[0m [gomplate]\n"
-	$(call docker_run, goss \
+	$(call manala_docker_shell, goss \
 		--vars .manala.yaml \
 		validate \
 		--color \

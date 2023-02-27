@@ -647,7 +647,7 @@ at least once on your machine, if not already.
 Makefile targets that are supposed to be runned via docker must be prefixed.
 
 ```makefile
-foo: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+foo: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 foo:
 	# Do something really foo...
 ```
@@ -659,26 +659,26 @@ Ssh
 #######
 
 ## Ssh to staging server
-ssh@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+ssh@staging: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 ssh@staging:
 	ssh app@foo.staging.rix.link
 
 # Single host...
 
-ssh@production: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+ssh@production: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 ssh@production:
 	...
 
 # Multi host...
 
-ssh@production-01: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+ssh@production-01: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 ssh@production-01:
 	...
 ```
 
 Sync
 ```makefile
-sync@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+sync@staging: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 sync@staging:
 	mkdir -p var
 	rsync --archive --compress --verbose --delete-after \
@@ -686,26 +686,26 @@ sync@staging:
 		var/files/
 
 # Multi targets...
-sync-uploads@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+sync-uploads@staging: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 sync-uploads@staging:
   ...
 
 # Multi apps...
-sync.api-uploads@staging: SHELL := $(or $(DOCKER_SHELL),$(SHELL))
+sync.api-uploads@staging: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 sync.api-uploads@staging:
   ...
 ```
 
 ### Git tools
 
-This recipe contains some git helpers such as the [`git_diff`](./.manala/make/git.mk) function.
+This recipe contains some git helpers such as the [`manala_git_diff`](./.manala/make/git.mk) function.
 
 This function is useful for example to apply `php-cs`, `php-cs-fix` or `PHPStan` checks only on the subset of updated PHP files and not on any PHP file of your project.
 
 Usage (in your `Makefile`):
 
 ```makefile
-lint.php-cs-fixer: DIFF = $(call git_diff, php, src tests)
+lint.php-cs-fixer: DIFF = $(call manala_git_diff, php, src tests)
 lint.php-cs-fixer:
 	$(if $(DIFF), \
 		vendor/bin/php-cs-fixer fix --config=.php_cs.dist --path-mode=intersection --diff --dry-run $(DIFF), \
@@ -715,7 +715,7 @@ lint.php-cs-fixer:
 
 ### Try tools
 
-This recipe contains some try helpers such as the [`try_finally`](./.manala/make/try.mk) function.
+This recipe contains some try helpers such as the [`manala_try_finally`](./.manala/make/try.mk) function.
 
 This function is useful for example to run `phpunit` tests needing a started symfony server, and to stop this server regardless of the tests return code.
 
@@ -724,7 +724,7 @@ Usage (in your `Makefile`):
 ```makefile
 test.phpunit@integration:
 	symfony server:start --ansi --no-humanize --daemon --no-tls --port=8000
-	$(call try_finally, \
+	$(call manala_try_finally, \
 		bin/phpunit --colors=always --log-junit report/junit/phpunit.xml, \
 		symfony server:stop --ansi \
 	)
