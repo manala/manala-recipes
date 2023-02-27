@@ -195,12 +195,6 @@
       host = 127.0.0.1
       user = root
 
-    ###########
-    # Network #
-    ###########
-
-    manala_network_hosts: "{{ system_network_hosts }}"
-
     #########
     # Nginx #
     #########
@@ -333,11 +327,6 @@
         name: apt
       when: system_apt
       tags: [apt]
-
-    - import_role:
-        name: network
-      when: system_network
-      tags: [network]
 
     - import_role:
         name: locales

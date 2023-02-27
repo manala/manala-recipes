@@ -35,9 +35,6 @@ system:
             system_influxdb: {{ not (empty .Vars.system.influxdb.version) | ternary "true" "false" }}
             # Locales
             system_locales: true
-            # Network
-            system_network: {{ not (empty .Vars.system.network.hosts) | ternary "true" "false" }}
-            {{- dict "system_network_hosts" .Vars.system.network.hosts | toYaml | nindent 12 }}
             # Nginx
             system_nginx: {{ not (empty .Vars.system.nginx.configs) | ternary "true" "false" }}
             # Ngrok
