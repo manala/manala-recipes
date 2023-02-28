@@ -104,6 +104,11 @@ MANALA_HELP += $(call manala_help,provision,             Provision the environme
 provision: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 provision: MANALA_ANSIBLE_PLAYBOOK_INVENTORY = $(MANALA_DIR)/.manala/ansible/inventories
 provision: MANALA_ANSIBLE_PLAYBOOK_BECOME = 1
+provision: MANALA_ANSIBLE_PLAYBOOK_TAGS = $(TAGS)
+provision: MANALA_ANSIBLE_PLAYBOOK_CHECK = $(if $(DIFF),1)
+provision: MANALA_ANSIBLE_PLAYBOOK_DIFF = $(if $(DIFF),1)
+provision: MANALA_ANSIBLE_PLAYBOOK_VERBOSE_MORE = $(if $(VERBOSE),1)
+provision: MANALA_ANSIBLE_PLAYBOOK_LIMIT = $(if $(LIMIT),$(LIMIT),development)
 provision: MANALA_ANSIBLE_DEBUG = $(if $(DEBUG),1)
 provision:
 	$(call manala_log, Install ansible galaxy collections)
@@ -114,39 +119,39 @@ provision:
 		$(MANALA_DIR)/.manala/ansible/system.yaml
 
 MANALA_HELP += $(call manala_help,provision.apt,         Provision the environment - Apt (DIFF|VERBOSE))
-provision.apt: MANALA_ANSIBLE_PLAYBOOK_TAGS = apt
+provision.apt: TAGS = apt
 provision.apt: provision
 
 {{- if .Vars.system.files }}
 
 MANALA_HELP += $(call manala_help,provision.files,       Provision the environment - Files (DIFF|VERBOSE))
-provision.files: MANALA_ANSIBLE_PLAYBOOK_TAGS = files
+provision.files: TAGS = files
 provision.files: provision
 {{- end }}
 
 {{- if .Vars.system.nginx.configs }}
 
 MANALA_HELP += $(call manala_help,provision.nginx,       Provision the environment - Nginx (DIFF|VERBOSE))
-provision.nginx: MANALA_ANSIBLE_PLAYBOOK_TAGS = nginx
+provision.nginx: TAGS = nginx
 provision.nginx: provision
 {{- end }}
 
 {{- if .Vars.system.supervisor.configs }}
 
 MANALA_HELP += $(call manala_help,provision.supervisor,  Provision the environment - Supervisor (DIFF|VERBOSE))
-provision.supervisor: MANALA_ANSIBLE_PLAYBOOK_TAGS = supervisor
+provision.supervisor: TAGS = supervisor
 provision.supervisor: provision
 {{- end }}
 
 {{- if .Vars.system.php.version }}
 
 MANALA_HELP += $(call manala_help,provision.php,         Provision the environment - Php (DIFF|VERBOSE))
-provision.php: MANALA_ANSIBLE_PLAYBOOK_TAGS = php
+provision.php: TAGS = php
 provision.php: provision
 {{- end }}
 
 MANALA_HELP += $(call manala_help,provision.certificates,Provision the environment - Certificates (DIFF|VERBOSE))
-provision.certificates: MANALA_ANSIBLE_PLAYBOOK_TAGS = certificates
+provision.certificates: TAGS = certificates
 provision.certificates: MANALA_ANSIBLE_PLAYBOOK_EXTRA_VARS = certificates_prompt=true
 provision.certificates: provision
 
