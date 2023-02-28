@@ -28,6 +28,11 @@ else
 MANALA_ANSIBLE_PLAYBOOK_LIMIT = development
 endif
 
+# Debug
+ifdef DEBUG
+MANALA_ANSIBLE_PLAYBOOK_ENV = ANSIBLE_DEBUG=1
+endif
+
 # Usage:
 #   $(manala_ansible_galaxy_collection_install) [REQUIREMENTS]
 
@@ -42,6 +47,7 @@ endef
 #   $(manala_ansible_playbook) [PLAYBOOK]
 
 define manala_ansible_playbook
+	$(if $(MANALA_ANSIBLE_PLAYBOOK_ENV), env $(MANALA_ANSIBLE_PLAYBOOK_ENV)) \
 	$(MANALA_ANSIBLE_PLAYBOOK_BIN) \
 		$(if $(MANALA_ANSIBLE_PLAYBOOK_INVENTORY),--inventory $(MANALA_ANSIBLE_PLAYBOOK_INVENTORY)) \
 		$(if $(MANALA_ANSIBLE_PLAYBOOK_BECOME),--become) \
