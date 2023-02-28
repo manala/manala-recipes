@@ -2,54 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
             <url>
             <loc>https://manala.github.io/manala-recipes/</loc>
-            <lastmod>2023-02-28T14:02:14+00:00</lastmod>            <priority>0</priority>            <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:39+00:00</lastmod>            <priority>0</priority>            <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/recipes/elao.app.docker</loc>
-            <lastmod>2023-02-28T14:02:15+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:40+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/recipes/elao.app</loc>
-            <lastmod>2023-02-28T14:02:15+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:40+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/recipes/lazy.ansible</loc>
-            <lastmod>2023-02-28T14:02:16+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:40+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/recipes/lazy.kubernetes</loc>
-            <lastmod>2023-02-28T14:02:16+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:41+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/recipes/lazy.symfony</loc>
-            <lastmod>2023-02-28T14:02:16+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:41+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/migrations/elao.app.docker/MIGRATION.2022-02</loc>
-            <lastmod>2023-02-28T14:02:17+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:41+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/migrations/elao.app.docker/MIGRATION.2022-11</loc>
-            <lastmod>2023-02-28T14:02:17+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:42+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/migrations/elao.app.docker/MIGRATION.2023-02</loc>
-            <lastmod>2023-02-28T14:02:17+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:42+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/migrations/elao.app/MIGRATION.2021-04</loc>
-            <lastmod>2023-02-28T14:02:18+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:42+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/migrations/lazy.ansible/MIGRATION.2023-02</loc>
-            <lastmod>2023-02-28T14:02:18+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:42+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/migrations/lazy.kubernetes/MIGRATION.2023-02</loc>
-            <lastmod>2023-02-28T14:02:18+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:43+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
             <url>
             <loc>https://manala.github.io/manala-recipes/migrations/lazy.symfony/MIGRATION.2023-02</loc>
-            <lastmod>2023-02-28T14:02:19+00:00</lastmod>                        <changefreq>monthly</changefreq>
+            <lastmod>2023-02-28T22:05:43+00:00</lastmod>                        <changefreq>monthly</changefreq>
         </url>
     </urlset>
