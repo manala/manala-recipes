@@ -51,12 +51,20 @@ command:
       - mbstring
       - xml
       # Project
-      - {{ index .Vars.system.php.extensions 0 }}
+      {{- range $extension := .Vars.system.php.extensions }}
+      - {{ $extension }}
+      {{- end }}
+  composer --version:
+    exit-status: 0
+    stdout:
+      - Composer version 2
   # Nodejs
   node --version:
     exit-status: 0
     stdout:
       - v{{ .Vars.system.nodejs.version }}
+  npm --version:
+    exit-status: 0
   # Deploy
   ansible-galaxy role list:
     exit-status: 0
