@@ -1,9 +1,15 @@
 {%- set config = manala_ssh_client_config|default('', True) -%}
 
-Host *
-    HashKnownHosts yes
-    GSSAPIAuthentication yes
-    GSSAPIDelegateCredentials no
-    StrictHostKeyChecking no
+# Allow host autocompletion by disabling hashing in known_hosts file
+HashKnownHosts no
+
+# Automatically accept host keys
+StrictHostKeyChecking no
+
+# Reduce log level
+LogLevel ERROR
+    
+GSSAPIAuthentication yes
+GSSAPIDelegateCredentials no
 
 {{ config }}
