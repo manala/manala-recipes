@@ -28,7 +28,7 @@ else
 MANALA_ANSIBLE_PLAYBOOK_LIMIT = development
 endif
 
-# Internal usage:
+# Usage:
 #   $(manala_ansible_galaxy_collection_install) [REQUIREMENTS]
 
 define manala_ansible_galaxy_collection_install
@@ -37,7 +37,7 @@ define manala_ansible_galaxy_collection_install
 		--requirements-file
 endef
 
-# Internal usage:
+# Usage:
 #   $(manala_ansible_playbook) [PLAYBOOK]
 
 define manala_ansible_playbook
