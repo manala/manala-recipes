@@ -45,7 +45,8 @@ ifndef MANALA_DOCKER
 
 MANALA_HELP += $(call manala_help_section, System)
 
-MANALA_HELP += $(call manala_help,sh,   Open a local system shell (PORT))
+MANALA_HELP += $(call manala_help,sh,   Open a local system shell (PORT|DEBUG))
+sh: MANALA_DOCKER_DEBUG = $(if $(DEBUG),1)
 sh:
 	$(call manala_docker_command, \
 		$(if $(PORT),--publish $(PORT)), \

@@ -104,9 +104,7 @@ MANALA_DOCKER_COMPOSE_FILE += \
 	$(if $(MANALA_DOCKER_COMPOSE_PROFILE), $(MANALA_DIR)/.manala/docker/compose/profile.$(MANALA_DOCKER_COMPOSE_PROFILE).yaml)
 
 # Debug
-ifdef DEBUG
-MANALA_DOCKER_COMPOSE_ENV += BUILDKIT_PROGRESS=plain
-endif
+MANALA_DOCKER_COMPOSE_ENV += $(if $(MANALA_DOCKER_DEBUG), BUILDKIT_PROGRESS=plain)
 
 # Usage:
 #   $(manala_docker_compose) [COMMAND] [ARGS...]
