@@ -56,7 +56,7 @@ endef
 # Docker Compose #
 ##################
 
-MANALA_DOCKER_COMPOSE_BIN_DEFAULT = $(MANALA_DOCKER_BIN) compose
+MANALA_DOCKER_COMPOSE_BIN_DEFAULT = $(call manala_docker) compose
 
 MANALA_DOCKER_COMPOSE_BIN = $(MANALA_DOCKER_COMPOSE_BIN_DEFAULT)
 
@@ -78,16 +78,13 @@ ifdef SSH_AUTH_SOCK
 # See: https://docs.docker.com/desktop/mac/networking/#ssh-agent-forwarding
 MANALA_DOCKER_COMPOSE_ENV += $(if $(MANALA_OS_DARWIN), \
 	SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
-	MANALA_SSH_AUTH_SOCK_BIND=/run/host-services/ssh-auth.sock.bind \
 )
-MANALA_DOCKER_COMPOSE_FILE += $(MANALA_DIR)/.manala/docker/compose/ssh-agent.yaml
+MANALA_DOCKER_COMPOSE_FILE += $(MANALA_DIR)/.manala/docker/compose/ssh.agent-bridge.yaml
 endif
 
 # Docker
-MANALA_DOCKER_COMPOSE_ENV += \
-	MANALA_DOCKER_SOCK=/var/run/docker.sock \
-	MANALA_DOCKER_SOCK_BIND=/var/run/docker.sock.bind
-MANALA_DOCKER_COMPOSE_FILE += $(MANALA_DIR)/.manala/docker/compose/docker.yaml
+MANALA_DOCKER_COMPOSE_ENV += MANALA_DOCKER_SOCK=$(MANALA_DOCKER_SOCK)
+MANALA_DOCKER_COMPOSE_FILE += $(MANALA_DIR)/.manala/docker/compose/docker.bridge.yaml
 
 # Docker - Cache
 ifneq ($(and $(MANALA_DOCKER_CACHE_FROM),$(MANALA_DOCKER_CACHE_TO)),)
