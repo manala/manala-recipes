@@ -63,7 +63,6 @@ system:
               env:
                   HOME: /srv/app
               jobs:
-                  # Foo - Bar
                   - command: php bin/console app:foo:bar --no-interaction -vv >> /srv/
     supervisor:
         configs:
@@ -88,4 +87,4 @@ system:
     ssh:
         client:
             config: |
-                # Foo
+                # Ssh config

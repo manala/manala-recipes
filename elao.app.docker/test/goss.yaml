@@ -154,7 +154,7 @@ file:
   /etc/ssh/ssh_config:
     exists: true
     contains:
-      - # Foo
+      - # Ssh config
 
 http:
   # MailHog
