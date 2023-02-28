@@ -25,6 +25,8 @@ system:
     network:
       hosts:
           1.2.3.4: foo.bar
+    goss:
+        version: 0.3.21
     nginx:
         configs:
             - template: nginx/gzip.j2

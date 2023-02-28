@@ -1,3 +1,9 @@
+{{/* Architecture map */}}
+{{ define "arch_map" -}}
+$(case $(dpkg --print-architecture) in
+  {{- range $k, $v := . }} "{{ $k }}") echo "{{ $v }}" ;;{{ end }} esac)
+{{- end }}
+
 {{/* Delivery makefile target */}}
 {{ define "delivery_target" -}}
     {{- if hasKey . "app" }}.{{ .app }}{{ end -}}
