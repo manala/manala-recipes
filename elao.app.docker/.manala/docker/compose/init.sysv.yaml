@@ -10,5 +10,4 @@ services:
                 MANALA_INIT: sysv
         tty: true
         tmpfs:
-            - /tmp
             - /run
