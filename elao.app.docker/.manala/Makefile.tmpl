@@ -55,6 +55,7 @@ ifndef MANALA_DOCKER
 # Setup commands only available *IN* root directory
 ifdef MANALA_CURRENT_ROOT
 MANALA_HELP += $(call manala_help,setup,                 Setup environment (DEBUG))
+setup: MANALA_DOCKER_DEBUG = $(if $(DEBUG),1)
 setup:
 	$(manala_docker_compose) up \
 		--build \
@@ -99,10 +100,11 @@ endif
 
 endif
 
-MANALA_HELP += $(call manala_help,provision,             Provision the environment (TAGS|DIFF|VERBOSE|LIMIT))
+MANALA_HELP += $(call manala_help,provision,             Provision the environment (TAGS|DIFF|VERBOSE|LIMIT|DEBUG))
 provision: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 provision: MANALA_ANSIBLE_PLAYBOOK_INVENTORY = $(MANALA_DIR)/.manala/ansible/inventories
 provision: MANALA_ANSIBLE_PLAYBOOK_BECOME = 1
+provision: MANALA_ANSIBLE_DEBUG = $(if $(DEBUG),1)
 provision:
 	$(call manala_log, Install ansible galaxy collections)
 	$(manala_ansible_galaxy_collection_install) \

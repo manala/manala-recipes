@@ -29,9 +29,7 @@ MANALA_ANSIBLE_PLAYBOOK_LIMIT = development
 endif
 
 # Debug
-ifdef DEBUG
-MANALA_ANSIBLE_PLAYBOOK_ENV = ANSIBLE_DEBUG=1
-endif
+MANALA_ANSIBLE_PLAYBOOK_ENV += $(if $(MANALA_ANSIBLE_DEBUG), ANSIBLE_DEBUG=1)
 
 # Usage:
 #   $(manala_ansible_galaxy_collection_install) [REQUIREMENTS]

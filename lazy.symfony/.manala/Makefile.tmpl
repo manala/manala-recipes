@@ -46,7 +46,8 @@ ifndef MANALA_DOCKER
 
 MANALA_HELP += $(call manala_help_section, System)
 
-MANALA_HELP += $(call manala_help,up,   Create and start local system (WAIT))
+MANALA_HELP += $(call manala_help,up,   Create and start local system (WAIT|DEBUG))
+up: MANALA_DOCKER_DEBUG = $(if $(DEBUG),1)
 up:
 	@$(call manala_log, Builds$(,) creates and starts docker containers…)
 	$(manala_docker_compose) up \
