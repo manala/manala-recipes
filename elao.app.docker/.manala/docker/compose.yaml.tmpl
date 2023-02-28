@@ -63,6 +63,7 @@ services:
             discovery.type: single-node
             http.cors.allow-origin: "*"
             http.cors.enabled: "true"
+            xpack.security.enabled: "false"
         command: >
             sh -c
             "{{- range $plugin := $.Vars.system.elasticsearch.plugins }}((elasticsearch-plugin list|grep {{ $plugin }}) || elasticsearch-plugin install --batch --verbose {{ $plugin }}) && {{ end -}}
