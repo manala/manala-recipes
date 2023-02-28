@@ -1,0 +1,89 @@
+manala:
+    repository: ../..
+    recipe: elao.app.docker
+
+project:
+    name: elao-app-docker-test
+    ports_prefix: 123
+
+system:
+    version: 11
+    timezone: Europe/Paris
+    locales:
+        default: C.UTF-8
+        codes:
+            - fr_FR.UTF-8
+    env:
+        FOO: BAR
+    apt:
+        packages:
+            - pacman4console
+    files:
+        - path: /srv/foo
+          content: |
+              bar
+    network:
+      hosts:
+          1.2.3.4: foo.bar
+    nginx:
+        configs:
+            - template: nginx/gzip.j2
+            - template: nginx/php_fpm_app.j2
+            - file: app.conf
+              config: |
+                  server {
+                      server_name ~.;
+                      root /srv/app/public;
+                      access_log /srv/log/nginx.access.log;
+                      error_log /srv/log/nginx.error.log;
+                      include conf.d/gzip;
+                      location / {
+                          try_files $uri /index.php$is_args$args;
+                      }
+                      location ~ ^/index\.php(/|$) {
+                          include conf.d/php_fpm_app;
+                          internal;
+                      }
+                  }
+    php:
+        version: 8.2
+        extensions:
+            - mysql
+        configs:
+            - template: php/app.ini.j2
+              config:
+                  date.timezone: Europe/Paris
+        env:
+            FOO: BAR
+    cron:
+        files:
+            - file: app
+              env:
+                  HOME: /srv/app
+              jobs:
+                  # Foo - Bar
+                  - command: php bin/console app:foo:bar --no-interaction -vv >> /srv/
+    supervisor:
+        configs:
+            - file: app.conf
+              programs:
+                  foo:
+                      command: php bin/console app:acme:foo --no-interaction -vv
+                      directory: /srv/app
+                      stdout_logfile: /srv/log/supervisor.acme-foo.log
+    nodejs:
+        version: 18
+        packages:
+            - package: sass
+    mariadb:
+        version: 10.6
+    redis:
+        version: "*"
+    elasticsearch:
+        version: 8
+        plugins:
+            - analysis-icu
+    ssh:
+        client:
+            config: |
+                # Foo
