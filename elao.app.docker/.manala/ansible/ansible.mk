@@ -33,6 +33,7 @@ endif
 
 define manala_ansible_galaxy_collection_install
 	$(MANALA_ANSIBLE_GALAXY_BIN) collection install \
+		--timeout 60 \
 		--upgrade \
 		--requirements-file
 endef
