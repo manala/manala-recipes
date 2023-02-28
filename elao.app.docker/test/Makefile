@@ -22,3 +22,16 @@ lint: .manala
 		$(if $(_HADOLINT_IGNORE), --env HADOLINT_IGNORE=$(_HADOLINT_IGNORE)) \
 		hadolint/hadolint:$(_HADOLINT_VERSION) \
 			< .manala/docker/Dockerfile
+
+########
+# Test #
+########
+
+## Test - Gomplate validation
+test: .manala
+	printf "\033[36mTest\033[0m [gomplate]\n"
+	$(call manala_docker_shell, goss \
+		--vars .manala.yaml \
+		validate \
+		--color \
+	)

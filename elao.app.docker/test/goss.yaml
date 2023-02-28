@@ -1,0 +1,178 @@
+package:
+  # System
+  gnupg:
+    installed: true
+  ca-certificates:
+    installed: true
+  sudo:
+    installed: true
+  curl:
+    installed: true
+  make:
+    installed: true
+  socat:
+    installed: true
+  # Apt
+  {{- range $package := .Vars.system.apt.packages }}
+  {{ $package }}:
+    installed: true
+  {{- end }}
+
+group:
+  # System
+  app:
+    exists: true
+
+user:
+  # System
+  app:
+    exists: true
+    groups:
+      - app
+    shell: /bin/zsh
+
+command:
+  # Goss
+  goss --version:
+    exit-status: 0
+    stdout:
+      - goss version v{{ .Vars.system.goss.version }}
+  # Ansible
+  ansible --version:
+    exit-status: 0
+    stdout:
+      - ansible [core 2.14.3]
+  # Locales
+  locale:
+    exit-status: 0
+    stdout:
+      - LANG={{ .Vars.system.locales.default }}
+  locale --all-locales:
+    exit-status: 0
+    stdout:
+      - {{ .Vars.system.locales.default }}
+      {{- range $code := .Vars.system.locales.codes }}
+      - {{ $code | replace "UTF-8" "utf8" }}
+      {{- end }}
+  # Env
+  env:
+    exit-status: 0
+    stdout:
+      - FOO=BAR
+      {{- range $key, $value := .Vars.system.env }}
+      - {{ $key }}={{ $value }}
+      {{- end }}
+  # Nginx
+  nginx -V:
+    exit-status: 0
+  # Php
+  php --version:
+    exit-status: 0
+    stdout:
+      - PHP {{ .Vars.system.php.version }}
+  php -m:
+    exit-status: 0
+    stdout:
+      # Base
+      - Zend OPcache
+      # Php
+      {{- range $extension := .Vars.system.php.extensions }}
+      - {{ $extension }}
+      {{- end }}
+  php -i:
+    exit-status: 0
+    stdout:
+      - date.timezone => Europe/Paris => Europe/Paris
+  composer --version:
+    exit-status: 0
+    stdout:
+      - Composer version 2
+  # Nodejs
+  node --version:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.nodejs.version }}
+  npm --version:
+    exit-status: 0
+  sass --version:
+    exit-status: 0
+
+dns:
+  # Network
+  {{- range $ip, $host := .Vars.system.network.hosts }}
+  {{ $host }}:
+    resolvable: true
+    addrs:
+    - {{ $ip }}
+  {{- end }}
+
+file:
+  # System
+  /etc/os-release:
+    exists: true
+    contains:
+      - VERSION_ID="{{ .Vars.system.version }}"
+  # Timezone
+  /etc/timezone:
+    exists: true
+    contains:
+      - {{ .Vars.system.timezone }}
+  # Files
+  /srv/foo:
+    exists: true
+    contains:
+      - bar
+  # Php
+  /etc/php/{{ .Vars.system.php.version }}/fpm/pool.d/app.conf:
+    exists: true
+    contains:
+      {{- range $key, $value := .Vars.system.php.env }}
+      - env[{{ $key }}] = "{{ $value }}"
+      {{- end }}
+  # Cron
+  /etc/cron.d/app:
+    exists: true
+    contains:
+      - HOME="/srv/app"
+      - "* * * * * app php bin/console app:foo:bar --no-interaction -vv >> /srv/"
+  # Supervisor
+  /etc/supervisor/conf.d/app.conf:
+    exists: true
+    contains:
+      - "[program:foo]"
+      - autorestart=true
+      - autostart=false
+      - redirect_stderr=true
+      - startretries=20
+      - stderr_logfile_maxbytes=0
+      - stdout_logfile_maxbytes=0
+      - user=app
+      - command=php bin/console app:acme:foo --no-interaction -vv
+      - directory=/srv/app
+      - stdout_logfile=/srv/log/supervisor.acme-foo.log
+  # Ssh
+  /etc/ssh/ssh_config:
+    exists: true
+    contains:
+      - # Foo
+
+http:
+  # MailHog
+  http://localhost:8025:
+    status: 200
+  # Nginx
+  http://localhost:
+   status: 200
+   body:
+     - Foo
+  # Elasticsearch
+  http://localhost:9200:
+    status: 200
+
+addr:
+  # MariaDB
+  tcp://localhost:3306:
+    reachable: true
+  # Redis
+  tcp://localhost:6379:
+    reachable: true
