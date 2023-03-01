@@ -64,6 +64,14 @@
         <div class="container">
                 <h1>Lazy - Ansible</h1>
 
+            <ul>
+                            <li>
+                    <a href="#requirements">Requirements</a>
+                                    </li>
+                            <li>
+                    <a href="#usage">Usage</a>
+                                    </li>
+                    </ul>
     
         <section>
         <header><h2>Migrations</h2></header>
@@ -87,11 +95,21 @@
 <li><a href="https://manala.github.io/manala/installation/" target="_blank">Manala CLI</a> to update the recipe</li>
 <li>Make</li>
 <li>Docker Desktop 2.2.0+ or Docker Engine + Docker Compose</li>
-</ul></body>
+</ul>
+<h2 id="usage">Usage<a href="#usage" class="anchor"></a></h2>
+<p>Open a shell to local system</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="6e3c3438c618a6a853510bb4ffe64803"><span class="token function">make</span> <span class="token function">sh</span></code></pre>
+<p>Run commands through local system</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="72fce40b9352e8ef9e93b2cd0a7262d0"><span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">command</span>
+<span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;</span> <span class="token string">'EOF'
+command 1
+command 2
+...
+EOF</span></code></pre></body>
         </article>
     </section>
 
-    <time datetime="2023-03-01UTC15:14:31+00:00">Last modified: March 1, 2023 15:14</time>
+    <time datetime="2023-03-01UTC22:58:38+00:00">Last modified: March 1, 2023 22:58</time>
         </div>
 
         <footer class="footer">
