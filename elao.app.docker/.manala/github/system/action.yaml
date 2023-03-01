@@ -9,9 +9,9 @@ inputs:
     type: boolean
     required: false
   env:
-      description: Env vars as a single string. Must be used before/during setup.
-      required: false
-      default: ''
+    description: Env vars as a single string. Must be used before/during setup.
+    required: false
+    default: ''
   setup_group:
     description: Shell group
     required: false

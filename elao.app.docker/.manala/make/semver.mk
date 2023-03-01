@@ -11,9 +11,9 @@ define manala_semver_bump
 		printf "$(MANALA_COLOR_INFO)What's the version number? (current: $(MANALA_COLOR_COMMENT)`cat $(firstword $(1))`$(MANALA_COLOR_INFO))$(MANALA_COLOR_RESET)\n" ; \
 		read VERSION ; \
 		if [ -z $${VERSION} ]; then \
-        printf "$(MANALA_COLOR_ERROR) ❌ Version cannot be empty. Aborting$(MANALA_COLOR_RESET)\n" ; \
-        exit 128 ; \
-    fi ; \
+        	printf "$(MANALA_COLOR_ERROR) ❌ Version cannot be empty. Aborting$(MANALA_COLOR_RESET)\n" ; \
+        	exit 128 ; \
+    	fi ; \
 	fi ; \
 	printf "$(MANALA_COLOR_INFO)Bumping version $(MANALA_COLOR_COMMENT)$${VERSION}$(MANALA_COLOR_INFO)…$(MANALA_COLOR_RESET)\n" ; \
 	for file in $(1) ; \
