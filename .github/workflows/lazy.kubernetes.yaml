@@ -12,9 +12,6 @@ on:
         required: false
         default: false
 
-env:
-  directory: lazy.kubernetes/test
-
 jobs:
 
   lint:
@@ -28,10 +25,10 @@ jobs:
       - name: Manala update
         uses: manala/github-action-manala@v1
         with:
-          dir: ${{ env.directory }}
+          dir: lazy.kubernetes/test
 
       - name: Lint
-        working-directory: ${{ env.directory }}
+        working-directory: lazy.kubernetes/test
         run: |
           make lint \
             VERBOSE=1
@@ -44,9 +41,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-22.04
-    env:
-      MANALA_DOCKER_CACHE_FROM: type=gha,scope=docker.lazy.kubernetes
-      MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=docker.lazy.kubernetes
     steps:
 
       - name: Checkout
@@ -55,21 +49,32 @@ jobs:
       - name: Manala update
         uses: manala/github-action-manala@v1
         with:
-          dir: ${{ env.directory }}
+          dir: lazy.kubernetes/test
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      # Expose ACTIONS_CACHE_URL & ACTIONS_RUNTIME_TOKEN
-      # to be consumed by docker github action cache
-      # See: https://docs.docker.com/build/cache/backends/gha/
-      - name: Expose GitHub Runtime
-        uses: crazy-max/ghaction-github-runtime@v2
+      - name: Set up system
+        uses: ./lazy.kubernetes/test/.manala/github/system/setup
+        with:
+          dir: lazy.kubernetes/test
+          docker_build_cache_scope: docker.lazy.kubernetes
+          docker_env: >
+            FOO=BAR
 
       - name: Test
-        working-directory: ${{ env.directory }}
+        working-directory: lazy.kubernetes/test
         run: |
           make test
+
+      - name: Test - Run
+        uses: ./lazy.kubernetes/test/.manala/github/system/run
+        with:
+          dir: lazy.kubernetes/test
+          docker_dir: /tmp
+          docker_env: >
+            BAR=BAZ
+          run: |
+            whoami
+            pwd
+            env | sort
 
       - name: Debug
         uses: mxschmitt/action-tmate@v3
