@@ -61,9 +61,13 @@ stop:
 	$(manala_docker_compose) stop
 .PHONY: stop
 
-MANALA_HELP += $(call manala_help,sh,   Open a local system shell)
+MANALA_HELP += $(call manala_help,sh,   Shell to local system)
 sh:
-	$(manala_docker_command) bash --login
+	if [ ! -t 0 ] ; then \
+		$(call manala_docker_command, --no-TTY) sh -s ; \
+	else \
+		$(manala_docker_command) bash --login ; \
+	fi
 .PHONY: sh
 
 MANALA_HELP += $(call manala_help,clean,Clean local system)

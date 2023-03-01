@@ -78,10 +78,19 @@ reload:
 	$(manala_docker_compose) restart
 	$(MAKE) help.project
 
-MANALA_HELP += $(call manala_help,sh,                    Open shell to the environment)
+MANALA_HELP += $(call manala_help,sh,                    Shell to the environment)
 sh:
-	$(manala_docker_command) \
-		sh -c "if [ -x \"\$$(command -v zsh)\" ] ; then exec zsh --login ; else exec bash --login ; fi"
+	if [ ! -t 0 ] ; then \
+		$(call manala_docker_command, --no-TTY) sh -s ; \
+	else \
+		$(manala_docker_command) sh -c ' \
+			if [ -x "$$(command -v zsh)" ] ; then \
+				exec zsh --login ; \
+			else \
+				exec bash --login ; \
+			fi \
+		' ; \
+	fi
 
 MANALA_HELP += $(call manala_help,destroy,               Stop and delete environment)
 destroy:

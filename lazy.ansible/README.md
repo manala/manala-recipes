@@ -9,3 +9,19 @@ tableOfContent: 3
 * Make
 * Docker Desktop 2.2.0+ or Docker Engine + Docker Compose
 
+## Usage
+
+Open a shell to local system
+```shell
+make sh
+```
+
+Run commands through local system
+```shell
+make sh <<< command
+make sh << 'EOF'
+command 1
+command 2
+...
+EOF
+```

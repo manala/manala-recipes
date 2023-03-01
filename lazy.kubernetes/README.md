@@ -9,18 +9,35 @@ tableOfContent: 3
 * Make
 * Docker Desktop 2.2.0+ or Docker Engine + Docker Compose
 
-## Kubectl
+## Usage
 
-Alias `k`
+Open a shell to local system
+```shell
+make sh
 ```
-❯ kubectl version
-Client Version: ...
-❯ k version
-Client Version: ...
+
+Run commands through local system
+```shell
+make sh <<< command
+make sh << 'EOF'
+command 1
+command 2
+...
+EOF
 ```
 
 Port forwarding to expose a service port on localhost:1234
+```shell
+make sh PORT=1234:4321
+kubectl --namespace [namespace] port-forward --address 0.0.0.0 svc/[service] 4321:[port]
 ```
-$ make sh PORT=1234:4321
-❯ kubectl --namespace [namespace] port-forward --address 0.0.0.0 svc/[service] 4321:[port]
+
+### Kubectl
+
+Alias `k`
+```shell
+kubectl version
+Client Version: ...
+k version
+Client Version: ...
 ```
