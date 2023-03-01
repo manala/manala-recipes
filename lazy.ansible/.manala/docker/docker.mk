@@ -8,6 +8,7 @@
 #   - Mandatory .manala/docker/compose/ssh-agent.yaml
 #   - Mandatory .manala/docker/compose/docker.yaml
 #   - Mandatory .manala/docker/compose/docker.cache.yaml
+#   - Mandatory .manala/docker/compose/env.file.yaml
 #   - Mandatory .manala/docker/compose/profile.$(MANALA_DOCKER_COMPOSE_PROFILE).yaml if "MANALA_DOCKER_COMPOSE_PROFILE" make variable
 #   - Optional include git.mk
 #   - Mandatory .manala/docker/compose/git.yaml if include git.mk
@@ -102,6 +103,12 @@ MANALA_DOCKER_COMPOSE_FILE += \
 # Profile
 MANALA_DOCKER_COMPOSE_FILE += \
 	$(if $(MANALA_DOCKER_COMPOSE_PROFILE), $(MANALA_DIR)/.manala/docker/compose/profile.$(MANALA_DOCKER_COMPOSE_PROFILE).yaml)
+
+# Env file
+MANALA_DOCKER_COMPOSE_ENV += \
+	$(if $(MANALA_DOCKER_ENV_FILE), MANALA_DOCKER_ENV_FILE=$(MANALA_DOCKER_ENV_FILE))
+MANALA_DOCKER_COMPOSE_FILE += \
+	$(if $(MANALA_DOCKER_ENV_FILE), $(MANALA_DIR)/.manala/docker/compose/env.file.yaml)
 
 # Debug
 MANALA_DOCKER_COMPOSE_ENV += $(if $(MANALA_DOCKER_DEBUG), BUILDKIT_PROGRESS=plain)
