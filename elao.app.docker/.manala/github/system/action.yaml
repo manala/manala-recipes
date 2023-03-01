@@ -99,7 +99,7 @@ runs:
             --profile integration \
             --file ./.manala/docker/compose.yaml \
             --file ./.manala/docker/compose/profile.integration.yaml \
-            --file ./.manala/docker/compose/app.cache.yaml \
+            --file ./.manala/docker/compose/project.cache.yaml \
             ${{ inputs.ssh_key != '' && '--file ./.manala/docker/compose/ssh.key.yaml' || '' }} \
             ${{ env.MANALA_DOCKER_ENV_FILE && '--file ./.manala/docker/compose/env.file.yaml' || '' }} \
             up \
@@ -119,7 +119,7 @@ runs:
             --profile integration \
             --file ./.manala/docker/compose.yaml \
             --file ./.manala/docker/compose/profile.integration.yaml \
-            --file ./.manala/docker/compose/app.cache.yaml \
+            --file ./.manala/docker/compose/project.cache.yaml \
             exec \
             -T \
             ${{ inputs.app != '' && format('--workdir /srv/app/{0}', inputs.app) || '' }} \
