@@ -33,3 +33,20 @@ rsync -a /tmp/foo/ ./
 ```
 
 Browse http://localhost:8080 and enjoy :)
+
+## Usage
+
+Open a shell to local system
+```shell
+make sh
+```
+
+Run commands through local system
+```shell
+make sh <<< command
+make sh << 'EOF'
+command 1
+command 2
+...
+EOF
+```

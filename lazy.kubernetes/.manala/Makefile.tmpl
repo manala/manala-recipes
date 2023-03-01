@@ -45,12 +45,16 @@ ifndef MANALA_DOCKER
 
 MANALA_HELP += $(call manala_help_section, System)
 
-MANALA_HELP += $(call manala_help,sh,   Open a local system shell (PORT|DEBUG))
+MANALA_HELP += $(call manala_help,sh,   Shell to local system (PORT|DEBUG))
 sh: MANALA_DOCKER_DEBUG = $(if $(DEBUG),1)
 sh:
-	$(call manala_docker_command, \
-		$(if $(PORT),--publish $(PORT)), \
-	) bash --login
+	if [ ! -t 0 ] ; then \
+		$(call manala_docker_command, --no-TTY) sh -s ; \
+	else \
+		$(call manala_docker_command, \
+			$(if $(PORT),--publish $(PORT)), \
+		) bash --login ; \
+	fi
 .PHONY: sh
 
 MANALA_HELP += $(call manala_help,clean,Clean local system)

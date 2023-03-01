@@ -45,10 +45,14 @@ ifndef MANALA_DOCKER
 
 MANALA_HELP += $(call manala_help_section, System)
 
-MANALA_HELP += $(call manala_help,sh,   Open a local system shell (DEBUG))
+MANALA_HELP += $(call manala_help,sh,   Shell to local system (DEBUG))
 sh: MANALA_DOCKER_DEBUG = $(if $(DEBUG),1)
 sh:
-	$(manala_docker_command) bash --login
+	if [ ! -t 0 ] ; then \
+		$(call manala_docker_command, --no-TTY) sh -s ; \
+	else \
+		$(manala_docker_command) bash --login ; \
+	fi
 .PHONY: sh
 
 MANALA_HELP += $(call manala_help,clean,Clean local system)
