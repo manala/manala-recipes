@@ -101,7 +101,7 @@ runs:
             --file ./.manala/docker/compose/profile.integration.yaml \
             --file ./.manala/docker/compose/app.cache.yaml \
             ${{ inputs.ssh_key != '' && '--file ./.manala/docker/compose/ssh.key.yaml' || '' }} \
-            ${{ env.MANALA_ENV_FILE && '--file ./.manala/docker/compose/app.env.yaml' || '' }} \
+            ${{ env.MANALA_DOCKER_ENV_FILE && '--file ./.manala/docker/compose/env.file.yaml' || '' }} \
             up \
             --wait
         echo "::endgroup::"
