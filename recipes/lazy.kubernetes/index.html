@@ -103,12 +103,16 @@
 <p>Open a shell to local system</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="6e3c3438c618a6a853510bb4ffe64803"><span class="token function">make</span> <span class="token function">sh</span></code></pre>
 <p>Run commands through local system</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="72fce40b9352e8ef9e93b2cd0a7262d0"><span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">command</span>
+<pre class="code-multiline language-shell"><code class="language-shell" id="9ff5ac17a8d20719cbaa478f5c855a72"><span class="token comment"># From file</span>
+<span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;</span> <span class="token function">file</span>
+<span class="token comment"># Multilines, using heredoc</span>
 <span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;</span> <span class="token string">'EOF'
 command 1
 command 2
 ...
-EOF</span></code></pre>
+EOF</span>
+<span class="token comment"># Single line</span>
+<span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">command</span></code></pre>
 <p>Port forwarding to expose a service port on localhost:1234</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="1b8b4323502c6c21f2ec3acf73d54c0c"><span class="token function">make</span> <span class="token function">sh</span> <span class="token assign-left variable">PORT</span><span class="token operator">=</span><span class="token number">1234</span>:4321
 kubectl --namespace <span class="token punctuation">[</span>namespace<span class="token punctuation">]</span> port-forward --address <span class="token number">0.0</span>.0.0 svc/<span class="token punctuation">[</span>service<span class="token punctuation">]</span> <span class="token number">4321</span>:<span class="token punctuation">[</span>port<span class="token punctuation">]</span></code></pre>
@@ -121,7 +125,7 @@ Client Version: <span class="token punctuation">..</span>.</code></pre></body>
         </article>
     </section>
 
-    <time datetime="2023-03-01UTC23:01:22+00:00">Last modified: March 1, 2023 23:01</time>
+    <time datetime="2023-03-02UTC13:46:07+00:00">Last modified: March 2, 2023 13:46</time>
         </div>
 
         <footer class="footer">
