@@ -9,6 +9,7 @@
 #   - Mandatory .manala/docker/compose/docker.yaml
 #   - Mandatory .manala/docker/compose/docker.cache.yaml
 #   - Mandatory .manala/docker/compose/env.file.yaml
+#   - Mandatory .manala/docker/compose/github.action.yaml
 #   - Mandatory .manala/docker/compose/project.cache.yaml
 #   - Mandatory .manala/docker/compose/profile.$(MANALA_DOCKER_COMPOSE_PROFILE).yaml if "MANALA_DOCKER_COMPOSE_PROFILE" make variable
 #   - Optional include git.mk
@@ -114,6 +115,10 @@ MANALA_DOCKER_COMPOSE_FILE += \
 # Project cache
 MANALA_DOCKER_COMPOSE_FILE += \
 	$(if $(MANALA_DOCKER_PROJECT_CACHE), $(MANALA_DIR)/.manala/docker/compose/project.cache.yaml)
+
+# GitHub Action
+MANALA_DOCKER_COMPOSE_FILE += \
+	$(if $(GITHUB_ACTION), $(MANALA_DIR)/.manala/docker/compose/github.action.yaml)
 
 # Debug
 MANALA_DOCKER_COMPOSE_ENV += $(if $(MANALA_DOCKER_DEBUG), BUILDKIT_PROGRESS=plain)

@@ -1,0 +1,16 @@
+services:
+
+    ##########
+    # System #
+    ##########
+
+    system:
+        environment:
+            CI: ${CI}
+            GITHUB_ACTION: ${GITHUB_ACTION}
+            GITHUB_ACTION_REF: ${GITHUB_ACTION_REF}
+            GITHUB_ACTION_REPOSITORY: ${GITHUB_ACTION_REPOSITORY}
+            GITHUB_ACTIONS: ${GITHUB_ACTIONS}
+            GITHUB_ACTOR: ${GITHUB_ACTOR}
+            GITHUB_JOB: ${GITHUB_JOB}
+            GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}
