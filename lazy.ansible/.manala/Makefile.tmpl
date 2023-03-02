@@ -29,12 +29,8 @@ MANALA_DOCKER_COMPOSE_ENV += \
 	MANALA_CACHE_DIR=$(realpath $(shell dir=$(MANALA_DIR)/$(MANALA_CACHE_DIR) ; mkdir -p $${dir} ; echo $${dir}))
 {{- end }}
 
-define manala_docker_command
-	$(manala_docker_compose) run \
-		--rm \
-		$(1) \
-		system
-endef
+MANALA_DOCKER_COMMAND = run --rm
+MANALA_DOCKER_COMMAND_SERVICE = system
 
 ##########
 # System #

@@ -15,33 +15,13 @@
 #   - Mandatory .manala/docker/compose/git.yaml if include git.mk
 #   - Mandatory .manala/docker/compose/github.yaml if include git.mk
 
-ifeq ($(container),docker)
-MANALA_DOCKER = 1
-endif
-
-ifndef MANALA_DOCKER
-define manala_docker_shell
-	$(if $(2), \
-		$(call manala_docker_command, $(strip $(1))) /bin/sh -c '$(subst ','\'',$(strip $(2)))', \
-		$(call manala_docker_command,) /bin/sh -c '$(subst ','\'',$(strip $(1)))' \
-	)
-endef
-MANALA_DOCKER_SHELL = $(manala_docker_command) /bin/sh
-MANALA_DOCKER_MAKE = $(manala_docker_command) make
-else
-define manala_docker_shell
-	$(if $(2), \
-		$(call message_error, Unable to run docker shell command with options inside a docker container) ; exit 1 ;, \
-		$(strip $(1)) \
-	)	
-endef
-MANALA_DOCKER_SHELL := $(SHELL)
-MANALA_DOCKER_MAKE := $(MAKE)
-endif
-
 ##########
 # Docker #
 ##########
+
+ifeq ($(container),docker)
+MANALA_DOCKER = 1
+endif
 
 MANALA_DOCKER_BIN = docker
 
@@ -132,3 +112,53 @@ define manala_docker_compose
 			--file $(FILE) \
 		)
 endef
+
+ifndef MANALA_DOCKER
+
+manala.docker.compose:
+	$(manala_docker_compose) $(OPTIONS) $(COMMAND)
+
+endif
+
+###########
+# Command #
+###########
+
+# Usage:
+#   $(manala_docker_command) [COMMAND] [ARGS...]
+#   $(call manala_docker_command, [OPTIONS]) [COMMAND] [ARGS...]
+
+define manala_docker_command
+	$(manala_docker_compose) $(MANALA_DOCKER_COMMAND) \
+		$(if $(MANALA_DOCKER_COMMAND_USER), --user $(MANALA_DOCKER_COMMAND_USER)) \
+		$(if $(MANALA_DOCKER_COMMAND_WORKDIR), --workdir $(MANALA_DOCKER_COMMAND_WORKDIR)) \
+		$(foreach ENV, $(MANALA_DOCKER_COMMAND_ENV), \
+			--env $(ENV) \
+		) \
+		$(1) \
+		$(MANALA_DOCKER_COMMAND_SERVICE)
+endef
+
+################
+# Shell / Make #
+################
+
+ifndef MANALA_DOCKER
+define manala_docker_shell
+	$(if $(2), \
+		$(call manala_docker_command, $(strip $(1))) /bin/sh -c '$(subst ','\'',$(strip $(2)))', \
+		$(call manala_docker_command,) /bin/sh -c '$(subst ','\'',$(strip $(1)))' \
+	)
+endef
+MANALA_DOCKER_SHELL = $(manala_docker_command) /bin/sh
+MANALA_DOCKER_MAKE = $(manala_docker_command) make
+else
+define manala_docker_shell
+	$(if $(2), \
+		$(call message_error, Unable to run docker shell command with options inside a docker container) ; exit 1 ;, \
+		$(strip $(1)) \
+	)	
+endef
+MANALA_DOCKER_SHELL := $(SHELL)
+MANALA_DOCKER_MAKE := $(MAKE)
+endif

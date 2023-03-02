@@ -35,13 +35,10 @@ MANALA_DOCKER_COMPOSE_FILE += \
 	$(if $(SYMFONY_IDE), $(MANALA_DIR)/.manala/docker/compose/symfony.yaml)
 MANALA_DOCKER_COMPOSE_PROFILE = development
 
-define manala_docker_command
-	$(manala_docker_compose) exec \
-		--user app \
-		--workdir /srv/app/$(MANALA_CURRENT_DIR) \
-		$(1) \
-		app
-endef
+MANALA_DOCKER_COMMAND = exec
+MANALA_DOCKER_COMMAND_SERVICE = app
+MANALA_DOCKER_COMMAND_USER = app
+MANALA_DOCKER_COMMAND_WORKDIR = /srv/app/$(MANALA_CURRENT_DIR)
 
 ###############
 # Environment #
