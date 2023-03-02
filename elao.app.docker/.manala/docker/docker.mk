@@ -1,7 +1,7 @@
 # Prerequisites:
 #   - "container" environment variable in docker containers equal to "docker"
 #   - "MANALA_DIR" make variable
-#   - "manala_docker_command" make function
+#   - "MANALA_DOCKER_COMMAND" & "MANALA_DOCKER_COMMAND_SERVICE" make variables
 #   - Mandatory include os.mk
 #   - Mandatory .manala/docker/compose.yaml
 #   - Optionals .manala/docker/compose/os.$(MANALA_OS).yaml
@@ -123,6 +123,19 @@ endif
 ###########
 # Command #
 ###########
+
+# GitHub Action
+MANALA_DOCKER_COMMAND_ENV += \
+	$(if $(GITHUB_ACTIONS), \
+		CI="$${CI}" \
+		GITHUB_ACTION="$${GITHUB_ACTION}" \
+		GITHUB_ACTION_REF="$${GITHUB_ACTION_REF}" \
+		GITHUB_ACTION_REPOSITORY="$${GITHUB_ACTION_REPOSITORY}" \
+		GITHUB_ACTIONS="$${GITHUB_ACTIONS}" \
+		GITHUB_ACTOR="$${GITHUB_ACTOR}" \
+		GITHUB_JOB="$${GITHUB_JOB}" \
+		GITHUB_WORKFLOW="$${GITHUB_WORKFLOW}" \
+	)
 
 # Usage:
 #   $(manala_docker_command) [COMMAND] [ARGS...]
