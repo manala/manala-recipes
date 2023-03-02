@@ -18,10 +18,14 @@ make sh
 
 Run commands through local system
 ```shell
-make sh <<< command
+# From file
+make sh < file
+# Multilines, using heredoc
 make sh << 'EOF'
 command 1
 command 2
 ...
 EOF
+# Single line
+make sh <<< command
 ```
