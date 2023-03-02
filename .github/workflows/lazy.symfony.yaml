@@ -5,6 +5,12 @@ on:
     paths:
       - lazy.symfony/**
   workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        description: Run with tmate debugging
+        required: false
+        default: false
 
 env:
   directory: lazy.symfony/test
@@ -29,6 +35,11 @@ jobs:
         run: |
           make lint \
             VERBOSE=1
+
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ inputs.debug && always() }}
+        timeout-minutes: 15
 
   test:
     name: Test
@@ -60,3 +71,8 @@ jobs:
         run: |
           make up WAIT=1
           make test
+
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ inputs.debug && always() }}
+        timeout-minutes: 15
