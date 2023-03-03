@@ -113,7 +113,7 @@ command 2
 EOF</span>
 <span class="token comment"># Single line</span>
 <span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">command</span></code></pre>
-<p>Port forwarding to expose a service port on localhost:1234</p>
+<p>Expose a container port 4321 on localhost:1234</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="1b8b4323502c6c21f2ec3acf73d54c0c"><span class="token function">make</span> <span class="token function">sh</span> <span class="token assign-left variable">PORT</span><span class="token operator">=</span><span class="token number">1234</span>:4321
 kubectl --namespace <span class="token punctuation">[</span>namespace<span class="token punctuation">]</span> port-forward --address <span class="token number">0.0</span>.0.0 svc/<span class="token punctuation">[</span>service<span class="token punctuation">]</span> <span class="token number">4321</span>:<span class="token punctuation">[</span>port<span class="token punctuation">]</span></code></pre>
 <h3 id="kubectl">Kubectl<a href="#kubectl" class="anchor"></a></h3>
@@ -125,7 +125,7 @@ Client Version: <span class="token punctuation">..</span>.</code></pre></body>
         </article>
     </section>
 
-    <time datetime="2023-03-02UTC15:47:15+00:00">Last modified: March 2, 2023 15:47</time>
+    <time datetime="2023-03-03UTC09:22:10+00:00">Last modified: March 3, 2023 09:22</time>
         </div>
 
         <footer class="footer">

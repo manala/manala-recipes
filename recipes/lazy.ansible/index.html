@@ -109,11 +109,13 @@ command 2
 ...
 EOF</span>
 <span class="token comment"># Single line</span>
-<span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">command</span></code></pre></body>
+<span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">command</span></code></pre>
+<p>Expose a container port 4321 on localhost:1234</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="94efa36809522dd891a10f723bd126e6"><span class="token function">make</span> <span class="token function">sh</span> <span class="token assign-left variable">PORT</span><span class="token operator">=</span><span class="token number">1234</span>:4321</code></pre></body>
         </article>
     </section>
 
-    <time datetime="2023-03-02UTC15:47:15+00:00">Last modified: March 2, 2023 15:47</time>
+    <time datetime="2023-03-03UTC09:22:10+00:00">Last modified: March 3, 2023 09:22</time>
         </div>
 
         <footer class="footer">
