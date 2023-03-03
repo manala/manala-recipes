@@ -47,7 +47,6 @@ up: MANALA_DOCKER_DEBUG = $(if $(DEBUG),1)
 up:
 	@$(call manala_log, Builds$(,) creates and starts docker containers…)
 	$(manala_docker_compose) up \
-		--build \
 		$(if $(WAIT), --wait)
 .PHONY: up
 
