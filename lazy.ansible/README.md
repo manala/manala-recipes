@@ -29,3 +29,8 @@ EOF
 # Single line
 make sh <<< command
 ```
+
+Expose a container port 4321 on localhost:1234
+```shell
+make sh PORT=1234:4321
+```
