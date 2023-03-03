@@ -123,11 +123,14 @@ command 2
 ...
 EOF</span>
 <span class="token comment"># Single line</span>
-<span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">command</span></code></pre></body>
+<span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">command</span></code></pre>
+<p>Specify working dir</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="847088f9201e66940020a657d621efcc"><span class="token function">make</span> <span class="token function">sh</span> <span class="token assign-left variable">DIR</span><span class="token operator">=</span>/etc <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">pwd</span>
+/etc</code></pre></body>
         </article>
     </section>
 
-    <time datetime="2023-03-03UTC09:22:10+00:00">Last modified: March 3, 2023 09:22</time>
+    <time datetime="2023-03-03UTC09:34:00+00:00">Last modified: March 3, 2023 09:34</time>
         </div>
 
         <footer class="footer">
