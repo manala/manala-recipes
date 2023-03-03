@@ -41,13 +41,18 @@ ifndef MANALA_DOCKER
 
 MANALA_HELP += $(call manala_help_section, System)
 
-MANALA_HELP += $(call manala_help,sh,   Shell to local system (DEBUG))
+MANALA_HELP += $(call manala_help,sh,   Shell to local system (PORT|DEBUG))
 sh: MANALA_DOCKER_DEBUG = $(if $(DEBUG),1)
 sh:
 	if [ ! -t 0 ] ; then \
-		$(call manala_docker_command, --no-TTY) sh -s ; \
+		$(call manala_docker_command, \
+			--no-TTY \
+			$(if $(PORT),--publish $(PORT)), \
+		) sh -s ; \
 	else \
-		$(manala_docker_command) bash --login ; \
+		$(call manala_docker_command, \
+			$(if $(PORT),--publish $(PORT)), \
+		) bash --login ; \
 	fi
 .PHONY: sh
 

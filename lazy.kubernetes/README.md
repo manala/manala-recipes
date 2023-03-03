@@ -30,7 +30,7 @@ EOF
 make sh <<< command
 ```
 
-Port forwarding to expose a service port on localhost:1234
+Expose a container port 4321 on localhost:1234
 ```shell
 make sh PORT=1234:4321
 kubectl --namespace [namespace] port-forward --address 0.0.0.0 svc/[service] 4321:[port]
