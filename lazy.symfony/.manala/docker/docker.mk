@@ -143,8 +143,9 @@ MANALA_DOCKER_COMMAND_ENV += \
 
 define manala_docker_command
 	$(manala_docker_compose) $(MANALA_DOCKER_COMMAND) \
-		$(if $(MANALA_DOCKER_COMMAND_USER), --user $(MANALA_DOCKER_COMMAND_USER)) \
-		$(if $(MANALA_DOCKER_COMMAND_WORKDIR), --workdir $(MANALA_DOCKER_COMMAND_WORKDIR)) \
+		$(if $(MANALA_DOCKER_COMMAND_DIR), --workdir $(MANALA_DOCKER_COMMAND_DIR), \
+			$(if $(MANALA_DOCKER_COMMAND_DEFAULT_DIR), --workdir $(MANALA_DOCKER_COMMAND_DEFAULT_DIR)) \
+		) \
 		$(foreach ENV, $(MANALA_DOCKER_COMMAND_ENV), \
 			--env $(ENV) \
 		) \

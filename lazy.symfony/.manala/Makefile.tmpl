@@ -30,9 +30,8 @@ MANALA_DOCKER_COMPOSE_ENV += \
 	MANALA_CACHE_DIR=$(realpath $(shell dir=$(MANALA_DIR)/$(MANALA_CACHE_DIR) ; mkdir -p $${dir} ; echo $${dir}))
 {{- end }}
 
-MANALA_DOCKER_COMMAND = exec
+MANALA_DOCKER_COMMAND = exec --user lazy
 MANALA_DOCKER_COMMAND_SERVICE = system
-MANALA_DOCKER_COMMAND_USER = lazy
 
 ##########
 # System #
@@ -58,7 +57,8 @@ stop:
 	$(manala_docker_compose) stop
 .PHONY: stop
 
-MANALA_HELP += $(call manala_help,sh,   Shell to local system)
+MANALA_HELP += $(call manala_help,sh,   Shell to local system (DIR))
+sh: MANALA_DOCKER_COMMAND_DIR = $(if $(findstring command line,$(origin DIR)),$(DIR))
 sh:
 	if [ ! -t 0 ] ; then \
 		$(call manala_docker_command, --no-TTY) sh -s ; \
