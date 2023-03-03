@@ -54,3 +54,9 @@ EOF
 # Single line
 make sh <<< command
 ```
+
+Specify working dir
+```shell
+make sh DIR=/etc <<< pwd
+/etc
+```

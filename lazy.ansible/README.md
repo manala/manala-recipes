@@ -30,6 +30,12 @@ EOF
 make sh <<< command
 ```
 
+Specify working dir
+```shell
+make sh DIR=/etc <<< pwd
+/etc
+```
+
 Expose a container port 4321 on localhost:1234
 ```shell
 make sh PORT=1234:4321
