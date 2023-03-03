@@ -58,7 +58,7 @@ stop:
 .PHONY: stop
 
 MANALA_HELP += $(call manala_help,sh,   Shell to local system (DIR))
-sh: MANALA_DOCKER_COMMAND_DIR = $(if $(findstring command line,$(origin DIR)),$(DIR))
+sh: MANALA_DOCKER_COMMAND_DIR ?= $(if $(findstring command line,$(origin DIR)),$(DIR))
 sh:
 	if [ ! -t 0 ] ; then \
 		$(call manala_docker_command, --no-TTY) sh -s ; \

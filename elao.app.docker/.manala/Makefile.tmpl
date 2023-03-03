@@ -76,7 +76,7 @@ reload:
 	$(MAKE) help.project
 
 MANALA_HELP += $(call manala_help,sh,                    Shell to the environment (DIR))
-sh: MANALA_DOCKER_COMMAND_DIR = $(if $(findstring command line,$(origin DIR)),$(DIR))
+sh: MANALA_DOCKER_COMMAND_DIR ?= $(if $(findstring command line,$(origin DIR)),$(DIR))
 sh:
 	if [ ! -t 0 ] ; then \
 		$(call manala_docker_command, --no-TTY) sh -s ; \
