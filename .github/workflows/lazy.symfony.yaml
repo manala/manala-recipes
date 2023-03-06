@@ -28,7 +28,7 @@ jobs:
       - name: Manala update
         uses: manala/github-action-manala@v1
         with:
-          directory: ${{ env.directory }}
+          dir: ${{ env.directory }}
 
       - name: Lint
         working-directory: ${{ env.directory }}
@@ -55,7 +55,7 @@ jobs:
       - name: Manala update
         uses: manala/github-action-manala@v1
         with:
-          directory: ${{ env.directory }}
+          dir: ${{ env.directory }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
