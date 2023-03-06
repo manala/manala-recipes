@@ -12,9 +12,6 @@ on:
         required: false
         default: false
 
-env:
-  directory: lazy.symfony/test
-
 jobs:
 
   lint:
@@ -28,10 +25,10 @@ jobs:
       - name: Manala update
         uses: manala/github-action-manala@v1
         with:
-          dir: ${{ env.directory }}
+          dir: lazy.symfony/test
 
       - name: Lint
-        working-directory: ${{ env.directory }}
+        working-directory: lazy.symfony/test
         run: |
           make lint \
             VERBOSE=1
@@ -44,9 +41,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-22.04
-    env:
-      MANALA_DOCKER_CACHE_FROM: type=gha,scope=docker.lazy.symfony
-      MANALA_DOCKER_CACHE_TO: type=gha,mode=max,scope=docker.lazy.symfony
     steps:
 
       - name: Checkout
@@ -55,22 +49,37 @@ jobs:
       - name: Manala update
         uses: manala/github-action-manala@v1
         with:
-          dir: ${{ env.directory }}
+          dir: lazy.symfony/test
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      # Expose ACTIONS_CACHE_URL & ACTIONS_RUNTIME_TOKEN
-      # to be consumed by docker github action cache
-      # See: https://docs.docker.com/build/cache/backends/gha/
-      - name: Expose GitHub Runtime
-        uses: crazy-max/ghaction-github-runtime@v2
+      - name: Set up system
+        uses: ./lazy.symfony/test/.manala/github/system/setup
+        with:
+          dir: lazy.symfony/test
+          docker_build_cache_scope: docker.lazy.symfony
+          docker_env: >
+            FOO=BAR
+          docker_compose_up: true
+          docker_services: >
+            mariadb
+            phpmyadmin
+            maildev
 
       - name: Test
-        working-directory: ${{ env.directory }}
+        working-directory: lazy.symfony/test
         run: |
-          make up WAIT=1
           make test
+
+      - name: Test - Run
+        uses: ./lazy.symfony/test/.manala/github/system/run
+        with:
+          dir: lazy.symfony/test
+          docker_dir: /tmp
+          docker_env: >
+            BAR=BAZ
+          run: |
+            whoami
+            pwd
+            env | sort
 
       - name: Debug
         uses: mxschmitt/action-tmate@v3
