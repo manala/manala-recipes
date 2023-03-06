@@ -26,12 +26,4 @@ if [ -n "${DOCKER_HOST}" ]; then
   " &
 fi
 
-# Ssh key
-if [ -n "${SSH_AUTH_SOCK}" ] && [ -n "${MANALA_SSH_KEY}" ]; then
-  printf "Start ssh-agent as app user\n"
-  su app -c "ssh-agent -a ${SSH_AUTH_SOCK}"
-  printf "Add ssh key\n"
-  su app -c "echo \"${MANALA_SSH_KEY}\" | ssh-add -"
-fi
-
 exec "$@"

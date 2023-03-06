@@ -1,0 +1,46 @@
+name: Set up
+
+description: Deliveries - Set up
+
+inputs:
+  app:
+    description: App
+    required: false
+  tier:
+    description: Tier
+    required: true
+  ref:
+    description: Ref
+    required: false
+    default: main
+  env:
+    description: Env vars as a single string
+    required: false
+  services:
+    description: Services
+    required: false
+  ssh_key:
+    description: Ssh Key
+    required: false
+
+runs:
+  using: composite
+  steps:
+
+    - name: >
+        Checkout delivery
+        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+        (ref "${{ inputs.ref }}")
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.ref }}
+        path: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
+
+    - name: >
+        Set up delivery
+        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+      uses: ./.manala/github/integration/setup
+      with:
+        dir: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
+        env: ${{ inputs.env }}
+        ssh_key: ${{ inputs.ssh_key }}

@@ -1,0 +1,39 @@
+name: Deploy
+
+description: Deliveries - Deploy
+
+inputs:
+  app:
+    description: App
+    required: false
+  tier:
+    description: Tier
+    required: true
+  url:
+    description: Ref
+    required: false
+  ref:
+    description: Ref
+    required: false
+
+runs:
+  using: composite
+  steps:
+
+    - name: >
+        Set deployment url
+        for ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+      if: inputs.url != ''
+      shell: bash
+      run: |
+        echo "deployment_url=${{ inputs.url }}" >> $GITHUB_OUTPUT
+
+    - name: >
+        Deploy
+        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+      uses: ./.manala/github/integration/run
+      with:
+        dir: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
+        run: |
+          make deploy${{ inputs.app && format('.{0}@', inputs.app) || '' }}${{ inputs.tier }} \
+            ${{ inputs.ref != '' && format('REF={0}', inputs.ref) || '' }}
