@@ -2,80 +2,7 @@
 
 name: {{ .Vars.project.name }}
 
-{{- if .Vars.system.mariadb.version }}
-
-volumes:
-    mariadb:
-
-{{- end }}
-
 services:
-
-{{- if .Vars.system.mariadb.version }}
-
-    ###########
-    # MariaDB #
-    ###########
-
-    mariadb:
-        hostname: mariadb.{{ .Vars.project.name }}
-        image: mariadb:{{ .Vars.system.mariadb.version | toString }}
-        restart: always
-        ports:
-            - {{ .Vars.system.mariadb.port | toString }}:3306
-        volumes:
-            - mariadb:/var/lib/mysql
-        environment:
-            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-            MYSQL_DATABASE: project
-            MYSQL_USER: project
-            MYSQL_PASSWORD: project
-        healthcheck:
-            test: mysqladmin ping --silent --host 0.0.0.0
-            interval: 30s
-            timeout: 30s
-            retries: 3
-            start_period: 0s
-
-{{- if .Vars.system.phpmyadmin.version }}
-
-    ##############
-    # PhpMyAdmin #
-    ##############
-
-    phpmyadmin:
-        hostname: phpmyadmin.{{ .Vars.project.name }}
-        image: phpmyadmin:{{ .Vars.system.phpmyadmin.version | toString }}
-        restart: always
-        ports:
-            - {{ .Vars.system.phpmyadmin.port }}:80
-        depends_on:
-            - mariadb
-        environment:
-            PMA_HOST: mariadb
-            PMA_USER: root
-            UPLOAD_LIMIT: 64M
-
-{{- end }}
-
-{{- end }}
-
-{{- if .Vars.system.maildev.version }}
-
-    ###########
-    # MailDev #
-    ###########
-
-    maildev:
-        hostname: maildev.{{ .Vars.project.name }}
-        image: maildev/maildev:{{ .Vars.system.maildev.version | toString }}
-        restart: always
-        user: root
-        ports:
-            - {{ .Vars.system.maildev.port }}:1080
-        command: ["--smtp", "25"]
-
-{{- end }}
 
     ##########
     # System #
@@ -119,12 +46,3 @@ services:
         {{- end }}
         {{- end }}
         working_dir: ${MANALA_DIR}
-        {{- if or .Vars.system.mariadb.version .Vars.system.maildev.version }}
-        links:
-            {{- if .Vars.system.mariadb.version }}
-            - mariadb
-            {{- end }}
-            {{- if .Vars.system.maildev.version }}
-            - maildev
-            {{- end }}
-        {{- end }}

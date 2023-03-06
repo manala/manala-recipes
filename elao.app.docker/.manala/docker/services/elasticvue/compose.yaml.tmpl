@@ -1,0 +1,22 @@
+{{ if .Vars.system.elasticsearch.version -}}
+services:
+
+    ##############
+    # Elasticvue #
+    ##############
+
+    elasticvue :
+        image: cars10/elasticvue:0.44.0
+        ports:
+            - {{ include "project_port" (list .Vars.project 78) }}:8080
+{{ else -}}
+#               _.._
+#              /   a\__,    Elasticvue service is disabled
+#              \  -.___/
+#               \  \
+#          (\____)  \
+#      |\_(         ))
+# _____|   (_        /________
+#      _\____(______/__
+#           ______
+{{ end -}}

@@ -1,0 +1,48 @@
+{{ if and .Vars.system.mariadb.version (not .Vars.system.mysql.version) -}}
+services:
+
+    ###########
+    # MariaDB #
+    ###########
+
+    mariadb:
+        image: mariadb:{{ .Vars.system.mariadb.version | toString }}
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        network_mode: service:app
+        healthcheck:
+            test: mysqladmin ping --silent --host 0.0.0.0
+            interval: 30s
+            timeout: 30s
+            retries: 3
+            start_period: 0s
+
+    #######
+    # App #
+    #######
+
+    app:
+        ports:
+            # MySQL / MariaDB
+            - {{ include "project_port" (list .Vars.project 6) }}:3306
+{{ else -}}
+#                  %%%%
+#                 %%%%-(
+#               _%%%%%_/                        \ ' /
+#             _%%%%%%%%                        - (_) -
+#           _%%%%%%%/ \%                        / , \
+#          %%%%%%%%%\\ \_
+#            %%%%%%   \ \\    MariaDB service is disabled
+#                )    /\_/
+#              /(___. \
+#              '----' (
+#             /       )
+# ---....____/        (_____ __ _ ___ ___ __ _ _ _____ _ _ ___
+#           /         )---...___ =-= = -_= -=_= _-=_-_ -=- =-_
+#         ,'          (         ```--.._= -_= -_= _-=- -_= _=-
+#      ,-'            )                 ``--._=-_ =-=_-= _-= _
+#      '-._    '-..___(                       ``-._=_-=_- =_-=
+#          ``---....__)                            `-._-=_-_=-
+#                )|)|                                  `-._=-_
+#               '-'-.\_                                    `-.
+{{ end -}}
