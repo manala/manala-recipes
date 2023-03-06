@@ -40,6 +40,29 @@ MANALA_DOCKER_COMMAND_SERVICE = app
 
 MANALA_DOCKER_COMMAND_DEFAULT_DIR = /srv/app/$(MANALA_CURRENT_DIR)
 
+# Services
+{{- if .Vars.system.mysql.version }}
+MANALA_DOCKER_DEFAULT_SERVICES += mysql
+{{- else if .Vars.system.mariadb.version }}
+MANALA_DOCKER_DEFAULT_SERVICES += mariadb
+{{- end }}
+{{- if .Vars.system.elasticsearch.version }}
+MANALA_DOCKER_DEFAULT_SERVICES += elasticsearch
+{{- end }}
+
+ifeq ($(MANALA_DOCKER_COMPOSE_PROFILE),development)
+MANALA_DOCKER_DEFAULT_SERVICES += mailhog
+{{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
+MANALA_DOCKER_DEFAULT_SERVICES += phpmyadmin
+{{- end }}
+{{- if .Vars.system.redis.version }}
+MANALA_DOCKER_DEFAULT_SERVICES += phpredisadmin
+{{- end }}
+{{- if .Vars.system.elasticsearch.version }}
+MANALA_DOCKER_DEFAULT_SERVICES += elasticvue
+{{- end }}
+endif
+
 ###############
 # Environment #
 ###############

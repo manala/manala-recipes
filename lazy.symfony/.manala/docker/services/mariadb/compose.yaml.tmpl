@@ -1,0 +1,48 @@
+{{ if .Vars.system.mariadb.version -}}
+volumes:
+    mariadb:
+
+services:
+
+    ###########
+    # MariaDB #
+    ###########
+
+    mariadb:
+        hostname: mariadb.{{ .Vars.project.name }}
+        image: mariadb:{{ .Vars.system.mariadb.version | toString }}
+        restart: always
+        ports:
+            - {{ .Vars.system.mariadb.port | toString }}:3306
+        volumes:
+            - mariadb:/var/lib/mysql
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_DATABASE: project
+            MYSQL_USER: project
+            MYSQL_PASSWORD: project
+        healthcheck:
+            test: mysqladmin ping --silent --host 0.0.0.0
+            interval: 30s
+            timeout: 30s
+            retries: 3
+            start_period: 0s
+
+    ##########
+    # System #
+    ##########
+
+    system:
+        links:
+            - mariadb
+{{ else -}}
+#               _.._
+#              /   a\__,    MariaDB service is disabled
+#              \  -.___/
+#               \  \
+#          (\____)  \
+#      |\_(         ))
+# _____|   (_        /________
+#      _\____(______/__
+#           ______
+{{ end -}}

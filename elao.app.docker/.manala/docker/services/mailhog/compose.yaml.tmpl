@@ -1,0 +1,22 @@
+services:
+
+    ###########
+    # MailHog #
+    ###########
+
+    mailhog:
+        image: jcalonso/mailhog:v1.0.1
+        entrypoint:
+            - /MailHog
+            - -smtp-bind-addr
+            - 0.0.0.0:25
+        network_mode: service:app
+
+    #######
+    # App #
+    #######
+
+    app:
+        ports:
+            # MailHog
+            - {{ include "project_port" (list .Vars.project 25) }}:8025

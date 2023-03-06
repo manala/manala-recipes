@@ -1,0 +1,40 @@
+{{ if and .Vars.system.mariadb.version .Vars.system.phpmyadmin.version -}}
+services:
+
+    ##############
+    # PhpMyAdmin #
+    ##############
+
+    phpmyadmin:
+        hostname: phpmyadmin.{{ .Vars.project.name }}
+        image: phpmyadmin:{{ .Vars.system.phpmyadmin.version | toString }}
+        restart: always
+        ports:
+            - {{ .Vars.system.phpmyadmin.port }}:80
+        depends_on:
+            - mariadb
+        environment:
+            PMA_HOST: mariadb
+            PMA_USER: root
+            UPLOAD_LIMIT: 64M
+{{ else -}}
+#                  %%%%
+#                 %%%%-(
+#               _%%%%%_/                        \ ' /
+#             _%%%%%%%%                        - (_) -
+#           _%%%%%%%/ \%                        / , \
+#          %%%%%%%%%\\ \_
+#            %%%%%%   \ \\    PhpMyAdmin service is disabled
+#                )    /\_/
+#              /(___. \
+#              '----' (
+#             /       )
+# ---....____/        (_____ __ _ ___ ___ __ _ _ _____ _ _ ___
+#           /         )---...___ =-= = -_= -=_= _-=_-_ -=- =-_
+#         ,'          (         ```--.._= -_= -_= _-=- -_= _=-
+#      ,-'            )                 ``--._=-_ =-=_-= _-= _
+#      '-._    '-..___(                       ``-._=_-=_- =_-=
+#          ``---....__)                            `-._-=_-_=-
+#                )|)|                                  `-._=-_
+#               '-'-.\_                                    `-.
+{{ end -}}

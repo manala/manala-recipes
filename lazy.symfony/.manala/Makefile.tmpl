@@ -33,6 +33,17 @@ MANALA_DOCKER_COMPOSE_ENV += \
 MANALA_DOCKER_COMMAND = exec --user lazy
 MANALA_DOCKER_COMMAND_SERVICE = system
 
+# Services
+{{- if .Vars.system.mariadb.version }}
+MANALA_DOCKER_DEFAULT_SERVICES += mariadb
+{{- if .Vars.system.phpmyadmin.version }}
+MANALA_DOCKER_DEFAULT_SERVICES += phpmyadmin
+{{- end }}
+{{- end }}
+{{- if .Vars.system.maildev.version }}
+MANALA_DOCKER_DEFAULT_SERVICES += maildev
+{{- end }}
+
 ##########
 # System #
 ##########

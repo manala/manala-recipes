@@ -1,0 +1,32 @@
+{{ if or .Vars.system.mysql.version .Vars.system.mariadb.version -}}
+services:
+
+    ##############
+    # PhpMyAdmin #
+    ##############
+
+    phpmyadmin:
+        image: phpmyadmin:5.2.1
+        environment:
+            PMA_USER: root
+            PMA_HOST: app
+            UPLOAD_LIMIT: 64M
+        ports:
+            - {{ include "project_port" (list .Vars.project 79) }}:80
+        depends_on:
+            {{- if .Vars.system.mysql.version }}
+            - mysql
+            {{- else if .Vars.system.mariadb.version }}
+            - mariadb
+            {{- end }}
+{{ else -}}
+#               _.._
+#              /   a\__,    PhpMyAdmin service is disabled
+#              \  -.___/
+#               \  \
+#          (\____)  \
+#      |\_(         ))
+# _____|   (_        /________
+#      _\____(______/__
+#           ______
+{{ end -}}

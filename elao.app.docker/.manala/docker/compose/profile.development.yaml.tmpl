@@ -1,70 +1,5 @@
 services:
 
-    ###########
-    # MailHog #
-    ###########
-
-    mailhog:
-        image: jcalonso/mailhog:v1.0.1
-        entrypoint:
-            - /MailHog
-            - -smtp-bind-addr
-            - 0.0.0.0:25
-        network_mode: service:app
-
-    {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
-
-    ##############
-    # PhpMyAdmin #
-    ##############
-
-    phpmyadmin:
-        image: phpmyadmin:5.2.0
-        environment:
-            PMA_USER: root
-            PMA_HOST: app
-            UPLOAD_LIMIT: 64M
-        ports:
-            - {{ include "project_port" (list .Vars.project 79) }}:80
-        depends_on:
-            {{- if .Vars.system.mysql.version }}
-            - mysql
-            {{- else if .Vars.system.mariadb.version }}
-            - mariadb
-            {{- end }}
-
-    {{- end }}
-
-    {{- if .Vars.system.redis.version }}
-
-    #################
-    # PhpRedisAdmin #
-    #################
-
-    phpredisadmin:
-        image: erikdubbelboer/phpredisadmin:1.18.0
-        environment:
-            REDIS_1_HOST: app
-        ports:
-            - {{ include "project_port" (list .Vars.project 81) }}:80
-        depends_on:
-            - app
-
-    {{- end }}
-
-    {{- if .Vars.system.elasticsearch.version }}
-
-    ##############
-    # Elasticvue #
-    ##############
-
-    elasticvue :
-        image: cars10/elasticvue:0.44.0
-        ports:
-            - {{ include "project_port" (list .Vars.project 78) }}:8080
-
-    {{- end }}
-
     #######
     # App #
     #######
@@ -77,8 +12,6 @@ services:
         ports:
             # Usuals (Webpack dev-server, …)
             - {{ include "project_port" (list .Vars.project 88) }}:8080
-            # MailHog
-            - {{ include "project_port" (list .Vars.project 25) }}:8025
             {{- if .Vars.system.nginx.configs }}
             # Nginx
             - {{ include "project_port" (list .Vars.project 80) }}:80
@@ -87,14 +20,6 @@ services:
             {{- if .Vars.system.supervisor.configs }}
             # Supervisor
             - {{ include "project_port" (list .Vars.project 1) }}:9001
-            {{- end }}
-            {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
-            # MySQL / MariaDB
-            - {{ include "project_port" (list .Vars.project 6) }}:3306
-            {{- end }}
-            {{- if .Vars.system.elasticsearch.version }}
-            # Elasticsearch
-            - {{ include "project_port" (list .Vars.project 92) }}:9200
             {{- end }}
             {{- if .Vars.system.docker.services.app.ports }}
             # App

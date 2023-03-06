@@ -1,0 +1,40 @@
+{{ if .Vars.system.maildev.version -}}
+services:
+
+    ###########
+    # MailDev #
+    ###########
+
+    maildev:
+        hostname: maildev.{{ .Vars.project.name }}
+        image: maildev/maildev:{{ .Vars.system.maildev.version | toString }}
+        restart: always
+        user: root
+        ports:
+            - {{ .Vars.system.maildev.port }}:1080
+        command: ["--smtp", "25"]
+
+    ##########
+    # System #
+    ##########
+
+    system:
+        links:
+            - maildev
+{{ else -}}
+#                         .
+#               /^\     .
+#          /\   "V"
+#         /__\   I      O  o
+#        //..\\  I     .        MailDev service is disabled
+#        \].`[/  I
+#        /l\/j\  (]    .  O
+#       /. ~~ ,\/I          .
+#       \\L__j^\/I       o
+#        \/--v}  I     o   .
+#        |    |  I   _________
+#        |    |  I c(`       ')o
+#        |    l  I   \.     ,/
+#      _/j  L l\_!  _//^---^\\_
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{{ end -}}
