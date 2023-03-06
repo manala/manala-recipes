@@ -33,7 +33,7 @@ MANALA_DOCKER_COMPOSE_ENV += \
 MANALA_DOCKER_COMPOSE_FILE += \
 	$(MANALA_DIR)/.manala/docker/compose/init.sysv.yaml \
 	$(if $(SYMFONY_IDE), $(MANALA_DIR)/.manala/docker/compose/symfony.yaml)
-MANALA_DOCKER_COMPOSE_PROFILE = development
+MANALA_DOCKER_COMPOSE_PROFILE ?= development
 
 MANALA_DOCKER_COMMAND = exec --user app
 MANALA_DOCKER_COMMAND_SERVICE = app
