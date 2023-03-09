@@ -70,6 +70,10 @@
                                     </li>
                             <li>
                     <a href="#usage">Usage</a>
+                                            <ul class="sub-list">
+                                                            <li><a href="#shell">Shell</a></li>
+                                                            <li><a href="#makefile">Makefile</a></li>
+                                                    </ul>
                                     </li>
                     </ul>
     
@@ -97,9 +101,10 @@
 <li>Docker Desktop 2.2.0+ or Docker Engine + Docker Compose</li>
 </ul>
 <h2 id="usage">Usage<a href="#usage" class="anchor"></a></h2>
-<p>Open a shell to local system</p>
+<h3 id="shell">Shell<a href="#shell" class="anchor"></a></h3>
+<p>Open a shell to container</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="6e3c3438c618a6a853510bb4ffe64803"><span class="token function">make</span> <span class="token function">sh</span></code></pre>
-<p>Run commands through local system</p>
+<p>Run commands through container shell</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="9ff5ac17a8d20719cbaa478f5c855a72"><span class="token comment"># From file</span>
 <span class="token function">make</span> <span class="token function">sh</span> <span class="token operator">&lt;</span> <span class="token function">file</span>
 <span class="token comment"># Multilines, using heredoc</span>
@@ -114,11 +119,92 @@ EOF</span>
 <pre class="code-multiline language-shell"><code class="language-shell" id="847088f9201e66940020a657d621efcc"><span class="token function">make</span> <span class="token function">sh</span> <span class="token assign-left variable">DIR</span><span class="token operator">=</span>/etc <span class="token operator">&lt;&lt;&lt;</span> <span class="token builtin class-name">pwd</span>
 /etc</code></pre>
 <p>Expose a container port 4321 on localhost:1234</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="94efa36809522dd891a10f723bd126e6"><span class="token function">make</span> <span class="token function">sh</span> <span class="token assign-left variable">PORT</span><span class="token operator">=</span><span class="token number">1234</span>:4321</code></pre></body>
+<pre class="code-multiline language-shell"><code class="language-shell" id="94efa36809522dd891a10f723bd126e6"><span class="token function">make</span> <span class="token function">sh</span> <span class="token assign-left variable">PORT</span><span class="token operator">=</span><span class="token number">1234</span>:4321</code></pre>
+<h3 id="makefile">Makefile<a href="#makefile" class="anchor"></a></h3>
+<p>One of the first directive of your project's Makefile should be to include manala recipe <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code></p>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="c469751d466f49d3a21f2f56fe8563a0"><span class="token keyword">include</span> .manala/Makefile</code></pre>
+<p>Or, if you're not sure manala recipe directory will be present, make it optional. If you do make it optionnal, you'll have to ensure that every parts of you project's Makefile using manala recipe tools could fallback to another solution.</p>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="5be3a1b05c281ba7b7a088f1cb94b04f"><span class="token keyword">-include</span> .manala/Makefile</code></pre>
+<p>Note: it's a good practise to have a <code class="code-inline" id="8b80b390d4c0e0872c8f8eb8fb9e3563">.SILENT:</code> as the first line of your project's Makefile. Not only does it globally silence make targets echoing, but it also offers a lowcost debugging system by just commenting it on demand.</p>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="8b80b390d4c0e0872c8f8eb8fb9e3563"><span class="token builtin-target builtin">.SILENT</span><span class="token punctuation">:</span></code></pre>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="527c30e7bc7484706ba5d8ec1036c6a2"><span class="token comment">#.SILENT:</span></code></pre>
+<p>A <code class="code-inline" id="110055b10e8e6724c50ae2ad5527cdc6">MANALA_DOCKER</code> variable is available to check whether you're inside the container or not</p>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="67539c0375386bd709bd8179c6f56576"><span class="token target symbol">foo</span><span class="token punctuation">:</span>
+<span class="token keyword">ifdef</span> MANALA_DOCKER
+    echo Inside container
+<span class="token keyword">else</span>
+    echo Outside container
+<span class="token keyword">endif</span></code></pre>
+<p>A <code class="code-inline" id="49b000e0cd2b995cf6aaa36dd7df095a">MANALA_DIR</code> variable is available to get your project's directory <em>inside</em> container</p>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="6306fc29f1ae6df49bae8a0b798b6389"><span class="token target symbol">foo</span><span class="token punctuation">:</span>
+    echo Project directory is <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DIR<span class="token punctuation">)</span></code></pre>
+<p>There are three ways to force your project's Makefile target execution inside container:</p>
+<ol>
+<li>Function <code class="code-inline" id="8aa008494abe6025239b4c6d218e01cb">manala_docker_shell</code></li>
+</ol>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="f8863667038e6e0fa38ee0edd19f7a3e"><span class="token target symbol">foo</span><span class="token punctuation">:</span>
+    echo Can be run *inside* or *outside* container
+    <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> manala_docker_shell, echo Always run *inside* container<span class="token punctuation">)</span></code></pre>
+<ol start="2">
+<li>Shell substitution with <code class="code-inline" id="2bacb24a22d4bc2341e310a124c7695f">MANALA_DOCKER_SHELL</code></li>
+</ol>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="d489a0318aadf26cf071cd7bb0d89249"><span class="token target symbol">foo</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>
+<span class="token target symbol">foo</span><span class="token punctuation">:</span>
+    echo Always run *inside* container
+
+<span class="token comment"># Or, if you're not sure manala recipe "Makefile" will be included</span>
+<span class="token target symbol">foo</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token target symbol">foo</span><span class="token punctuation">:</span>
+    echo Can be run *inside* or *outside* container, \
+        but always *inside* if manala recipe <span class="token string">"Makefile"</span> is included</code></pre>
+<ol start="3">
+<li>Make substitution with <code class="code-inline" id="f4ede42c2e932a5ed54bc15eb0ee413e">MANALA_DOCKER_MAKE</code></li>
+</ol>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="b190ad08706301c4d8a3994a5fd52a56"><span class="token target symbol">foo</span><span class="token punctuation">:</span>
+    <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_MAKE<span class="token punctuation">)</span> bar
+
+<span class="token target symbol">bar</span><span class="token punctuation">:</span>
+    echo Run *outside* container if called directly \
+        or *inside* container if called from <span class="token string">"foo"</span></code></pre>
+<p>An automagic target help system is included out-of-the-box. You can list all available documented commands with <code class="code-inline" id="1e44bdd89936c3da837c09c086678c89">make help</code> (or just <code class="code-inline" id="099dafc678df7d266c25f95ccf6cde22">make</code>,  as the help command is the default one)</p>
+<pre class="code-multiline language-shell"><code class="language-shell" id="d0db3d1d6377aa1c5f603b9b60f486ab">$ <span class="token function">make</span>
+
+Usage: <span class="token function">make</span> <span class="token punctuation">[</span>command<span class="token punctuation">]</span>
+
+Help:
+  <span class="token builtin class-name">help</span> This <span class="token builtin class-name">help</span>
+
+System:
+  <span class="token function">sh</span>    Open a <span class="token builtin class-name">local</span> system shell
+  clean Clean <span class="token builtin class-name">local</span> system</code></pre>
+<p>You can add your own documented commands, by adding double dashed comments in your projects's Makefile</p>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="cc0a344e485a200c5ac5eb972b26a1df"><span class="token comment">## This is foo</span>
+<span class="token target symbol">foo</span><span class="token punctuation">:</span>
+    ...
+
+<span class="token comment">## Bar - Use the "Bar" help section</span>
+<span class="token target symbol">bar.baz</span><span class="token punctuation">:</span>
+    ...</code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="84e090deed76b8cb6d9e9a6ac9cacbe4">$ <span class="token function">make</span>
+
+Usage: <span class="token function">make</span> <span class="token punctuation">[</span>command<span class="token punctuation">]</span>
+
+Help:
+  <span class="token builtin class-name">help</span> This <span class="token builtin class-name">help</span>
+
+System:
+  <span class="token function">sh</span>    Open a <span class="token builtin class-name">local</span> system shell
+  clean Clean <span class="token builtin class-name">local</span> system
+
+Commands:
+  foo This is foo
+
+Bar:
+  bar.baz Use the <span class="token string">"Bar"</span> <span class="token builtin class-name">help</span> section</code></pre></body>
         </article>
     </section>
 
-    <time datetime="2023-03-06UTC13:12:36+00:00">Last modified: March 6, 2023 13:12</time>
+    <time datetime="2023-03-09UTC14:35:50+00:00">Last modified: March 9, 2023 14:35</time>
         </div>
 
         <footer class="footer">
