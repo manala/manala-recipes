@@ -1,6 +1,6 @@
 .SILENT:
 
--include .manala/Makefile
+include .manala/Makefile
 
 _HADOLINT_VERSION = 2.12.0
 _HADOLINT_IGNORE  = DL3008,SC1091,DL3006,DL3045
