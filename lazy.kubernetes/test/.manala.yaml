@@ -10,37 +10,37 @@ system:
     goss:
         version: 0.3.21
     kubectl:
-        version: 1.26.1
+        version: 1.26.2
     helm:
-        version: 3.11.0
+        version: 3.11.2
         plugins:
             - url: https://github.com/databus23/helm-diff
               version: 3.6.0
     helmfile:
-        version: 0.150.0
+        version: 0.151.0
     k9s:
-        version: 0.26.7
+        version: 0.27.3
     stern:
-        version: 1.22.0
+        version: 1.23.0
     kube-prompt:
         version: 1.0.11
     popeye:
-        version: 0.10.1
+        version: 0.11.1
     knsk:
         version: "1.0"
     vault:
-        version: 1.12.2
+        version: 1.13.0
     rclone:
       version: 1.61.1
     openstack:
-      version: 6.0.0
+      version: 6.2.0
     swift:
-      version: 4.1.0
+      version: 4.2.0
       keystone:
-        version: 5.0.1
+        version: 5.1.0
     scw:
-      version: 2.8.0
+      version: 2.12.0
     sops:
       version: 3.7.3
     aws:
-      version: 2.9.17
+      version: 2.11.1
