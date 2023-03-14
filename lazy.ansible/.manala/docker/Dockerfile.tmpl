@@ -64,18 +64,20 @@ RUN \
 # System #
 ##########
 
-ARG PIPX_HOME="/usr/local"
-ARG PIPX_BIN_DIR="/usr/local/bin"
+ENV PIPX_HOME="/usr/local"
+ENV PIPX_BIN_DIR="/usr/local/bin"
 
 RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         openssh-client \
         sshpass \
-        python3 python3-pip \
+        python3 \
+        pipx \
         python3-argcomplete \
-        python3-apt {{- if .Vars.system.docker }} python3-docker {{- end }} \
         shellcheck \
+    # Sudo
+    && echo "Defaults env_keep += \"PIPX_*\"" > /etc/sudoers.d/pipx \
     # Bash completion
     && activate-global-python-argcomplete3 --dest /etc/bash_completion.d \
     # Clean
@@ -105,56 +107,58 @@ RUN \
 
 {{ end -}}
 
-# Ansible
 {{ $ansible := .Vars.system.ansible -}}
+# Ansible
 RUN \
-    pip3 --no-cache-dir --disable-pip-version-check install \
+    pipx install --pip-args="--no-cache-dir" \
         ansible-core=={{ $ansible.version }}
+    {{- if $ansible.dependencies }} \
+    && pipx inject --pip-args="--no-cache-dir" ansible-core \
+        {{- range $i, $dependency := $ansible.dependencies }}
+        {{- if $i }} \{{- end }}
+        {{ $dependency }}
+        {{- end }}
+    {{- end }}
 
 {{ $ansibleLint := index .Vars.system "ansible-lint" -}}
-{{ $molecule := .Vars.system.molecule -}}
-{{ if or $ansibleLint.version $molecule.version -}}
+{{ if $ansibleLint.version -}}
+# Ansible Lint
 RUN \
     BUILD_PACKAGES=( \
-        pipx \
-        {{- if $ansibleLint.version }}
         libpython3-dev gcc \
-        {{- end }}
     ) \
     && apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         "${BUILD_PACKAGES[@]}" \
-    {{- if $ansibleLint.version }}
-    # Ansible Lint
-    && pipx install \
+    && pipx install --pip-args="--no-cache-dir" \
         ansible-lint=={{ $ansibleLint.version }} \
-    {{- end }}
-    {{- if $molecule.version }}
-    # Molecule
-    && pipx install \
-        molecule=={{ $molecule.version }} \
-    && _MOLECULE_COMPLETE=bash_source molecule > /etc/bash_completion.d/molecule \
-    {{- if $molecule.plugins.version }}
-    && pipx inject molecule \
-        molecule-plugins=={{ $molecule.plugins.version }} \
-    {{- if $molecule.plugins.azure }}
-    && pipx inject molecule \
-        molecule-plugins[azure]=={{ $molecule.plugins.version }} \
-    {{- end }}
-    {{- if $molecule.plugins.docker }}
-    && pipx inject molecule \
-        molecule-plugins[docker]=={{ $molecule.plugins.version }} \
-    {{- end }}
-    {{- if $molecule.plugins.gce }}
-    && pipx inject molecule \
-        molecule-plugins[gce]=={{ $molecule.plugins.version }} \
-    {{- end }}
-    {{- end }}
+    {{- if $ansibleLint.dependencies }}
+    && pipx inject --pip-args="--no-cache-dir" ansible-lint \
+        {{- range $dependency := $ansibleLint.dependencies }}
+        {{ $dependency }} \
+        {{- end }}
     {{- end }}
     # Clean
     && apt-get --quiet --yes --autoremove purge \
         "${BUILD_PACKAGES[@]}" \
     && rm -rf /var/lib/apt/lists/*
+
+{{ end -}}
+
+{{ $molecule := .Vars.system.molecule -}}
+{{ if $molecule.version -}}
+# Molecule
+RUN \
+    pipx install --pip-args="--no-cache-dir" \
+        molecule=={{ $molecule.version }} \
+    && _MOLECULE_COMPLETE=bash_source molecule > /etc/bash_completion.d/molecule \
+    {{- if $molecule.dependencies }}
+    && pipx inject --pip-args="--no-cache-dir" molecule \
+        {{- range $i, $dependency := $molecule.dependencies }}
+        {{- if $i }} \{{- end }}
+        {{ $dependency }}
+        {{- end }}
+    {{- end }}
 
 {{ end -}}
 
