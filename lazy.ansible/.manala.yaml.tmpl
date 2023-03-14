@@ -49,6 +49,11 @@ system:
             #pipelining = True
             # Avoid issues on ssh too long socket path and/or invalid permissions
             #control_path_dir = /tmp/ansible/cp
+        # dependencies:
+        #     # Collection community.docker
+        #     - docker==6.0.1
+        #     # Collection community.hashi_vault
+        #     - hvac==1.1.0 
     
     {{- $ansibleLint := index .Vars.system "ansible-lint" }}
     {{- if $ansibleLint.version }}
@@ -60,4 +65,7 @@ system:
     {{- if $molecule.version }}
     molecule:
         version: {{ $molecule.version | toYaml }}
+        # dependencies:
+        #     - molecule-plugins==23.0.0
+        #     - molecule-plugins[docker]==23.0.0
     {{- end }}
