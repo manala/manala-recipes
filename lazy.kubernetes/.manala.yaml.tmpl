@@ -18,6 +18,11 @@ project:
 ##########
 
 system:
+    git:
+        config: |
+            # Silence false positive dubious ownership errors
+            #[safe]
+            #directory = *
     kubectl:
         version: {{ .Vars.system.kubectl.version | toYaml }}
     {{- if .Vars.system.helm.version }}

@@ -42,6 +42,9 @@ system:
     goss:
         # @schema {"enum": [null, "0.3.21"]}
         version: ~
+    git:
+        # @schema {"type": ["null", "string"]}
+        config: ~
     ssh:
         # @schema {"type": ["null", "string"]}
         config: ~

@@ -18,6 +18,11 @@ project:
 ##########
 
 system:
+    git:
+        config: |
+            # Silence false positive dubious ownership errors
+            #[safe]
+            #directory = *
     ssh:
         config: |
             # Allow host autocompletion by disabling hashing in known_hosts file

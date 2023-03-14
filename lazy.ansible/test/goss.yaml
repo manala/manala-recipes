@@ -23,6 +23,18 @@ user:
       - lazy
     shell: /bin/bash
 
+file:
+  # Git
+  /etc/gitconfig:
+    exists: true
+    contains:
+      - # Git config
+  # Ssh
+  /etc/ssh/ssh_config:
+    exists: true
+    contains:
+      - # Ssh config
+
 command:
   # Goss
   goss --version:
