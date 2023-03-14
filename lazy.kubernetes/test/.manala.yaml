@@ -9,6 +9,9 @@ system:
     docker: true
     goss:
         version: 0.3.21
+    git:
+        config: |
+            # Git config
     kubectl:
         version: 1.26.2
     helm:

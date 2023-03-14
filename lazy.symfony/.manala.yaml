@@ -43,6 +43,9 @@ system:
     goss:
         # @schema {"enum": [null, "0.3.21"]}
         version: ~
+    git:
+        # @schema {"type": ["null", "string"]}
+        config: ~
     nginx:
         # @option {"label": "Nginx version"}
         # @schema {"enum": ["1.20"]}

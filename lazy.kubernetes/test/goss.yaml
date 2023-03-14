@@ -19,6 +19,13 @@ user:
       - lazy
     shell: /bin/bash
 
+file:
+  # Git
+  /etc/gitconfig:
+    exists: true
+    contains:
+      - # Git config
+
 command:
   # Goss
   goss --version:
