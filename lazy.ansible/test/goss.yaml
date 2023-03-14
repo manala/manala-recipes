@@ -4,6 +4,8 @@ package:
     installed: true
   sshpass:
     installed: true
+  pipx:
+    installed: true
   shellcheck:
     installed: true
   # Docker
