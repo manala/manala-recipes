@@ -60,11 +60,4 @@ system:
     {{- if $molecule.version }}
     molecule:
         version: {{ $molecule.version | toYaml }}
-        {{- if $molecule.plugins.version }}
-        plugins:
-            version: {{ $molecule.plugins.version | toYaml }}
-            azure: false
-            docker: false
-            gce: false
-        {{- end }}
     {{- end }}

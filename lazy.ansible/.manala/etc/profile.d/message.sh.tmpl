@@ -11,15 +11,21 @@ printf "\033[34m    =- =- -=.--\"\033[0m\n"
 printf "\n"
 {{- $ansible := .Vars.system.ansible }}
 printf " \033[36m‣ ansible \033[35m{{ $ansible.version }}\033[0m\n"
+{{- range $dependency := $ansible.dependencies }}
+printf "    \033[36m· {{ $dependency }}\033[0m\n"
+{{- end }}
 {{- $ansibleLint := index .Vars.system "ansible-lint" }}
 {{- if $ansibleLint.version }}
 printf " \033[36m‣ ansible-lint \033[35m{{ $ansibleLint.version }}\033[0m\n"
+{{- range $dependency := $ansibleLint.dependencies }}
+printf "    \033[36m· {{ $dependency }}\033[0m\n"
+{{- end }}
 {{- end }}
 {{- $molecule := .Vars.system.molecule }}
 {{- if $molecule.version }}
 printf " \033[36m‣ molecule \033[35m{{ $molecule.version }}\033[0m\n"
-{{- if $molecule.plugins.version }}
-printf " \033[36m‣ molecule-plugins \033[35m{{ $molecule.plugins.version }}\033[0m\n"
+{{- range $dependency := $molecule.dependencies }}
+printf "    \033[36m· {{ $dependency }}\033[0m\n"
 {{- end }}
 {{- end }}
 
