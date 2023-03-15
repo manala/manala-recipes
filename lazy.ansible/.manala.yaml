@@ -5,6 +5,7 @@ manala:
       - .manala/docker
       - .manala/etc
       - .manala/github
+      - .manala/gitlab
       - .manala/make
       - .manala/.dockerignore
       - .manala/.gitignore
