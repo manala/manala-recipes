@@ -78,11 +78,9 @@ RUN \
         pipx \
         python3-argcomplete \
         shellcheck \
-    {{- if $apt.packages }}
         {{- range $package := $apt.packages }}
         {{ $package }} \
         {{- end }}
-    {{- end }}
     # Sudo
     && echo "Defaults env_keep += \"PIPX_*\"" > /etc/sudoers.d/pipx \
     # Bash completion
