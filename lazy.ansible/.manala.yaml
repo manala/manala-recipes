@@ -43,6 +43,9 @@ system:
     goss:
         # @schema {"enum": [null, "0.3.21"]}
         version: ~
+    apt:
+        # @schema {"items": {"type": "string"}}
+        packages: []
     git:
         # @schema {"type": ["null", "string"]}
         config: ~
