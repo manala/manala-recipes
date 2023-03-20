@@ -64,10 +64,15 @@ RUN \
 # System #
 ##########
 
+{{ $apt := index .Vars.system "apt" -}}
+
 RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         unzip \
+        {{- range $package := $apt.packages }}
+        {{ $package }} \
+        {{- end }}
     # Clean
     && rm -rf /var/lib/apt/lists/*
 

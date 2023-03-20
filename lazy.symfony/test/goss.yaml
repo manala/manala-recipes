@@ -10,6 +10,9 @@ package:
     installed: true
   ansible:
     installed: true
+  # Project
+  jq:
+    installed: true
 
 group:
   # Base
