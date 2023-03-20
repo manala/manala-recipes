@@ -9,6 +9,9 @@ system:
     docker: true
     goss:
         version: 0.3.21
+    apt:
+        packages:
+            - jq
     git:
         config: |
             # Git config

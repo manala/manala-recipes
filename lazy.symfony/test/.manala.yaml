@@ -10,7 +10,7 @@ system:
     goss:
         version: 0.3.21
     apt:
-        package:
+        packages:
             - jq
     git:
         config: |
