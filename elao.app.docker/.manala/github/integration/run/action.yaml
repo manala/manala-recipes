@@ -1,0 +1,28 @@
+name: Run
+
+description: Integration - Run
+
+inputs:
+  dir:
+    description: Working directory
+    required: false
+    default: .
+  app:
+    description: App
+    required: false
+  run:
+    description: Run
+    required: true
+
+runs:
+  using: composite
+  steps:
+
+    - name: run
+      uses: ./.manala/github/system/run
+      with:
+        dir: ${{ inputs.dir }}
+        docker_dir: /srv/app${{ inputs.app != '' && format('/{0}', inputs.app) || '' }}
+        docker_env: >
+          XDG_CACHE_HOME=/srv/cache/${{ inputs.app != '' && format('{0}', inputs.app) || 'project' }}
+        run: ${{ inputs.run }}
