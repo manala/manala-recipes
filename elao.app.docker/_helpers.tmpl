@@ -52,10 +52,3 @@ $(case $(dpkg --print-architecture) in
     {{- (index . 0).ports_prefix -}}
     {{- printf "%02d" (index . 1) -}}
 {{- end -}}
-
-{{/* Elasticsearch version */}}
-{{- define "elasticsearch_version" -}}
-    {{- $elasticsearch_versions := dict 5 "5.6.16" 6 "6.8.23" 7 "7.17.9" 8 "8.1.3" -}}
-    {{- $version := .version -}}
-    {{- index $elasticsearch_versions ($version | toString) -}}
-{{- end -}}
