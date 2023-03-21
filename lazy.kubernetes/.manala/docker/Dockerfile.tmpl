@@ -69,10 +69,16 @@ ARG PIPX_BIN_DIR="/usr/local/bin"
 
 ARG VIM_GNUPG_VERSION="2.7.1"
 
+{{ $apt := index .Vars.system "apt" -}}
+
 RUN \
     apt-get --quiet update \
+    {{- if $apt.packages }}
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        jq \
+        {{- range $package := $apt.packages }}
+        {{ $package }} \
+        {{- end }}
+    {{- end }}
     # Vim Gnupg
     && mkdir --verbose --parents /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg \
     && curl -sSL https://github.com/jamessan/vim-gnupg/releases/download/v${VIM_GNUPG_VERSION}/vim-gnupg-v${VIM_GNUPG_VERSION}.tar.gz \

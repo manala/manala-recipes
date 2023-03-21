@@ -1,9 +1,9 @@
 package:
-  # System
-  jq:
-    installed: true
   # Docker
   docker-ce-cli:
+    installed: true
+  # Project
+  jq:
     installed: true
 
 group:

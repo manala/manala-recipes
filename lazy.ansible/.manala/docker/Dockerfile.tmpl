@@ -67,6 +67,8 @@ RUN \
 ENV PIPX_HOME="/usr/local"
 ENV PIPX_BIN_DIR="/usr/local/bin"
 
+{{ $apt := index .Vars.system "apt" -}}
+
 RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
@@ -76,6 +78,9 @@ RUN \
         pipx \
         python3-argcomplete \
         shellcheck \
+        {{- range $package := $apt.packages }}
+        {{ $package }} \
+        {{- end }}
     # Sudo
     && echo "Defaults env_keep += \"PIPX_*\"" > /etc/sudoers.d/pipx \
     # Bash completion
