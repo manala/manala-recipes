@@ -1,4 +1,4 @@
-name: {{ .Vars.project.name }}
+name: {{ .Vars.project.name | replace "." "-"}}
 
 services:
 
