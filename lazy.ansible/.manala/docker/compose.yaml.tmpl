@@ -1,6 +1,6 @@
 {{- $now := dateInZone "20060102150405" (now) "UTC" -}}
 
-name: {{ .Vars.project.name }}
+name: {{ .Vars.project.name | replace "." "-" }}
 
 services:
 
