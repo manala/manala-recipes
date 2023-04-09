@@ -1,0 +1,27 @@
+name: Tests
+
+on:
+  pull_request:
+
+jobs:
+
+  test:
+    name: Tests
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up system
+        uses: ./lazy.symfony/test/.manala/github/system/setup
+        with:
+          dir: lazy.symfony/test
+          docker_build_cache_scope: docker.lazy.symfony
+          docker_env: >
+            FOO=BAR
+          docker_compose_up: true
+          docker_services: >
+            mariadb
+            phpmyadmin
+            maildev
