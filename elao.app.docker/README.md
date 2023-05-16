@@ -246,7 +246,7 @@ system:
     #             command=/bin/foo
     # MariaDB
     mariadb:
-        version: 10.6
+        version: 10.11
     # ...*OR* MySQL...
     mysql:
         version: "8.0"
