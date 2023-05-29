@@ -1,3 +1,0 @@
-deb http://deb.debian.org/debian {{ ansible_facts.distribution_release }} {{ manala_apt_components|flatten|join(' ') }}
-deb http://deb.debian.org/debian {{ ansible_facts.distribution_release }}-updates {{ manala_apt_components|flatten|join(' ') }}
-deb http://security.debian.org/debian-security {{ ansible_facts.distribution_release }}{{ (ansible_facts.distribution_release in ['buster'])|ternary('/updates', '-security') }} {{ manala_apt_components|flatten|join(' ') }}

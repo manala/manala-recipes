@@ -51,8 +51,6 @@ RUN \
             /var/cache/apt/archives/libssl1.1.deb ; \
     fi \
     {{- end }}
-    # Apt keyrings (debian < bookworm)
-    && install --verbose --mode 0755 --directory /etc/apt/keyrings \
     # User
     && addgroup --gid ${MANALA_GROUP_ID} app \
     && adduser --home /home/app --shell /bin/bash --uid ${MANALA_USER_ID} --gecos app --ingroup app --disabled-password app \
@@ -220,11 +218,18 @@ RUN \
     && ldconfig \
     && python3.9 -m pip --no-cache-dir --disable-pip-version-check install \
         ansible==${ANSIBLE_VERSION} \
-{{- else }}
+{{- else if eq (.version|int) 11 }}
         # As controller node
         python3-pip \
     && pip3 --no-cache-dir --disable-pip-version-check install \
         ansible==${ANSIBLE_VERSION} \
+{{- else }}
+        # As controller node
+        pipx \
+    && PIPX_HOME="/usr/local/pipx" PIPX_BIN_DIR="/usr/local/bin" \
+        pipx install ansible==${ANSIBLE_VERSION} \
+            --include-deps --pip-args="--no-cache-dir" --verbose \
+    && rm -rf ~/.cache/pip /usr/local/pipx/.cache /usr/local/pipx/logs \
 {{- end }}
     && install --verbose --mode 0755 --directory /etc/ansible \
     && printf "\

@@ -127,7 +127,7 @@ project:
 ##########
 
 system:
-    version: 11
+    version: 12
     #timezone: Etc/UTC # Optional
     #locales: # Optional
     #    default: C.UTF-8
