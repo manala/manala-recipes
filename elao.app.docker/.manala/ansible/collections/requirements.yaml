@@ -8,4 +8,8 @@ collections:
   - community.mongodb
   - community.mysql
   - gluster.gluster
-  - manala.roles
+  # !!! Not Ready !!!
+  #- manala.roles
+  - name: https://github.com/manala/ansible-roles.git
+    type: git
+    version: apt/deb822

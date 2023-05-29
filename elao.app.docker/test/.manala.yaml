@@ -7,7 +7,7 @@ project:
     ports_prefix: 123
 
 system:
-    version: 11
+    version: 12
     timezone: Europe/Paris
     locales:
         default: C.UTF-8
