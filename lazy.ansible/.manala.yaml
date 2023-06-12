@@ -67,7 +67,7 @@ system:
         # @schema {"items": {"type": "string"}}
         dependencies: []
     molecule:
-        # @schema {"enum": [null, "4.0.4"]}
+        # @schema {"enum": [null, "5.0.1", "4.0.4"]}
         # @option {"label": "Molecule version"}
         version: ~
         # @schema {"items": {"type": "string"}}
