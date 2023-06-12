@@ -7,11 +7,9 @@ manala:
       - .manala/certificates/ca.key
       - .manala/docker
       - .manala/github
-      - .manala/jenkins
       - .manala/make
       - .manala/.dockerignore
       - .manala/.gitignore
-      - .manala/Jenkinsfile.tmpl
       - .manala/Makefile.tmpl
       - Makefile.dist
       - README.md .manala/README.md
@@ -164,30 +162,6 @@ system:
 ###############
 
 integration:
-    jenkins:
-        # @schema {
-        #     "definitions": {
-        #         "pipeline": {"type": "object", "$id": "#pipeline",
-        #             "additionalProperties": false,
-        #             "properties": {
-        #                 "label": {"type": "string"},
-        #                 "parallel": {"type": "boolean"},
-        #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
-        #                 "env": {"type": "object",
-        #                     "additionalProperties": {"type": ["string", "integer"]},
-        #                     "propertyNames": {"pattern": "^[A-Z_]+$"}
-        #                 },
-        #                 "junit": {"type": "string"},
-        #                 "artifacts": {"type": ["string", "array"]},
-        #                 "shell": {"type": "string"},
-        #                 "warn": {"type": "boolean"},
-        #                 "tasks": {"type": "array", "items": {"$ref": "#pipeline"}}
-        #             }
-        #         }
-        #     },
-        #     "$ref": "#pipeline"
-        # }
-        pipeline: {}
     github:
         # @schema {
         #     "definitions": {
