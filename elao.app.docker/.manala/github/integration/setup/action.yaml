@@ -21,19 +21,25 @@ runs:
   using: composite
   steps:
 
+    - name: Save inputs.dir to env vars for post actions
+      # Why? => https://github.com/actions/runner/issues/2009#issuecomment-1195690228
+      shell: bash
+      run: |
+        echo "INPUT_DIR=${{ inputs.dir }}" >> $GITHUB_ENV
+
     - name: Create dependencies cache dir
       shell: bash
-      working-directory: ${{ inputs.dir }}
+      working-directory: ${{ env.INPUT_DIR }}
       run: mkdir -p .manala/.cache
-    
+
     - name: Cache dependencies
       uses: actions/cache@v3
       with:
-        path: ${{ inputs.dir }}/.manala/.cache
-        key: app-dependencies-${{ hashFiles(format('{0}/**/composer.lock', inputs.dir), format('{0}/**/package-lock.json', inputs.dir), format('{0}/**/yarn.lock', inputs.dir)) }}-${{ github.workflow }}-${{ github.job }}
+        path: ${{ env.INPUT_DIR }}/.manala/.cache
+        key: app-dependencies-${{ hashFiles(format('{0}/**/composer.lock', env.INPUT_DIR), format('{0}/**/package-lock.json', env.INPUT_DIR), format('{0}/**/yarn.lock', env.INPUT_DIR)) }}-${{ github.workflow }}-${{ github.job }}
         restore-keys: |
-          app-dependencies-${{ hashFiles(format('{0}/**/composer.lock', inputs.dir), format('{0}/**/package-lock.json', inputs.dir), format('{0}/**/yarn.lock', inputs.dir)) }}-${{ github.workflow }}-
-          app-dependencies-${{ hashFiles(format('{0}/**/composer.lock', inputs.dir), format('{0}/**/package-lock.json', inputs.dir), format('{0}/**/yarn.lock', inputs.dir)) }}-
+          app-dependencies-${{ hashFiles(format('{0}/**/composer.lock', env.INPUT_DIR), format('{0}/**/package-lock.json', env.INPUT_DIR), format('{0}/**/yarn.lock', env.INPUT_DIR)) }}-${{ github.workflow }}-
+          app-dependencies-${{ hashFiles(format('{0}/**/composer.lock', env.INPUT_DIR), format('{0}/**/package-lock.json', env.INPUT_DIR), format('{0}/**/yarn.lock', env.INPUT_DIR)) }}-
           app-dependencies-
 
     - name: Ssh key
@@ -45,7 +51,7 @@ runs:
     - name: Set up system
       uses: ./.manala/github/system/setup
       with:
-        dir: ${{ inputs.dir }}
+        dir: ${{ env.INPUT_DIR }}
         docker_build_cache_scope: app-docker-${{ hashFiles('.manala/docker/Dockerfile', '.manala/Makefile', '.manala/ansible/**', '.manala/certificates/**') }}
         docker_compose_profile: integration
         docker_env: ${{ inputs.env }}
