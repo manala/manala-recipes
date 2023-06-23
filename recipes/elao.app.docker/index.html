@@ -216,7 +216,7 @@ App:</code></pre>
 <pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- --follow</code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="5dae76c549ebf009595ea855e623e443"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="a82f66417356d19bd3d1a623aa86faa4"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
@@ -320,9 +320,15 @@ App:</code></pre>
     <span class="token comment">#         jobs:</span>
     <span class="token comment">#           # Foo - Bar</span>
     <span class="token comment">#           - command: php bin/console app:foo:bar --no-interaction -vv &gt;&gt; /srv/log/cron.foo-bar.log 2&gt;&amp;1</span>
-    <span class="token comment">#             minute: 0</span>
+    <span class="token comment">#             # From Monday to Friday 05:15am</span>
+    <span class="token comment">#             hour: 5</span>
+    <span class="token comment">#             minute: 15</span>
+    <span class="token comment">#             day: *</span>
+    <span class="token comment">#             month: *</span>
+    <span class="token comment">#             weekday: 1-5</span>
     <span class="token comment">#             # Dev</span>
     <span class="token comment">#             state: absent</span>
+    <span class="token comment">#             # CRON documentation : https://docs.ansible.com/ansible/latest/collections/ansible/builtin/cron_module.html</span>
     <span class="token comment"># supervisor:</span>
     <span class="token comment">#     configs:</span>
     <span class="token comment">#       - file: app.conf</span>
@@ -824,7 +830,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2023-06-12UTC14:01:25+00:00">Last modified: June 12, 2023 14:01</time>
+    <time datetime="2023-06-23UTC07:45:23+00:00">Last modified: June 23, 2023 07:45</time>
         </div>
 
         <footer class="footer">
