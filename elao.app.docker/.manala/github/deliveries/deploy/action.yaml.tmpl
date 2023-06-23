@@ -1,0 +1,75 @@
+{{- $apps := list -}}
+{{- range $delivery := .Vars.deliveries -}}
+{{- if hasKey $delivery "app" -}}
+{{- $apps = (append $apps $delivery.app) | uniq -}}
+{{- end -}}
+{{- end -}}
+
+name: Deploy
+
+description: Deliveries - Deploy
+
+inputs:
+  app:
+    description: App
+    required: false
+  tier:
+    description: Tier
+    required: true
+  ref:
+    description: Ref
+    required: false
+
+outputs:
+  deployment_url:
+    description: The deployed app URL
+    {{- if $apps }}
+    value: {{ `${{ steps[format('deployment_url_{0}_{1}', inputs.app, inputs.tier)].outputs.deployment_url }}` }}
+    {{- else }}
+    value: {{ `${{ steps[format('deployment_url_{0}', inputs.tier)].outputs.deployment_url }}` }}
+    {{- end }}
+
+runs:
+  using: composite
+  steps:
+
+    {{- range $i, $delivery := .Vars.deliveries }}
+    {{- $delivery_name := $delivery.tier }}
+    {{- $delivery_if := printf "inputs.tier == '%s'" $delivery.tier }}
+    {{- $delivery_id_suffix := $delivery.tier }}
+    {{- if hasKey $delivery "app" }}
+      {{- $delivery_name = printf "%s@%s" $delivery.app $delivery.tier }}
+      {{- $delivery_if = printf "inputs.app == '%s' && inputs.tier == '%s'" $delivery.app $delivery.tier }}
+      {{- $delivery_id_suffix = printf "%s_%s" $delivery.app $delivery.tier }}
+    {{- end }}
+    {{- $delivery_ref := printf "${{ inputs.ref || '%s' }}" (or (get $delivery "ref") "master") }}
+
+    ##{{ repeat (len $delivery_name) "#" }}##
+    # {{ $delivery_name }} #
+    ##{{ repeat (len $delivery_name) "#" }}##
+
+    - name: Set deployment url for {{ $delivery_name }}
+      id: deployment_url_{{ $delivery_id_suffix }}
+      if: {{ $delivery_if }}
+      shell: bash
+      {{- if hasKey $delivery "deploy_url" }}
+      run: echo "deployment_url={{ $delivery.deploy_url }}" >> $GITHUB_OUTPUT
+      {{- else }}
+      run: echo "deployment_url=" >> $GITHUB_OUTPUT
+      {{- end }}
+
+    {{- end }}
+
+    ##########
+    # Deploy #
+    ##########
+
+    {{ `- name: >
+        Deploy
+        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+      uses: ./.manala/github/integration/run
+      with:
+        dir: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
+        run: |
+          make deploy${{ inputs.app && format('.{0}@', inputs.app) || '' }}${{ inputs.tier }} \
+            ${{ inputs.ref != '' && format('REF={0}', inputs.ref) || '' }}` }}

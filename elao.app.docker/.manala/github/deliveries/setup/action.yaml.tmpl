@@ -1,0 +1,76 @@
+name: Set up
+
+description: Deliveries - Set up
+
+inputs:
+  app:
+    description: App
+    required: false
+  tier:
+    description: Tier
+    required: true
+  ref:
+    description: Ref
+    required: false
+    default: main
+  env:
+    description: Env vars as a single string
+    required: false
+  services:
+    description: Services
+    required: false
+#  ssh_key:
+#    description: Ssh Key
+#    required: false
+  secrets:
+    description: Secrets
+    required: true
+
+runs:
+  using: composite
+  steps:
+
+    {{ `- name: >
+        Checkout delivery
+        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+        (ref "${{ inputs.ref }}")
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.ref }}
+        path: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}` }}
+
+    {{- range $i, $delivery := .Vars.deliveries }}
+    {{- $delivery_name := $delivery.tier }}
+    {{- $delivery_if := printf "inputs.tier == '%s'" $delivery.tier }}
+    {{- $delivery_id_suffix := $delivery.tier }}
+    {{- if hasKey $delivery "app" }}
+      {{- $delivery_name = printf "%s@%s" $delivery.app $delivery.tier }}
+      {{- $delivery_if = printf "inputs.app == '%s' && inputs.tier == '%s'" $delivery.app $delivery.tier }}
+      {{- $delivery_id_suffix = printf "%s_%s" $delivery.app $delivery.tier }}
+    {{- end }}
+    {{- $delivery_ref := printf "${{ inputs.ref || '%s' }}" (or (get $delivery "ref") "master") }}
+
+    ##{{ repeat (len $delivery_name) "#" }}##
+    # {{ $delivery_name }} #
+    ##{{ repeat (len $delivery_name) "#" }}##
+
+    - name: Setup SSH Key for {{ $delivery_name }}
+      id: setup_ssh_key_{{ $delivery_id_suffix }}
+      if: {{ $delivery_if }}
+      shell: bash
+      run: echo "ssh_key_secret={{ $delivery.github_ssh_key_secret }}" >> $GITHUB_OUTPUT
+
+    {{- end }}
+
+    #########
+    # Setup #
+    #########
+
+    {{ `- name: >
+        Set up delivery
+        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+      uses: ./.manala/github/integration/setup
+      with:
+        dir: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
+        env: ${{ inputs.env }}
+        ssh_key: ${{ fromJSON(inputs.secrets)[steps[format('setup_ssh_key_{0}_{1}', inputs.app, inputs.tier)].outputs.ssh_key_secret] }}` }}
