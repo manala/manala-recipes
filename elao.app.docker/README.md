@@ -216,9 +216,15 @@ system:
     #         jobs:
     #           # Foo - Bar
     #           - command: php bin/console app:foo:bar --no-interaction -vv >> /srv/log/cron.foo-bar.log 2>&1
-    #             minute: 0
+    #             # From Monday to Friday 05:15am
+    #             hour: 5
+    #             minute: 15
+    #             day: *
+    #             month: *
+    #             weekday: 1-5
     #             # Dev
     #             state: absent
+    #             # CRON documentation : https://docs.ansible.com/ansible/latest/collections/ansible/builtin/cron_module.html
     # supervisor:
     #     configs:
     #       - file: app.conf
