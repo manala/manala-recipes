@@ -12,7 +12,8 @@ inputs:
   ref:
     description: Ref
     required: false
-    default: main
+    # default depends on the selected app+tier (delivery) if none explicitly provided.
+    # E.g: 'main' for production, 'staging' for staging, etc… depending on .manala.yaml deliveries config.
   env:
     description: Env vars as a single string
     required: false
@@ -30,15 +31,6 @@ runs:
   using: composite
   steps:
 
-    {{ `- name: >
-        Checkout delivery
-        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
-        (ref "${{ inputs.ref }}")
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ inputs.ref }}
-        path: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}` }}
-
     {{- range $i, $delivery := .Vars.deliveries }}
     {{- $delivery_name := $delivery.tier }}
     {{- $delivery_if := printf "inputs.tier == '%s'" $delivery.tier }}
@@ -48,11 +40,18 @@ runs:
       {{- $delivery_if = printf "inputs.app == '%s' && inputs.tier == '%s'" $delivery.app $delivery.tier }}
       {{- $delivery_id_suffix = printf "%s_%s" $delivery.app $delivery.tier }}
     {{- end }}
-    {{- $delivery_ref := printf "${{ inputs.ref || '%s' }}" (or (get $delivery "ref") "master") }}
+    {{- $delivery_ref := printf "${{ inputs.ref || '%s' }}" (or (get $delivery "ref") "main") }}
 
     ##{{ repeat (len $delivery_name) "#" }}##
     # {{ $delivery_name }} #
     ##{{ repeat (len $delivery_name) "#" }}##
+
+    - name: Checkout {{ $delivery_name }} (ref "{{ $delivery_ref }}")
+      if: {{ $delivery_if }}
+      uses: actions/checkout@v3
+      with:
+        ref: {{ $delivery_ref }}
+        {{ `path: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}` }}
 
     - name: Setup SSH Key for {{ $delivery_name }}
       id: setup_ssh_key_{{ $delivery_id_suffix }}
