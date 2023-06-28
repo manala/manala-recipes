@@ -40,7 +40,7 @@ runs:
       {{- $delivery_if = printf "inputs.app == '%s' && inputs.tier == '%s'" $delivery.app $delivery.tier }}
       {{- $delivery_id_suffix = printf "%s_%s" $delivery.app $delivery.tier }}
     {{- end }}
-    {{- $delivery_ref := printf "${{ inputs.ref || '%s' }}" (or (get $delivery "ref") "main") }}
+    {{- $delivery_ref := printf "${{ inputs.ref || '%s' }}" (or (get $delivery "ref") "master") }}
 
     ##{{ repeat (len $delivery_name) "#" }}##
     # {{ $delivery_name }} #
