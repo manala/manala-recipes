@@ -16,10 +16,10 @@ runs:
 
     - name: >
         Release
-        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+        ${{ inputs.app && format('{0}', inputs.app) || '' }}@${{ inputs.tier }}
       uses: ./.manala/github/integration/run
       with:
         dir: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
         run: |
-          make release${{ inputs.app && format('.{0}@', inputs.app) || '' }}${{ inputs.tier }} \
+          make release${{ inputs.app && format('.{0}', inputs.app) || '' }}@${{ inputs.tier }} \
             AUTHOR="manala-ci-releaser <${{ github.actor }}+github@manala.io>"
