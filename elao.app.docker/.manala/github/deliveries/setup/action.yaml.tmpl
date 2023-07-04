@@ -72,4 +72,9 @@ runs:
       with:
         dir: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
         env: ${{ inputs.env }}
-        ssh_key: ${{ fromJSON(inputs.secrets)[steps[format('setup_ssh_key_{0}_{1}', inputs.app, inputs.tier)].outputs.ssh_key_secret] }}` }}
+        ssh_key: >
+          ${{ fromJSON(inputs.secrets)[steps[format(
+            'setup_ssh_key_{0}{1}',
+             inputs.app && format('{0}_', inputs.app) || '',
+             inputs.tier
+          )].outputs.ssh_key_secret] }}` }}
