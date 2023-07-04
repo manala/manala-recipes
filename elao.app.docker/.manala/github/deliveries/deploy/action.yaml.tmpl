@@ -66,10 +66,10 @@ runs:
 
     {{ `- name: >
         Deploy
-        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+        ${{ inputs.app && format('{0}', inputs.app) || '' }}@${{ inputs.tier }}
       uses: ./.manala/github/integration/run
       with:
         dir: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
         run: |
-          make deploy${{ inputs.app && format('.{0}@', inputs.app) || '' }}${{ inputs.tier }} \
+          make deploy${{ inputs.app && format('.{0}', inputs.app) || '' }}@${{ inputs.tier }} \
             ${{ inputs.ref != '' && format('REF={0}', inputs.ref) || '' }}` }}

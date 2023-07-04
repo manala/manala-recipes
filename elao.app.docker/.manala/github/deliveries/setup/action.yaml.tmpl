@@ -67,7 +67,7 @@ runs:
 
     {{ `- name: >
         Set up delivery
-        ${{ inputs.app && format('{0}@', inputs.app) || '' }}${{ inputs.tier }}
+        ${{ inputs.app && format('{0}', inputs.app) || '' }}@${{ inputs.tier }}
       uses: ./.manala/github/integration/setup
       with:
         dir: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
