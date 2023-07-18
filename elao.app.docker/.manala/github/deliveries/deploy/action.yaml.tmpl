@@ -48,6 +48,7 @@ runs:
     # {{ $delivery_name }} #
     ##{{ repeat (len $delivery_name) "#" }}##
 
+    {{ if hasKey $delivery "deploy_url" -}}
     - name: Set deployment url for {{ $delivery_name }}
       id: deployment_url_{{ $delivery_id_suffix }}
       if: {{ $delivery_if }}
@@ -57,6 +58,9 @@ runs:
       {{- else }}
       run: echo "deployment_url=" >> $GITHUB_OUTPUT
       {{- end }}
+    {{- else -}}
+    # No deploy url configured for {{ $delivery_name }}
+    {{- end }}
 
     {{- end }}
 
