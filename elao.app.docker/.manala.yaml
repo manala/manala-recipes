@@ -157,37 +157,6 @@ system:
             ignore:
                 paths: []
 
-###############
-# Integration #
-###############
-
-integration:
-    github:
-        # @schema {
-        #     "definitions": {
-        #         "job": {"type": "object", "$id": "#job",
-        #             "additionalProperties": false,
-        #             "properties": {
-        #                 "app": {"type": "string", "pattern": "^[a-z]+$"},
-        #                 "tasks": {"type": "array", "items": {"$ref": "#task"}},
-        #                 "artifacts": {"type": ["string", "array"]}
-        #             }
-        #         },
-        #         "task": {"type": "object", "$id": "#task",
-        #             "additionalProperties": false,
-        #             "properties": {
-        #                 "label": {"type": "string"},
-        #                 "shell": {"type": "string"}
-        #             }
-        #         }
-        #     },
-        #     "patternProperties": {
-        #         "": {"$ref": "#job"}
-        #     },
-        #     "propertyNames": {"pattern": "^[a-z_]+$"}
-        # }
-        jobs: {}
-
 ##############
 # Deliveries #
 ##############
