@@ -318,50 +318,10 @@ Details:
 
 ## Integration
 
-### Github Actions
+### GitHub Actions
 
-The recipes can generate Github actions files you can use in your workflows.  
-Complete the `integration.github.jobs` according to your need, and consult the `.manala/github/integration/README.md` to
-learn how you can write your own workflows using these actions.
-
-```yaml
-###############
-# Integration #
-###############
-
-integration:
-  github:
-    jobs:
-      # Lint
-      lint:
-        tasks:
-          - shell: make install@integration
-          - shell: make build@integration
-          - shell: make lint.twig@integration
-          - shell: make lint.yaml@integration
-          - shell: make lint.phpstan@integration
-          - shell: make lint.php-cs-fixer@integration
-          - shell: make lint.eslint@integration
-      # Security
-      security:
-        tasks:
-          - shell: make security.symfony@integration
-          - shell: make security.npm@integration
-      # Test
-      test:
-        tasks:
-          - label: Install
-            shell: |-
-              make install.php@integration
-              # Fake manifest.json
-              mkdir -p public/build/
-              echo {} > public/build/manifest.json
-              # Install phpunit
-              vendor/bin/simple-phpunit install
-          - shell: make test.phpunit@integration
-        artifacts:
-          - var/log/test.log
-```
+The recipes can generate GitHub actions files you can use in your workflows.  
+Consult the `.manala/github/integration/README.md` to learn how you can write your own workflows using these actions.
 
 ### Common integration tasks
 
@@ -555,9 +515,9 @@ deliveries:
     github_ssh_key_secret: SSH_DEPLOY_KEY_STAGING
 ```
 
-### Github Actions
+### GitHub Actions
 
-Deliveries can be triggered through Github Actions as well.
+Deliveries can be triggered through GitHub Actions as well.
 Consult the `.manala/github/deliveries/README.md` to learn how to write your own release & deploy workflows.
 
 !!! Note
