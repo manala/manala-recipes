@@ -37,6 +37,11 @@ install@staging:
 # Database #
 ############
 
+## Database - Reset hard the database with schema and fixtures
+db:
+	$(call manala_confirm, Are you sure to reset the database? You will lose all your data. Fixtures will be loaded again., y)
+	make db.reset db.fixtures
+
 ## Database - Init (create+schema)
 db.install: db.create db.update-force
 
