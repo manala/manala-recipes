@@ -85,14 +85,14 @@
                             <li>
                     <a href="#integration">Integration</a>
                                             <ul class="sub-list">
-                                                            <li><a href="#github-actions">Github Actions</a></li>
+                                                            <li><a href="#github-actions">GitHub Actions</a></li>
                                                             <li><a href="#common-integration-tasks">Common integration tasks</a></li>
                                                     </ul>
                                     </li>
                             <li>
                     <a href="#deliveries">Deliveries</a>
                                             <ul class="sub-list">
-                                                            <li><a href="#github-actions">Github Actions</a></li>
+                                                            <li><a href="#github-actions">GitHub Actions</a></li>
                                                     </ul>
                                     </li>
                             <li>
@@ -421,46 +421,9 @@ App:</code></pre>
 </ul></li>
 </ul>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
-<h3 id="github-actions">Github Actions<a href="#github-actions" class="anchor"></a></h3>
-<p>The recipes can generate Github actions files you can use in your workflows.<br>
-Complete the <code class="code-inline" id="46cf218e3270964e4bd558e0db58523f">integration.github.jobs</code> according to your need, and consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.manala/github/integration/README.md</code> to
-learn how you can write your own workflows using these actions.</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="38ed4af80bb42d29185fab6d63c43292"><span class="token comment">###############</span>
-<span class="token comment"># Integration #</span>
-<span class="token comment">###############</span>
-
-<span class="token key atrule">integration</span><span class="token punctuation">:</span>
-  <span class="token key atrule">github</span><span class="token punctuation">:</span>
-    <span class="token key atrule">jobs</span><span class="token punctuation">:</span>
-      <span class="token comment"># Lint</span>
-      <span class="token key atrule">lint</span><span class="token punctuation">:</span>
-        <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make install@integration
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make build@integration
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.twig@integration
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.yaml@integration
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.phpstan@integration
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.php<span class="token punctuation">-</span>cs<span class="token punctuation">-</span>fixer@integration
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make lint.eslint@integration
-      <span class="token comment"># Security</span>
-      <span class="token key atrule">security</span><span class="token punctuation">:</span>
-        <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.symfony@integration
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make security.npm@integration
-      <span class="token comment"># Test</span>
-      <span class="token key atrule">test</span><span class="token punctuation">:</span>
-        <span class="token key atrule">tasks</span><span class="token punctuation">:</span>
-          <span class="token punctuation">-</span> <span class="token key atrule">label</span><span class="token punctuation">:</span> Install
-            <span class="token key atrule">shell</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token punctuation">-</span>
-              make install.php@integration
-              <span class="token comment"># Fake manifest.json</span>
-              mkdir <span class="token punctuation">-</span>p public/build/
-              echo <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">&gt;</span> public/build/manifest.json
-              <span class="token comment"># Install phpunit</span>
-              vendor/bin/simple<span class="token punctuation">-</span>phpunit install
-          <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make test.phpunit@integration
-        <span class="token key atrule">artifacts</span><span class="token punctuation">:</span>
-          <span class="token punctuation">-</span> var/log/test.log</code></pre>
+<h3 id="github-actions">GitHub Actions<a href="#github-actions" class="anchor"></a></h3>
+<p>The recipes can generate GitHub actions files you can use in your workflows.<br>
+Consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.manala/github/integration/README.md</code> to learn how you can write your own workflows using these actions.</p>
 <h3 id="common-integration-tasks">Common integration tasks<a href="#common-integration-tasks" class="anchor"></a></h3>
 <p>Add in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>:</p>
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="626e3a6cd593698728b85ecac62a1cc7"><span class="token comment">###########</span>
@@ -642,8 +605,8 @@ learn how you can write your own workflows using these actions.</p>
       <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> make warmup@staging
     <span class="token comment"># GitHub</span>
     <span class="token key atrule">github_ssh_key_secret</span><span class="token punctuation">:</span> SSH_DEPLOY_KEY_STAGING</code></pre>
-<h3 id="github-actions">Github Actions<a href="#github-actions" class="anchor"></a></h3>
-<p>Deliveries can be triggered through Github Actions as well.
+<h3 id="github-actions">GitHub Actions<a href="#github-actions" class="anchor"></a></h3>
+<p>Deliveries can be triggered through GitHub Actions as well.
 Consult the <code class="code-inline" id="f04b542e973164f9c88bf55021f5da97">.manala/github/deliveries/README.md</code> to learn how to write your own release &amp; deploy workflows.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -830,7 +793,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2023-07-18UTC07:08:07+00:00">Last modified: July 18, 2023 07:08</time>
+    <time datetime="2023-08-25UTC08:09:20+00:00">Last modified: August 25, 2023 08:09</time>
         </div>
 
         <footer class="footer">
