@@ -1,8 +1,11 @@
 {{/* Elasticsearch version */}}
 {{- define "elasticsearch_version" -}}
     {{- $elasticsearch_versions := dict 5 "5.6.16" 6 "6.8.23" 7 "7.17.9" 8 "8.1.3" -}}
-    {{- $version := .version -}}
-    {{- index $elasticsearch_versions ($version | toString) -}}
+    {{- with index $elasticsearch_versions (.version | toString) -}}
+        {{ . }}
+    {{- else -}}
+        {{ .version }}
+    {{- end }}
 {{- end -}}
 
 {{ if .Vars.system.elasticsearch.version -}}
@@ -15,7 +18,7 @@ services:
 
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:{{ include "elasticsearch_version" .Vars.system.elasticsearch }}
-        {{- if le (.Vars.system.elasticsearch.version|int) 6 }}
+        {{- if semverCompare "<=6" (include "elasticsearch_version" .Vars.system.elasticsearch) }}
         # docker.elastic.co/elasticsearch/elasticsearch image unavailable for arm64 on version <= 6
         # force amd64 architecture
         platform: linux/amd64
@@ -28,7 +31,7 @@ services:
         command: >
             sh -c
             "{{- range $plugin := $.Vars.system.elasticsearch.plugins }}((elasticsearch-plugin list|grep {{ $plugin }}) || elasticsearch-plugin install --batch --verbose {{ $plugin }}) && {{ end -}}
-            {{- if le (.Vars.system.elasticsearch.version|int) 5 }}
+            {{- if semverCompare "<=5" (include "elasticsearch_version" .Vars.system.elasticsearch) }}
             exec bin/es-docker"
             {{- else }}
             exec docker-entrypoint.sh"
