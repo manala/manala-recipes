@@ -41,7 +41,7 @@ command:
   ansible --version:
     exit-status: 0
     stdout:
-      - ansible [core 2.14.3]
+      - ansible [core 2.15.5]
   # Locales
   locale:
     exit-status: 0

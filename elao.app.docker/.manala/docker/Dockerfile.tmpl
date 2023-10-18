@@ -201,7 +201,7 @@ FROM init-${MANALA_INIT} AS provision-none
 # Ansible
 FROM init-${MANALA_INIT} AS provision-ansible
 
-ARG ANSIBLE_VERSION="2.14.3"
+ARG ANSIBLE_VERSION="8.5.0"
 ARG MANALA_PROVISION_LIMIT
 ARG SYMFONY_IDE
 
@@ -222,12 +222,12 @@ RUN \
 {{- if eq (.version|int) 10 }}
     && ldconfig \
     && python3.9 -m pip --no-cache-dir --disable-pip-version-check install \
-        ansible-core==${ANSIBLE_VERSION} \
+        ansible==${ANSIBLE_VERSION} \
 {{- else }}
         # As controller node
         python3-pip \
     && pip3 --no-cache-dir --disable-pip-version-check install \
-        ansible-core==${ANSIBLE_VERSION} \
+        ansible==${ANSIBLE_VERSION} \
 {{- end }}
     && mkdir --verbose --parents /etc/ansible \
     && printf "[defaults]\n\
