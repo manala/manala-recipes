@@ -8,7 +8,7 @@ project:
 system:
     docker: true
     goss:
-        version: 0.3.21
+        version: 0.4.2
     apt:
         packages:
             - jq
@@ -16,7 +16,7 @@ system:
         config: |
             # Git config
     nginx:
-        version: "1.20"
+        version: 1.24
     php:
         version: 8.1
         extensions:
@@ -24,11 +24,11 @@ system:
     nodejs:
         version: 16
     mariadb:
-        version: 10.4
+        version: 10.5
     phpmyadmin:
-        version: 5.1
+        version: 5.2.1
     maildev:
-        version: 2.0.5
+        version: 2.1.0
 
 ##########
 # Deploy #
