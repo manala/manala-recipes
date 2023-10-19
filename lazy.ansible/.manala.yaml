@@ -41,7 +41,7 @@ system:
     mount: []
     docker: false
     goss:
-        # @schema {"enum": [null, "0.3.21"]}
+        # @schema {"enum": [null, "0.4.2", "0.3.23"]}
         version: ~
     apt:
         # @schema {"items": {"type": "string"}}
@@ -53,7 +53,7 @@ system:
         # @schema {"type": ["null", "string"]}
         config: ~
     ansible:
-        # @schema {"enum": ["2.14.3", "2.13.8", "2.12.10"]}
+        # @schema {"enum": ["2.15.5", "2.14.11", "2.13.13"]}
         # @option {"label": "Ansible version"}
         version: ~
         # @schema {"type": ["null", "string"]}
@@ -61,7 +61,7 @@ system:
         # @schema {"items": {"type": "string"}}
         dependencies: []
     ansible-lint:
-        # @schema {"enum": [null, "6.14.2", "6.13.1", "6.12.2"]}
+        # @schema {"enum": [null, "6.14.6", "6.13.1", "6.12.2"]}
         # @option {"label": "Ansible-lint version"}
         version: ~
         # @schema {"items": {"type": "string"}}

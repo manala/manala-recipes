@@ -41,7 +41,7 @@ system:
     mount: []
     docker: false
     goss:
-        # @schema {"enum": [null, "0.4.0", "0.3.21"]}
+        # @schema {"enum": [null, "0.4.2", "0.3.23"]}
         version: ~
     apt:
         # @schema {"items": {"type": "string"}}
@@ -50,11 +50,11 @@ system:
         # @schema {"type": ["null", "string"]}
         config: ~
     kubectl:
-        # @schema {"enum": ["1.28.1", "1.27.5", "1.26.2", "1.25.7", "1.24.11", "1.23.17", "1.22.17", "1.21.14", "1.20.15"]}
+        # @schema {"enum": ["1.28.3", "1.27.7", "1.26.10", "1.25.15", "1.24.17", "1.23.17", "1.22.17", "1.21.14", "1.20.15"]}
         # @option {"label": "Kubectl version"}
         version: ~
     helm:
-        # @schema {"enum": [null, "3.12.3", "3.11.2", "3.10.3", "3.9.4"]}
+        # @schema {"enum": [null, "3.13.1", "3.12.3", "3.11.3", "3.10.3"]}
         # @option {"label": "Helm version"}
         version: ~
         # @schema {
@@ -73,15 +73,15 @@ system:
         # }
         plugins: []
     helmfile:
-        # @schema {"enum": [null, "0.156.0", "0.151.0"]}
+        # @schema {"enum": [null, "0.157.0", "0.156.0"]}
         # @option {"label": "Helmfile version"}
         version: ~
     k9s:
-        # @schema {"enum": [null, "0.27.3"]}
+        # @schema {"enum": [null, "0.27.4"]}
         # @option {"label": "K9s version"}
         version: ~
     stern:
-        # @schema {"enum": [null, "1.23.0"]}
+        # @schema {"enum": [null, "1.26.0"]}
         # @option {"label": "Stern version"}
         version: ~
     kube-prompt:
@@ -97,34 +97,34 @@ system:
         # @option {"label": "Kubernetes namespace killer version"}
         version: ~
     vault:
-        # @schema {"enum": [null, "1.14.1", "1.13.0", "1.12.4", "1.11.8"]}
+        # @schema {"enum": [null, "1.15.0", "1.14.4", "1.13.8", "1.12.11"]}
         # @option {"label": "Vault version"}
         version: ~
     rclone:
-        # @schema {"enum": [null, "1.61.1"]}
+        # @schema {"enum": [null, "1.64.1"]}
         # @option {"label": "Rclone version"}
       version: ~
     openstack:
-        # @schema {"enum": [null, "6.2.0"]}
+        # @schema {"enum": [null, "6.3.0"]}
         # @option {"label": "Openstack client version"}
       version: ~
     swift:
-        # @schema {"enum": [null, "4.2.0"]}
+        # @schema {"enum": [null, "4.4.0"]}
         # @option {"label": "Swift client version"}
       version: ~
       keystone:
-        # @schema {"enum": [null, "5.1.0"]}
+        # @schema {"enum": [null, "5.2.0"]}
         # @option {"label": "Swift keystone client version"}
         version: ~
     scw:
-        # @schema {"enum": [null, "2.19.0"]}
+        # @schema {"enum": [null, "2.23.0"]}
         # @option {"label": "Scaleway cli version"}
       version: ~
     sops:
-        # @schema {"enum": [null, "3.7.3"]}
+        # @schema {"enum": [null, "3.8.1"]}
         # @option {"label": "Sops version"}
       version: ~
     aws:
-        # @schema {"enum": [null, "2.13.3"]}
+        # @schema {"enum": [null, "2.13.27"]}
         # @option {"label": "AWS cli version"}
       version: ~

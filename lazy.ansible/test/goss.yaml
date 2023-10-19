@@ -29,18 +29,32 @@ user:
     shell: /bin/bash
 
 file:
+  # Base
+  /etc/os-release:
+    exists: true
+    contents:
+      - PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
   # Git
   /etc/gitconfig:
     exists: true
-    contains:
-      - # Git config
+    contents:
+      - "# Git config template"
   # Ssh
-  /etc/ssh/ssh_config:
+  /etc/ssh/ssh_config.d/ssh_config.conf:
     exists: true
-    contains:
-      - # Ssh config
+    contents:
+      - "# Ssh config template"
 
 command:
+  # Base
+  gosu --version:
+    exit-status: 0
+    stdout:
+      - "1.16"
+  gomplate --version:
+    exit-status: 0
+    stdout:
+      - gomplate version 3.11.5
   # Goss
   goss --version:
     exit-status: 0

@@ -42,7 +42,7 @@ system:
     mount: []
     docker: false
     goss:
-        # @schema {"enum": [null, "0.3.21"]}
+        # @schema {"enum": [null, "0.4.2", "0.3.23"]}
         version: ~
     apt:
         # @schema {"items": {"type": "string"}}
@@ -52,7 +52,7 @@ system:
         config: ~
     nginx:
         # @option {"label": "Nginx version"}
-        # @schema {"enum": ["1.20"]}
+        # @schema {"enum": [1.24]}
         version: ~
         # @schema {"type": "integer", "exclusiveMinimum": 1024, "maximum": 65535}
         port: 8000
@@ -74,13 +74,13 @@ system:
         port: 8306
     phpmyadmin:
         # @option {"label": "PhpMyAdmin version"}
-        # @schema {"enum": [null, 5.1]}
+        # @schema {"enum": [null, "5.2.1"]}
         version: ~
         # @schema {"type": "integer", "exclusiveMinimum": 1024, "maximum": 65535}
         port: 8300
     maildev:
         # @option {"label": "MailDev version"}
-        # @schema {"enum": [null, "2.0.5"]}
+        # @schema {"enum": [null, "2.1.0"]}
         version: ~
         # @schema {"type": "integer", "exclusiveMinimum": 1024, "maximum": 65535}
         port: 8025

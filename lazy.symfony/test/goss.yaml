@@ -28,13 +28,27 @@ user:
     shell: /bin/bash
 
 file:
+  # Base
+  /etc/os-release:
+    exists: true
+    contents:
+      - PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
   # Git
   /etc/gitconfig:
     exists: true
-    contains:
-      - # Git config
+    contents:
+      - "# Git config template"
 
 command:
+  # Base
+  gosu --version:
+    exit-status: 0
+    stdout:
+      - "1.16"
+  gomplate --version:
+    exit-status: 0
+    stdout:
+      - gomplate version 3.11.5
   # Goss
   goss --version:
     exit-status: 0
@@ -79,8 +93,8 @@ command:
   ansible-galaxy role list:
     exit-status: 0
     stdout:
-      - # /usr/share/ansible/roles
-      - "- ansistrano.deploy, 3.10.0"
+      - "# /usr/share/ansible/roles"
+      - "- ansistrano.deploy, 3.14.0"
       - "- ansistrano.rollback, 3.1.0"
 
 process:
