@@ -42,7 +42,7 @@ system:
     
     {{- $ansible := .Vars.system.ansible }}
     ansible:
-        version: {{ $ansible | toYaml }}
+        version: {{ $ansible.version | toYaml }}
         config: |
             [defaults]
             #force_color = True
