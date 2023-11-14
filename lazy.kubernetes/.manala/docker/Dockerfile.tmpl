@@ -335,6 +335,7 @@ RUN \
 {{ $gcloud := .Vars.system.gcloud -}}
 {{ if $gcloud.version -}}
 # Google Cloud cli
+ENV CLOUDSDK_CORE_DISABLE_USAGE_REPORTING="1"
 RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
@@ -344,7 +345,6 @@ RUN \
     # Profile
     && touch /etc/profile.d/gcloud.sh \
     && /usr/local/google-cloud-sdk/install.sh \
-        --usage-reporting false \
         --rc-path /etc/profile.d/gcloud.sh \
         --command-completion true \
         --path-update true \
