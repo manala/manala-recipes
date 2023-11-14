@@ -343,6 +343,7 @@ RUN \
         | bsdtar -xf - -C /usr/local \
     && /usr/local/google-cloud-sdk/install.sh \
         --additional-components gke-gcloud-auth-plugin \
+        --usage-reporting false \
         --quiet \
         # Bash aliases
     && printf "if [ -f '/usr/local/google-cloud-sdk/path.bash.inc' ]; then . '/usr/local/google-cloud-sdk/path.bash.inc'; fi\n\
