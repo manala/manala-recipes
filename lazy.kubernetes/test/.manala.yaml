@@ -50,3 +50,7 @@ system:
         version: 3.8.1
     aws:
         version: 2.13.27
+    gcloud:
+        version: 454.0.0
+        components:
+          - gke-gcloud-auth-plugin
