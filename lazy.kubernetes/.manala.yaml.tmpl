@@ -88,4 +88,6 @@ system:
     {{- if .Vars.system.gcloud }}
     gcloud:
         version: {{ .Vars.system.gcloud.version | toYaml }}
+        # components:
+        #     - gke-gcloud-auth-plugin
     {{- end }}

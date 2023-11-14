@@ -344,11 +344,13 @@ RUN \
     # Profile
     && touch /etc/profile.d/gcloud.sh \
     && /usr/local/google-cloud-sdk/install.sh \
-        --additional-components gke-gcloud-auth-plugin \
         --usage-reporting false \
         --rc-path /etc/profile.d/gcloud.sh \
         --command-completion true \
         --path-update true \
+        {{- if $gcloud.components }}
+        --additional-components {{ $gcloud.components | join " " }} \
+        {{- end }}
         --quiet \
     && rm -rf /etc/profile.d/gcloud.sh.backup \
     # Clean
