@@ -103,28 +103,28 @@ system:
     rclone:
         # @schema {"enum": [null, "1.64.1"]}
         # @option {"label": "Rclone version"}
-      version: ~
+        version: ~
     openstack:
         # @schema {"enum": [null, "6.3.0"]}
         # @option {"label": "Openstack client version"}
-      version: ~
+        version: ~
     swift:
         # @schema {"enum": [null, "4.4.0"]}
         # @option {"label": "Swift client version"}
-      version: ~
-      keystone:
-        # @schema {"enum": [null, "5.2.0"]}
-        # @option {"label": "Swift keystone client version"}
         version: ~
+        keystone:
+            # @schema {"enum": [null, "5.2.0"]}
+            # @option {"label": "Swift keystone client version"}
+            version: ~
     scw:
         # @schema {"enum": [null, "2.23.0"]}
         # @option {"label": "Scaleway cli version"}
-      version: ~
+        version: ~
     sops:
         # @schema {"enum": [null, "3.8.1"]}
         # @option {"label": "Sops version"}
-      version: ~
+        version: ~
     aws:
         # @schema {"enum": [null, "2.13.27"]}
         # @option {"label": "AWS cli version"}
-      version: ~
+        version: ~
