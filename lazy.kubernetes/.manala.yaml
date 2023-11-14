@@ -128,3 +128,7 @@ system:
         # @schema {"enum": [null, "2.13.27"]}
         # @option {"label": "AWS cli version"}
         version: ~
+    gcloud:
+        # @schema {"enum": [null, "454.0.0"]}
+        # @option {"label": "GCLOUD cli version"}
+      version: ~

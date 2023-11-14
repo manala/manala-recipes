@@ -332,6 +332,29 @@ RUN \
 
 {{ end -}}
 
+{{ $gcloud := .Vars.system.gcloud -}}
+{{ if $gcloud.version -}}
+# GCLOUD cli
+RUN \
+    apt-get --quiet update \
+    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+        python3 \
+    && curl -sSL "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-$(case $(dpkg --print-architecture) in "amd64") echo "x86_64" ;; "arm64") echo "arm" ;; esac).tar.gz" \
+        --output gcloud.tar.gz \
+    && bsdtar -xvf gcloud.tar.gz -C /usr/local/ \
+    && /usr/local/google-cloud-sdk/install.sh \
+        --additional-components gke-gcloud-auth-plugin \
+        --quiet \
+    && rm -rf gcloud.tar.gz \
+        # Bash aliases
+    && printf "if [ -f '/usr/local/google-cloud-sdk/path.bash.inc' ]; then . '/usr/local/google-cloud-sdk/path.bash.inc'; fi\n\
+if [ -f '/usr/local/google-cloud-sdk/completion.bash.inc' ]; then . '/usr/local/google-cloud-sdk/completion.bash.inc'; fi\n\
+"> /etc/profile.d/gcloud.sh \
+    # Clean
+    && rm -rf /var/lib/apt/lists/*
+
+{{ end -}}
+
 # Run
 COPY docker/entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
