@@ -339,7 +339,7 @@ RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         python3 \
-    && curl -sSL "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-$(case $(dpkg --print-architecture) in "amd64") echo "x86_64" ;; "arm64") echo "arm" ;; esac).tar.gz" \
+    && curl -sSL "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm") }}.tar.gz" \
         --output gcloud.tar.gz \
     && bsdtar -xvf gcloud.tar.gz -C /usr/local/ \
     && /usr/local/google-cloud-sdk/install.sh \
