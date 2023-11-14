@@ -130,5 +130,5 @@ system:
         version: ~
     gcloud:
         # @schema {"enum": [null, "454.0.0"]}
-        # @option {"label": "GCLOUD cli version"}
+        # @option {"label": "Google Cloud cli version"}
       version: ~
