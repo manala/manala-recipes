@@ -334,7 +334,7 @@ RUN \
 
 {{ $gcloud := .Vars.system.gcloud -}}
 {{ if $gcloud.version -}}
-# GCLOUD cli
+# Google Cloud cli
 RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
