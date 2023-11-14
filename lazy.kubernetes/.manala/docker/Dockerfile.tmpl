@@ -341,14 +341,16 @@ RUN \
         python3 \
     && curl -sSL "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm") }}.tar.gz" \
         | bsdtar -xf - -C /usr/local \
+    # Profile
+    && touch /etc/profile.d/gcloud.sh \
     && /usr/local/google-cloud-sdk/install.sh \
         --additional-components gke-gcloud-auth-plugin \
         --usage-reporting false \
+        --rc-path /etc/profile.d/gcloud.sh \
+        --command-completion true \
+        --path-update true \
         --quiet \
-        # Bash aliases
-    && printf "if [ -f '/usr/local/google-cloud-sdk/path.bash.inc' ]; then . '/usr/local/google-cloud-sdk/path.bash.inc'; fi\n\
-if [ -f '/usr/local/google-cloud-sdk/completion.bash.inc' ]; then . '/usr/local/google-cloud-sdk/completion.bash.inc'; fi\n\
-"> /etc/profile.d/gcloud.sh \
+    && rm -rf /etc/profile.d/gcloud.sh.backup \
     # Clean
     && rm -rf /var/lib/apt/lists/*
 
