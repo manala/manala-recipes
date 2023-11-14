@@ -336,6 +336,7 @@ RUN \
 {{ if $gcloud.version -}}
 # Google Cloud cli
 ENV CLOUDSDK_CORE_DISABLE_USAGE_REPORTING="1"
+ENV CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK="1"
 RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
