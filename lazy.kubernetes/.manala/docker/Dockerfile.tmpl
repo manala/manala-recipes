@@ -340,12 +340,10 @@ RUN \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         python3 \
     && curl -sSL "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm") }}.tar.gz" \
-        --output gcloud.tar.gz \
-    && bsdtar -xvf gcloud.tar.gz -C /usr/local/ \
+        | bsdtar -xf - -C /usr/local \
     && /usr/local/google-cloud-sdk/install.sh \
         --additional-components gke-gcloud-auth-plugin \
         --quiet \
-    && rm -rf gcloud.tar.gz \
         # Bash aliases
     && printf "if [ -f '/usr/local/google-cloud-sdk/path.bash.inc' ]; then . '/usr/local/google-cloud-sdk/path.bash.inc'; fi\n\
 if [ -f '/usr/local/google-cloud-sdk/completion.bash.inc' ]; then . '/usr/local/google-cloud-sdk/completion.bash.inc'; fi\n\
