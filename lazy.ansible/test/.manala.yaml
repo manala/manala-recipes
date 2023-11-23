@@ -6,6 +6,11 @@ project:
     name: lazy-ansible-test
 
 system:
+    env:
+        TEST: test
+    env_file:
+        - .env.1
+        - .env.2
     docker: true
     goss:
         version: 0.4.2
