@@ -60,6 +60,20 @@ command:
     exit-status: 0
     stdout:
       - goss version v{{ .Vars.system.goss.version }}
+  # Env
+  echo ${TEST}:
+    exit-status: 0
+    stdout:
+      - test
+  # Env File
+  echo ${TEST_FOO}:
+    exit-status: 0
+    stdout:
+      - foo
+  echo ${TEST_BAR}:
+    exit-status: 0
+    stdout:
+      - bar
   # Ansible
   ansible --version:
     exit-status: 0
