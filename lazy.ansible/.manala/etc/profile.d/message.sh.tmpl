@@ -28,6 +28,10 @@ printf " \033[36m‣ molecule \033[35m{{ $molecule.version }}\033[0m\n"
 printf "    \033[36m· {{ $dependency }}\033[0m\n"
 {{- end }}
 {{- end }}
+{{- $terraform := .Vars.system.terraform }}
+{{- if $terraform.version }}
+printf " \033[36m‣ terraform \033[35m{{ $terraform.version }}\033[0m\n"
+{{- end }}
 
 {{- $help := .Vars.project.help }}
 {{- if $help }}
