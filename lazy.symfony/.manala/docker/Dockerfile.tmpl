@@ -11,6 +11,7 @@ ARG MANALA_GROUP_ID="1000"
 
 ARG GOSU_VERSION="1.16"
 ARG GOMPLATE_VERSION="3.11.5"
+ARG DIRENV_VERSION="2.33.0"
 
 # The 'container' environment variable tells systemd that it's running inside a
 # Docker container environment.
@@ -49,6 +50,10 @@ RUN \
     && curl -sSL "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/gomplate \
     && chmod +x /usr/local/bin/gomplate \
+    # Direnv
+    && curl -sSL "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+        --output /usr/local/bin/direnv \
+    && chmod +x /usr/local/bin/direnv \
     # Bash completion
     && install --verbose --mode 0755 --directory /etc/bash_completion.d \
     # Oh My Bash
