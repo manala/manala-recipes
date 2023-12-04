@@ -41,6 +41,11 @@ command:
     exit-status: 0
     stdout:
       - gomplate version 3.11.5
+  # Direnv
+  direnv --version:
+    exit-status: 0
+    stdout:
+      - 2.33.0
   # Goss
   goss --version:
     exit-status: 0
