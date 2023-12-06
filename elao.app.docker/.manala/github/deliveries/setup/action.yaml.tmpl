@@ -55,10 +55,9 @@ runs:
 
     {{ if hasKey $delivery "github_ssh_key_secret" -}}
     - name: Setup SSH Key for {{ $delivery_name }}
-      id: setup_ssh_key_{{ $delivery_id_suffix }}
       if: {{ $delivery_if }}
       shell: bash
-      run: echo "ssh_key_secret={{ $delivery.github_ssh_key_secret }}" >> $GITHUB_OUTPUT
+      run: echo "MANALA_DELIVERIES_SSH_KEY_SECRET={{ $delivery.github_ssh_key_secret }}" >> $GITHUB_ENV
     {{- else -}}
     # No SSH key configured for {{ $delivery_name }}
     {{- end }}
@@ -77,8 +76,4 @@ runs:
         dir: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}
         env: ${{ inputs.env }}
         ssh_key: >-
-          ${{ fromJSON(inputs.secrets)[steps[format(
-            'setup_ssh_key_{0}{1}',
-             inputs.app && format('{0}_', inputs.app) || '',
-             inputs.tier
-          )].outputs.ssh_key_secret] }}` }}
+          ${{ fromJSON(inputs.secrets)[env.MANALA_DELIVERIES_SSH_KEY_SECRET] }}` }}

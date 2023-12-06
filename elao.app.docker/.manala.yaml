@@ -166,7 +166,7 @@ system:
 #         "delivery": {"type": "object", "$id": "#delivery",
 #             "additionalProperties": false,
 #             "properties": {
-#                 "app": {"type": "string", "pattern": "^[a-z]+$"},
+#                 "app": {"type": "string", "pattern": "^[\/a-z]+$"},
 #                 "tier": {"type": "string", "pattern": "^[\\w-/]+$"},
 #                 "ref": {"type": "string", "pattern": "^[\\w-/]+$"},
 #                 "release_repo": {"type": "string"},
