@@ -60,7 +60,7 @@ system:
     network:
         hosts: {}
     goss:
-        # @schema {"enum": [null, "0.3.21"]}
+        # @schema {"enum": [null, "0.4.4"]}
         version: ~
     nginx:
         # @schema {

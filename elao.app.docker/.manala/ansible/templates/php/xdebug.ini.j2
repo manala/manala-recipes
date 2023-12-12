@@ -1,6 +1,6 @@
 {%- set config = item.config|default({}) -%}
 
-{%- set host = ansible_env.MANALA_HOST_OS | default('linux') -%}
+{%- set host = ansible_facts.env.MANALA_HOST_OS | default('linux') -%}
 {% if host == 'linux' %}
 # Linux
 xdebug.discover_client_host = 1
