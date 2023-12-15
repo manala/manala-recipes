@@ -65,7 +65,7 @@ RUN \
 # System #
 ##########
 
-{{ $apt := index .Vars.system "apt" -}}
+{{ $apt := .Vars.system.apt -}}
 
 RUN \
     apt-get --quiet update \
@@ -82,7 +82,8 @@ RUN \
 RUN \
     curl -sSL https://download.docker.com/linux/debian/gpg \
         --output /etc/apt/keyrings/docker.asc \
-    && printf "Types: deb\n\
+    && printf "\
+Types: deb\n\
 URIs: https://download.docker.com/linux/debian\n\
 Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
 Components: stable\n\
@@ -111,13 +112,15 @@ RUN \
 RUN \
     curl -sSL http://nginx.org/keys/nginx_signing.key \
         --output /etc/apt/keyrings/nginx.asc \
-    && printf "Types: deb\n\
+    && printf "\
+Types: deb\n\
 URIs: http://nginx.org/packages/debian\n\
 Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
 Components: nginx\n\
 Signed-By: /etc/apt/keyrings/nginx.asc\n\
 " > /etc/apt/sources.list.d/nginx.sources \
-    && printf "Package: nginx\n\
+    && printf "\
+Package: nginx\n\
 Pin: version {{ $nginx.version }}.*\n\
 Pin-Priority: 1000\n\
 " > /etc/apt/preferences.d/nginx \
@@ -132,7 +135,8 @@ Pin-Priority: 1000\n\
 RUN \
     curl -sSL https://packages.sury.org/php/apt.gpg \
         --output /etc/apt/keyrings/sury_php.gpg \
-    && printf "Types: deb\n\
+    && printf "\
+Types: deb\n\
 URIs: https://packages.sury.org/php/\n\
 Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
 Components: main\n\
@@ -173,19 +177,22 @@ Signed-By: /etc/apt/keyrings/sury_php.gpg\n\
 RUN \
     curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
         --output /etc/apt/keyrings/nodesource.asc \
-    && printf "Types: deb\n\
+    && printf "\
+Types: deb\n\
 URIs: https://deb.nodesource.com/node_{{ $nodejs.version }}.x\n\
 Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
 Components: main\n\
 Signed-By: /etc/apt/keyrings/nodesource.asc\n\
 " > /etc/apt/sources.list.d/nodesource.sources \
-    && printf "Package: nodejs\n\
+    && printf "\
+Package: nodejs\n\
 Pin: origin deb.nodesource.com\n\
 Pin-Priority: 1000\n\
 " > /etc/apt/preferences.d/nodejs \
     && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg \
         --output /etc/apt/keyrings/yarn.asc \
-    && printf "Types: deb\n\
+    && printf "\
+Types: deb\n\
 URIs:  https://dl.yarnpkg.com/debian/\n\
 Suites: stable\n\
 Components: main\n\

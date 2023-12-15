@@ -70,7 +70,7 @@ ARG PIPX_BIN_DIR="/usr/local/bin"
 
 ARG VIM_GNUPG_VERSION="2.7.1"
 
-{{ $apt := index .Vars.system "apt" -}}
+{{ $apt := .Vars.system.apt -}}
 
 RUN \
     apt-get --quiet update \
@@ -93,7 +93,8 @@ RUN \
 RUN \
     curl -sSL https://download.docker.com/linux/debian/gpg \
         --output /etc/apt/keyrings/docker.asc \
-    && printf "Types: deb\n\
+    && printf "\
+Types: deb\n\
 URIs: https://download.docker.com/linux/debian\n\
 Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
 Components: stable\n\
@@ -126,7 +127,8 @@ RUN \
     # Bash completion
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
     # Bash aliases
-    && printf "alias k='kubectl'\n\
+    && printf "\
+alias k='kubectl'\n\
 complete -F __start_kubectl k\n\
 " > /etc/profile.d/kubectl.sh
 
@@ -140,7 +142,8 @@ RUN \
     # Bash completion
     && helm completion bash > /etc/bash_completion.d/helm \
     # Bash aliases
-    && printf "alias h='helm'\n\
+    && printf "\
+alias h='helm'\n\
 complete -F __start_helm h\n\
 " > /etc/profile.d/helm.sh
     {{- if $helm.plugins }} \
@@ -166,7 +169,8 @@ RUN \
     # Bash completion
     && helmfile completion bash > /etc/bash_completion.d/helmfile \
     # Bash aliases
-    && printf "alias hf='helmfile'\n\
+    && printf "\
+alias hf='helmfile'\n\
 complete -F __start_helmfile hf\n\
 alias hfi='helmfile --interactive'\n\
 complete -F __start_helmfile hfi\n\
