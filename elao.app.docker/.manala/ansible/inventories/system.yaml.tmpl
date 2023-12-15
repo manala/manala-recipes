@@ -9,7 +9,7 @@ system:
         {{- end }}
 
         # Variables
-        apt_architecture: {{ `"{{ ansible_architecture | manala.roles.apt_architecture }}"` }}
+        apt_architecture: {{ `"{{ ansible_facts.architecture | manala.roles.apt_architecture }}"` }}
 
         # Alternatives
         system_alternatives: false

@@ -52,7 +52,7 @@ RUN \
     fi \
     {{- end }}
     # Apt keyrings (debian < bookworm)
-    && mkdir --verbose --parents /etc/apt/keyrings \
+    && install --verbose --mode 0755 --directory /etc/apt/keyrings \
     # User
     && addgroup --gid ${MANALA_GROUP_ID} app \
     && adduser --home /home/app --shell /bin/bash --uid ${MANALA_USER_ID} --gecos app --ingroup app --disabled-password app \
@@ -130,7 +130,8 @@ RUN \
         umountfs \
         umountroot \
     # Block systemd replacement
-    && printf "Package: systemd-sysv\n\
+    && printf "\
+Package: systemd-sysv\n\
 Pin: release *\n\
 Pin-Priority: -1\n\
 " > /etc/apt/preferences \
@@ -170,20 +171,21 @@ RUN \
     && systemctl set-default multi-user.target \
     && sed -i 's/#\(ForwardToConsole=\).*$/\1yes/' \
         /etc/systemd/journald.conf \
-    && printf "Defaults env_keep += \"container\"\n" \
+    && echo "Defaults env_keep += \"container\"" \
         > /etc/sudoers.d/systemd \
     && rm -rf \
         /etc/systemd/system/*.wants/* \
+        /lib/systemd/system/basic.target.wants/* \
         /lib/systemd/system/multi-user.target.wants/* \
         /lib/systemd/system/local-fs.target.wants/* \
         /lib/systemd/system/sockets.target.wants/*udev* \
         /lib/systemd/system/sockets.target.wants/*initctl* \
         /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev* \
+        /lib/systemd/system/systemd-ask-password-console.* \
+        /lib/systemd/system/systemd-tmpfiles-clean.* \
         /lib/systemd/system/systemd-update-utmp* \
     # Clean
     && rm -rf /var/lib/apt/lists/*
-
-VOLUME /sys/fs/cgroup
 
 STOPSIGNAL SIGRTMIN+3
 
@@ -201,7 +203,7 @@ FROM init-${MANALA_INIT} AS provision-none
 # Ansible
 FROM init-${MANALA_INIT} AS provision-ansible
 
-ARG ANSIBLE_VERSION="8.5.0"
+ARG ANSIBLE_VERSION="8.7.0"
 ARG MANALA_PROVISION_LIMIT
 ARG SYMFONY_IDE
 
@@ -229,12 +231,15 @@ RUN \
     && pip3 --no-cache-dir --disable-pip-version-check install \
         ansible==${ANSIBLE_VERSION} \
 {{- end }}
-    && mkdir --verbose --parents /etc/ansible \
-    && printf "[defaults]\n\
+    && install --verbose --mode 0755 --directory /etc/ansible \
+    && printf "\
+[defaults]\n\
 force_color = True\n\
 display_skipped_hosts = False\n\
 retry_files_enabled = False\n\
 stdout_callback = community.general.yaml\n\
+check_mode_markers = True\n\
+inject_facts_as_vars = False\n\
 [ssh_connection]\n\
 pipelining = True\n\
 [privilege_escalation]\n\
