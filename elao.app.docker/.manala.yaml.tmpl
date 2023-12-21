@@ -99,6 +99,12 @@ system:
         version: {{ .influxdb.version | toYaml }}
     {{- end }}
 
+    git:
+        config: |
+            # Silence false positive dubious ownership errors
+            [safe]
+            directory = *
+
     # ssh:
     #     client:
     #         config: |

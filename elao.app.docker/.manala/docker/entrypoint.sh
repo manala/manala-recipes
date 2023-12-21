@@ -26,4 +26,9 @@ if [ -n "${DOCKER_HOST}" ]; then
   " &
 fi
 
+# Templates
+if [ -d ".manala/etc" ]; then
+  GOMPLATE_LOG_FORMAT=simple gomplate --input-dir=.manala/etc --output-dir=/etc 2>/dev/null
+fi
+
 exec "$@"
