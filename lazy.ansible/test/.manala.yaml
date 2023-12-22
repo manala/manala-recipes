@@ -38,3 +38,5 @@ system:
         dependencies:
             - molecule-plugins==23.5.0
             - molecule-plugins[docker]==23.5.0
+    terraform:
+        version: 1.6.6

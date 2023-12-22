@@ -110,3 +110,8 @@ command:
     stdout:
       - "/molecule(\\s+){{ .Vars.system.molecule.version }}/"
       - "/molecule-plugins(\\s+)\\d+\\.\\d+\\.\\d+/"
+  # Terraform
+  terraform -version:
+    exit-status: 0
+    stdout:
+      - Terraform v{{ .Vars.system.terraform.version }}
