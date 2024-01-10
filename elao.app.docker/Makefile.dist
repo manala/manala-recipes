@@ -2,6 +2,17 @@
 
 -include .manala/Makefile
 
+ifneq ($(.DEFAULT_GOAL),help)
+.DEFAULT_GOAL := _default
+endif
+
+_default:
+	@printf '\n'
+	@printf '\033[33mWARNING:\033[39m\n'
+	@printf ' If you just call \033[3mmake\033[23m and read this, no default goal was defined explicitly.\n'
+	@printf ' This might be because the \033[3m.manala\033[23m folder is not included.\n'
+	@printf ' Hence, \033[3mmake help\033[23m command is not available.\n\n'
+
 define setup
 	$(MANALA_DOCKER_MAKE) install db.install build
 endef
