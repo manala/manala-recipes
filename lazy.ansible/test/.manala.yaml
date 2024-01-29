@@ -24,19 +24,19 @@ system:
         config: |
             # Ssh config
     ansible:
-        version: 2.15.5
+        version: 2.16.2
         config: |
             # Ansible config
         dependencies:
-            - hvac==1.2.1
+            - hvac==2.1.0
     ansible-lint:
-        version: 6.14.6
+        version: 6.22.2
         dependencies:
-            - pytest==7.4.2
+            - pytest==8.0.0
     molecule:
-        version: 5.0.1
+        version: 6.0.3
         dependencies:
             - molecule-plugins==23.5.0
             - molecule-plugins[docker]==23.5.0
     terraform:
-        version: 1.6.6
+        version: 1.7.1
