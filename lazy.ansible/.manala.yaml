@@ -41,7 +41,7 @@ system:
     mount: []
     docker: false
     goss:
-        # @schema {"enum": [null, "0.4.2", "0.3.23"]}
+        # @schema {"enum": [null, "0.4.4", "0.3.23"]}
         version: ~
     apt:
         # @schema {"items": {"type": "string"}}

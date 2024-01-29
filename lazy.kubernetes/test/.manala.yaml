@@ -13,10 +13,10 @@ system:
         - .env.2
     docker: true
     goss:
-        version: 0.4.2
+        version: 0.4.4
     apt:
         packages:
-          - jq
+            - jq
     git:
         config: |
             # Git config
@@ -25,8 +25,8 @@ system:
     helm:
         version: 3.13.1
         plugins:
-          - url: https://github.com/databus23/helm-diff
-            version: 3.8.1
+            - url: https://github.com/databus23/helm-diff
+              version: 3.8.1
     helmfile:
         version: 0.157.0
     k9s:
@@ -58,4 +58,4 @@ system:
     gcloud:
         version: 454.0.0
         components:
-          - gke-gcloud-auth-plugin
+            - gke-gcloud-auth-plugin
