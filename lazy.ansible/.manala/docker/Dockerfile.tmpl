@@ -59,8 +59,8 @@ RUN \
     && chmod +x /usr/local/bin/direnv \
     # Bash completion
     && install --verbose --mode 0755 --directory /etc/bash_completion.d \
-    # Oh My Bash
-    && git clone https://github.com/ohmybash/oh-my-bash.git /usr/local/share/oh-my-bash \
+    # Bash-it
+    && git clone --depth 1 https://github.com/Bash-it/bash-it.git /usr/local/share/bash-it \
     # Clean
     && rm -rf /var/lib/apt/lists/*
 
