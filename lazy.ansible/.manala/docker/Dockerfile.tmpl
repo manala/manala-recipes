@@ -80,15 +80,12 @@ RUN \
         sshpass \
         python3 \
         pipx \
-        python3-argcomplete \
         shellcheck \
         {{- range $package := $apt.packages }}
         {{ $package }} \
         {{- end }}
     # Sudo
     && echo "Defaults env_keep += \"PIPX_*\"" > /etc/sudoers.d/pipx \
-    # Bash completion
-    && activate-global-python-argcomplete --dest /etc/bash_completion.d \
     # Clean
     && rm -rf /var/lib/apt/lists/*
 
