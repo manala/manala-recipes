@@ -174,9 +174,8 @@ RUN \
     # Bash aliases
     && printf "\
 alias hf='helmfile'\n\
-complete -F __start_helmfile hf\n\
 alias hfi='helmfile --interactive'\n\
-complete -F __start_helmfile hfi\n\
+complete -F __start_helmfile hf hfi\n\
 " > /etc/profile.d/helmfile.sh
 
 {{ end -}}

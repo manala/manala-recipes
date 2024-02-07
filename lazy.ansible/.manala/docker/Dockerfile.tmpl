@@ -181,12 +181,10 @@ RUN \
     curl -sSL "https://releases.hashicorp.com/terraform/{{ $terraform.version }}/terraform_{{ $terraform.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
         | bsdtar -xvf - -C /usr/local/bin \
     && chmod +x /usr/local/bin/terraform \
-    # Bash completion
-    && echo "complete -C /usr/local/bin/terraform terraform" > /etc/bash_completion.d/terraform \
     # Bash aliases
-    && printf "alias tf='terraform'\n\
-complete -C /usr/local/bin/terraform tf\n\
-" > /etc/profile.d/terraform.sh
+    && echo "alias tf='terraform'" > /etc/profile.d/terraform.sh \
+    # Bash completion
+    && echo "complete -C /usr/local/bin/terraform terraform tf" > /etc/bash_completion.d/terraform
 
 {{ end -}}
 
