@@ -39,6 +39,8 @@ system:
     env_file: []
     # @schema {"items": {"type": "string"}}
     mount: []
+    # @schema {"type": ["null", "string"]}
+    profile: ~
     docker: false
     goss:
         # @schema {"enum": [null, "0.4.4", "0.3.23"]}
