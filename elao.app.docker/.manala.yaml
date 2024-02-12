@@ -32,7 +32,7 @@ project:
 
 system:
     # @option {"label": "System version"}
-    # @schema {"enum": [11, 10]}
+    # @schema {"enum": [12, 11, 10]}
     version: ~
     # @schema {"type": "string", "pattern": "^[a-zA-Z]+/[a-zA-Z]+$"}
     timezone: Etc/UTC
@@ -60,7 +60,7 @@ system:
     network:
         hosts: {}
     goss:
-        # @schema {"enum": [null, "0.3.21"]}
+        # @schema {"enum": [null, "0.4.4"]}
         version: ~
     nginx:
         # @schema {

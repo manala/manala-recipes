@@ -74,7 +74,7 @@
         - ["{{ certificates_ssl_pem }}", certs]
         - ["{{ certificates_ssl_key }}", private]
       notify:
-        - nginx restart
+        - Restart nginx
   when: (certificates_ssl_key is file)
     and (certificates_ssl_pem is file)
 
@@ -86,7 +86,7 @@
         type: RSA
         size: 4096
       notify:
-        - nginx restart
+        - Restart nginx
     - name: certificates > Generate self signed ssl certificate signing request
       community.crypto.openssl_csr:
         path: /etc/ssl/certs/ssl.csr
@@ -102,6 +102,6 @@
         privatekey_path: /etc/ssl/private/ssl.key
         provider: selfsigned
       notify:
-        - nginx restart
+        - Restart nginx
   when: (certificates_ssl_key is not file)
      or (certificates_ssl_pem is not file)
