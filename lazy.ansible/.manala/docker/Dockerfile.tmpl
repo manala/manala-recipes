@@ -9,7 +9,6 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG MANALA_USER_ID="1000"
 ARG MANALA_GROUP_ID="1000"
 
-ARG GOSU_VERSION="1.17"
 ARG GOMPLATE_VERSION="3.11.7"
 ARG DIRENV_VERSION="2.33.0"
 
@@ -45,10 +44,6 @@ RUN \
     && adduser --home /home/lazy --shell /bin/bash --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
     && install --verbose --mode 0755 --group lazy --owner lazy --directory /run/user/${MANALA_USER_ID} \
     && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
-    # Gosu
-    && curl -sSL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-        --output /usr/local/bin/gosu \
-    && chmod +x /usr/local/bin/gosu \
     # Gomplate
     && curl -sSL "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/gomplate \
