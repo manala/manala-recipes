@@ -1,0 +1,5 @@
+#!/bin/sh
+
+exec socat \
+    UNIX-LISTEN:/var/run/ssh-auth-bridge.sock,fork,unlink-early,mode=777 \
+    UNIX-CONNECT:/var/run/ssh-auth.sock

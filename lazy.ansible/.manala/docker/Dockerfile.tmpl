@@ -9,6 +9,7 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG MANALA_USER_ID="1000"
 ARG MANALA_GROUP_ID="1000"
 
+ARG TINI_VERSION="0.19.0"
 ARG GOSU_VERSION="1.17"
 ARG GOMPLATE_VERSION="3.11.7"
 ARG DIRENV_VERSION="2.33.0"
@@ -45,6 +46,10 @@ RUN \
     && adduser --home /home/lazy --shell /bin/bash --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
     && install --verbose --mode 0755 --group lazy --owner lazy --directory /run/user/${MANALA_USER_ID} \
     && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
+    # Tini
+    && curl -sSL "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+        --output /usr/local/bin/tini \
+    && chmod +x /usr/local/bin/tini \
     # Gosu
     && curl -sSL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/gosu \
@@ -57,12 +62,19 @@ RUN \
     && curl -sSL "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/direnv \
     && chmod +x /usr/local/bin/direnv \
+    # Services
+    && install --verbose --directory /etc/services/enabled \
+    && install --verbose --directory /etc/services/available \
     # Bash completion
     && install --verbose --mode 0755 --directory /etc/bash_completion.d \
     # Oh My Bash
     && git clone https://github.com/ohmybash/oh-my-bash.git /usr/local/share/oh-my-bash \
     # Clean
     && rm -rf /var/lib/apt/lists/*
+
+# Services
+COPY services/docker-bridge /etc/services/available/docker-bridge
+COPY services/ssh-auth-bridge /etc/services/available/ssh-auth-bridge
 
 ##########
 # System #
