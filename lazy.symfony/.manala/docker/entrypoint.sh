@@ -2,30 +2,6 @@
 
 set -e
 
-# Ssh agent bridge
-if [ -n "${SSH_AUTH_SOCK}" ]; then
-  sh -c " \
-    while sleep 1; do \
-      rm -f /var/run/ssh-auth-bridge.sock ;
-      socat \
-        UNIX-LISTEN:/var/run/ssh-auth-bridge.sock,fork,mode=777 \
-        UNIX-CONNECT:/var/run/ssh-auth.sock ; \
-    done \
-  " &
-fi
-
-# Docker bridge
-if [ -n "${DOCKER_HOST}" ]; then
-  sh -c " \
-    while sleep 1; do \
-      rm -f /var/run/docker-bridge.sock ;
-      socat -t 600 \
-        UNIX-LISTEN:/var/run/docker-bridge.sock,fork,mode=777 \
-        UNIX-CONNECT:/var/run/docker.sock ; \
-    done \
-  " &
-fi
-
 # As a consequence of running the container as root user,
 # tty is not writable by sued user
 if [ -t 1 ]; then
@@ -48,10 +24,15 @@ if [ -d ".manala/etc" ]; then
   GOMPLATE_LOG_FORMAT=simple gomplate --input-dir=.manala/etc --output-dir=/etc 2>/dev/null
 fi
 
-# Services
-if [ $# -eq 0 ] && [ -d "/etc/services.d" ]; then
-    exec s6-svscan /etc/services.d
+# Docker bridge
+if [ -n "${DOCKER_HOST}" ]; then
+  ln --symbolic /etc/services/available/docker-bridge /etc/services/enabled/
 fi
 
-# Command
-exec gosu lazy "$@"
+# Ssh auth bridge
+if [ -n "${SSH_AUTH_SOCK}" ]; then
+  ln --symbolic /etc/services/available/ssh-auth-bridge /etc/services/enabled/
+fi
+
+# Services
+exec s6-svscan /etc/services/enabled

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+exec socat -t 600 \
+    UNIX-LISTEN:/var/run/docker-bridge.sock,fork,unlink-early,mode=777 \
+    UNIX-CONNECT:/var/run/docker.sock
