@@ -39,4 +39,4 @@ system:
             - molecule-plugins==23.5.0
             - molecule-plugins[docker]==23.5.0
     terraform:
-        version: 1.7.1
+        version: 1.7.4
