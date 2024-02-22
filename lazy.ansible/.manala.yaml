@@ -73,6 +73,6 @@ system:
         # @schema {"items": {"type": "string"}}
         dependencies: []
     terraform:
-        # @schema {"enum": [null, "1.7.1", "1.6.6", "1.5.7"]}
+        # @schema {"enum": [null, "1.7.4", "1.6.6", "1.5.7"]}
         # @option {"label": "Terraform version"}
         version: ~
