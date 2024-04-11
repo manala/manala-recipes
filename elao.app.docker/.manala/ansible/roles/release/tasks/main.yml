@@ -89,12 +89,12 @@
     git {{
       release_author|ternary(release_author|regex_replace(release_email_regex, '-c user.name="\g<name>" -c user.email="\g<email>"'), '')
     }} commit --allow-empty --message "{{
-      ansible_date_time.year
-      ~ ansible_date_time.month
-      ~ ansible_date_time.day
-      ~ ansible_date_time.hour
-      ~ ansible_date_time.minute
-      ~ ansible_date_time.second
+      ansible_facts.date_time.year
+      ~ ansible_facts.date_time.month
+      ~ ansible_facts.date_time.day
+      ~ ansible_facts.date_time.hour
+      ~ ansible_facts.date_time.minute
+      ~ ansible_facts.date_time.second
     }}
     Original commit: https://{{
       __original_repo.stdout|regex_replace(release_git_url_regex, '\g<host>/\g<user>/\g<repository>')

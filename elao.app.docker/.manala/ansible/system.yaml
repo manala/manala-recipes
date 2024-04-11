@@ -67,7 +67,7 @@
       # Redis
       - preference: redis@backports
         state: "{{ 'present' if (
-          (system_redis_version|string == '6.0') and (ansible_distribution_release in ['buster'])
+          (system_redis_version|string == '6.0') and (ansible_facts.distribution_release in ['buster'])
         ) else 'ignore' }}"
       # GitHub CLI
       - preference: gh@github_cli
