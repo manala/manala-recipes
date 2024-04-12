@@ -56,9 +56,7 @@ RUN \
     # User
     && addgroup --gid ${MANALA_GROUP_ID} app \
     && adduser --home /home/app --shell /bin/bash --uid ${MANALA_USER_ID} --gecos app --ingroup app --disabled-password app \
-    && echo "app ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/app \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+    && echo "app ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/app
 
 {{ if .goss.version -}}
 # Goss
@@ -92,6 +90,7 @@ RUN \
     mv /usr/bin/ischroot /usr/bin/ischroot_ \
     && ln -s /bin/true /usr/bin/ischroot \
     && apt-get --quiet update \
+    && apt-get --quiet --yes --purge --autoremove upgrade \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         sysvinit-core \
     && mv /usr/bin/ischroot_ /usr/bin/ischroot \
@@ -134,9 +133,7 @@ RUN \
 Package: systemd-sysv\n\
 Pin: release *\n\
 Pin-Priority: -1\n\
-" > /etc/apt/preferences \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+" > /etc/apt/preferences
 
 STOPSIGNAL SIGINT
 
@@ -150,10 +147,9 @@ FROM system AS init-openrc
 RUN \
     rm -f /etc/init.d/hwclock.sh \
     && apt-get --quiet update \
+    && apt-get --quiet --yes --purge --autoremove upgrade \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        openrc \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+        openrc
 
 STOPSIGNAL SIGINT
 
@@ -166,6 +162,7 @@ FROM system AS init-systemd
 
 RUN \
     apt-get --quiet update \
+    && apt-get --quiet --yes --purge --autoremove upgrade \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         systemd dbus \
     && systemctl set-default multi-user.target \
@@ -180,9 +177,7 @@ RUN \
         /lib/systemd/system/sockets.target.wants/*udev* \
         /lib/systemd/system/sockets.target.wants/*initctl* \
         /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev* \
-        /lib/systemd/system/systemd-update-utmp* \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+        /lib/systemd/system/systemd-update-utmp*
 
 VOLUME /sys/fs/cgroup
 
@@ -216,6 +211,7 @@ COPY --from=python:3.9.2-slim-buster /usr/local/lib/python3.9/ /usr/local/lib/py
 {{- end }}
 RUN \
     apt-get --quiet update \
+    && apt-get --quiet --yes --purge --autoremove upgrade \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         # As managed node
         python3 \
@@ -243,9 +239,7 @@ check_mode_markers = True\n\
 pipelining = True\n\
 [privilege_escalation]\n\
 become_flags = -E\n\
-" > /etc/ansible/ansible.cfg \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+" > /etc/ansible/ansible.cfg
 
 COPY Makefile      ./.manala/
 COPY ansible/      ./.manala/ansible/

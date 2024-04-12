@@ -3,7 +3,7 @@
 include .manala/Makefile
 
 _HADOLINT_VERSION = 2.12.0
-_HADOLINT_IGNORE  = DL3008,SC1091,DL3006,DL3045
+_HADOLINT_IGNORE  = DL3008,SC1091,DL3006,DL3045,DL3009
 
 .manala:
 	$(error Please, run "manala up" before)
