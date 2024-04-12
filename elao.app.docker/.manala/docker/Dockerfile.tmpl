@@ -52,7 +52,7 @@ RUN \
     fi \
     {{- end }}
     # Apt keyrings (debian < bookworm)
-    && mkdir --verbose --parents /etc/apt/keyrings \
+    && install --verbose --mode 0755 --directory /etc/apt/keyrings \
     # User
     && addgroup --gid ${MANALA_GROUP_ID} app \
     && adduser --home /home/app --shell /bin/bash --uid ${MANALA_USER_ID} --gecos app --ingroup app --disabled-password app \
@@ -130,7 +130,8 @@ RUN \
         umountfs \
         umountroot \
     # Block systemd replacement
-    && printf "Package: systemd-sysv\n\
+    && printf "\
+Package: systemd-sysv\n\
 Pin: release *\n\
 Pin-Priority: -1\n\
 " > /etc/apt/preferences \
@@ -170,7 +171,7 @@ RUN \
     && systemctl set-default multi-user.target \
     && sed -i 's/#\(ForwardToConsole=\).*$/\1yes/' \
         /etc/systemd/journald.conf \
-    && printf "Defaults env_keep += \"container\"\n" \
+    && echo "Defaults env_keep += \"container\"" \
         > /etc/sudoers.d/systemd \
     && rm -rf \
         /etc/systemd/system/*.wants/* \
@@ -229,8 +230,9 @@ RUN \
     && pip3 --no-cache-dir --disable-pip-version-check install \
         ansible==${ANSIBLE_VERSION} \
 {{- end }}
-    && mkdir --verbose --parents /etc/ansible \
-    && printf "[defaults]\n\
+    && install --verbose --mode 0755 --directory /etc/ansible \
+    && printf "\
+[defaults]\n\
 force_color = True\n\
 display_skipped_hosts = False\n\
 retry_files_enabled = False\n\
