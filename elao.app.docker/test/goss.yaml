@@ -110,35 +110,35 @@ file:
   # System
   /etc/os-release:
     exists: true
-    contains:
+    contents:
       - VERSION_ID="{{ .Vars.system.version }}"
   # Timezone
   /etc/timezone:
     exists: true
-    contains:
+    contents:
       - {{ .Vars.system.timezone }}
   # Files
   /srv/foo:
     exists: true
-    contains:
+    contents:
       - bar
   # Php
   /etc/php/{{ .Vars.system.php.version }}/fpm/pool.d/app.conf:
     exists: true
-    contains:
+    contents:
       {{- range $key, $value := .Vars.system.php.env }}
       - env[{{ $key }}] = "{{ $value }}"
       {{- end }}
   # Cron
   /etc/cron.d/app:
     exists: true
-    contains:
+    contents:
       - HOME="/srv/app"
       - "* * * * * app php bin/console app:foo:bar --no-interaction -vv >> /srv/"
   # Supervisor
   /etc/supervisor/conf.d/app.conf:
     exists: true
-    contains:
+    contents:
       - "[program:foo]"
       - autorestart=true
       - autostart=false
@@ -153,8 +153,8 @@ file:
   # Ssh
   /etc/ssh/ssh_config:
     exists: true
-    contains:
-      - # Ssh config
+    contents:
+      - "# Ssh config"
 
 http:
   # MailHog
