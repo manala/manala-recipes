@@ -32,7 +32,7 @@ project:
 
 system:
     # @option {"label": "System version"}
-    # @schema {"enum": [11, 10]}
+    # @schema {"enum": [12, 11, 10]}
     version: ~
     # @schema {"type": "string", "pattern": "^[a-zA-Z]+/[a-zA-Z]+$"}
     timezone: Etc/UTC

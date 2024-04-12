@@ -31,10 +31,14 @@
     manala_apt_components:
       - main
 
-    manala_apt_sources_list_template: apt/sources.list.j2
+    manala_apt_sources_list: false
 
     manala_apt_repositories_exclusive: true
-    manala_apt_repositories: "{{ system_apt_repositories }}"
+    manala_apt_repositories:
+      - default
+      - updates
+      - security
+      - "{{ system_apt_repositories }}"
 
     manala_apt_preferences_exclusive: true
     manala_apt_preferences:

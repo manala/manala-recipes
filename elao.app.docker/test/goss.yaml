@@ -50,7 +50,11 @@ command:
   locale --all-locales:
     exit-status: 0
     stdout:
+      {{- if le (.Vars.system.version|int) 11 }}
       - {{ .Vars.system.locales.default }}
+      {{- else }}
+      - {{ .Vars.system.locales.default | replace "UTF-8" "utf8" }}
+      {{- end }}
       {{- range $code := .Vars.system.locales.codes }}
       - {{ $code | replace "UTF-8" "utf8" }}
       {{- end }}
