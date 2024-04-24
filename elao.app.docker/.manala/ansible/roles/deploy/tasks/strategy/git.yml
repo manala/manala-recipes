@@ -26,7 +26,7 @@
 
     - name: strategy/git > Export repository
       ansible.builtin.shell: >
-        git checkout-index -f -a --prefix="{{ deploy_helper.new_release_path }}/"
+        git checkout-index -f -a --prefix="{{ ansible_facts.deploy_helper.new_release_path }}/"
       args:
         chdir: "{{ deploy_dir ~ '/repo' }}"
       tags: log_failed

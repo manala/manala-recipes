@@ -2,46 +2,46 @@
 
 - name: shared > Ensure release targets are absent
   ansible.builtin.file:
-    path:  "{{ deploy_helper.new_release_path ~ '/' ~ item }}"
+    path:  "{{ ansible_facts.deploy_helper.new_release_path ~ '/' ~ item }}"
     state: absent
   with_items: "{{ deploy_shared_files + deploy_shared_dirs }}"
 
 - name: shared > Stat shared files
   ansible.builtin.stat:
-    path: "{{ deploy_helper.shared_path ~ '/' ~ item }}"
+    path: "{{ ansible_facts.deploy_helper.shared_path ~ '/' ~ item }}"
   register: __deploy_shared_files_stats_output
   with_items: "{{ deploy_shared_files }}"
 
 - name: shared > Ensure shared directories files are present
   ansible.builtin.file:
-    path:  "{{ (deploy_helper.shared_path ~ '/' ~ item.1)|dirname }}"
+    path:  "{{ (ansible_facts.deploy_helper.shared_path ~ '/' ~ item.1)|dirname }}"
     state: directory
   with_indexed_items: "{{ deploy_shared_files }}"
   when: not __deploy_shared_files_stats_output.results[item.0].stat.exists
 
 - name: shared > Ensure shared files are present
   ansible.builtin.file:
-    path:  "{{ deploy_helper.shared_path ~ '/' ~ item.1 }}"
+    path:  "{{ ansible_facts.deploy_helper.shared_path ~ '/' ~ item.1 }}"
     state: touch
   with_indexed_items: "{{ deploy_shared_files }}"
   when: not __deploy_shared_files_stats_output.results[item.0].stat.exists
 
 - name: shared > Ensure shared dirs are present
   ansible.builtin.file:
-    path:  "{{ deploy_helper.shared_path ~ '/' ~ item }}"
+    path:  "{{ ansible_facts.deploy_helper.shared_path ~ '/' ~ item }}"
     state: directory
     follow: true
   with_items: "{{ deploy_shared_dirs }}"
 
 - name: shared > Ensure directories links are present
   ansible.builtin.file:
-    path:  "{{ (deploy_helper.new_release_path ~ '/' ~ item)|dirname }}"
+    path:  "{{ (ansible_facts.deploy_helper.new_release_path ~ '/' ~ item)|dirname }}"
     state: directory
   with_items: "{{ deploy_shared_files + deploy_shared_dirs }}"
 
 - name: shared > Links
   ansible.builtin.file:
-    path:  "{{ deploy_helper.new_release_path ~ '/' ~ item }}"
-    src:   "{{ (deploy_helper.shared_path ~ '/' ~ item)|relpath((deploy_helper.new_release_path ~ '/' ~ item)|dirname) }}"
+    path:  "{{ ansible_facts.deploy_helper.new_release_path ~ '/' ~ item }}"
+    src:   "{{ (ansible_facts.deploy_helper.shared_path ~ '/' ~ item)|relpath((ansible_facts.deploy_helper.new_release_path ~ '/' ~ item)|dirname) }}"
     state: link
   with_items: "{{ deploy_shared_files + deploy_shared_dirs }}"
