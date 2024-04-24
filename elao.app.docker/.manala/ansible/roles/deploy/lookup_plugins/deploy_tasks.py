@@ -15,12 +15,12 @@ class LookupModule(LookupBase):
             'options': None,
             'when':    True,
             'dir':
-                (variables['deploy_helper']['new_release_path'])
-                    if 'deploy_helper' in variables else
+                (variables['ansible_facts']['deploy_helper']['new_release_path'])
+                    if 'deploy_helper' in variables['ansible_facts'] else
                 (variables['deploy_dir'] + '/' +  variables['deploy_current_dir']),
             'shared_dir':
-                (variables['deploy_helper']['shared_path'])
-                    if 'deploy_helper' in variables else
+                (variables['ansible_facts']['deploy_helper']['shared_path'])
+                    if 'deploy_helper' in variables['ansible_facts'] else
                 (variables['deploy_dir'] + '/' +  variables['deploy_shared_dir'])
         }
 

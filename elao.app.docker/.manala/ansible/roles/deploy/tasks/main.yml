@@ -17,7 +17,7 @@
 # Unfinished
 - name: unfinished > Add an unfinished file, to allow cleanup on successful finalize
   ansible.builtin.file:
-    path:  "{{ deploy_helper.new_release_path }}/{{ deploy_helper.unfinished_filename }}"
+    path:  "{{ ansible_facts.deploy_helper.new_release_path }}/{{ ansible_facts.deploy_helper.unfinished_filename }}"
     state: touch
 
 # Shared
@@ -26,14 +26,14 @@
 # Copied
 - name: copied > Stat
   ansible.builtin.stat:
-    path: "{{ deploy_helper.previous_release_path ~ '/' ~ item }}"
+    path: "{{ ansible_facts.deploy_helper.previous_release_path ~ '/' ~ item }}"
   register: __deploy_copied_stats_output
   with_items: "{{ deploy_copied }}"
 
 - name: copied > Copy
   ansible.builtin.shell: >
-    cp -R {{ deploy_helper.previous_release_path ~ '/' ~ item.1 ~ (__deploy_copied_stats_output.results[item.0].stat.isdir|ternary('/', '')) }}
-    {{ deploy_helper.new_release_path ~ '/' ~ item.1 }}
+    cp -R {{ ansible_facts.deploy_helper.previous_release_path ~ '/' ~ item.1 ~ (__deploy_copied_stats_output.results[item.0].stat.isdir|ternary('/', '')) }}
+    {{ ansible_facts.deploy_helper.new_release_path ~ '/' ~ item.1 }}
   delegate_to: "{{ inventory_hostname }}"
   with_indexed_items: "{{ deploy_copied }}"
   when: __deploy_copied_stats_output.results[item.0].stat.exists
@@ -51,28 +51,28 @@
 # Remove
 - name: remove > Files
   file:
-    path:  "{{ deploy_helper.new_release_path ~ '/' ~ item }}"
+    path:  "{{ ansible_facts.deploy_helper.new_release_path ~ '/' ~ item }}"
     state: absent
   with_items: "{{ deploy_remove }}"
 
 # Finalize
 - name: finalize > Remove the unfinished file and create a symlink to the newly deployed release
-  deploy_helper:
+  community.general.deploy_helper:
     path:          "{{ deploy_dir }}"
     current_path:  "{{ deploy_current_dir }}"
     releases_path: "{{ deploy_releases_dir }}"
-    release:       "{{ deploy_helper.new_release }}"
+    release:       "{{ ansible_facts.deploy_helper.new_release }}"
     keep_releases: "{{ deploy_releases }}"
     state:         finalize
     clean:         false
 
 # Clean
 - name: clean > Remove failed and old releases, keeping "{{ deploy_releases }}" releases
-  deploy_helper:
+  community.general.deploy_helper:
     path:          "{{ deploy_dir }}"
     current_path:  "{{ deploy_current_dir }}"
     releases_path: "{{ deploy_releases_dir }}"
-    release:       "{{ deploy_helper.new_release }}"
+    release:       "{{ ansible_facts.deploy_helper.new_release }}"
     keep_releases: "{{ deploy_releases }}"
     state:         clean
   ignore_errors: true
