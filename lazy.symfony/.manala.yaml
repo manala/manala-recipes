@@ -8,6 +8,7 @@ manala:
       - .manala/github
       - .manala/gitlab
       - .manala/make
+      - .manala/services
       - .manala/.dockerignore
       - .manala/.gitignore
       - .manala/Makefile.tmpl
