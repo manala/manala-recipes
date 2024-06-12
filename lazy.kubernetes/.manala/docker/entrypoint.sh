@@ -54,4 +54,5 @@ if [ $# -eq 0 ] && [ -d "/etc/services.d" ]; then
 fi
 
 # Command
-exec gosu lazy "$@"
+export HOME="/home/lazy"
+exec s6-setuidgid lazy "$@"
