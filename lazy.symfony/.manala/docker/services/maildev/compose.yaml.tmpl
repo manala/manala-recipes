@@ -12,6 +12,9 @@ services:
         user: root
         ports:
             - {{ .Vars.system.maildev.port }}:1080
+        environment:
+            # See: https://github.com/maildev/maildev/issues/484
+            MAILDEV_IP: "::"
         command: ["--smtp", "25"]
 
     ##########
