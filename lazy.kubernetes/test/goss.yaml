@@ -40,12 +40,12 @@ command:
   gomplate --version:
     exit-status: 0
     stdout:
-      - gomplate version 3.11.7
+      - gomplate version 4.0.0
   # Direnv
   direnv --version:
     exit-status: 0
     stdout:
-      - 2.33.0
+      - 2.34.0
   # Goss
   goss --version:
     exit-status: 0
