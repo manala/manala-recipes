@@ -13,7 +13,7 @@ system:
         - .env.2
     docker: true
     goss:
-        version: 0.4.4
+        version: 0.4.7
     apt:
         packages:
             - jq
@@ -24,19 +24,19 @@ system:
         config: |
             # Ssh config
     ansible:
-        version: 2.16.2
+        version: 2.16.8
         config: |
             # Ansible config
         dependencies:
-            - hvac==2.1.0
+            - hvac==2.3.0
     ansible-lint:
-        version: 6.22.2
+        version: 24.5.0
         dependencies:
-            - pytest==8.0.0
+            - pytest==8.2.2
     molecule:
-        version: 6.0.3
+        version: 24.2.1
         dependencies:
             - molecule-plugins==23.5.0
             - molecule-plugins[docker]==23.5.0
     terraform:
-        version: 1.7.4
+        version: 1.8.5
