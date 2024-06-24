@@ -10,7 +10,7 @@ jobs:
 
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     env:
       working-directory: ./docs/app
@@ -21,11 +21,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # https://github.com/actions/setup-node
       - name: Set up node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
             node-version: 16
 
@@ -42,14 +42,14 @@ jobs:
         run: echo "directory=$(composer config cache-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.directory }}
           key: composer-${{ hashFiles('docs/app/composer.lock') }}
           restore-keys: composer-
 
       - name: Cache NPM dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: node-${{ hashFiles('docs/app/package-lock.json') }}
