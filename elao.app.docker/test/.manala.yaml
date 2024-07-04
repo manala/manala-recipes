@@ -73,7 +73,7 @@ system:
                       directory: /srv/app
                       stdout_logfile: /srv/log/supervisor.acme-foo.log
     nodejs:
-        version: 20
+        version: 22
         packages:
             - package: sass
     mariadb:
