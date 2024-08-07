@@ -41,7 +41,7 @@ system:
     mount: []
     docker: false
     goss:
-        # @schema {"enum": [null, "0.4.7", "0.3.23"]}
+        # @schema {"enum": [null, "0.4.8", "0.3.23"]}
         version: ~
     apt:
         # @schema {"items": {"type": "string"}}
@@ -53,7 +53,7 @@ system:
         # @schema {"type": ["null", "string"]}
         config: ~
     ansible:
-        # @schema {"enum": ["2.16.8", "2.15.12", "2.14.17"]}
+        # @schema {"enum": ["2.16.9", "2.15.12", "2.14.17"]}
         # @option {"label": "Ansible version"}
         version: ~
         # @schema {"type": ["null", "string"]}
@@ -61,18 +61,18 @@ system:
         # @schema {"items": {"type": "string"}}
         dependencies: []
     ansible-lint:
-        # @schema {"enum": [null, "24.5.0", "24.2.3", "6.22.2", "6.14.6"]}
+        # @schema {"enum": [null, "24.7.0", "24.6.1", "24.5.0", "24.2.3", "6.22.2", "6.14.6"]}
         # @option {"label": "Ansible-lint version"}
         version: ~
         # @schema {"items": {"type": "string"}}
         dependencies: []
     molecule:
-        # @schema {"enum": [null, "24.2.1", "6.0.3", "5.1.0"]}
+        # @schema {"enum": [null, "24.7.0", "24.6.1", "24.2.1", "6.0.3", "5.1.0"]}
         # @option {"label": "Molecule version"}
         version: ~
         # @schema {"items": {"type": "string"}}
         dependencies: []
     terraform:
-        # @schema {"enum": [null, "1.8.5", "1.7.5", "1.6.6"]}
+        # @schema {"enum": [null, "1.9.4", "1.8.5", "1.7.5"]}
         # @option {"label": "Terraform version"}
         version: ~
