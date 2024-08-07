@@ -48,7 +48,7 @@ command:
   gomplate --version:
     exit-status: 0
     stdout:
-      - gomplate version 4.0.0
+      - gomplate version 4.1.0
   # Direnv
   direnv --version:
     exit-status: 0
