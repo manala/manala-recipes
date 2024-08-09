@@ -13,7 +13,7 @@ system:
         - .env.2
     docker: true
     goss:
-        version: 0.4.4
+        version: 0.4.8
     apt:
         packages:
             - jq
@@ -21,41 +21,41 @@ system:
         config: |
             # Git config
     kubectl:
-        version: 1.28.3
+        version: 1.30.3
     helm:
-        version: 3.13.1
+        version: 3.15.3
         plugins:
             - url: https://github.com/databus23/helm-diff
-              version: 3.8.1
+              version: 3.9.9
     helmfile:
-        version: 0.157.0
+        version: 0.167.1
     k9s:
-        version: 0.27.4
+        version: 0.32.5
     stern:
-        version: 1.26.0
+        version: 1.30.0
     kube-prompt:
         version: 1.0.11
     popeye:
-        version: 0.11.1
+        version: 0.21.3
     knsk:
         version: "1.0"
     vault:
-        version: 1.15.0
+        version: 1.17.3
     rclone:
-        version: 1.64.1
+        version: 1.67.0
     openstack:
-        version: 6.3.0
+        version: 7.0.0
     swift:
-        version: 4.4.0
+        version: 4.6.0
         keystone:
-            version: 5.2.0
+            version: 5.4.0
     scw:
-        version: 2.23.0
+        version: 2.32.1
     sops:
-        version: 3.8.1
+        version: 3.9.0
     aws:
-        version: 2.13.27
+        version: 2.17.25
     gcloud:
-        version: 454.0.0
+        version: 487.0.0
         components:
             - gke-gcloud-auth-plugin
