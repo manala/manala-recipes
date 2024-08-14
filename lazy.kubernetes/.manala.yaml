@@ -134,3 +134,7 @@ system:
         version: ~
         # @schema {"items": {"type": "string"}}
         components: []
+    age:
+        # @schema {"enum": [null, "1.2.0"]}
+        # @option {"label": "Age version"}
+        version: ~

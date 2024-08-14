@@ -146,3 +146,12 @@ command:
     exit-status: 0
     stdout:
       - gke-gcloud-auth-plugin
+  # Age
+  age --version:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.age.version }}
+  age-keygen --version:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.age.version }}

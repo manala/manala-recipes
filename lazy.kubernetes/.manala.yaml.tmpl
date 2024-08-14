@@ -91,3 +91,7 @@ system:
         # components:
         #     - gke-gcloud-auth-plugin
     {{- end }}
+    {{- if .Vars.system.age.version }}
+    age:
+        version: {{ .Vars.system.age.version | toYaml }}
+    {{- end }}

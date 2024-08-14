@@ -80,6 +80,10 @@ printf " \033[36m‣ aws \033[35m{{ $aws.version }}\033[0m\n"
 {{- if $gcloud.version }}
 printf " \033[36m‣ gcloud \033[35m{{ $gcloud.version }}\033[0m\n"
 {{- end }}
+{{- $age := .Vars.system.age }}
+{{- if $age.version }}
+printf " \033[36m‣ age \033[35m{{ $age.version }}\033[0m\n"
+{{- end }}
 
 {{- $help := .Vars.project.help }}
 {{- if $help }}
