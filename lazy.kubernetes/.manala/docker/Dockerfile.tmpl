@@ -215,7 +215,7 @@ RUN \
 {{ if $popeye.version -}}
 # Popeye
 RUN \
-    curl -sSL "https://github.com/derailed/popeye/releases/download/v{{ $popeye.version }}/popeye_Linux_{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm64") }}.tar.gz" \
+    curl -sSL "https://github.com/derailed/popeye/releases/download/v{{ $popeye.version }}/popeye_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin popeye
 
 {{ end -}}
