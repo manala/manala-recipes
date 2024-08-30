@@ -95,3 +95,7 @@ system:
     age:
         version: {{ .Vars.system.age.version | toYaml }}
     {{- end }}
+    {{- if .Vars.system.argocd.version }}
+    argocd:
+        version: {{ .Vars.system.argocd.version | toYaml }}
+    {{- end }}

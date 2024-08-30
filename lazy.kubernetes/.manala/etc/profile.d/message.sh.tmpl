@@ -84,6 +84,10 @@ printf " \033[36m‣ gcloud \033[35m{{ $gcloud.version }}\033[0m\n"
 {{- if $age.version }}
 printf " \033[36m‣ age \033[35m{{ $age.version }}\033[0m\n"
 {{- end }}
+{{- $argocd := .Vars.system.argocd }}
+{{- if $argocd.version }}
+printf " \033[36m‣ argocd \033[35m{{ $argocd.version }}\033[0m\n"
+{{- end }}
 
 {{- $help := .Vars.project.help }}
 {{- if $help }}

@@ -378,6 +378,17 @@ RUN \
 RUN \
     curl -sSL "https://github.com/FiloSottile/age/releases/download/v{{ $age.version }}/age-v{{ $age.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin --strip-components=1 age/age age/age-keygen
+
+{{ end -}}
+
+{{ $argocd := .Vars.system.argocd -}}
+{{ if $argocd.version -}}
+# ArgoCD
+RUN \
+    curl -sSL "https://github.com/argoproj/argo-cd/releases/download/v{{ $argocd.version }}/argocd-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+        --output /usr/local/bin/argocd \
+    && chmod +x /usr/local/bin/argocd
+
 {{ end -}}
 
 # Run
