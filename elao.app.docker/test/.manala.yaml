@@ -77,7 +77,7 @@ system:
         packages:
             - package: sass
     mariadb:
-        version: 10.11
+        version: 11.4
     redis:
         version: "*"
     elasticsearch:

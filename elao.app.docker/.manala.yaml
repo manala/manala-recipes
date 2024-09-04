@@ -116,7 +116,7 @@ system:
             version: ~
     mariadb:
         # @option {"label": "MariaDB version"}
-        # @schema {"enum": [null, 10.11, 10.6, 10.5, 10.4, 10.3, 10.2, 10.1]}
+        # @schema {"enum": [null, 11.4, 10.11, 10.6, 10.5, 10.4, 10.3, 10.2, 10.1]}
         version: ~
     mysql:
         # @option {"label": "MySQL version"}
