@@ -84,7 +84,7 @@ GitHub UI.</p>
 <h2 id="migrate">Migrate<a href="#migrate" class="anchor"></a></h2>
 <p>Simply update the recipe in your project and adapt the <code class="code-inline" id="119080786fc51b98f6a3ed888678047e">.github/workflows/deploy.yaml</code> workflow according to the <code class="code-inline" id="f04b542e973164f9c88bf55021f5da97">.manala/github/deliveries/README.md</code> content.</p>
 <p>The changes should look like:</p>
-<pre class="code-multiline language-diff"><code class="language-diff" id="1cf920f532c81cc58da40525090de18d">required: true
+<pre class="code-multiline language-diff"><code class="language-diff" id="89122e075696460e4cde633d3a38e07d">required: true
 <span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">      tier:
 </span><span class="token prefix unchanged"> </span><span class="token line">        description: Tier
 </span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">        type: choice
@@ -104,7 +104,7 @@ GitHub UI.</p>
 </span><span class="token prefix inserted">+</span><span class="token line">
 </span></span><span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">    steps:
 </span><span class="token prefix unchanged"> </span><span class="token line">      - name: 'Checkout'
-</span><span class="token prefix unchanged"> </span><span class="token line">        uses: actions/checkout@v3
+</span><span class="token prefix unchanged"> </span><span class="token line">        uses: actions/checkout@v4
 </span></span>
 <span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">      - name: 'Deploy'
 </span><span class="token prefix unchanged"> </span><span class="token line">        uses: ./.manala/github/deliveries
@@ -116,7 +116,7 @@ GitHub UI.</p>
         </article>
     </section>
 
-    <time datetime="2024-08-15UTC07:57:34+00:00">Last modified: August 15, 2024 07:57</time>
+    <time datetime="2024-09-11UTC07:22:01+00:00">Last modified: September 11, 2024 07:22</time>
         </div>
 
         <footer class="footer">
