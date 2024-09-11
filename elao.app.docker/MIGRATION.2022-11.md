@@ -36,7 +36,7 @@ The changes should look like:
 +
      steps:
        - name: 'Checkout'
-         uses: actions/checkout@v3
+         uses: actions/checkout@v4
  
        - name: 'Deploy'
          uses: ./.manala/github/deliveries
