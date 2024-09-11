@@ -76,7 +76,7 @@ runs:
       run: mkdir -p .manala/.cache
     - name: Cache dependencies
       if: inputs.setup != 'false'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .manala/.cache
         key: app-dependencies-${{ hashFiles('**/composer.lock', '**/package-lock.json', '**/yarn.lock') }}-${{ github.workflow }}-${{ github.job }}

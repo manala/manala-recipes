@@ -100,7 +100,7 @@ jobs:
     steps:
 
       - name: 'Checkout'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 'Setup container with Manala'
         uses: ./.manala/github/integration/setup

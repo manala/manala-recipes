@@ -48,7 +48,7 @@ runs:
 
     - name: Checkout {{ $delivery_name }} (ref "{{ $delivery_ref }}")
       if: {{ $delivery_if }}
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: {{ $delivery_ref }}
         {{ `path: deliveries/${{ inputs.app && format('{0}/', inputs.app) || '' }}${{ inputs.tier }}` }}

@@ -33,7 +33,7 @@ runs:
       run: mkdir -p .manala/.cache
 
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ env.INPUT_DIR }}/.manala/.cache
         key: app-dependencies-${{ hashFiles(format('{0}/**/composer.lock', env.INPUT_DIR), format('{0}/**/package-lock.json', env.INPUT_DIR), format('{0}/**/yarn.lock', env.INPUT_DIR)) }}-${{ github.workflow }}-${{ github.job }}
