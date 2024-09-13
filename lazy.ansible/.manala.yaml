@@ -35,7 +35,21 @@ system:
     #     "propertyNames": {"pattern": "^[A-Z_]+$"}
     # }
     env: {}
-    # @schema {"type": ["string", "array"]}
+    # @schema {
+    #     "type": ["string", "array"],
+    #     "items": {"oneOf": [
+    #         {"type": "string"},
+    #         {
+    #             "type": "object",
+    #             "properties": {
+    #                  "path": {"type": "string"},
+    #                  "required": {"type": "boolean"}
+    #             },
+    #             "required": ["path"],
+    #             "additionalProperties": false
+    #         }
+    #     ]}
+    # }
     env_file: []
     # @schema {"items": {"type": "string"}}
     mount: []
