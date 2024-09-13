@@ -33,7 +33,12 @@ services:
         {{- if kindIs "slice" .Vars.system.env_file }}
         env_file:
             {{- range $file := .Vars.system.env_file }}
+              {{- if kindIs "map" $file }}
+              {{- $file := set $file "path" (printf "../../%s" $file.path) }}
+            - {{ $file | toYaml | indent 14 | trim }}
+              {{- else }}
             - ../../{{ $file }}
+              {{- end }}
             {{- end }}
         {{- else }}
         env_file: ../../{{ .Vars.system.env_file }}
