@@ -44,7 +44,7 @@ RUN \
     # Openssl packages are broken on buster/arm64, install them from bullseye
     # See: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=989604
     && if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
-        curl -sSL "http://snapshot.debian.org/archive/debian/20210827T161311Z/pool/main/o/openssl/{openssl,libssl1.1}_1.1.1k-1%2Bdeb11u1_arm64.deb" \
+        curl -sSLf "http://snapshot.debian.org/archive/debian/20210827T161311Z/pool/main/o/openssl/{openssl,libssl1.1}_1.1.1k-1%2Bdeb11u1_arm64.deb" \
             --output /var/cache/apt/archives/#1.deb \
         && dpkg --install \
             /var/cache/apt/archives/openssl.deb \
@@ -59,7 +59,7 @@ RUN \
 {{ if .goss.version -}}
 # Goss
 RUN \
-    curl -sSL "https://github.com/goss-org/goss/releases/download/v{{ .goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    curl -sSLf "https://github.com/goss-org/goss/releases/download/v{{ .goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/goss \
     && chmod +x /usr/local/bin/goss
 

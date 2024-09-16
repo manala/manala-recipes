@@ -48,23 +48,23 @@ RUN \
     && install --verbose --mode 0755 --group lazy --owner lazy --directory /run/user/${MANALA_USER_ID} \
     && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
     # Gosu
-    && curl -sSL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/gosu \
     && chmod +x /usr/local/bin/gosu \
     # Gomplate
-    && curl -sSL "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/gomplate \
     && chmod +x /usr/local/bin/gomplate \
     # Direnv
-    && curl -sSL "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/direnv \
     && chmod +x /usr/local/bin/direnv \
     # Jq
-    && curl -sSL "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/jq \
     && chmod +x /usr/local/bin/jq \
     # Yq
-    && curl -sSL "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/yq \
     && chmod +x /usr/local/bin/yq \
     # Bash completion
@@ -95,7 +95,7 @@ RUN \
     {{- end }}
     # Vim Gnupg
     && install --verbose --mode 0755 --directory /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg \
-    && curl -sSL https://github.com/jamessan/vim-gnupg/releases/download/v${VIM_GNUPG_VERSION}/vim-gnupg-v${VIM_GNUPG_VERSION}.tar.gz \
+    && curl -sSLf https://github.com/jamessan/vim-gnupg/releases/download/v${VIM_GNUPG_VERSION}/vim-gnupg-v${VIM_GNUPG_VERSION}.tar.gz \
         | bsdtar -xvf - -C /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg --strip-components=1 vim-gnupg-${VIM_GNUPG_VERSION} \
     && echo "let g:GPGPreferSymmetric = 1" >> /etc/vim/vimrc \
     # Clean
@@ -104,7 +104,7 @@ RUN \
 {{ if .Vars.system.docker -}}
 # Docker
 RUN \
-    curl -sSL https://download.docker.com/linux/debian/gpg \
+    curl -sSLf https://download.docker.com/linux/debian/gpg \
         --output /etc/apt/keyrings/docker.asc \
     && printf "\
 Types: deb\n\
@@ -125,7 +125,7 @@ Signed-By: /etc/apt/keyrings/docker.asc\n\
 {{ if $goss.version -}}
 # Goss
 RUN \
-    curl -sSL "https://github.com/goss-org/goss/releases/download/v{{ $goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    curl -sSLf "https://github.com/goss-org/goss/releases/download/v{{ $goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/goss \
     && chmod +x /usr/local/bin/goss
 
@@ -134,7 +134,7 @@ RUN \
 # Kubectl
 {{ $kubectl := .Vars.system.kubectl -}}
 RUN \
-    curl -sSL "https://storage.googleapis.com/kubernetes-release/release/v{{ $kubectl.version }}/bin/linux/{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/kubectl" \
+    curl -sSLf "https://storage.googleapis.com/kubernetes-release/release/v{{ $kubectl.version }}/bin/linux/{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/kubectl" \
         --output /usr/local/bin/kubectl \
     && chmod +x /usr/local/bin/kubectl \
     # Bash completion
@@ -150,7 +150,7 @@ complete -F __start_kubectl k\n\
 # Helm
 ENV HELM_PLUGINS="/usr/local/share/helm/plugins"
 RUN \
-    curl -sSL "https://get.helm.sh/helm-v{{ $helm.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    curl -sSLf "https://get.helm.sh/helm-v{{ $helm.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin --strip-components=1 "linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/helm" \
     # Bash completion
     && helm completion bash > /etc/bash_completion.d/helm \
@@ -177,7 +177,7 @@ complete -F __start_helm h\n\
 # Helmfile
 ENV HELMFILE_UPGRADE_NOTICE_DISABLED="1"
 RUN \
-    curl -sSL "https://github.com/helmfile/helmfile/releases/download/v{{ $helmfile.version }}/helmfile_{{ $helmfile.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    curl -sSLf "https://github.com/helmfile/helmfile/releases/download/v{{ $helmfile.version }}/helmfile_{{ $helmfile.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin helmfile \
     # Bash completion
     && helmfile completion bash > /etc/bash_completion.d/helmfile \
@@ -195,7 +195,7 @@ complete -F __start_helmfile hfi\n\
 {{ if $k9s.version -}}
 # K9s
 RUN \
-    curl -sSL "https://github.com/derailed/k9s/releases/download/v{{ $k9s.version }}/k9s_Linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    curl -sSLf "https://github.com/derailed/k9s/releases/download/v{{ $k9s.version }}/k9s_Linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin k9s
 
 {{ end -}}
@@ -204,7 +204,7 @@ RUN \
 {{ if $stern.version -}}
 # Stern
 RUN \
-    curl -sSL "https://github.com/stern/stern/releases/download/v{{ $stern.version }}/stern_{{ $stern.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    curl -sSLf "https://github.com/stern/stern/releases/download/v{{ $stern.version }}/stern_{{ $stern.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin stern \
     # Bash completion
     && stern --completion=bash > /etc/bash_completion.d/stern
@@ -215,7 +215,7 @@ RUN \
 {{ if $kubePrompt.version -}}
 # Kube Prompt
 RUN \
-    curl -sSL "https://github.com/c-bata/kube-prompt/releases/download/v{{ $kubePrompt.version }}/kube-prompt_v{{ $kubePrompt.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
+    curl -sSLf "https://github.com/c-bata/kube-prompt/releases/download/v{{ $kubePrompt.version }}/kube-prompt_v{{ $kubePrompt.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
         | bsdtar -xvf - -C /usr/local/bin \
     && chmod +x /usr/local/bin/kube-prompt
 
@@ -225,7 +225,7 @@ RUN \
 {{ if $popeye.version -}}
 # Popeye
 RUN \
-    curl -sSL "https://github.com/derailed/popeye/releases/download/v{{ $popeye.version }}/popeye_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    curl -sSLf "https://github.com/derailed/popeye/releases/download/v{{ $popeye.version }}/popeye_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin popeye
 
 {{ end -}}
@@ -234,7 +234,7 @@ RUN \
 {{ if $knsk.version -}}
 # Knsk
 RUN \
-    curl -sSL https://github.com/thyarles/knsk/archive/refs/tags/v{{ $knsk.version }}.tar.gz \
+    curl -sSLf https://github.com/thyarles/knsk/archive/refs/tags/v{{ $knsk.version }}.tar.gz \
         | bsdtar -xvf - -C /usr/local/bin --strip-components=1 knsk-{{ $knsk.version }}/knsk.sh
 
 {{ end -}}
@@ -243,7 +243,7 @@ RUN \
 {{ if $vault.version -}}
 # Vault
 RUN \
-    curl -sSL "https://releases.hashicorp.com/vault/{{ $vault.version }}/vault_{{ $vault.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
+    curl -sSLf "https://releases.hashicorp.com/vault/{{ $vault.version }}/vault_{{ $vault.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
         | bsdtar -xvf - -C /usr/local/bin \
     && chmod +x /usr/local/bin/vault \
     # Bash completion
@@ -255,7 +255,7 @@ RUN \
 {{ if $rclone.version -}}
 # Rclone
 RUN \
-    curl -sSL "https://downloads.rclone.org/v{{ $rclone.version }}/rclone-v{{ $rclone.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
+    curl -sSLf "https://downloads.rclone.org/v{{ $rclone.version }}/rclone-v{{ $rclone.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
         | bsdtar -xvf - -C /usr/local/bin --strip-components=1 "rclone-v{{ $rclone.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/rclone" \
     && chmod +x /usr/local/bin/rclone \
     # Bash completion
@@ -315,7 +315,7 @@ RUN \
 {{ if $scw.version -}}
 # Scaleway cli
 RUN \
-    curl -sSL "https://github.com/scaleway/scaleway-cli/releases/download/v{{ $scw.version }}/scaleway-cli_{{ $scw.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    curl -sSLf "https://github.com/scaleway/scaleway-cli/releases/download/v{{ $scw.version }}/scaleway-cli_{{ $scw.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/scw \
     && chmod +x /usr/local/bin/scw \
     # Bash completion
@@ -327,7 +327,7 @@ RUN \
 {{ if $sops.version -}}
 # Sops
 RUN \
-    curl -sSL "https://github.com/mozilla/sops/releases/download/v{{ $sops.version }}/sops-v{{ $sops.version }}.linux.{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    curl -sSLf "https://github.com/mozilla/sops/releases/download/v{{ $sops.version }}/sops-v{{ $sops.version }}.linux.{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/sops \
     && chmod +x /usr/local/bin/sops
 
@@ -340,7 +340,7 @@ RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         groff \
-    && curl -sSL "https://awscli.amazonaws.com/awscli-exe-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-{{ $aws.version }}.zip" \
+    && curl -sSLf "https://awscli.amazonaws.com/awscli-exe-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-{{ $aws.version }}.zip" \
         --output aws.zip \
     && bsdtar -xvf aws.zip \
     && aws/install \
@@ -364,7 +364,7 @@ RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         python3 \
-    && curl -sSL "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm") }}.tar.gz" \
+    && curl -sSLf "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm") }}.tar.gz" \
         | bsdtar -xf - -C /usr/local \
     # Profile
     && touch /etc/profile.d/gcloud.sh \
@@ -386,7 +386,7 @@ RUN \
 {{ if $age.version -}}
 # Age
 RUN \
-    curl -sSL "https://github.com/FiloSottile/age/releases/download/v{{ $age.version }}/age-v{{ $age.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    curl -sSLf "https://github.com/FiloSottile/age/releases/download/v{{ $age.version }}/age-v{{ $age.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin --strip-components=1 age/age age/age-keygen
 {{ end -}}
 
