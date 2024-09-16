@@ -12,6 +12,8 @@ ARG MANALA_GROUP_ID="1000"
 ARG GOSU_VERSION="1.17"
 ARG GOMPLATE_VERSION="4.1.0"
 ARG DIRENV_VERSION="2.34.0"
+ARG JQ_VERSION="1.7.1"
+ARG YQ_VERSION="4.44.3"
 
 # The 'container' environment variable tells systemd that it's running inside a
 # Docker container environment.
@@ -57,6 +59,14 @@ RUN \
     && curl -sSL "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/direnv \
     && chmod +x /usr/local/bin/direnv \
+    # Jq
+    && curl -sSL "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+        --output /usr/local/bin/jq \
+    && chmod +x /usr/local/bin/jq \
+    # Yq
+    && curl -sSL "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+        --output /usr/local/bin/yq \
+    && chmod +x /usr/local/bin/yq \
     # Bash completion
     && install --verbose --mode 0755 --directory /etc/bash_completion.d \
     # Oh My Bash
