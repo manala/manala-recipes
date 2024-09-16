@@ -29,19 +29,20 @@ RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --purge --autoremove upgrade \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        s6 \
-        sudo \
-        curl \
-        ca-certificates \
-        gnupg \
-        libarchive-tools bzip2 \
         bash-completion \
-        rsync \
+        bzip2 \
+        ca-certificates \
+        curl \
         git \
-        make \
+        gnupg \
         less \
-        vim \
+        libarchive-tools \
+        make \
+        rsync \
+        s6 \
         socat \
+        sudo \
+        vim \
     # User
     && addgroup --gid ${MANALA_GROUP_ID} lazy \
     && adduser --home /home/lazy --shell /bin/bash --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
@@ -162,8 +163,8 @@ Signed-By: /etc/apt/keyrings/sury_php.gpg\n\
         php{{ $php.version }}-opcache \
         php{{ $php.version }}-xdebug \
         # Symfony
-        php{{ $php.version }}-intl \
         php{{ $php.version }}-curl \
+        php{{ $php.version }}-intl \
         php{{ $php.version }}-mbstring \
         php{{ $php.version }}-xml \
         # Project
@@ -225,8 +226,8 @@ Signed-By: /etc/apt/keyrings/yarn.asc\n\
 RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        openssh-client \
         ansible \
+        openssh-client \
     && ansible-galaxy install --roles-path /usr/share/ansible/roles \
         ansistrano.deploy,3.14.0 \
         ansistrano.rollback,3.1.0 \

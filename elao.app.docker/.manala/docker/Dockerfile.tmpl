@@ -34,12 +34,12 @@ RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --purge --autoremove upgrade \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        gnupg \
         ca-certificates \
-        sudo \
         curl \
+        gnupg \
         make \
         socat \
+        sudo \
     {{- if eq (.version|int) 10 }}
     # Openssl packages are broken on buster/arm64, install them from bullseye
     # See: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=989604
