@@ -48,23 +48,23 @@ RUN \
     && install --verbose --mode 0755 --group lazy --owner lazy --directory /run/user/${MANALA_USER_ID} \
     && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
     # Gosu
-    && curl -sSL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/gosu \
     && chmod +x /usr/local/bin/gosu \
     # Gomplate
-    && curl -sSL "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/gomplate \
     && chmod +x /usr/local/bin/gomplate \
     # Direnv
-    && curl -sSL "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/direnv \
     && chmod +x /usr/local/bin/direnv \
     # Jq
-    && curl -sSL "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/jq \
     && chmod +x /usr/local/bin/jq \
     # Yq
-    && curl -sSL "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && curl -sSLf "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/yq \
     && chmod +x /usr/local/bin/yq \
     # Bash completion
@@ -105,7 +105,7 @@ RUN \
 {{ if .Vars.system.docker -}}
 # Docker
 RUN \
-    curl -sSL https://download.docker.com/linux/debian/gpg \
+    curl -sSLf https://download.docker.com/linux/debian/gpg \
         --output /etc/apt/keyrings/docker.asc \
     && printf "\
 Types: deb\n\
@@ -126,7 +126,7 @@ Signed-By: /etc/apt/keyrings/docker.asc\n\
 {{ if $goss.version -}}
 # Goss
 RUN \
-    curl -sSL "https://github.com/goss-org/goss/releases/download/v{{ $goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    curl -sSLf "https://github.com/goss-org/goss/releases/download/v{{ $goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/goss \
     && chmod +x /usr/local/bin/goss
 
@@ -191,7 +191,7 @@ RUN \
 {{ if $terraform.version -}}
 # Terraform
 RUN \
-    curl -sSL "https://releases.hashicorp.com/terraform/{{ $terraform.version }}/terraform_{{ $terraform.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
+    curl -sSLf "https://releases.hashicorp.com/terraform/{{ $terraform.version }}/terraform_{{ $terraform.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
         | bsdtar -xvf - -C /usr/local/bin \
     && chmod +x /usr/local/bin/terraform \
     # Bash completion
