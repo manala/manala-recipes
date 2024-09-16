@@ -46,6 +46,16 @@ command:
     exit-status: 0
     stdout:
       - 2.34.0
+  # Jq
+  jq --version:
+    exit-status: 0
+    stdout:
+      - jq-1.7.1
+  # Yq
+  yq --version:
+    exit-status: 0
+    stdout:
+      - yq (https://github.com/mikefarah/yq/) version v4.44.3
   # Goss
   goss --version:
     exit-status: 0
