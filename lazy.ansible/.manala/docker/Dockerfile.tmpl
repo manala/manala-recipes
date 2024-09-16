@@ -29,19 +29,20 @@ RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --purge --autoremove upgrade \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        s6 \
-        sudo \
-        curl \
-        ca-certificates \
-        gnupg \
-        libarchive-tools bzip2 \
         bash-completion \
-        rsync \
+        bzip2 \
+        ca-certificates \
+        curl \
         git \
-        make \
+        gnupg \
         less \
-        vim \
+        libarchive-tools \
+        make \
+        rsync \
+        s6 \
         socat \
+        sudo \
+        vim \
     # User
     && addgroup --gid ${MANALA_GROUP_ID} lazy \
     && adduser --home /home/lazy --shell /bin/bash --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
@@ -87,11 +88,11 @@ RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         openssh-client \
-        sshpass \
-        python3 \
         pipx \
+        python3 \
         python3-argcomplete \
         shellcheck \
+        sshpass \
         {{- range $package := $apt.packages }}
         {{ $package }} \
         {{- end }}
