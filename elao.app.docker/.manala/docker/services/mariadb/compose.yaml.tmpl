@@ -11,9 +11,14 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
         network_mode: service:app
         healthcheck:
+            {{- if le (.Vars.system.mariadb.version|float64) 10.1 }}
             test: mysqladmin ping --silent --host 0.0.0.0
-            interval: 30s
-            timeout: 30s
+            {{- else }}
+            # See: https://mariadb.com/kb/en/using-healthcheck-sh/
+            test: healthcheck.sh --connect --innodb_initialized
+            {{- end }}
+            interval: 10s
+            timeout: 5s
             retries: 3
             start_period: 0s
 
