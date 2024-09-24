@@ -135,9 +135,8 @@ RUN \
 # Kubectl
 {{ $kubectl := .Vars.system.kubectl -}}
 RUN \
-    curl -sSLf "https://storage.googleapis.com/kubernetes-release/release/v{{ $kubectl.version }}/bin/linux/{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/kubectl" \
-        --output /usr/local/bin/kubectl \
-    && chmod +x /usr/local/bin/kubectl \
+    curl -sSLf "https://dl.k8s.io/v{{ $kubectl.version }}/kubernetes-client-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+        | bsdtar -xvf - -C /usr/local/bin --strip-components=3 kubernetes/client/bin/kubectl \
     # Bash completion
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
     # Bash aliases
