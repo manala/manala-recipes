@@ -165,3 +165,8 @@ command:
     exit-status: 0
     stdout:
       - v{{ .Vars.system.age.version }}
+  # ArgoCD
+  argocd version --client:
+    exit-status: 0
+    stdout:
+      - "argocd: v{{ .Vars.system.argocd.version }}"

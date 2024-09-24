@@ -152,3 +152,7 @@ system:
         # @schema {"enum": [null, "1.2.0"]}
         # @option {"label": "Age version"}
         version: ~
+    argocd:
+        # @schema {"enum": [null, "2.12.3"]}
+        # @option {"label": "ArgoCD version"}
+        version: ~

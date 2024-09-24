@@ -64,3 +64,5 @@ system:
             - gke-gcloud-auth-plugin
     age:
         version: 1.2.0
+    argocd:
+        version: 2.12.3
