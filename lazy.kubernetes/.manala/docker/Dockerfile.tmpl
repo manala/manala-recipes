@@ -29,7 +29,6 @@ RUN \
     apt-get --quiet update \
     && apt-get --quiet --yes --purge --autoremove upgrade \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        bash-completion \
         bzip2 \
         ca-certificates \
         curl \
@@ -43,9 +42,10 @@ RUN \
         socat \
         sudo \
         vim \
+        zsh \
     # User
     && addgroup --gid ${MANALA_GROUP_ID} lazy \
-    && adduser --home /home/lazy --shell /bin/bash --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
+    && adduser --home /home/lazy --shell /bin/zsh --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
     && install --verbose --mode 0755 --group lazy --owner lazy --directory /run/user/${MANALA_USER_ID} \
     && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
     # Gosu
@@ -68,10 +68,12 @@ RUN \
     && curl -sSLf "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/yq \
     && chmod +x /usr/local/bin/yq \
-    # Bash completion
-    && install --verbose --mode 0755 --directory /etc/bash_completion.d \
-    # Oh My Bash
-    && git clone https://github.com/ohmybash/oh-my-bash.git /usr/local/share/oh-my-bash \
+    # Oh My Zsh
+    && git clone https://github.com/ohmyzsh/ohmyzsh.git /usr/local/share/oh-my-zsh \
+    # See: https://github.com/ohmyzsh/ohmyzsh/issues/11995
+    && git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-autosuggestions \
+    && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-syntax-highlighting \
+    && echo "ZDOTDIR=/etc/zsh" > /etc/zsh/zshenv \
     # Clean
     && rm -rf /var/lib/apt/lists/*
 
@@ -136,14 +138,7 @@ RUN \
 {{ $kubectl := .Vars.system.kubectl -}}
 RUN \
     curl -sSLf "https://dl.k8s.io/v{{ $kubectl.version }}/kubernetes-client-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
-        | bsdtar -xvf - -C /usr/local/bin --strip-components=3 kubernetes/client/bin/kubectl \
-    # Bash completion
-    && kubectl completion bash > /etc/bash_completion.d/kubectl \
-    # Bash aliases
-    && printf "\
-alias k='kubectl'\n\
-complete -F __start_kubectl k\n\
-" > /etc/profile.d/kubectl.sh
+        | bsdtar -xvf - -C /usr/local/bin --strip-components=3 kubernetes/client/bin/kubectl
 
 {{ $helm := .Vars.system.helm -}}
 {{ if $helm.version -}}
@@ -151,14 +146,7 @@ complete -F __start_kubectl k\n\
 ENV HELM_PLUGINS="/usr/local/share/helm/plugins"
 RUN \
     curl -sSLf "https://get.helm.sh/helm-v{{ $helm.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
-        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 "linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/helm" \
-    # Bash completion
-    && helm completion bash > /etc/bash_completion.d/helm \
-    # Bash aliases
-    && printf "\
-alias h='helm'\n\
-complete -F __start_helm h\n\
-" > /etc/profile.d/helm.sh
+        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 "linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/helm"
     {{- if $helm.plugins }} \
     # Plugins
       {{- range $i, $plugin := $helm.plugins }}
@@ -179,15 +167,23 @@ ENV HELMFILE_UPGRADE_NOTICE_DISABLED="1"
 RUN \
     curl -sSLf "https://github.com/helmfile/helmfile/releases/download/v{{ $helmfile.version }}/helmfile_{{ $helmfile.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin helmfile \
-    # Bash completion
-    && helmfile completion bash > /etc/bash_completion.d/helmfile \
-    # Bash aliases
+    # Oh My Zsh plugin
+    # See: https://github.com/ohmyzsh/ohmyzsh/pull/12750
+    && mkdir /usr/local/share/oh-my-zsh/custom/plugins/helmfile \
     && printf "\
+if (( ! $+commands[helmfile] )); then\n\
+  return\n\
+fi\n\
+if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_helmfile\" ]]; then\n\
+  helmfile completion zsh | tee \"\$ZSH_CACHE_DIR/completions/_helmfile\" >/dev/null\n\
+  source \"\$ZSH_CACHE_DIR/completions/_helmfile\"\n\
+else\n\
+  source \"\$ZSH_CACHE_DIR/completions/_helmfile\"\n\
+  helmfile completion zsh | tee \"\$ZSH_CACHE_DIR/completions/_helmfile\" >/dev/null &|\n\
+fi\n\
 alias hf='helmfile'\n\
-complete -F __start_helmfile hf\n\
 alias hfi='helmfile --interactive'\n\
-complete -F __start_helmfile hfi\n\
-" > /etc/profile.d/helmfile.sh
+" > /usr/local/share/oh-my-zsh/custom/plugins/helmfile/helmfile.plugin.zsh
 
 {{ end -}}
 
@@ -206,8 +202,21 @@ RUN \
 RUN \
     curl -sSLf "https://github.com/stern/stern/releases/download/v{{ $stern.version }}/stern_{{ $stern.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin stern \
-    # Bash completion
-    && stern --completion=bash > /etc/bash_completion.d/stern
+    # Oh My Zsh plugin
+    # See: https://github.com/ohmyzsh/ohmyzsh/pull/12751
+    && mkdir /usr/local/share/oh-my-zsh/custom/plugins/stern \
+    && printf "\
+if (( ! $+commands[stern] )); then\n\
+  return\n\
+fi\n\
+if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_stern\" ]]; then\n\
+  stern --completion zsh | tee \"\$ZSH_CACHE_DIR/completions/_stern\" >/dev/null\n\
+  source \"\$ZSH_CACHE_DIR/completions/_stern\"\n\
+else\n\
+  source \"\$ZSH_CACHE_DIR/completions/_stern\"\n\
+  stern --completion zsh | tee \"\$ZSH_CACHE_DIR/completions/_stern\" >/dev/null &|\n\
+fi\n\
+" > /usr/local/share/oh-my-zsh/custom/plugins/stern/stern.plugin.zsh
 
 {{ end -}}
 
@@ -227,8 +236,15 @@ RUN \
     curl -sSLf "https://releases.hashicorp.com/vault/{{ $vault.version }}/vault_{{ $vault.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
         | bsdtar -xvf - -C /usr/local/bin \
     && chmod +x /usr/local/bin/vault \
-    # Bash completion
-    && echo "complete -C /usr/local/bin/vault vault" > /etc/bash_completion.d/vault
+    # Oh My Zsh plugin
+    # See: https://github.com/ohmyzsh/ohmyzsh/pull/12753
+    && mkdir /usr/local/share/oh-my-zsh/custom/plugins/vault \
+    && printf "\
+if (( ! $+commands[helmfile] )); then\n\
+  return\n\
+fi\n\
+complete -o nospace -C vault vault\n\
+" > /usr/local/share/oh-my-zsh/custom/plugins/vault/vault.plugin.zsh
 
 {{ end -}}
 
@@ -239,8 +255,20 @@ RUN \
     curl -sSLf "https://downloads.rclone.org/v{{ $rclone.version }}/rclone-v{{ $rclone.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
         | bsdtar -xvf - -C /usr/local/bin --strip-components=1 "rclone-v{{ $rclone.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/rclone" \
     && chmod +x /usr/local/bin/rclone \
-    # Bash completion
-    && rclone genautocomplete bash /etc/bash_completion.d/rclone
+    # Oh My Zsh plugin
+    # See: https://github.com/ohmyzsh/ohmyzsh/pull/12754
+    && mkdir /usr/local/share/oh-my-zsh/custom/plugins/rclone \
+    && printf "\
+if (( ! $+commands[rclone] )); then\n\
+  return\n\
+fi\n\
+if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_rclone\" ]]; then\n\
+  typeset -g -A _comps\n\
+  autoload -Uz _rclone\n\
+  _comps[rclone]=_rclone\n\
+fi\n\
+rclone completion zsh - >| \"\$ZSH_CACHE_DIR/completions/_rclone\" &|\n\
+" > /usr/local/share/oh-my-zsh/custom/plugins/rclone/rclone.plugin.zsh
 
 {{ end -}}
 
@@ -300,9 +328,7 @@ RUN \
 RUN \
     curl -sSLf "https://github.com/scaleway/scaleway-cli/releases/download/v{{ $scw.version }}/scaleway-cli_{{ $scw.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/scw \
-    && chmod +x /usr/local/bin/scw \
-    # Bash completion
-    && scw autocomplete script shell=/bin/bash > /etc/bash_completion.d/scw
+    && chmod +x /usr/local/bin/scw
 
 {{ end -}}
 
@@ -312,7 +338,31 @@ RUN \
 RUN \
     curl -sSLf "https://github.com/mozilla/sops/releases/download/v{{ $sops.version }}/sops-v{{ $sops.version }}.linux.{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/sops \
-    && chmod +x /usr/local/bin/sops
+    && chmod +x /usr/local/bin/sops \
+    # Oh My Zsh plugin
+    # See: https://github.com/ohmyzsh/ohmyzsh/pull/12757
+    && mkdir /usr/local/share/oh-my-zsh/custom/plugins/sops \
+    && printf "\
+if (( ! $+commands[sops] )); then\n\
+  return\n\
+fi\n\
+_sops() {\n\
+  local -a opts\n\
+  local cur\n\
+  cur=\${words[-1]}\n\
+  if [[ \"\$cur\" == \"-\"* ]]; then\n\
+    opts=(\"\${(@f)\$(\${words[@]:0:#words[@]-1} \${cur} --generate-shell-completion)}\")\n\
+  else\n\
+    opts=(\"\${(@f)\$(\${words[@]:0:#words[@]-1} --generate-shell-completion)}\")\n\
+  fi\n\
+  if [[ \"\${opts[1]}\" != \"\" ]]; then\n\
+    _describe 'values' opts\n\
+  else\n\
+    _files\n\
+  fi\n\
+}\n\
+compdef _sops sops\n\
+" > /usr/local/share/oh-my-zsh/custom/plugins/sops/sops.plugin.zsh
 
 {{ end -}}
 
@@ -348,18 +398,7 @@ RUN \
     && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
         python3 \
     && curl -sSLf "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm") }}.tar.gz" \
-        | bsdtar -xf - -C /usr/local \
-    # Profile
-    && touch /etc/profile.d/gcloud.sh \
-    && /usr/local/google-cloud-sdk/install.sh \
-        --rc-path /etc/profile.d/gcloud.sh \
-        --command-completion true \
-        --path-update true \
-        {{- if $gcloud.components }}
-        --additional-components {{ $gcloud.components | join " " }} \
-        {{- end }}
-        --quiet \
-    && rm -rf /etc/profile.d/gcloud.sh.backup \
+        | bsdtar -xf - -C /usr/local/share \
     # Clean
     && rm -rf /var/lib/apt/lists/*
 
@@ -387,4 +426,4 @@ RUN \
 # Run
 COPY docker/entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["bash"]
+CMD ["zsh"]
