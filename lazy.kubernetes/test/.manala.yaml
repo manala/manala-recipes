@@ -40,8 +40,6 @@ system:
         version: 1.0.11
     popeye:
         version: 0.21.5
-    knsk:
-        version: "1.0"
     vault:
         version: 1.17.5
     rclone:

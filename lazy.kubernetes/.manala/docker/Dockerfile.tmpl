@@ -230,15 +230,6 @@ RUN \
 
 {{ end -}}
 
-{{ $knsk := .Vars.system.knsk -}}
-{{ if $knsk.version -}}
-# Knsk
-RUN \
-    curl -sSLf https://github.com/thyarles/knsk/archive/refs/tags/v{{ $knsk.version }}.tar.gz \
-        | bsdtar -xvf - -C /usr/local/bin --strip-components=1 knsk-{{ $knsk.version }}/knsk.sh
-
-{{ end -}}
-
 {{ $vault := .Vars.system.vault -}}
 {{ if $vault.version -}}
 # Vault

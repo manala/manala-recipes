@@ -42,10 +42,6 @@ printf " \033[36m‣ kube-prompt \033[35m{{ $kubePrompt.version }}\033[0m\n"
 {{- if $popeye.version }}
 printf " \033[36m‣ popeye \033[35m{{ $popeye.version }}\033[0m\n"
 {{- end }}
-{{- $knsk := .Vars.system.knsk }}
-{{- if $knsk.version }}
-printf " \033[36m‣ knsk \033[35m{{ $knsk.version }}\033[0m\n"
-{{- end }}
 {{- $vault := .Vars.system.vault }}
 {{- if $vault.version }}
 printf " \033[36m‣ vault \033[35m{{ $vault.version }}\033[0m\n"

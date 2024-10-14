@@ -106,10 +106,6 @@ system:
         # @schema {"enum": [null, "0.21.5"]}
         # @option {"label": "Popeye version"}
         version: ~
-    knsk:
-        # @schema {"enum": [null, "1.0"]}
-        # @option {"label": "Kubernetes namespace killer version"}
-        version: ~
     vault:
         # @schema {"enum": [null, "1.17.5", "1.16.3", "1.15.6", "1.14.10"]}
         # @option {"label": "Vault version"}
