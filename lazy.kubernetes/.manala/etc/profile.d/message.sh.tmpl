@@ -88,10 +88,10 @@ printf " \033[36m‣ age \033[35m{{ $age.version }}\033[0m\n"
 {{- if $argocd.version }}
 printf " \033[36m‣ argocd \033[35m{{ $argocd.version }}\033[0m\n"
 {{- end }}
+printf "\n"
 
 {{- $help := .Vars.project.help }}
 {{- if $help }}
-printf "\n"
 cat << EOF
 {{ $help }}
 EOF

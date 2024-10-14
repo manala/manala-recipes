@@ -19,10 +19,10 @@ printf " \033[36m‣ php \033[35m{{ $php.version }}\033[0m\n"
 {{- if $nodejs.version }}
 printf " \033[36m‣ nodejs \033[35m{{ $nodejs.version }}\033[0m\n"
 {{- end }}
-
 printf "\n"
 
 printf " \033[36m• php-xdebug \033[35m[on|off] \033[37m- enable/disable php xdebug\033[0m\n"
+printf "\n"
 php-xdebug () {
   if [ "$1" = on ]; then
     sudo phpenmod xdebug
@@ -41,7 +41,6 @@ php-xdebug () {
 
 {{- $help := .Vars.project.help }}
 {{- if $help }}
-printf "\n"
 cat << EOF
 {{ $help }}
 EOF
