@@ -57,10 +57,6 @@ system:
     popeye:
         version: {{ .Vars.system.popeye.version | toYaml }}
     {{- end }}
-    {{- if .Vars.system.knsk.version }}
-    knsk:
-        version: {{ .Vars.system.knsk.version | toYaml }}
-    {{- end }}
     {{- if .Vars.system.vault.version }}
     vault:
         version: {{ .Vars.system.vault.version | toYaml }}

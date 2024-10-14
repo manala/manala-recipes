@@ -109,9 +109,6 @@ command:
     exit-status: 0
     stdout:
       - {{ .Vars.system.popeye.version }}
-  # Knsk
-  knsk.sh --help:
-    exit-status: 0
   # Vault
   vault version:
     exit-status: 0
