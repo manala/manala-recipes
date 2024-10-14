@@ -48,11 +48,6 @@ system:
     stern:
         version: {{ .Vars.system.stern.version | toYaml }}
     {{- end }}
-    {{- $kubePrompt := index .Vars.system "kube-prompt" -}}
-    {{- if $kubePrompt.version }}
-    kube-prompt:
-        version: {{ $kubePrompt.version | toYaml }}
-    {{- end }}
     {{- if .Vars.system.popeye.version }}
     popeye:
         version: {{ .Vars.system.popeye.version | toYaml }}

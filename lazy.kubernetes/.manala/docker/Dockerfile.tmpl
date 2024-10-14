@@ -211,16 +211,6 @@ RUN \
 
 {{ end -}}
 
-{{ $kubePrompt := index .Vars.system "kube-prompt" -}}
-{{ if $kubePrompt.version -}}
-# Kube Prompt
-RUN \
-    curl -sSLf "https://github.com/c-bata/kube-prompt/releases/download/v{{ $kubePrompt.version }}/kube-prompt_v{{ $kubePrompt.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
-        | bsdtar -xvf - -C /usr/local/bin \
-    && chmod +x /usr/local/bin/kube-prompt
-
-{{ end -}}
-
 {{ $popeye := .Vars.system.popeye -}}
 {{ if $popeye.version -}}
 # Popeye
