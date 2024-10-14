@@ -32,11 +32,11 @@ printf "    \033[36m· {{ $dependency }}\033[0m\n"
 {{- if $terraform.version }}
 printf " \033[36m‣ terraform \033[35m{{ $terraform.version }}\033[0m\n"
 {{- end }}
-printf "\n"
 
 {{- $help := .Vars.project.help }}
 {{- if $help }}
+printf "\n"
 cat << EOF
-{{ $help }}
+{{ $help  | trim }}
 EOF
 {{- end }}

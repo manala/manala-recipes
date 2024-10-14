@@ -64,6 +64,25 @@
     },
     {
       "customType": "regex",
+      "fileMatch": ["Dockerfile\\.tmpl"],
+      "matchStrings": ["ARG STARSHIP_VERSION=\"(?<currentValue>.+)\""],
+      "depNameTemplate": "starship",
+      "depTypeTemplate": "components",
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "starship/starship",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["Dockerfile\\.tmpl"],
+      "matchStrings": ["ARG FZF_VERSION=\"(?<currentValue>.+)\""],
+      "depNameTemplate": "fzf",
+      "depTypeTemplate": "components",
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "junegunn/fzf"
+    },
+    {
+      "customType": "regex",
       "fileMatch": ["Makefile"],
       "matchStrings": ["_HADOLINT_VERSION = (?<currentValue>.+)"],
       "depNameTemplate": "hadolint",
