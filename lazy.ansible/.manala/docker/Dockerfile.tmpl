@@ -14,6 +14,7 @@ ARG GOMPLATE_VERSION="4.1.0"
 ARG DIRENV_VERSION="2.34.0"
 ARG JQ_VERSION="1.7.1"
 ARG YQ_VERSION="4.44.3"
+ARG FZF_VERSION="0.55.0"
 
 # The 'container' environment variable tells systemd that it's running inside a
 # Docker container environment.
@@ -74,6 +75,10 @@ RUN \
     && git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-autosuggestions \
     && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-syntax-highlighting \
     && echo "ZDOTDIR=/etc/zsh" > /etc/zsh/zshenv \
+    # Fzf
+    && curl -sSLf "https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+        | bsdtar -xvf - -C /usr/local/bin \
+    && chmod +x /usr/local/bin/fzf \
     # Clean
     && rm -rf /var/lib/apt/lists/*
 
