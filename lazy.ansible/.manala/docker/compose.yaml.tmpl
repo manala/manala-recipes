@@ -45,5 +45,9 @@ services:
         {{- end }}
         {{- end }}
         working_dir: ${MANALA_DIR}
-        # Use default docker bridge network
-        network_mode: bridge
+        networks:
+          - network
+
+networks:
+  network:
+    name: {{ .Vars.project.name | replace "." "-" }}
