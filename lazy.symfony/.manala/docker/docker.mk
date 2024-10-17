@@ -109,6 +109,9 @@ MANALA_DOCKER_COMPOSE_FILE += $(foreach SERVICE, $(MANALA_DOCKER_SERVICES), \
 # Debug
 MANALA_DOCKER_COMPOSE_ENV += $(if $(MANALA_DOCKER_DEBUG), BUILDKIT_PROGRESS=plain)
 
+# Term
+MANALA_DOCKER_COMPOSE_FILE += $(MANALA_DIR)/.manala/docker/compose/term.yaml
+
 # Usage:
 #   $(manala_docker_compose) [COMMAND] [ARGS...]
 
