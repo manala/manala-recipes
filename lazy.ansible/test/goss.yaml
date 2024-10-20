@@ -12,7 +12,7 @@ package:
   docker-ce-cli:
     installed: true
   # Project
-  jq:
+  nano:
     installed: true
 
 group:

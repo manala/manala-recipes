@@ -19,7 +19,7 @@ system:
         version: 0.4.8
     apt:
         packages:
-            - jq
+            - nano
     git:
         config: |
             # Git config
