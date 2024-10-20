@@ -11,7 +11,7 @@ package:
   ansible:
     installed: true
   # Project
-  jq:
+  nano:
     installed: true
 
 group:
