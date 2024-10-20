@@ -25,7 +25,7 @@ user:
     exists: true
     groups:
       - lazy
-    shell: /bin/bash
+    shell: /bin/zsh
 
 file:
   # Base
