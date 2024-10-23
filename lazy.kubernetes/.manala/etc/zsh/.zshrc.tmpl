@@ -77,6 +77,7 @@ plugins=(
   zsh-syntax-highlighting
   fzf
   kubectl
+  kube-ps1
 {{- if .Vars.system.docker }}
   docker
 {{- end }}
@@ -146,6 +147,16 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+## Kube-ps1 configuration
+
+KUBE_PS1_SEPARATOR=''
+KUBE_PS1_CTX_COLOR=blue
+KUBE_PS1_SYMBOL_COLOR=blue
+KUBE_PS1_PREFIX=[
+KUBE_PS1_PREFIX_COLOR=blue
+KUBE_PS1_SUFFIX=]
+KUBE_PS1_SUFFIX_COLOR=blue
+
 # Theme customization
-PROMPT="%{$fg[green]%}╭─%n@%m %{$reset_color%}%{$fg[yellow]%}in %1~ %{$reset_color%}${git_branch}
-%{$fg[green]%}╰\$ %{$reset_color%}"
+PROMPT='%{$fg[green]%}╭─%n@%m %{$reset_color%}%{$fg[yellow]%}in %1~ %{$reset_color%}%{$FG[008]%}•%{$reset_color%} $(kube_ps1)
+%{$fg[green]%}╰\$ %{$reset_color%}'
