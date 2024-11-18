@@ -30,7 +30,7 @@ system:
         extensions:
             - bcmath
     nodejs:
-        version: 16
+        version: 22
     mariadb:
         version: 10.5
     phpmyadmin:
