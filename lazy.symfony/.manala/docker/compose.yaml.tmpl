@@ -14,6 +14,7 @@ services:
             context: ..
             dockerfile: docker/Dockerfile
         image: {{ .Vars.project.name }}:{{ $now }}
+        pull_policy: never
         restart: always
         ports:
             - {{ .Vars.system.nginx.port }}:80
