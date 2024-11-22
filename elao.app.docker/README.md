@@ -12,7 +12,7 @@ MacOS
 
 * Docker Desktop 4.29.0+
 (`brew install docker`)
-* Mutagen Compose 0.17.5+
+* Mutagen Compose 0.18.0+
 (`brew install mutagen-io/mutagen/mutagen-compose`)
 
 Linux

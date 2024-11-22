@@ -170,14 +170,15 @@ RUN \
         > /etc/sudoers.d/systemd \
     && rm -rf \
         /etc/systemd/system/*.wants/* \
+        /lib/systemd/system/basic.target.wants/* \
         /lib/systemd/system/multi-user.target.wants/* \
         /lib/systemd/system/local-fs.target.wants/* \
         /lib/systemd/system/sockets.target.wants/*udev* \
         /lib/systemd/system/sockets.target.wants/*initctl* \
         /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev* \
+        /lib/systemd/system/systemd-ask-password-console.* \
+        /lib/systemd/system/systemd-tmpfiles-clean.* \
         /lib/systemd/system/systemd-update-utmp*
-
-VOLUME /sys/fs/cgroup
 
 STOPSIGNAL SIGRTMIN+3
 
