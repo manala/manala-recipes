@@ -13,5 +13,7 @@ services:
         tmpfs:
             - /run
             - /run/lock
+        security_opt:
+            - apparmor=unconfined
         volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:rw
