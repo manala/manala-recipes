@@ -6,12 +6,19 @@
   "enabledManagers": [
     "regex"
   ],
+  "packageRules": [
+    {
+      "matchDepTypes": ["components"],
+      "groupName": "components"
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
       "fileMatch": ["Dockerfile\\.tmpl"],
       "matchStrings": ["ARG GOSU_VERSION=\"(?<currentValue>.+)\""],
       "depNameTemplate": "gosu",
+      "depTypeTemplate": "components",
       "datasourceTemplate": "github-releases",
       "packageNameTemplate": "tianon/gosu"
     },
@@ -20,6 +27,7 @@
       "fileMatch": ["Dockerfile\\.tmpl"],
       "matchStrings": ["ARG GOMPLATE_VERSION=\"(?<currentValue>.+)\""],
       "depNameTemplate": "gomplate",
+      "depTypeTemplate": "components",
       "datasourceTemplate": "github-releases",
       "packageNameTemplate": "hairyhenderson/gomplate",
       "extractVersionTemplate": "^v(?<version>.+)$"
@@ -29,6 +37,7 @@
       "fileMatch": ["Dockerfile\\.tmpl"],
       "matchStrings": ["ARG DIRENV_VERSION=\"(?<currentValue>.+)\""],
       "depNameTemplate": "direnv",
+      "depTypeTemplate": "components",
       "datasourceTemplate": "github-releases",
       "packageNameTemplate": "direnv/direnv",
       "extractVersionTemplate": "^v(?<version>.+)$"
@@ -38,6 +47,7 @@
       "fileMatch": ["Dockerfile\\.tmpl"],
       "matchStrings": ["ARG JQ_VERSION=\"(?<currentValue>.+)\""],
       "depNameTemplate": "jq",
+      "depTypeTemplate": "components",
       "datasourceTemplate": "github-releases",
       "packageNameTemplate": "jqlang/jq",
       "extractVersionTemplate": "^jq (?<version>.+)$"
@@ -47,6 +57,7 @@
       "fileMatch": ["Dockerfile\\.tmpl"],
       "matchStrings": ["ARG YQ_VERSION=\"(?<currentValue>.+)\""],
       "depNameTemplate": "yq",
+      "depTypeTemplate": "components",
       "datasourceTemplate": "github-releases",
       "packageNameTemplate": "mikefarah/yq",
       "extractVersionTemplate": "^v(?<version>.+)$"
@@ -56,6 +67,7 @@
       "fileMatch": ["Makefile"],
       "matchStrings": ["_HADOLINT_VERSION = (?<currentValue>.+)"],
       "depNameTemplate": "hadolint",
+      "depTypeTemplate": "components",
       "datasourceTemplate": "docker",
       "packageNameTemplate": "hadolint/hadolint"
     }
