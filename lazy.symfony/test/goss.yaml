@@ -25,7 +25,7 @@ user:
     exists: true
     groups:
       - lazy
-    shell: /bin/bash
+    shell: /bin/zsh
 
 file:
   # Base
@@ -49,21 +49,26 @@ command:
     exit-status: 0
     stdout:
       - "/gomplate version \\d+\\.\\d+\\.\\d+/"
-  # Direnv
   direnv --version:
     exit-status: 0
     stdout:
       - "/\\d+\\.\\d+\\.\\d+/"
-  # Jq
   jq --version:
     exit-status: 0
     stdout:
       - "/jq-\\d+\\.\\d+\\.\\d+/"
-  # Yq
   yq --version:
     exit-status: 0
     stdout:
       - "/yq \\(https://github.com/mikefarah/yq/\\) version v\\d+\\.\\d+\\.\\d+/"
+  starship --version:
+    exit-status: 0
+    stdout:
+      - "/starship \\d+\\.\\d+\\.\\d+/"
+  fzf --version:
+    exit-status: 0
+    stdout:
+      - "/\\d+\\.\\d+\\.\\d+/"
   # Goss
   goss --version:
     exit-status: 0
