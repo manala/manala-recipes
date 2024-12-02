@@ -3,7 +3,7 @@ name: Docs - Test
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - docs/**
       - '**/README.md'
