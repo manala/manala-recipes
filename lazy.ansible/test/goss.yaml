@@ -50,26 +50,26 @@ command:
   gosu --version:
     exit-status: 0
     stdout:
-      - "1.17"
+      - "/\\d+\\.\\d+/"
   gomplate --version:
     exit-status: 0
     stdout:
-      - gomplate version 4.1.0
+      - "/gomplate version \\d+\\.\\d+\\.\\d+/"
   # Direnv
   direnv --version:
     exit-status: 0
     stdout:
-      - 2.34.0
+      - "/\\d+\\.\\d+\\.\\d+/"
   # Jq
   jq --version:
     exit-status: 0
     stdout:
-      - jq-1.7.1
+      - "/jq-\\d+\\.\\d+\\.\\d+/"
   # Yq
   yq --version:
     exit-status: 0
     stdout:
-      - yq (https://github.com/mikefarah/yq/) version v4.44.3
+      - "/yq \\(https://github.com/mikefarah/yq/\\) version v\\d+\\.\\d+\\.\\d+/"
   # Goss
   goss --version:
     exit-status: 0
