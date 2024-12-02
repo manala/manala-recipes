@@ -1,0 +1,63 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "regex"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["Dockerfile\\.tmpl"],
+      "matchStrings": ["ARG GOSU_VERSION=\"(?<currentValue>.+)\""],
+      "depNameTemplate": "gosu",
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "tianon/gosu"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["Dockerfile\\.tmpl"],
+      "matchStrings": ["ARG GOMPLATE_VERSION=\"(?<currentValue>.+)\""],
+      "depNameTemplate": "gomplate",
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "hairyhenderson/gomplate",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["Dockerfile\\.tmpl"],
+      "matchStrings": ["ARG DIRENV_VERSION=\"(?<currentValue>.+)\""],
+      "depNameTemplate": "direnv",
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "direnv/direnv",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["Dockerfile\\.tmpl"],
+      "matchStrings": ["ARG JQ_VERSION=\"(?<currentValue>.+)\""],
+      "depNameTemplate": "jq",
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "jqlang/jq",
+      "extractVersionTemplate": "^jq (?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["Dockerfile\\.tmpl"],
+      "matchStrings": ["ARG YQ_VERSION=\"(?<currentValue>.+)\""],
+      "depNameTemplate": "yq",
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "mikefarah/yq",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["Makefile"],
+      "matchStrings": ["_HADOLINT_VERSION = (?<currentValue>.+)"],
+      "depNameTemplate": "hadolint",
+      "datasourceTemplate": "docker",
+      "packageNameTemplate": "hadolint/hadolint"
+    }
+  ]
+}
