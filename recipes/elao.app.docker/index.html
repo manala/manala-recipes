@@ -665,7 +665,7 @@ It uses the <a href="https://github.com/cli/cli" target="_blank">Github CLI tool
 <span class="token target symbol">sync.api-uploads@staging</span><span class="token punctuation">:</span>
   ...</code></pre>
 <h3 id="git-tools">Git tools<a href="#git-tools" class="anchor"></a></h3>
-<p>This recipe contains some git helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app.docker/.manala/make/git.mk" target="_blank"><code class="code-inline" id="47af118f85e5080692eb4c9e5b8e46ee">manala_git_diff</code></a> function.</p>
+<p>This recipe contains some git helpers such as the <a href="https://github.com/manala/manala-recipes/blob/main/elao.app.docker/.manala/make/git.mk" target="_blank"><code class="code-inline" id="47af118f85e5080692eb4c9e5b8e46ee">manala_git_diff</code></a> function.</p>
 <p>This function is useful for example to apply <code class="code-inline" id="bb7790bfaa80da52ecba1a151b299b55">php-cs</code>, <code class="code-inline" id="84a40fcfe7ec43f029d5956efb08d1c2">php-cs-fix</code> or <code class="code-inline" id="b098e670cdbfc421583801f6038ae38d">PHPStan</code> checks only on the subset of updated PHP files and not on any PHP file of your project.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="9d5bcf1164670f5f8afc6b80e182b5ef"><span class="token target symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span> DIFF <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> manala_git_diff, php, src tests<span class="token punctuation">)</span>
@@ -675,7 +675,7 @@ It uses the <a href="https://github.com/cli/cli" target="_blank">Github CLI tool
         printf <span class="token string">"You have made no change in PHP files\n"</span> \
     <span class="token punctuation">)</span></code></pre>
 <h3 id="try-tools">Try tools<a href="#try-tools" class="anchor"></a></h3>
-<p>This recipe contains some try helpers such as the <a href="https://github.com/manala/manala-recipes/blob/master/elao.app.docker/.manala/make/try.mk" target="_blank"><code class="code-inline" id="844a849d3b1c1f2b318c37a8afbb32b9">manala_try_finally</code></a> function.</p>
+<p>This recipe contains some try helpers such as the <a href="https://github.com/manala/manala-recipes/blob/main/elao.app.docker/.manala/make/try.mk" target="_blank"><code class="code-inline" id="844a849d3b1c1f2b318c37a8afbb32b9">manala_try_finally</code></a> function.</p>
 <p>This function is useful for example to run <code class="code-inline" id="85af727fd022d3a13e7972fd6a418582">phpunit</code> tests needing a started symfony server, and to stop this server regardless of the tests return code.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="71f30a117e209f2744480fb56642732e"><span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
@@ -795,7 +795,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2024-12-02UTC15:35:31+00:00">Last modified: December 2, 2024 15:35</time>
+    <time datetime="2024-12-02UTC15:41:31+00:00">Last modified: December 2, 2024 15:41</time>
         </div>
 
         <footer class="footer">
