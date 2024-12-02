@@ -277,6 +277,7 @@
     manala_redis_server_config_template: config/debian/redis.conf.j2
     manala_redis_server_config: "{{ {
       'bind': '0.0.0.0',
+      'protected-mode': False,
     }|combine(system_redis_server_config) }}"
 
     #######
