@@ -52,7 +52,7 @@ MANALA_DOCKER_DEFAULT_SERVICES += elasticsearch
 {{- end }}
 
 ifeq ($(MANALA_DOCKER_COMPOSE_PROFILE),development)
-MANALA_DOCKER_DEFAULT_SERVICES += mailhog
+MANALA_DOCKER_DEFAULT_SERVICES += mailpit
 {{- if or .Vars.system.mysql.version .Vars.system.mariadb.version }}
 MANALA_DOCKER_DEFAULT_SERVICES += phpmyadmin
 {{- end }}
@@ -315,4 +315,4 @@ MANALA_HELP_PROJECT += $(call manala_help,Elasticvue,   http://$(call manala_pro
 {{- if .Vars.system.redis.version }}
 MANALA_HELP_PROJECT += $(call manala_help,PhpRedisAdmin,http://$(call manala_project_host, 81))
 {{- end }}
-MANALA_HELP_PROJECT += $(call manala_help,MailHog,      http://$(call manala_project_host, 25))
+MANALA_HELP_PROJECT += $(call manala_help,Mailpit,      http://$(call manala_project_host, 25))

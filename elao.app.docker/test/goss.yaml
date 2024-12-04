@@ -161,7 +161,7 @@ file:
       - "# Ssh config"
 
 http:
-  # MailHog
+  # Mailpit
   http://localhost:8025:
     status: 200
   # Nginx
