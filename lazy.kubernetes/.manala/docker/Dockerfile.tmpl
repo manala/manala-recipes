@@ -320,28 +320,7 @@ RUN \
 RUN \
     curl -sSLf "https://github.com/mozilla/sops/releases/download/v{{ $sops.version }}/sops-v{{ $sops.version }}.linux.{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
         --output /usr/local/bin/sops \
-    && chmod +x /usr/local/bin/sops \
-    # Oh My Zsh plugin
-    # See: https://github.com/ohmyzsh/ohmyzsh/pull/12757
-    && mkdir /usr/local/share/oh-my-zsh/custom/plugins/sops \
-    && printf "\
-_sops() {\n\
-  local -a opts\n\
-  local cur\n\
-  cur=\${words[-1]}\n\
-  if [[ \"\$cur\" == \"-\"* ]]; then\n\
-    opts=(\"\${(@f)\$(\${words[@]:0:#words[@]-1} \${cur} --generate-shell-completion)}\")\n\
-  else\n\
-    opts=(\"\${(@f)\$(\${words[@]:0:#words[@]-1} --generate-shell-completion)}\")\n\
-  fi\n\
-  if [[ \"\${opts[1]}\" != \"\" ]]; then\n\
-    _describe 'values' opts\n\
-  else\n\
-    _files\n\
-  fi\n\
-}\n\
-compdef _sops sops\n\
-" > /usr/local/share/oh-my-zsh/custom/plugins/sops/sops.plugin.zsh
+    && chmod +x /usr/local/bin/sops
 
 {{ end -}}
 
