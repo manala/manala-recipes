@@ -61,7 +61,7 @@ jobs:
             FOO=BAR
           docker_compose_up: true
           docker_services: >
-            mailhog
+            mailpit
             mariadb
             elasticsearch
 
