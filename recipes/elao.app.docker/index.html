@@ -218,7 +218,7 @@ App:</code></pre>
 <pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- --follow</code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="752b01a310a3b81b2a61261860244707"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="3bddf1d122261aac46ac364194ab1a39"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
@@ -289,7 +289,7 @@ App:</code></pre>
         #               }
         #           }</span>
     <span class="token key atrule">php</span><span class="token punctuation">:</span>
-        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">8.3</span>
+        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">8.4</span>
         <span class="token comment"># composer:</span>
         <span class="token comment">#   version: 1 # Optional</span>
         <span class="token key atrule">extensions</span><span class="token punctuation">:</span>
@@ -523,7 +523,7 @@ Consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.man
     npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="deliveries">Deliveries<a href="#deliveries" class="anchor"></a></h2>
 <p>Here is an example of a production/staging deliveries configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="4963d57b80efd0dc03670a07315c12e9"><span class="token comment">##############</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="e31055d1b19a4377e0cc18d7fccd529a"><span class="token comment">##############</span>
 <span class="token comment"># Deliveries #</span>
 <span class="token comment">##############</span>
 
@@ -589,7 +589,7 @@ Consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.man
     <span class="token comment">#deploy_remove:</span>
     <span class="token comment">#  - web/app_dev.php</span>
     <span class="token key atrule">deploy_post_tasks</span><span class="token punctuation">:</span>
-      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> sudo /bin/systemctl reload php8.3<span class="token punctuation">-</span>fpm
+      <span class="token punctuation">-</span> <span class="token key atrule">shell</span><span class="token punctuation">:</span> sudo /bin/systemctl reload php8.4<span class="token punctuation">-</span>fpm
       <span class="token comment">#- shell: sudo /bin/systemctl restart supervisor</span>
     <span class="token comment"># GitHub</span>
     <span class="token key atrule">github_ssh_key_secret</span><span class="token punctuation">:</span> SSH_DEPLOY_KEY_PRODUCTION
@@ -795,7 +795,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2025-01-16UTC14:57:31+00:00">Last modified: January 16, 2025 14:57</time>
+    <time datetime="2025-01-17UTC09:52:35+00:00">Last modified: January 17, 2025 09:52</time>
         </div>
 
         <footer class="footer">
