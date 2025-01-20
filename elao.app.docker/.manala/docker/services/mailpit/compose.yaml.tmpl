@@ -1,14 +1,13 @@
 services:
 
     ###########
-    # MailHog #
+    # Mailpit #
     ###########
 
-    mailhog:
-        image: jcalonso/mailhog:v1.0.1
-        entrypoint:
-            - /MailHog
-            - -smtp-bind-addr
+    mailpit:
+        image: axllent/mailpit:v1.21.8
+        command:
+            - --smtp
             - 0.0.0.0:25
         network_mode: service:app
 
@@ -18,5 +17,5 @@ services:
 
     app:
         ports:
-            # MailHog
+            # Mailpit
             - {{ include "project_port" (list .Vars.project 25) }}:8025
