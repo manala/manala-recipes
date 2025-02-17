@@ -93,3 +93,9 @@ system:
         # @schema {"enum": [null, "1.9.6", "1.8.5", "1.7.5"]}
         # @option {"label": "Terraform version"}
         version: ~
+    gcloud:
+        # @schema {"enum": [null, "510.0.0"]}
+        # @option {"label": "Google Cloud cli version"}
+        version: ~
+        # @schema {"items": {"type": "string"}}
+        components: []
