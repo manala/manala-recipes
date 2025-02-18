@@ -82,3 +82,9 @@ system:
     terraform:
         version: {{ $terraform.version | toYaml }}
     {{- end }}
+    {{- if .Vars.system.gcloud }}
+    gcloud:
+        version: {{ .Vars.system.gcloud.version | toYaml }}
+        # components:
+        #     - gke-gcloud-auth-plugin
+    {{- end }}

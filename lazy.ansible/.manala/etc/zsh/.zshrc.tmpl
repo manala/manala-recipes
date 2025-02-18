@@ -83,6 +83,9 @@ plugins=(
 {{- if .Vars.system.terraform }}
   terraform
 {{- end }}
+{{- if .Vars.system.gcloud.version }}
+  gcloud
+{{- end }}
 )
 
 source $ZSH/oh-my-zsh.sh

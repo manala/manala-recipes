@@ -130,3 +130,12 @@ command:
     exit-status: 0
     stdout:
       - Terraform v{{ .Vars.system.terraform.version }}
+  # Google Cloud cli
+  gcloud --version:
+    exit-status: 0
+    stdout:
+      - Google Cloud SDK {{ .Vars.system.gcloud.version }}
+  gcloud components list:
+    exit-status: 0
+    stdout:
+      - gke-gcloud-auth-plugin
