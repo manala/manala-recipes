@@ -44,7 +44,7 @@ runs:
 
     - name: Ssh key
       if: inputs.ssh_key != ''
-      uses: webfactory/ssh-agent@v0.7.0
+      uses: webfactory/ssh-agent@v0.9.1
       with:
           ssh-private-key: ${{ inputs.ssh_key }}
 
