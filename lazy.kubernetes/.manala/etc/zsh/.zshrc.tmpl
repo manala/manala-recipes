@@ -143,5 +143,9 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# See: https://seankhliao.com/blog/12021-07-29-makefile-notes/#-zsh--completion
+zstyle ':completion:*:make:*:targets' call-command true
+zstyle ':completion:*:make:*' tag-order targets
+
 # Starship
 eval "$(starship init zsh)"
