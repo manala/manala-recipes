@@ -138,7 +138,7 @@ command:
   scw version:
     exit-status: 0
     stdout:
-      - Version    {{ .Vars.system.scw.version }}
+      - Version          {{ .Vars.system.scw.version }}
   # Sops
   sops --version:
     exit-status: 0
