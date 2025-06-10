@@ -58,7 +58,7 @@ system:
         config: ~
     docker: false
     goss:
-        # @schema {"enum": [null, "0.4.8", "0.3.23"]}
+        # @schema {"enum": [null, "0.4.9", "0.3.23"]}
         version: ~
     apt:
         # @schema {"items": {"type": "string"}}
@@ -70,7 +70,7 @@ system:
         # @schema {"type": ["null", "string"]}
         config: ~
     ansible:
-        # @schema {"enum": ["2.17.4", "2.16.11", "2.15.12", "2.14.17"]}
+        # @schema {"enum": ["2.17.12", "2.16.14", "2.15.13", "2.14.18"]}
         # @option {"label": "Ansible version"}
         version: ~
         # @schema {"type": ["null", "string"]}
@@ -90,11 +90,11 @@ system:
         # @schema {"items": {"type": "string"}}
         dependencies: []
     terraform:
-        # @schema {"enum": [null, "1.9.6", "1.8.5", "1.7.5"]}
+        # @schema {"enum": [null, "1.9.8", "1.8.5", "1.7.5"]}
         # @option {"label": "Terraform version"}
         version: ~
     gcloud:
-        # @schema {"enum": [null, "510.0.0"]}
+        # @schema {"enum": [null, "525.0.0"]}
         # @option {"label": "Google Cloud cli version"}
         version: ~
         # @schema {"items": {"type": "string"}}
