@@ -188,8 +188,8 @@ RUN \
 # Molecule
 RUN \
     pipx install --pip-args="--no-cache-dir" \
-        molecule=={{ $molecule.version }} \
-    {{- if $molecule.dependencies }}
+        molecule=={{ $molecule.version }}
+    {{- if $molecule.dependencies }} \
     && pipx inject --pip-args="--no-cache-dir" molecule \
         {{- range $i, $dependency := $molecule.dependencies }}
         {{- if $i }} \{{- end }}
