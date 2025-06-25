@@ -15,14 +15,5 @@ inputs:
     required: true
 
 runs:
-  using: composite
-  steps:
-
-    - name: run
-      uses: ./.manala/github/system/run
-      with:
-        dir: ${{ inputs.dir }}
-        docker_dir: /srv/app${{ inputs.app != '' && format('/{0}', inputs.app) || '' }}
-        docker_env: >
-          XDG_CACHE_HOME=/srv/cache/${{ inputs.app != '' && format('{0}', inputs.app) || 'project' }}
-        run: ${{ inputs.run }}
+  using: node16
+  main: action.js
