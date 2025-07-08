@@ -42,7 +42,7 @@ system:
             - molecule-plugins==23.6.0
             - molecule-plugins[docker]==23.6.0
     terraform:
-        version: 1.9.8
+        version: 1.12.2
     gcloud:
         version: 525.0.0
         components:
