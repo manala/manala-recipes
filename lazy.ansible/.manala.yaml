@@ -90,7 +90,7 @@ system:
         # @schema {"items": {"type": "string"}}
         dependencies: []
     terraform:
-        # @schema {"enum": [null, "1.9.8", "1.8.5", "1.7.5"]}
+        # @schema {"enum": [null, "1.12.2", "1.11.4", "1.10.5", "1.9.8"]}
         # @option {"label": "Terraform version"}
         version: ~
     gcloud:
