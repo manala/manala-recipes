@@ -85,6 +85,16 @@ command:
     exit-status: 0
     stdout:
       - "Client Version: v{{ .Vars.system.kubectl.version }}"
+  # Krew
+  kubectl krew version:
+    exit-status: 0
+    stdout:
+      - "GitTag            v{{ .Vars.system.krew.version }}"
+  kubectl plugin list:
+    exit-status: 0
+    stdout:
+      - "/usr/local/share/krew/bin/kubectl-krew"
+      - "/usr/local/share/krew/bin/kubectl-ns"
   # Helm
   helm version --short:
     exit-status: 0

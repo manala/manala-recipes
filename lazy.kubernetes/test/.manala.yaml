@@ -25,6 +25,10 @@ system:
             # Git config
     kubectl:
         version: 1.33.1
+    krew:
+        version: 0.4.5
+        plugins:
+            - ns
     helm:
         version: 3.18.2
         plugins:
