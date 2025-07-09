@@ -1,0 +1,5 @@
+{{- $paths := list }}
+
+{{- $paths = append $paths "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" -}}
+
+Defaults secure_path="{{ join ":" $paths }}"

@@ -1,0 +1,9 @@
+{{- $paths := list }}
+
+{{- if .Vars.system.gcloud.version -}}
+{{- $paths = append $paths "/usr/local/share/google-cloud-sdk/bin" -}}
+{{- end }}
+
+{{- $paths = append $paths "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" -}}
+
+Defaults secure_path="{{ join ":" $paths }}"

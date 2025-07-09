@@ -75,6 +75,11 @@ command:
     exit-status: 0
     stdout:
       - "/\\d+\\.\\d+\\.\\d+/"
+  # Sudoers
+  sudo echo $PATH:
+    exit-status: 0
+    stdout:
+      - /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   # Goss
   goss --version:
     exit-status: 0
