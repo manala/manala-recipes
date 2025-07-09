@@ -11,6 +11,13 @@ printf "\033[34m    =- =- -=.--\"\033[0m\n"
 printf "\n"
 {{- $kubectl := .Vars.system.kubectl }}
 printf " \033[36m‣ kubectl \033[35m{{ $kubectl.version }}\033[0m\n"
+{{- $krew := .Vars.system.krew }}
+{{- if $krew.version }}
+printf " \033[36m‣ krew \033[35m{{ $krew.version }}\033[0m\n"
+{{- range $plugin := $krew.plugins }}
+printf "    \033[36m· {{ $plugin }} \033[0m\n"
+{{- end }}
+{{- end }}
 {{- $helm := .Vars.system.helm }}
 {{- if $helm.version }}
 printf " \033[36m‣ helm \033[35m{{ $helm.version }}\033[0m\n"

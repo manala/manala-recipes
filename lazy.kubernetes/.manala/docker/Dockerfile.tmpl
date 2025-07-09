@@ -153,6 +153,27 @@ RUN \
     curl -sSLf "https://dl.k8s.io/v{{ $kubectl.version }}/kubernetes-client-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
         | bsdtar -xvf - -C /usr/local/bin --strip-components=3 kubernetes/client/bin/kubectl
 
+{{ $krew := .Vars.system.krew -}}
+{{- if $krew.version }} \
+# Krew
+ENV KREW_ROOT="/usr/local/share/krew"
+ENV PATH="$KREW_ROOT/bin:$PATH"
+RUN \
+    curl -sSLf "https://github.com/kubernetes-sigs/krew/releases/download/v{{ $krew.version }}/krew-linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+        | bsdtar --no-xattrs -xvf - -C /tmp "krew-linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && /tmp/krew-linux_"{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" install krew \
+    && rm -rf /tmp/krew-linux_"{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    && echo "Defaults env_keep += KREW_ROOT" > /etc/sudoers.d/krew
+    {{- if $krew.plugins }} \
+    # Plugins
+      {{- range $i, $plugin := $krew.plugins }}
+    && kubectl krew install {{ $plugin }}
+      {{- if ne $i (sub (len $krew.plugins) 1) }} \{{ end -}}
+      {{- end }}
+    {{- end }}
+
+{{ end -}}
+
 {{ $helm := .Vars.system.helm -}}
 {{ if $helm.version -}}
 # Helm
