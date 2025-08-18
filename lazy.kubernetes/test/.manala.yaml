@@ -15,10 +15,9 @@ system:
         - path: .env.3
           required: false
     docker: true
-    goss:
-        version: 0.4.9
     apt:
         packages:
+            - goss
             - nano
     git:
         config: |

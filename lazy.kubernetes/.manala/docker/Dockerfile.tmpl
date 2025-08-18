@@ -4,14 +4,13 @@
 # Base #
 ########
 
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
 ARG MANALA_USER_ID="1000"
 ARG MANALA_GROUP_ID="1000"
 
-ARG GOSU_VERSION="1.17"
 ARG GOMPLATE_VERSION="4.3.3"
 ARG DIRENV_VERSION="2.37.1"
 ARG JQ_VERSION="1.7.1"
@@ -42,6 +41,7 @@ apt-get --quiet --yes --no-install-recommends --verbose-versions install \
     curl \
     git \
     gnupg \
+    gosu \
     less \
     libarchive-tools \
     make \
@@ -56,10 +56,6 @@ addgroup --gid ${MANALA_GROUP_ID} lazy
 adduser --home /home/lazy --shell /bin/zsh --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy
 install --verbose --mode 0755 --group lazy --owner lazy --directory /run/user/${MANALA_USER_ID}
 echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy
-# Gosu
-curl -sSLf "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-    --output /usr/local/bin/gosu
-chmod +x /usr/local/bin/gosu
 # Gomplate
 curl -sSLf "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
     --output /usr/local/bin/gomplate
@@ -140,17 +136,6 @@ apt-get --quiet --yes --no-install-recommends --verbose-versions install \
     docker-ce-cli
 # Clean
 rm -rf /var/lib/apt/lists/*
-EOF
-
-{{ end -}}
-
-{{ $goss := .Vars.system.goss -}}
-{{ if $goss.version -}}
-# Goss
-RUN <<EOF
-curl -sSLf "https://github.com/goss-org/goss/releases/download/v{{ $goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-    --output /usr/local/bin/goss
-chmod +x /usr/local/bin/goss
 EOF
 
 {{ end -}}

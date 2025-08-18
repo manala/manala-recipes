@@ -58,9 +58,6 @@ system:
         # @schema {"type": ["null", "string"]}
         config: ~
     docker: false
-    goss:
-        # @schema {"enum": [null, "0.4.4", "0.3.23"]}
-        version: ~
     apt:
         # @schema {"items": {"type": "string"}}
         packages: []
@@ -69,7 +66,7 @@ system:
         config: ~
     nginx:
         # @option {"label": "Nginx version"}
-        # @schema {"enum": [1.24]}
+        # @schema {"enum": [1.28]}
         version: ~
         # @schema {"type": "integer", "exclusiveMinimum": 1024, "maximum": 65535}
         port: 8000

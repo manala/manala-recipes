@@ -15,16 +15,15 @@ system:
         - path: .env.3
           required: false
     docker: true
-    goss:
-        version: 0.4.4
     apt:
         packages:
+            - goss
             - nano
     git:
         config: |
             # Git config
     nginx:
-        version: 1.24
+        version: 1.28
     php:
         version: 8.3
         extensions:
