@@ -57,9 +57,6 @@ system:
         # @schema {"type": ["null", "string"]}
         config: ~
     docker: false
-    goss:
-        # @schema {"enum": [null, "0.4.9", "0.3.23"]}
-        version: ~
     apt:
         # @schema {"items": {"type": "string"}}
         packages: []
