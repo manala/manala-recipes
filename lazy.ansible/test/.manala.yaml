@@ -26,7 +26,7 @@ system:
         config: |
             # Ssh config
     ansible:
-        version: 2.17.13
+        version: 2.19.0
         config: |
             # Ansible config
         dependencies:

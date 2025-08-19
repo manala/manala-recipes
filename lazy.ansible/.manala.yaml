@@ -67,7 +67,7 @@ system:
         # @schema {"type": ["null", "string"]}
         config: ~
     ansible:
-        # @schema {"enum": ["2.17.13", "2.16.14", "2.15.13", "2.14.18"]}
+        # @schema {"enum": ["2.19.0", "2.18.8", "2.17.13", "2.16.14"]}
         # @option {"label": "Ansible version"}
         version: ~
         # @schema {"type": ["null", "string"]}
