@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 ########
 # Base #
 ########
@@ -30,65 +32,67 @@ ENV STARSHIP_CONFIG=/etc/starship/starship.toml
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN \
-    apt-get --quiet update \
-    && apt-get --quiet --yes --purge --autoremove upgrade \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        bzip2 \
-        ca-certificates \
-        curl \
-        git \
-        gnupg \
-        less \
-        libarchive-tools \
-        make \
-        rsync \
-        s6 \
-        socat \
-        sudo \
-        vim \
-        zsh \
-    # User
-    && addgroup --gid ${MANALA_GROUP_ID} lazy \
-    && adduser --home /home/lazy --shell /bin/zsh --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy \
-    && install --verbose --mode 0755 --group lazy --owner lazy --directory /run/user/${MANALA_USER_ID} \
-    && echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy \
-    # Gosu
-    && curl -sSLf "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-        --output /usr/local/bin/gosu \
-    && chmod +x /usr/local/bin/gosu \
-    # Gomplate
-    && curl -sSLf "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-        --output /usr/local/bin/gomplate \
-    && chmod +x /usr/local/bin/gomplate \
-    # Direnv
-    && curl -sSLf "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-        --output /usr/local/bin/direnv \
-    && chmod +x /usr/local/bin/direnv \
-    # Jq
-    && curl -sSLf "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-        --output /usr/local/bin/jq \
-    && chmod +x /usr/local/bin/jq \
-    # Yq
-    && curl -sSLf "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-        --output /usr/local/bin/yq \
-    && chmod +x /usr/local/bin/yq \
-    # Oh My Zsh
-    && git clone https://github.com/ohmyzsh/ohmyzsh.git /usr/local/share/oh-my-zsh \
-    # See: https://github.com/ohmyzsh/ohmyzsh/issues/11995
-    && git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-autosuggestions \
-    && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-syntax-highlighting \
-    && echo "ZDOTDIR=/etc/zsh" > /etc/zsh/zshenv \
-    # Starship
-    && curl -sSLf "https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-unknown-linux-musl.tar.gz" \
-        | bsdtar -xvf - -C /usr/local/bin \
-    && echo "Defaults env_keep += STARSHIP_CONFIG" > /etc/sudoers.d/starship \
-    # Fzf
-    && curl -sSLf "https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
-        | bsdtar -xvf - -C /usr/local/bin \
-    && chmod +x /usr/local/bin/fzf \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+RUN <<EOF
+# Packages
+apt-get --quiet update
+apt-get --quiet --yes --purge --autoremove upgrade
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    bzip2 \
+    ca-certificates \
+    curl \
+    git \
+    gnupg \
+    less \
+    libarchive-tools \
+    make \
+    rsync \
+    s6 \
+    socat \
+    sudo \
+    vim \
+    zsh
+# User
+addgroup --gid ${MANALA_GROUP_ID} lazy
+adduser --home /home/lazy --shell /bin/zsh --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy
+install --verbose --mode 0755 --group lazy --owner lazy --directory /run/user/${MANALA_USER_ID}
+echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy
+# Gosu
+curl -sSLf "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/gosu
+chmod +x /usr/local/bin/gosu
+# Gomplate
+curl -sSLf "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/gomplate
+chmod +x /usr/local/bin/gomplate
+# Direnv
+curl -sSLf "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/direnv
+chmod +x /usr/local/bin/direnv
+# Jq
+curl -sSLf "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/jq
+chmod +x /usr/local/bin/jq
+# Yq
+curl -sSLf "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/yq
+chmod +x /usr/local/bin/yq
+# Oh My Zsh
+git clone https://github.com/ohmyzsh/ohmyzsh.git /usr/local/share/oh-my-zsh
+# See: https://github.com/ohmyzsh/ohmyzsh/issues/11995
+git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+echo "ZDOTDIR=/etc/zsh" > /etc/zsh/zshenv
+# Starship
+curl -sSLf "https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-unknown-linux-musl.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin
+echo "Defaults env_keep += STARSHIP_CONFIG" > /etc/sudoers.d/starship
+# Fzf
+curl -sSLf "https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin
+chmod +x /usr/local/bin/fzf
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
 
 ##########
 # System #
@@ -96,133 +100,142 @@ RUN \
 
 {{ $apt := .Vars.system.apt -}}
 
-RUN \
-    apt-get --quiet update \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        unzip \
-        {{- range $package := $apt.packages }}
-        {{ $package }} \
-        {{- end }}
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+RUN <<EOF
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    unzip
+    {{- if $apt.packages }} \
+    {{- range $i, $package := $apt.packages }}
+    {{- if $i }} \{{- end }}
+    {{ $package }}
+    {{- end }}
+    {{- end }}
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
 
 {{ if .Vars.system.docker -}}
 # Docker
-RUN \
-    curl -sSLf https://download.docker.com/linux/debian/gpg \
-        --output /etc/apt/keyrings/docker.asc \
-    && printf "\
+RUN <<EOF
+curl -sSLf https://download.docker.com/linux/debian/gpg \
+    --output /etc/apt/keyrings/docker.asc
+printf "\
 Types: deb\n\
 URIs: https://download.docker.com/linux/debian\n\
 Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
 Components: stable\n\
 Signed-By: /etc/apt/keyrings/docker.asc\n\
-" > /etc/apt/sources.list.d/docker.sources \
-    && apt-get --quiet update \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        docker-ce-cli \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+" > /etc/apt/sources.list.d/docker.sources
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    docker-ce-cli
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
 
 {{ end -}}
 
 {{ $goss := .Vars.system.goss -}}
 {{ if $goss.version -}}
 # Goss
-RUN \
-    curl -sSLf "https://github.com/goss-org/goss/releases/download/v{{ $goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-        --output /usr/local/bin/goss \
-    && chmod +x /usr/local/bin/goss
+RUN <<EOF
+curl -sSLf "https://github.com/goss-org/goss/releases/download/v{{ $goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/goss
+chmod +x /usr/local/bin/goss
+EOF
 
 {{ end -}}
 
 # Nginx
 {{ $nginx := .Vars.system.nginx -}}
-RUN \
-    curl -sSLf http://nginx.org/keys/nginx_signing.key \
-        --output /etc/apt/keyrings/nginx.asc \
-    && printf "\
+RUN <<EOF
+curl -sSLf http://nginx.org/keys/nginx_signing.key \
+    --output /etc/apt/keyrings/nginx.asc
+printf "\
 Types: deb\n\
 URIs: http://nginx.org/packages/debian\n\
 Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
 Components: nginx\n\
 Signed-By: /etc/apt/keyrings/nginx.asc\n\
-" > /etc/apt/sources.list.d/nginx.sources \
-    && printf "\
+" > /etc/apt/sources.list.d/nginx.sources
+printf "\
 Package: nginx\n\
 Pin: version {{ $nginx.version }}.*\n\
 Pin-Priority: 1000\n\
-" > /etc/apt/preferences.d/nginx \
-    && apt-get --quiet update \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        nginx={{ $nginx.version }}.* \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+" > /etc/apt/preferences.d/nginx
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    nginx={{ $nginx.version }}.*
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
 
 # Php
 {{ $php := .Vars.system.php -}}
-RUN \
-    curl -sSLf https://packages.sury.org/php/apt.gpg \
-        --output /etc/apt/keyrings/sury_php.gpg \
-    && printf "\
+RUN <<EOF
+curl -sSLf https://packages.sury.org/php/apt.gpg \
+    --output /etc/apt/keyrings/sury_php.gpg
+printf "\
 Types: deb\n\
 URIs: https://packages.sury.org/php/\n\
 Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
 Components: main\n\
 Signed-By: /etc/apt/keyrings/sury_php.gpg\n\
-" > /etc/apt/sources.list.d/sury_php.sources \
-    && apt-get --quiet update \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        php{{ $php.version }}-cli \
-        php{{ $php.version }}-fpm \
-        php{{ $php.version }}-opcache \
-        php{{ $php.version }}-xdebug \
-        # Symfony
-        php{{ $php.version }}-curl \
-        php{{ $php.version }}-intl \
-        php{{ $php.version }}-mbstring \
-        php{{ $php.version }}-xml \
-        # Project
-        {{- range $php.extensions }}
-        php{{ $php.version }}-{{ . }} \
-        {{- end }}
-    && apt-get --quiet --yes --purge --autoremove upgrade \
-    && phpdismod xdebug \
-    && install --verbose --mode 0755 --directory /run/php \
-    && update-alternatives --install /usr/sbin/php-fpm php-fpm /usr/sbin/php-fpm{{ $php.version }} 1 \
-    && update-alternatives --install /etc/php/default php-config-default /etc/php/{{ $php.version }} 1 \
-    # Composer
-    && curl -sSLf https://getcomposer.org/installer \
-        | php -- --install-dir /usr/local/bin --filename composer \
-    # Symfony
-    && curl -sSLf "https://github.com/symfony-cli/symfony-cli/releases/latest/download/symfony-cli_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
-        | bsdtar -xvf - -C /usr/local/bin symfony \
-    # Oh My Zsh plugin
-    # See: https://github.com/ohmyzsh/ohmyzsh/pull/12768
-    && mkdir /usr/local/share/oh-my-zsh/custom/plugins/symfony-cli \
-    && printf "\
+" > /etc/apt/sources.list.d/sury_php.sources
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    php{{ $php.version }}-cli \
+    php{{ $php.version }}-fpm \
+    php{{ $php.version }}-opcache \
+    php{{ $php.version }}-xdebug \
+    php{{ $php.version }}-curl \
+    php{{ $php.version }}-intl \
+    php{{ $php.version }}-mbstring \
+    php{{ $php.version }}-xml
+    {{- if $php.extensions }} \
+    {{- range $i, $extension := $php.extensions }}
+    {{- if $i }} \{{- end }}
+    php{{ $php.version }}-{{ $extension }}
+    {{- end }}
+    {{- end }}
+apt-get --quiet --yes --purge --autoremove upgrade
+phpdismod xdebug
+install --verbose --mode 0755 --directory /run/php
+update-alternatives --install /usr/sbin/php-fpm php-fpm /usr/sbin/php-fpm{{ $php.version }} 1
+update-alternatives --install /etc/php/default php-config-default /etc/php/{{ $php.version }} 1
+# Composer
+curl -sSLf https://getcomposer.org/installer \
+    | php -- --install-dir /usr/local/bin --filename composer
+# Symfony
+curl -sSLf "https://github.com/symfony-cli/symfony-cli/releases/latest/download/symfony-cli_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin symfony
+# Oh My Zsh plugin
+# See: https://github.com/ohmyzsh/ohmyzsh/pull/12768
+mkdir /usr/local/share/oh-my-zsh/custom/plugins/symfony-cli
+printf "\
 if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_symfony-cli\" ]]; then\n\
   typeset -g -A _comps\n\
   autoload -Uz _symfony-cli\n\
   _comps[symfony]=_symfony-cli\n\
 fi\n\
 symfony self:completion zsh >| \"\$ZSH_CACHE_DIR/completions/_symfony-cli\" &|\n\
-" > /usr/local/share/oh-my-zsh/custom/plugins/symfony-cli/symfony-cli.plugin.zsh \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+" > /usr/local/share/oh-my-zsh/custom/plugins/symfony-cli/symfony-cli.plugin.zsh
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
 
 {{ $nodejs := .Vars.system.nodejs -}}
 {{ if $nodejs.version -}}
 # Nodejs
-RUN \
+RUN <<EOF
 {{- if semverCompare "<=20" ($nodejs.version | toString) }}
-    curl -sSLf https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
-        --output /etc/apt/keyrings/nodesource.asc \
+curl -sSLf https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
+    --output /etc/apt/keyrings/nodesource.asc
 {{- else }}
-    curl -sSLf https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
-        --output /etc/apt/keyrings/nodesource.asc \
+curl -sSLf https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+    --output /etc/apt/keyrings/nodesource.asc
 {{- end }}
-    && printf "\
+printf "\
 Types: deb\n\
 URIs: https://deb.nodesource.com/node_{{ $nodejs.version }}.x\n\
 {{- if semverCompare "<=20" ($nodejs.version | toString) }}
@@ -232,42 +245,44 @@ Suites: nodistro\n\
 {{- end }}
 Components: main\n\
 Signed-By: /etc/apt/keyrings/nodesource.asc\n\
-" > /etc/apt/sources.list.d/nodesource.sources \
-    && printf "\
+" > /etc/apt/sources.list.d/nodesource.sources
+printf "\
 Package: nodejs\n\
 Pin: origin deb.nodesource.com\n\
 Pin-Priority: 1000\n\
-" > /etc/apt/preferences.d/nodejs \
-    && curl -sSLf https://dl.yarnpkg.com/debian/pubkey.gpg \
-        --output /etc/apt/keyrings/yarn.asc \
-    && printf "\
+" > /etc/apt/preferences.d/nodejs
+curl -sSLf https://dl.yarnpkg.com/debian/pubkey.gpg \
+    --output /etc/apt/keyrings/yarn.asc
+printf "\
 Types: deb\n\
 URIs:  https://dl.yarnpkg.com/debian/\n\
 Suites: stable\n\
 Components: main\n\
 Signed-By: /etc/apt/keyrings/yarn.asc\n\
-" > /etc/apt/sources.list.d/yarn.sources \
-    && apt-get --quiet update \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        nodejs \
-        yarn \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+" > /etc/apt/sources.list.d/yarn.sources
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    nodejs \
+    yarn
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
 
 {{ end -}}
 
 {{ if .Vars.deploy.inventory -}}
 # Ansistrano
-RUN \
-    apt-get --quiet update \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        ansible \
-        openssh-client \
-    && ansible-galaxy install --roles-path /usr/share/ansible/roles \
-        ansistrano.deploy,3.14.0 \
-        ansistrano.rollback,3.1.0 \
-    # Clean
-    && rm -rf /var/lib/apt/lists/*
+RUN <<EOF
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    ansible \
+    openssh-client
+ansible-galaxy install --roles-path /usr/share/ansible/roles \
+    ansistrano.deploy,3.14.0 \
+    ansistrano.rollback,3.1.0
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
 
 {{ end -}}
 
