@@ -158,7 +158,7 @@ jobs:
         run: |
           echo {{ `${{ steps.find-prs.outputs.prs }}` }} | jq -c '.[]' | while read pr; do
             gh pr view $pr --json=number,title
-            {{ `gh pr comment $pr --body "> **Warning** la branche ^b^$tierRef^b^ a été reset. Cette PR doit à nouveau être mergée sur ^b^$tierRef^b^"`| replace "^b^" "\\`" | replace "$tierRef" $tierRef }}
+            {{ `echo -e "> [\!Warning] \n> la branche ^b^$tierRef^b^ a été reset. Cette PR doit à nouveau être mergée sur ^b^$tierRef^b^" | gh pr comment $pr --body-file - `| replace "^b^" "\\`" | replace "$tierRef" $tierRef }}
           done
 
   deploy:
