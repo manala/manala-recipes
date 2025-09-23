@@ -24,6 +24,8 @@ services:
             - ../../{{ $mount }}:${MANALA_DIR}/{{ $mount }}
               {{- end }}
             {{- end }}
+        tmpfs:
+            - /tmp
         environment:
             MANALA_DIR: ${MANALA_DIR}
             MANALA_CACHE_DIR: ${MANALA_CACHE_DIR}
