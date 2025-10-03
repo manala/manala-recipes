@@ -53,6 +53,8 @@ system:
     env_file: []
     # @schema {"items": {"type": "string"}}
     mount: []
+    # @schema {"items": {"type": "string"}}
+    tmpfs: []
     starship:
         # @schema {"type": ["null", "string"]}
         config: ~
