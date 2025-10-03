@@ -22,6 +22,17 @@ user:
       - lazy
     shell: /bin/zsh
 
+mount:
+  # Tmpfs
+  /tmpfs:
+    exists: true
+    filesystem: tmpfs
+    opts: [rw, nosuid, nodev, noexec, relatime]
+  /tmpfs/exec:
+    exists: true
+    filesystem: tmpfs
+    opts: [rw, nosuid, nodev, relatime]
+
 file:
   # Base
   /etc/os-release:

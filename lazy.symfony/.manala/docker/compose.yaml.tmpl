@@ -30,8 +30,12 @@ services:
             - ../../{{ $mount }}:${MANALA_DIR}/{{ $mount }}
               {{- end }}
             {{- end }}
+        {{- if .Vars.system.tmpfs }}
         tmpfs:
-            - /tmp
+            {{- range $fs := .Vars.system.tmpfs }}
+            - {{ $fs }}
+            {{- end }}
+        {{- end }}
         environment:
             MANALA_DIR: ${MANALA_DIR}
             MANALA_CACHE_DIR: ${MANALA_CACHE_DIR}
