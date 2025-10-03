@@ -23,9 +23,6 @@ ARG FZF_VERSION="0.65.2"
 # It's also internally used for checking we're running inside a container.
 ENV container="docker"
 
-# Default locale
-ENV LANG="C.UTF-8"
-
 # Starship
 ENV STARSHIP_CONFIG=/etc/starship/starship.toml
 
@@ -51,6 +48,13 @@ apt-get --quiet --yes --no-install-recommends --verbose-versions install \
     sudo \
     vim \
     zsh
+{{- if ne .Vars.system.locale "C.UTF-8" }}
+# Locale
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    locales
+sed -i "/^# *{{ .Vars.system.locale }}\b/s/^# *//" /etc/locale.gen
+dpkg-reconfigure locales
+{{- end }}
 # User
 addgroup --gid ${MANALA_GROUP_ID} lazy
 adduser --home /home/lazy --shell /bin/zsh --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy
@@ -89,6 +93,9 @@ chmod +x /usr/local/bin/fzf
 # Clean
 rm -rf /var/lib/apt/lists/*
 EOF
+
+# Locale
+ENV LANG="{{ .Vars.system.locale }}"
 
 ##########
 # System #
