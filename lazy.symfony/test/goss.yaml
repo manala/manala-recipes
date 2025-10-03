@@ -79,6 +79,11 @@ command:
     exit-status: 0
     stdout:
       - "/\\d+\\.\\d+\\.\\d+/"
+  # Locale
+  locale -a:
+    exit-status: 0
+    stdout:
+      - en_US.utf8
   # Env
   echo ${TEST}:
     exit-status: 0

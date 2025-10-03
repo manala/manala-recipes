@@ -6,6 +6,7 @@ project:
     name: lazy-ansible-test
 
 system:
+    locale: en_US.UTF-8
     env:
         TEST: test
     env_file:

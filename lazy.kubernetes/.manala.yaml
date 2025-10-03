@@ -30,6 +30,7 @@ project:
 
 system:
     dir: ~
+    locale: C.UTF-8
     # @schema {
     #     "additionalProperties": {"type": ["string", "integer"]},
     #     "propertyNames": {"pattern": "^[A-Z_]+$"}
