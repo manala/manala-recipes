@@ -172,7 +172,7 @@ apt-get --quiet update
 apt-get --quiet --yes --no-install-recommends --verbose-versions install \
     "${BUILD_PACKAGES[@]}"
 pipx install --pip-args="--no-cache-dir" \
-    ansible-lint=={{ $ansibleLint.version }}
+    ansible-lint[lock]=={{ $ansibleLint.version }}
 {{- if $ansibleLint.dependencies }}
 pipx inject --pip-args="--no-cache-dir" ansible-lint \
     {{- range $i, $dependency := $ansibleLint.dependencies }}
