@@ -18,6 +18,10 @@ printf " \033[36m‣ krew \033[35m{{ $krew.version }}\033[0m\n"
 printf "    \033[36m· {{ $plugin }} \033[0m\n"
 {{- end }}
 {{- end }}
+{{- $kustomize := .Vars.system.kustomize }}
+{{- if $kustomize.version }}
+printf " \033[36m‣ kustomize \033[35m{{ $kustomize.version }}\033[0m\n"
+{{- end }}
 {{- $helm := .Vars.system.helm }}
 {{- if $helm.version }}
 printf " \033[36m‣ helm \033[35m{{ $helm.version }}\033[0m\n"

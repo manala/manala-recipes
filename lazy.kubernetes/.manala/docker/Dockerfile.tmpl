@@ -154,6 +154,16 @@ curl -sSLf "https://dl.k8s.io/v{{ $kubectl.version }}/kubernetes-client-linux-{{
     | bsdtar -xvf - -C /usr/local/bin --strip-components=3 kubernetes/client/bin/kubectl
 EOF
 
+{{ $kustomize := .Vars.system.kustomize -}}
+{{ if $kustomize.version -}}
+# Kustomize
+RUN <<EOF
+curl -sSLf "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v{{ $kustomize.version }}/kustomize_v{{ $kustomize.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin
+EOF
+
+{{ end -}}
+
 {{ $krew := .Vars.system.krew -}}
 {{- if $krew.version }} \
 # Krew
