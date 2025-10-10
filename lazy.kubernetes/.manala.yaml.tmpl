@@ -35,6 +35,10 @@ system:
             #directory = *
     kubectl:
         version: {{ .Vars.system.kubectl.version | toYaml }}
+    {{- if .Vars.system.kustomize.version }}
+    kustomize:
+        version: {{ .Vars.system.kustomize.version | toYaml }}
+    {{- end }}
     {{- if .Vars.system.helm.version }}
     helm:
         version: {{ .Vars.system.helm.version | toYaml }}

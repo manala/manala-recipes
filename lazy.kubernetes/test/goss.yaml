@@ -95,6 +95,11 @@ command:
     exit-status: 0
     stdout:
       - "Client Version: v{{ .Vars.system.kubectl.version }}"
+  # Kustomize
+  kustomize version:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.kustomize.version }}
   # Krew
   kubectl krew version:
     exit-status: 0
