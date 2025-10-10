@@ -275,7 +275,7 @@ EOF
 # Vault
 RUN <<EOF
 curl -sSLf "https://releases.hashicorp.com/vault/{{ $vault.version }}/vault_{{ $vault.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
-    | bsdtar -xvf - -C /usr/local/bin
+    | bsdtar -xvf - -C /usr/local/bin vault
 chmod +x /usr/local/bin/vault
 EOF
 
