@@ -124,6 +124,11 @@ command:
     stdout:
       - "/ansible-lint(\\s+){{ (index .Vars.system "ansible-lint").version }}/"
       - "/pytest(\\s+)\\d+\\.\\d+\\.\\d+/"
+  # Ansible Creator
+  ansible-creator --version:
+    exit-status: 0
+    stdout:
+      - {{ (index .Vars.system "ansible-creator").version }}
   # Molecule
   FORCE_COLOR=0 molecule --version:
     exit-status: 0

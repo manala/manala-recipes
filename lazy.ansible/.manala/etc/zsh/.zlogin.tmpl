@@ -21,6 +21,10 @@ printf " \033[36m‣ ansible-lint \033[35m{{ $ansibleLint.version }}\033[0m\n"
 printf "    \033[36m· {{ $dependency }}\033[0m\n"
 {{- end }}
 {{- end }}
+{{- $ansibleCreator := index .Vars.system "ansible-creator" }}
+{{- if $ansibleCreator.version }}
+printf " \033[36m‣ ansible-creator \033[35m{{ $ansibleCreator.version }}\033[0m\n"
+{{- end }}
 {{- $molecule := .Vars.system.molecule }}
 {{- if $molecule.version }}
 printf " \033[36m‣ molecule \033[35m{{ $molecule.version }}\033[0m\n"

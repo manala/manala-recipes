@@ -83,6 +83,10 @@ system:
         version: ~
         # @schema {"items": {"type": "string"}}
         dependencies: []
+    ansible-creator:
+        # @schema {"enum": [null, "25.9.0"]}
+        # @option {"label": "Ansible-creator version"}
+        version: ~
     molecule:
         # @schema {"enum": [null, "25.9.0", "25.7.0", "24.9.0", "24.8.0", "24.7.0", "24.6.1"]}
         # @option {"label": "Molecule version"}
