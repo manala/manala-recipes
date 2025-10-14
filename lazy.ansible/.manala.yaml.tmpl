@@ -71,6 +71,12 @@ system:
         version: {{ $ansibleLint.version | toYaml }}
     {{- end }}
 
+    {{- $ansibleCreator := index .Vars.system "ansible-creator" }}
+    {{- if $ansibleCreator.version }}
+    ansible-creator:
+        version: {{ $ansibleCreator.version | toYaml }}
+    {{- end }}
+
     {{- $molecule := .Vars.system.molecule }}
     {{- if $molecule.version }}
     molecule:

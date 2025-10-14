@@ -188,6 +188,16 @@ EOF
 
 {{ end -}}
 
+{{ $ansibleCreator := index .Vars.system "ansible-creator" -}}
+{{ if $ansibleCreator.version -}}
+# Ansible Creator
+RUN <<EOF
+pipx install --pip-args="--no-cache-dir" \
+    ansible-creator=={{ $ansibleCreator.version }}
+EOF
+
+{{ end -}}
+
 {{ $molecule := .Vars.system.molecule -}}
 {{ if $molecule.version -}}
 # Molecule
