@@ -26,7 +26,7 @@ ENV container="docker"
 # Starship
 ENV STARSHIP_CONFIG=/etc/starship/starship.toml
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
 RUN <<EOF
 # Packages
