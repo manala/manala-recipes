@@ -233,26 +233,6 @@ Regenerate certificates if necessary
 make provision.certificates
 ```
 
-### Mutagen
-
-Mutagen in a great tool to sync files between host and guest, but could be tweaked a bit in some situations in `.manala.yaml`:
-
-```yaml
-system:
-    ...
-    docker:
-        ...
-        mutagen:
-            ignore:
-                paths:
-                    # Single app
-                    - /var/cache
-                    - /var/log
-                    # Multi app
-                    - /foo/var/cache
-                    - /foo/var/log
-```
-
 ### Nginx
 
 Ensure nginx logs path are properly set on `/srv/log` in `.manala.yaml`.
