@@ -12,8 +12,6 @@ MacOS
 
 * Docker Desktop 4.29.0+
 (`brew install docker`)
-* Mutagen Compose 0.17.5+
-(`brew install mutagen-io/mutagen/mutagen-compose`)
 
 Linux
 
@@ -300,17 +298,6 @@ system:
                 ports:
                     # whoami
                     - 12345:80
-        # Optimizes Mutagen sync performances (adapt to your project structure)
-        mutagen:
-            ignore:
-                paths:
-                    # Webpack build files
-                    - /public/build/
-                    # Node modules cache (Babel, ...)
-                    - /node_modules/.cache
-                    # Symfony log & cache files
-                    - /var/cache
-                    - /var/log
 ```
 
 Details:
