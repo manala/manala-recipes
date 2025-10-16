@@ -32,7 +32,7 @@ project:
 
 system:
     # @option {"label": "System version"}
-    # @schema {"enum": [12, 11, 10]}
+    # @schema {"enum": [13, 12, 11]}
     version: ~
     # @schema {"type": "string", "pattern": "^[a-zA-Z]+/[a-zA-Z]+$"}
     timezone: Etc/UTC
@@ -60,7 +60,7 @@ system:
     network:
         hosts: {}
     goss:
-        # @schema {"enum": [null, "0.4.4"]}
+        # @schema {"enum": [null, "0.4.9"]}
         version: ~
     nginx:
         # @schema {
@@ -107,7 +107,7 @@ system:
         configs: []
     nodejs:
         # @option {"label": "Nodejs version"}
-        # @schema {"enum": [null, 22, 20, 18, 16, 14, 12, 10, 8, 6]}
+        # @schema {"enum": [null, 24, 22, 20, 18, 16, 14, 12, 10]}
         version: ~
         # @schema {"items": {"type": "object"}}
         packages: []
@@ -116,11 +116,11 @@ system:
             version: ~
     mariadb:
         # @option {"label": "MariaDB version"}
-        # @schema {"enum": [null, 11.4, 10.11, 10.6, 10.5, 10.4, 10.3, 10.2, 10.1]}
+        # @schema {"enum": [null, 11.8, 11.4, 10.11, 10.6, 10.5]}
         version: ~
     mysql:
         # @option {"label": "MySQL version"}
-        # @schema {"enum": [null, "8.0", 5.7]}
+        # @schema {"enum": [null, "8.0"]}
         version: ~
     redis:
         # @option {"label": "Redis version"}

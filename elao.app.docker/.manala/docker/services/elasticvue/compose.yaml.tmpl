@@ -6,7 +6,7 @@ services:
     ##############
 
     elasticvue :
-        image: cars10/elasticvue:0.44.0
+        image: cars10/elasticvue:1.8.0
         ports:
             - {{ include "project_port" (list .Vars.project 78) }}:8080
 {{ else -}}

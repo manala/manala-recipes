@@ -4,9 +4,6 @@ system:
 
         # Ansible
         ansible_connection: local
-        {{- if le (.Vars.system.version|int) 10 }}
-        ansible_python_interpreter: /usr/bin/python3
-        {{- end }}
 
         # Variables
         apt_architecture: {{ `"{{ ansible_facts.architecture | manala.roles.apt_architecture }}"` }}
@@ -62,9 +59,6 @@ system:
         system_mysql_version: {{ .Vars.system.mysql.version | toYaml }}
         system_mysql_install_packages:
             - default-mysql-client
-            {{- if eq (.Vars.system.version|int) 10 }}
-            - libmariadb3
-            {{- end }}
         # Network
         system_network: false
         # Nginx
