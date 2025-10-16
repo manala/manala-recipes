@@ -153,9 +153,6 @@ system:
         services:
             app:
                 ports: []
-        mutagen:
-            ignore:
-                paths: []
 
 ##############
 # Deliveries #
