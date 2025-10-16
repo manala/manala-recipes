@@ -7,11 +7,6 @@ services:
 
     mysql:
         image: mysql/mysql-server:{{ .Vars.system.mysql.version | toString }}
-        {{- if le (.Vars.system.mysql.version|float64) 5.7 }}
-        # mysql/mysql-server image unavailable for arm64 on version <= 5.7
-        # force amd64 architecture
-        platform: linux/amd64
-        {{- end }}
         environment:
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
             MYSQL_ROOT_HOST: "%"

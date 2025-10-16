@@ -41,7 +41,7 @@ command:
   ansible --version:
     exit-status: 0
     stdout:
-      - "/ansible \\[core 2\\.15\\.\\d+\\]/"
+      - "/ansible \\[core 2\\.18\\.\\d+\\]/"
   # Locales
   locale:
     exit-status: 0
@@ -117,10 +117,10 @@ file:
     contents:
       - VERSION_ID="{{ .Vars.system.version }}"
   # Timezone
-  /etc/timezone:
+  /etc/localtime:
     exists: true
-    contents:
-      - {{ .Vars.system.timezone }}
+    filetype: symlink
+    linked-to: /usr/share/zoneinfo/{{ .Vars.system.timezone }}
   # Files
   /srv/foo:
     exists: true

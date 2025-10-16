@@ -127,7 +127,7 @@ project:
 ##########
 
 system:
-    version: 12
+    version: 13
     #timezone: Etc/UTC # Optional
     #locales: # Optional
     #    default: C.UTF-8
@@ -139,7 +139,7 @@ system:
         #preferences: [] # Optional
         packages:
           - pdftk
-          - https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_{{ apt_architecture }}.deb
+          - https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_{{ apt_architecture }}.deb
     files:
       - path: /srv/app/var/log
         src: /srv/log
@@ -204,10 +204,10 @@ system:
                 upload_max_filesize: 16M
                 post_max_size: 16M
     nodejs:
-        version: 22
+        version: 24
         # packages:
         #   - package: mjml
-        #     version: 4.6.3
+        #     version: 4.16.1
         # yarn:
         #     version: 1
     # cron:
@@ -254,7 +254,7 @@ system:
     #             command=/bin/foo
     # MariaDB
     mariadb:
-        version: 11.4
+        version: 11.8
     # ...*OR* MySQL...
     mysql:
         version: "8.0"
@@ -263,7 +263,7 @@ system:
     #     # config:
     #     #     save: '""' # Disable persistence
     elasticsearch:
-        version: 7
+        version: 8
         plugins:
           - analysis-icu
     # influxdb:
@@ -291,7 +291,7 @@ system:
     docker:
         services:
             whoami:
-                image: traefik/whoami:v1.7.1
+                image: traefik/whoami:v1.11.0
                 network_mode: service:app
                 profiles:
                     - development
@@ -338,13 +338,13 @@ Add in your `Makefile`:
 
 install@integration: export APP_ENV = test
 install@integration:
-	# Composer
-	composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
-	#composer run-script symfony-scripts --ansi --verbose --no-interaction
-	# Npm
-	npm install --color=always --no-progress --no-audit
-	# Yarn
-	yarn install --color=always --no-progress
+  # Composer
+  composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
+  #composer run-script symfony-scripts --ansi --verbose --no-interaction
+  # Npm
+  npm install --color=always --no-progress --no-audit
+  # Yarn
+  yarn install --color=always --no-progress
 
 #########
 # Build #
@@ -353,8 +353,8 @@ install@integration:
 ...
 
 build@integration:
-	# Webpack Encore
-	npx encore production --color=always --no-progress
+  # Webpack Encore
+  npx encore production --color=always --no-progress
 
 ########
 # Lint #
@@ -363,32 +363,32 @@ build@integration:
 ...
 
 lint.php-cs-fixer@integration:
-	mkdir -p report/junit
-	vendor/bin/php-cs-fixer fix --dry-run --diff --format=junit > report/junit/php-cs-fixer.xml
+  mkdir -p report/junit
+  vendor/bin/php-cs-fixer fix --dry-run --diff --format=junit > report/junit/php-cs-fixer.xml
 
 lint.phpstan@integration:
-	mkdir -p report/junit
-	vendor/bin/phpstan --error-format=junit --no-progress --no-interaction analyse > report/junit/phpstan.xml
+  mkdir -p report/junit
+  vendor/bin/phpstan --error-format=junit --no-progress --no-interaction analyse > report/junit/phpstan.xml
 
 lint.twig@integration:
-	bin/console lint:twig templates --ansi --no-interaction
+  bin/console lint:twig templates --ansi --no-interaction
 
 lint.yaml@integration:
-	bin/console lint:yaml config translations --ansi --no-interaction
+  bin/console lint:yaml config translations --ansi --no-interaction
 
 lint.eslint@integration:
-	npx eslint src --format junit --output-file report/junit/eslint.xml
+  npx eslint src --format junit --output-file report/junit/eslint.xml
 
 lint.stylelint@integration:
-	mkdir -p report/junit
-	npx stylelint "assets/styles/**/*.scss" \
-		--syntax scss \
-		--custom-formatter "node_modules/stylelint-junit-formatter" \
-		> report/junit/stylelint.xml
+  mkdir -p report/junit
+  npx stylelint "assets/styles/**/*.scss" \
+    --syntax scss \
+    --custom-formatter "node_modules/stylelint-junit-formatter" \
+    > report/junit/stylelint.xml
 
 lint.flow@integration:
-	mkdir -p report/junit
-	npx flow check --json | npx flow-junit-transformer > report/junit/flow.xml
+  mkdir -p report/junit
+  npx flow check --json | npx flow-junit-transformer > report/junit/flow.xml
 
 ############
 # Security #
@@ -397,13 +397,13 @@ lint.flow@integration:
 ...
 
 security.symfony@integration:
-	symfony check:security
+  symfony check:security
 
 security.yarn@integration:
-	yarn audit ; RC=$${?} ; [ $${RC} -gt 2 ] && exit $${RC} || exit 0
+  yarn audit ; RC=$${?} ; [ $${RC} -gt 2 ] && exit $${RC} || exit 0
 
 security.npm@integration:
-	npm audit --audit-level moderate
+  npm audit --audit-level moderate
 
 ########
 # Test #
@@ -413,16 +413,16 @@ security.npm@integration:
 
 test.phpunit@integration: export APP_ENV = test
 test.phpunit@integration:
-	# Db
-	bin/console doctrine:database:create --ansi
-	bin/console doctrine:schema:create --ansi
-	# PHPUnit
-	bin/phpunit --colors=always --log-junit report/junit/phpunit.xml
+  # Db
+  bin/console doctrine:database:create --ansi
+  bin/console doctrine:schema:create --ansi
+  # PHPUnit
+  bin/phpunit --colors=always --log-junit report/junit/phpunit.xml
 
 test.jest@integration: export JEST_JUNIT_OUTPUT_DIR = report/junit
 test.jest@integration: export JEST_JUNIT_OUTPUT_NAME = jest.xml
 test.jest@integration:
-	npx jest --ci --color --reporters=default --reporters=jest-junit
+  npx jest --ci --color --reporters=default --reporters=jest-junit
 
 ```
 
@@ -542,7 +542,7 @@ Makefile targets that are supposed to be runned via docker must be prefixed.
 ```makefile
 foo: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 foo:
-	# Do something really foo...
+  # Do something really foo...
 ```
 
 Ssh
@@ -554,29 +554,29 @@ Ssh
 ## Ssh to staging server
 ssh@staging: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 ssh@staging:
-	ssh app@foo.staging.rix.link
+  ssh app@foo.staging.rix.link
 
 # Single host...
 
 ssh@production: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 ssh@production:
-	...
+  ...
 
 # Multi host...
 
 ssh@production-01: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 ssh@production-01:
-	...
+  ...
 ```
 
 Sync
 ```makefile
 sync@staging: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
 sync@staging:
-	mkdir -p var
-	rsync --archive --compress --verbose --delete-after \
-		app@foo.staging.rix.link:/srv/app/current/var/files/ \
-		var/files/
+  mkdir -p var
+  rsync --archive --compress --verbose --delete-after \
+    app@foo.staging.rix.link:/srv/app/current/var/files/ \
+    var/files/
 
 # Multi targets...
 sync-uploads@staging: SHELL := $(or $(MANALA_DOCKER_SHELL),$(SHELL))
@@ -600,10 +600,10 @@ Usage (in your `Makefile`):
 ```makefile
 lint.php-cs-fixer: DIFF = $(call manala_git_diff, php, src tests)
 lint.php-cs-fixer:
-	$(if $(DIFF), \
-		vendor/bin/php-cs-fixer fix --config=.php_cs.dist --path-mode=intersection --diff --dry-run $(DIFF), \
-		printf "You have made no change in PHP files\n" \
-	)
+  $(if $(DIFF), \
+    vendor/bin/php-cs-fixer fix --config=.php_cs.dist --path-mode=intersection --diff --dry-run $(DIFF), \
+    printf "You have made no change in PHP files\n" \
+  )
 ```
 
 ### Try tools
@@ -616,11 +616,11 @@ Usage (in your `Makefile`):
 
 ```makefile
 test.phpunit@integration:
-	symfony server:start --ansi --no-humanize --daemon --no-tls --port=8000
-	$(call manala_try_finally, \
-		bin/phpunit --colors=always --log-junit report/junit/phpunit.xml, \
-		symfony server:stop --ansi \
-	)
+  symfony server:start --ansi --no-humanize --daemon --no-tls --port=8000
+  $(call manala_try_finally, \
+    bin/phpunit --colors=always --log-junit report/junit/phpunit.xml, \
+    symfony server:stop --ansi \
+  )
 ```
 
 ## Secrets
@@ -636,10 +636,10 @@ Add the following tasks in the `Makefile`:
 ###########
 
 secrets@production:
-	gomplate --input-dir=secrets/production --output-map='{{ .in | replaceAll ".gohtml" "" }}'
+  gomplate --input-dir=secrets/production --output-map='{{ .in | replaceAll ".gohtml" "" }}'
 
 secrets@staging:
-	gomplate --input-dir=secrets/staging --output-map='{{ .in | replaceAll ".gohtml" "" }}'
+  gomplate --input-dir=secrets/staging --output-map='{{ .in | replaceAll ".gohtml" "" }}'
 ```
 
 Put your templates in `.gohtml` files inside a `secrets/[production|staging]` directory at the root of the project.  
@@ -767,6 +767,5 @@ framework:
 
 ## Caveats
 
-- MySQL 5.7 docker images are not available on arm64, that's why amd64 architecture is forced. Expect rare speed and stability issues.
 - OpenSSL debian packages for buster are broken on arm64, that's why bullseye ones are used. Expect rare behavior issues.
 - Firefox is blocking some ports like `10080`. Try to avoid them.

@@ -1,5 +1,7 @@
 {{- with .Vars.system -}}
 
+# syntax=docker/dockerfile:1
+
 # Init system (none|sysv|openrc|systemd)
 ARG MANALA_INIT="none"
 # Provision system (none|ansible)
@@ -17,7 +19,10 @@ ARG DEBIAN_FRONTEND="noninteractive"
 
 ARG MANALA_HOST_OS="linux"
 ARG MANALA_HOST_DIR
+ARG MANALA_USER="app"
 ARG MANALA_USER_ID="1000"
+ARG MANALA_USER_COMMENT="App"
+ARG MANALA_GROUP="app"
 ARG MANALA_GROUP_ID="1000"
 
 ENV MANALA_HOST_OS="${MANALA_HOST_OS}"
@@ -28,40 +33,31 @@ ENV MANALA_HOST_DIR="${MANALA_HOST_DIR}"
 # It's also internally used for checking we're running inside a container.
 ENV container="docker"
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
-RUN \
-    apt-get --quiet update \
-    && apt-get --quiet --yes --purge --autoremove upgrade \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        ca-certificates \
-        curl \
-        gnupg \
-        make \
-        socat \
-        sudo \
-    {{- if eq (.version|int) 10 }}
-    # Openssl packages are broken on buster/arm64, install them from bullseye
-    # See: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=989604
-    && if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
-        curl -sSLf "http://snapshot.debian.org/archive/debian/20210827T161311Z/pool/main/o/openssl/{openssl,libssl1.1}_1.1.1k-1%2Bdeb11u1_arm64.deb" \
-            --output /var/cache/apt/archives/#1.deb \
-        && dpkg --install \
-            /var/cache/apt/archives/openssl.deb \
-            /var/cache/apt/archives/libssl1.1.deb ; \
-    fi \
-    {{- end }}
-    # User
-    && addgroup --gid ${MANALA_GROUP_ID} app \
-    && adduser --home /home/app --shell /bin/bash --uid ${MANALA_USER_ID} --gecos app --ingroup app --disabled-password app \
-    && echo "app ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/app
+RUN <<EOF
+apt-get --quiet update
+apt-get --quiet --yes --purge --autoremove upgrade
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    ca-certificates \
+    curl \
+    gnupg \
+    make \
+    socat \
+    sudo
+# User
+groupadd --gid ${MANALA_GROUP_ID} ${MANALA_GROUP}
+useradd --uid ${MANALA_USER_ID} --gid ${MANALA_GROUP_ID} --inactive -1 --create-home --home-dir /home/${MANALA_USER} --shell /bin/bash --comment ${MANALA_USER_COMMENT} ${MANALA_USER}
+echo "${MANALA_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${MANALA_USER}
+EOF
 
 {{ if .goss.version -}}
 # Goss
-RUN \
-    curl -sSLf "https://github.com/goss-org/goss/releases/download/v{{ .goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
-        --output /usr/local/bin/goss \
-    && chmod +x /usr/local/bin/goss
+RUN <<EOF
+curl -sSLf "https://github.com/goss-org/goss/releases/download/v{{ .goss.version }}/goss-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/goss
+chmod +x /usr/local/bin/goss
+EOF
 
 {{ end -}}
 
@@ -83,55 +79,60 @@ ENTRYPOINT ["/entrypoint.sh"]
 # SysV
 FROM system AS init-sysv
 
-RUN \
-    # Work around chroot check to avoid sysvinit restart after install
-    mv /usr/bin/ischroot /usr/bin/ischroot_ \
-    && ln -s /bin/true /usr/bin/ischroot \
-    && apt-get --quiet update \
-    && apt-get --quiet --yes --purge --autoremove upgrade \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        sysvinit-core \
-    && mv /usr/bin/ischroot_ /usr/bin/ischroot \
-    # Disable getty
-    && sed -i "s/^\([[:digit:]]:\)/#\1/g" /etc/inittab \
-    # Shutdown on SIGINT
-    && sed -i "s/^\(ca:.*\)/ca:12345:ctrlaltdel:\/sbin\/shutdown -h now/g" /etc/inittab \
-    # Don't bring networking down right before halting system
-    {{- if le (.version|int) 10 }}
-    && echo "NETDOWN=no" >> /etc/default/halt \
-    {{- else }}
-    && sed -i "/^NETDOWN=/s/yes/no/" /etc/default/halt \
-    {{- end }}
-    # Useless services
-    && insserv --remove \
-        # rcS / rc2
-        {{- if eq (.version|int) 10 }}
-        mountall-bootclean.sh mountall.sh checkroot-bootclean.sh checkfs.sh checkroot.sh bootlogs hostname.sh \
-        hwclock.sh mountdevsubfs.sh mountkernfs.sh \
-        brightness \
-        {{- else }}
-        bootlogs mountall-bootclean.sh mountall.sh checkfs.sh checkroot-bootclean.sh checkroot.sh hostname.sh \
-        hwclock.sh \
-        mount-configfs mountdevsubfs.sh mountkernfs.sh \
-        brightness \
-        {{- end }}
-        mountnfs-bootclean.sh mountnfs.sh \
-        urandom \
-        bootmisc.sh \
-        # rc2
-        rmnologin \
-        rc.local \
-        # rc0
-        sendsigs \
-        umountnfs.sh \
-        umountfs \
-        umountroot \
-    # Block systemd replacement
-    && printf "\
+RUN <<EOF
+{{- if le (.version|int) 12 }}
+# Work around chroot check to avoid sysvinit restart after install
+mv /usr/bin/ischroot /usr/bin/ischroot_
+ln -s /bin/true /usr/bin/ischroot
+{{- end }}
+apt-get --quiet update
+apt-get --quiet --yes --purge --autoremove upgrade
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    sysvinit-core
+{{- if le (.version|int) 12 }}
+mv /usr/bin/ischroot_ /usr/bin/ischroot
+{{- end }}
+# Disable getty
+sed -i "s/^\([[:digit:]]:\)/#\1/g" /etc/inittab
+# Shutdown on SIGINT
+sed -i "s/^\(ca:.*\)/ca:12345:ctrlaltdel:\/sbin\/shutdown -h now/g" /etc/inittab
+# Don't bring networking down right before halting system
+sed -i "/^NETDOWN=/s/yes/no/" /etc/default/halt
+# Useless services
+insserv --remove \
+{{- if eq (.version|int) 13 }}
+    kmod \
+    udev \
+{{- end }}
+    bootlogs \
+    bootmisc.sh \
+    brightness \
+    checkfs.sh \
+    checkroot-bootclean.sh \
+    checkroot.sh \
+    hostname.sh \
+    hwclock.sh \
+    mount-configfs \
+    mountall-bootclean.sh \
+    mountall.sh \
+    mountdevsubfs.sh \
+    mountkernfs.sh \
+    mountnfs-bootclean.sh \
+    mountnfs.sh \
+    rc.local \
+    rmnologin \
+    sendsigs \
+    umountfs \
+    umountnfs.sh \
+    umountroot \
+    urandom
+# Block systemd replacement
+printf "\
 Package: systemd-sysv\n\
 Pin: release *\n\
 Pin-Priority: -1\n\
 " > /etc/apt/preferences
+EOF
 
 STOPSIGNAL SIGINT
 
@@ -142,12 +143,13 @@ ENTRYPOINT ["/entrypoint.sh"]
 # OpenRC
 FROM system AS init-openrc
 
-RUN \
-    rm -f /etc/init.d/hwclock.sh \
-    && apt-get --quiet update \
-    && apt-get --quiet --yes --purge --autoremove upgrade \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        openrc
+RUN <<EOF
+rm -f /etc/init.d/hwclock.sh
+apt-get --quiet update
+apt-get --quiet --yes --purge --autoremove upgrade
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    openrc
+EOF
 
 STOPSIGNAL SIGINT
 
@@ -158,24 +160,25 @@ ENTRYPOINT ["/entrypoint.sh"]
 # Systemd
 FROM system AS init-systemd
 
-RUN \
-    apt-get --quiet update \
-    && apt-get --quiet --yes --purge --autoremove upgrade \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        systemd dbus \
-    && systemctl set-default multi-user.target \
-    && sed -i 's/#\(ForwardToConsole=\).*$/\1yes/' \
-        /etc/systemd/journald.conf \
-    && echo "Defaults env_keep += \"container\"" \
-        > /etc/sudoers.d/systemd \
-    && rm -rf \
-        /etc/systemd/system/*.wants/* \
-        /lib/systemd/system/multi-user.target.wants/* \
-        /lib/systemd/system/local-fs.target.wants/* \
-        /lib/systemd/system/sockets.target.wants/*udev* \
-        /lib/systemd/system/sockets.target.wants/*initctl* \
-        /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev* \
-        /lib/systemd/system/systemd-update-utmp*
+RUN <<EOF
+apt-get --quiet update
+apt-get --quiet --yes --purge --autoremove upgrade
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    systemd dbus
+systemctl set-default multi-user.target
+sed -i 's/#\(ForwardToConsole=\).*$/\1yes/' \
+    /etc/systemd/journald.conf
+echo "Defaults env_keep += \"container\"" \
+    > /etc/sudoers.d/systemd
+rm -rf \
+    /etc/systemd/system/*.wants/* \
+    /lib/systemd/system/multi-user.target.wants/* \
+    /lib/systemd/system/local-fs.target.wants/* \
+    /lib/systemd/system/sockets.target.wants/*udev* \
+    /lib/systemd/system/sockets.target.wants/*initctl* \
+    /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev* \
+    /lib/systemd/system/systemd-update-utmp*
+EOF
 
 VOLUME /sys/fs/cgroup
 
@@ -195,44 +198,41 @@ FROM init-${MANALA_INIT} AS provision-none
 # Ansible
 FROM init-${MANALA_INIT} AS provision-ansible
 
-ARG ANSIBLE_VERSION="8.7.0"
+ARG ANSIBLE_VERSION="11.11.0"
 ARG MANALA_PROVISION_LIMIT
 ARG SYMFONY_IDE
 
 # Locale
 ENV LANG="{{ .locales.default }}"
 
-{{- if eq (.version|int) 10 }}
-COPY --from=python:3.9.2-slim-buster /usr/local/bin/python3.9 /usr/local/bin/
-COPY --from=python:3.9.2-slim-buster /usr/local/lib/libpython3.9.so.1.0 /usr/local/lib/
-COPY --from=python:3.9.2-slim-buster /usr/local/lib/python3.9/ /usr/local/lib/python3.9/
+{{- if eq (.version|int) 11 }}
+COPY --from=python:3.11.2-slim-bullseye /usr/local/bin/python3.11 /usr/local/bin/
+COPY --from=python:3.11.2-slim-bullseye /usr/local/lib/libpython3.11.so.1.0 /usr/local/lib/
+COPY --from=python:3.11.2-slim-bullseye /usr/local/lib/python3.11/ /usr/local/lib/python3.11/
 {{- end }}
-RUN \
-    apt-get --quiet update \
-    && apt-get --quiet --yes --purge --autoremove upgrade \
-    && apt-get --quiet --yes --no-install-recommends --verbose-versions install \
-        # As managed node
-        python3 \
-        python3-apt \
-{{- if eq (.version|int) 10 }}
-    && ldconfig \
-    && python3.9 -m pip --no-cache-dir --disable-pip-version-check install \
-        ansible==${ANSIBLE_VERSION} \
-{{- else if eq (.version|int) 11 }}
-        # As controller node
-        python3-pip \
-    && pip3 --no-cache-dir --disable-pip-version-check install \
-        ansible==${ANSIBLE_VERSION} \
+RUN <<EOF
+apt-get --quiet update
+apt-get --quiet --yes --purge --autoremove upgrade
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    python3 \
+    python3-apt \
+{{- if eq (.version|int) 11 }}
+    python3-pip \
+    libexpat1-dev
+python3.11 -m pip --no-cache-dir --disable-pip-version-check install --root-user-action=ignore \
+    python-debian==0.1.39 \
+    ansible==${ANSIBLE_VERSION}
+apt-get --quiet --yes --autoremove purge \
+    libexpat1-dev
 {{- else }}
-        # As controller node
-        pipx \
-    && PIPX_HOME="/usr/local/pipx" PIPX_BIN_DIR="/usr/local/bin" \
-        pipx install ansible==${ANSIBLE_VERSION} \
-            --include-deps --pip-args="--no-cache-dir" --verbose \
-    && rm -rf ~/.cache/pip /usr/local/pipx/.cache /usr/local/pipx/logs \
+    pipx
+PIPX_HOME="/usr/local/pipx" PIPX_BIN_DIR="/usr/local/bin" \
+    pipx install ansible==${ANSIBLE_VERSION} \
+        --include-deps --pip-args="--no-cache-dir" --verbose
+rm -rf ~/.cache/pip /usr/local/pipx/.cache /usr/local/pipx/logs
 {{- end }}
-    && install --verbose --mode 0755 --directory /etc/ansible \
-    && printf "\
+install --verbose --mode 0755 --directory /etc/ansible
+printf "\
 [defaults]\n\
 force_color = True\n\
 display_skipped_hosts = False\n\
@@ -240,24 +240,27 @@ retry_files_enabled = False\n\
 callback_result_format = yaml\n\
 inject_facts_as_vars = False\n\
 check_mode_markers = True\n\
+interpreter_python = auto_silent\n\
 [ssh_connection]\n\
 pipelining = True\n\
 [privilege_escalation]\n\
 become_flags = -E\n\
 " > /etc/ansible/ansible.cfg
+EOF
 
 COPY Makefile      ./.manala/
 COPY ansible/      ./.manala/ansible/
 COPY certificates/ ./.manala/certificates/
 
-RUN \
-    if [ -n "${MANALA_PROVISION_LIMIT}" ]; then \
-        su app -s /usr/bin/make -- \
-            --silent \
-            --directory .manala \
-            provision \
-            LIMIT=${MANALA_PROVISION_LIMIT} ; \
-    fi
+RUN <<EOF
+if [ -n "${MANALA_PROVISION_LIMIT}" ]; then
+    su app -s /usr/bin/make -- \
+        --silent \
+        --directory .manala \
+        provision \
+        LIMIT=${MANALA_PROVISION_LIMIT} ;
+fi
+EOF
 
 #######
 # App #
