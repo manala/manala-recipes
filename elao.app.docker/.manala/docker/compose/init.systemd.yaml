@@ -8,7 +8,10 @@ services:
         build:
             args:
                 MANALA_INIT: systemd
-        tty: true
-        privileged: true
+        cgroup: host
+        cap_add:
+            - SYS_ADMIN
         volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:rw
+        tmpfs:
+            - /run

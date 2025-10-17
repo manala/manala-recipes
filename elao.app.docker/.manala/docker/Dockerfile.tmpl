@@ -168,19 +168,23 @@ apt-get --quiet --yes --no-install-recommends --verbose-versions install \
 systemctl set-default multi-user.target
 sed -i 's/#\(ForwardToConsole=\).*$/\1yes/' \
     /etc/systemd/journald.conf
-echo "Defaults env_keep += \"container\"" \
-    > /etc/sudoers.d/systemd
-rm -rf \
-    /etc/systemd/system/*.wants/* \
-    /lib/systemd/system/multi-user.target.wants/* \
-    /lib/systemd/system/local-fs.target.wants/* \
-    /lib/systemd/system/sockets.target.wants/*udev* \
-    /lib/systemd/system/sockets.target.wants/*initctl* \
-    /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev* \
-    /lib/systemd/system/systemd-update-utmp*
+find /etc/systemd/system -mindepth 1 \
+    ! -name default.target \
+    -exec rm -rfv {} +
+find /lib/systemd/system -mindepth 1 -type f,l \
+    ! -name basic.target \
+    ! -name final.target \
+    ! -name halt.target \
+    ! -name multi-user.target \
+    ! -name shutdown.target \
+    ! -name sysinit.target \
+    ! -name systemd-halt.service \
+    ! -name systemd-journald.service \
+    ! -name systemd-journald.socket \
+    ! -name systemd-tmpfiles-setup.service \
+    ! -name umount.target \
+    -exec rm -rfv {} +
 EOF
-
-VOLUME /sys/fs/cgroup
 
 STOPSIGNAL SIGRTMIN+3
 
