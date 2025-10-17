@@ -31,7 +31,7 @@ MANALA_DOCKER_COMPOSE_ENV += \
 	MANALA_HOST_DIR=$(abspath $(MANALA_DIR))
 MANALA_DOCKER_COMPOSE_FILE += \
 	$(MANALA_DIR)/.manala/docker/compose/term.yaml \
-	$(MANALA_DIR)/.manala/docker/compose/init.sysv.yaml \
+	$(MANALA_DIR)/.manala/docker/compose/init.systemd.yaml \
 	$(if $(SYMFONY_IDE), $(MANALA_DIR)/.manala/docker/compose/symfony.yaml)
 MANALA_DOCKER_COMPOSE_PROFILE ?= development
 

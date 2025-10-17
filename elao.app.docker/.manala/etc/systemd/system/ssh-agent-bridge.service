@@ -1,0 +1,16 @@
+[Unit]
+Description=Ssh Agent Bridge
+ConditionPathExists=/run/ssh-auth.sock
+
+[Service]
+ExecStart=/bin/sh -c 'exec \
+    /usr/bin/socat -dd \
+        UNIX-LISTEN:${SSH_AUTH_SOCK},fork,mode=777 \
+        UNIX-CONNECT:/run/ssh-auth.sock \
+    '
+Restart=always
+RestartSec=1s
+PassEnvironment=SSH_AUTH_SOCK
+
+[Install]
+WantedBy=multi-user.target

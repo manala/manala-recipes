@@ -28,9 +28,11 @@ ARG MANALA_GROUP_ID="1000"
 ENV MANALA_HOST_OS="${MANALA_HOST_OS}"
 ENV MANALA_HOST_DIR="${MANALA_HOST_DIR}"
 
-# The 'container' environment variable tells systemd that it's running inside a
-# Docker container environment.
-# It's also internally used for checking we're running inside a container.
+# The 'container' environment variable is internally used for
+# checking we're running inside a container.
+{{- if le (.version|int) 11 }}
+# It also tells systemd that it's running inside a Docker container environment.
+{{- end }}
 ENV container="docker"
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
@@ -73,8 +75,6 @@ FROM system AS init-none
 STOPSIGNAL SIGKILL
 
 CMD ["sleep", "9999999"]
-
-ENTRYPOINT ["/entrypoint.sh"]
 
 # SysV
 FROM system AS init-sysv
@@ -138,8 +138,6 @@ STOPSIGNAL SIGINT
 
 CMD ["/sbin/init"]
 
-ENTRYPOINT ["/entrypoint.sh"]
-
 # OpenRC
 FROM system AS init-openrc
 
@@ -155,38 +153,81 @@ STOPSIGNAL SIGINT
 
 CMD ["/sbin/openrc-init"]
 
-ENTRYPOINT ["/entrypoint.sh"]
-
 # Systemd
 FROM system AS init-systemd
 
 RUN <<EOF
+# Packages
 apt-get --quiet update
 apt-get --quiet --yes --purge --autoremove upgrade
 apt-get --quiet --yes --no-install-recommends --verbose-versions install \
     systemd dbus
+    {{- if gt (.version|int) 12 }} \
+    libbpf1
+    {{- end }}
+# Default target
 systemctl set-default multi-user.target
-sed -i 's/#\(ForwardToConsole=\).*$/\1yes/' \
-    /etc/systemd/journald.conf
-echo "Defaults env_keep += \"container\"" \
-    > /etc/sudoers.d/systemd
-rm -rf \
-    /etc/systemd/system/*.wants/* \
-    /lib/systemd/system/multi-user.target.wants/* \
-    /lib/systemd/system/local-fs.target.wants/* \
-    /lib/systemd/system/sockets.target.wants/*udev* \
-    /lib/systemd/system/sockets.target.wants/*initctl* \
-    /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev* \
-    /lib/systemd/system/systemd-update-utmp*
+# Systemd
+install --verbose --mode 0755 --directory /etc/systemd/system.conf.d
+printf "\
+[Manager]\n\
+ShowStatus=no\n\
+" > /etc/systemd/system.conf.d/docker.conf
+# Journald
+install --verbose --mode 0755 --directory /etc/systemd/journald.conf.d
+printf "\
+[Journal]\n\
+ForwardToConsole=yes\n\
+" > /etc/systemd/journald.conf.d/docker.conf
+{{- if gt (.version|int) 11 }}
+# Disable Journald firewall
+sed -ri '/^IPAddressDeny/d' \
+    /lib/systemd/system/systemd-journald.service
+{{- end }}
+# Disable halt umounting, that would require SYS_ADMIN capability
+sed -i 's/umount\.target\s*//g' \
+    /lib/systemd/system/systemd-halt.service
+{{- if eq (.version|int) 13 }}
+# See: https://salsa.debian.org/systemd-team/systemd/-/commit/d3f9a1f928a9f8ae6d917ec06cff651a03dfb8dc
+sed -i '/^d \/run\/lock 0755 root root -$/d' \
+    /usr/lib/tmpfiles.d/legacy.conf
+{{- end }}
+# Cleanup units
+find /etc/systemd/system -mindepth 1 \
+    ! -name default.target \
+    -exec rm -rfv {} +
+find /lib/systemd/system -mindepth 1 -type f,l \
+    ! -name basic.target \
+    ! -name final.target \
+    ! -name halt.target \
+    ! -name multi-user.target \
+    {{- if eq (.version|int) 13 }}
+    ! -name run-lock.mount \
+    {{- end }}
+    ! -name shutdown.target \
+    ! -name sysinit.target \
+    ! -name systemd-halt.service \
+    ! -name systemd-journald.service \
+    ! -name systemd-journald.socket \
+    ! -name systemd-tmpfiles-setup.service \
+    ! -name timers.target \
+    -exec rm -rfv {} +
 EOF
 
-VOLUME /sys/fs/cgroup
+COPY \
+    etc/systemd/system/docker-bridge.service \
+    etc/systemd/system/ssh-agent-bridge.service \
+    /etc/systemd/system/
+
+RUN <<EOF
+systemctl enable \
+    docker-bridge \
+    ssh-agent-bridge
+EOF
 
 STOPSIGNAL SIGRTMIN+3
 
 CMD ["/lib/systemd/systemd"]
-
-ENTRYPOINT ["/entrypoint.sh"]
 
 #############
 # Provision #
@@ -267,7 +308,5 @@ EOF
 #######
 
 FROM provision-${MANALA_PROVISION} AS app
-
-COPY docker/entrypoint.sh /
 
 {{- end }}

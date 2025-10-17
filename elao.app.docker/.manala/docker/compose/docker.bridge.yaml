@@ -6,6 +6,6 @@ services:
 
     app:
         volumes:
-            - ${MANALA_DOCKER_SOCK}:/var/run/docker.sock
+            - ${MANALA_DOCKER_SOCK}:/run/docker.sock
         environment:
-            DOCKER_HOST: unix:///var/run/docker-bridge.sock
+            DOCKER_HOST: unix:///run/docker-bridge.sock

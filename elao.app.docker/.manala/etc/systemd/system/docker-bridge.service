@@ -1,0 +1,16 @@
+[Unit]
+Description=Docker Bridge
+ConditionPathExists=/run/docker.sock
+
+[Service]
+ExecStart=/bin/sh -c 'exec \
+    /usr/bin/socat -dd -t 600 \
+        UNIX-LISTEN:${DOCKER_HOST#unix://},fork,mode=777 \
+        UNIX-CONNECT:/run/docker.sock \
+    '
+Restart=always
+RestartSec=1s
+PassEnvironment=DOCKER_HOST
+
+[Install]
+WantedBy=multi-user.target
