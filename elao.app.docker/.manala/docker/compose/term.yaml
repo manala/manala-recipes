@@ -1,0 +1,9 @@
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        environment:
+            TERM: ${TERM:-xterm}
