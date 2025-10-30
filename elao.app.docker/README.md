@@ -10,14 +10,14 @@ tableOfContent: 3
 
 MacOS
 
-* Docker Desktop 4.29.0+
+* Docker Desktop 4.49.0+
 (`brew install docker`)
 
 Linux
 
-* Docker Engine 26.0.0+
+* Docker Engine 28.5.1+
 (see [documentation](https://docs.docker.com/engine/install/))
-* Docker Compose 2.26.0+
+* Docker Compose 2.40.2+
 (see [documentation](https://docs.docker.com/compose/install/))
 
 ## Overview
