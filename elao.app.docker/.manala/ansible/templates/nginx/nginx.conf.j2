@@ -4,10 +4,10 @@
 } | combine(manala_nginx_config|default({}, true)) -%}
 
 user www-data;
-{{ config | manala.roles.nginx_config_parameter('worker_processes', default=1) }}
+{{ config | manala.roles.nginx_config_parameter('worker_processes', default='auto') }}
 
-error_log /var/log/nginx/error.log warn;
-pid /var/run/nginx.pid;
+error_log /var/log/nginx/error.log notice;
+pid /run/nginx.pid;
 
 {{ config | manala.roles.nginx_config_parameter('load_module', default=[]) }}
 
