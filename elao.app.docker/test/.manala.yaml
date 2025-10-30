@@ -7,7 +7,7 @@ project:
     ports_prefix: 123
 
 system:
-    version: 12
+    version: 13
     timezone: Europe/Paris
     locales:
         default: C.UTF-8
@@ -26,7 +26,7 @@ system:
       hosts:
           1.2.3.4: foo.bar
     goss:
-        version: 0.4.4
+        version: 0.4.9
     nginx:
         configs:
             - template: nginx/gzip.j2
@@ -73,11 +73,11 @@ system:
                       directory: /srv/app
                       stdout_logfile: /srv/log/supervisor.acme-foo.log
     nodejs:
-        version: 22
+        version: 24
         packages:
             - package: sass
     mariadb:
-        version: 11.4
+        version: 11.8
     redis:
         version: "*"
     elasticsearch:

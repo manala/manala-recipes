@@ -68,11 +68,6 @@
           'default'
         }}"
         state: "{{ 'present' if (system_mariadb) else 'ignore' }}"
-      # Redis
-      - preference: redis@backports
-        state: "{{ 'present' if (
-          (system_redis_version|string == '6.0') and (ansible_facts.distribution_release in ['buster'])
-        ) else 'ignore' }}"
       # GitHub CLI
       - preference: gh@github_cli
         state: "{{ 'present' if (system_git) else 'ignore' }}"
