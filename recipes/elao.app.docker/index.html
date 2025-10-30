@@ -159,8 +159,6 @@
 <ul>
 <li>Docker Desktop 4.29.0+
 (<code class="code-inline" id="46498ebd83f0fa20a7399fc1752a1ae0">brew install docker</code>)</li>
-<li>Mutagen Compose 0.17.5+
-(<code class="code-inline" id="a14d6e44dbd1ccc8b4dd53663b5e50a5">brew install mutagen-io/mutagen/mutagen-compose</code>)</li>
 </ul>
 <p>Linux</p>
 <ul>
@@ -218,7 +216,7 @@ App:</code></pre>
 <pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- --follow</code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="bd25fdea6221b83da0e773e9aa7beb04"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="d1a1f2d467ac09b6e9ac66cd1bb62c5e"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
@@ -403,18 +401,7 @@ App:</code></pre>
             app:
                 ports:
                     # whoami
-                    - 12345:80
-        # Optimizes Mutagen sync performances (adapt to your project structure)
-        mutagen:
-            ignore:
-                paths:
-                    # Webpack build files
-                    - /public/build/
-                    # Node modules cache (Babel, ...)
-                    - /node_modules/.cache
-                    # Symfony log &amp; cache files
-                    - /var/cache
-                    - /var/log</span></code></pre>
+                    - 12345:80</span></code></pre>
 <p>Details:</p>
 <ul>
 <li><code class="code-inline" id="46f86faa6bbf9ac94a7e459509a20ed0">project</code>
@@ -794,7 +781,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2025-10-30UTC07:35:53+00:00">Last modified: October 30, 2025 07:35</time>
+    <time datetime="2025-10-30UTC07:36:09+00:00">Last modified: October 30, 2025 07:36</time>
         </div>
 
         <footer class="footer">

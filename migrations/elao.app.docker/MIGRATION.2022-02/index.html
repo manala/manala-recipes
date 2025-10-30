@@ -83,7 +83,6 @@
                                                             <li><a href="#urls">Urls</a></li>
                                                             <li><a href="#makefile">Makefile</a></li>
                                                             <li><a href="#certificates">Certificates</a></li>
-                                                            <li><a href="#mutagen">Mutagen</a></li>
                                                             <li><a href="#nginx">Nginx</a></li>
                                                             <li><a href="#yarn">Yarn</a></li>
                                                             <li><a href="#integration-jenkins">Integration - Jenkins</a></li>
@@ -260,21 +259,6 @@ An <code class="code-inline" id="1fbe7b8e67161c40a4df6ab0764aa5c8">apt_architect
 <h3 id="certificates">Certificates<a href="#certificates" class="anchor"></a></h3>
 <p>Regenerate certificates if necessary</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="23f13d83cc7b357b50c6b0225711925a"><span class="token function">make</span> provision.certificates</code></pre>
-<h3 id="mutagen">Mutagen<a href="#mutagen" class="anchor"></a></h3>
-<p>Mutagen in a great tool to sync files between host and guest, but could be tweaked a bit in some situations in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="cfd0c548a9ff54224b0c61e1f56d58e8"><span class="token key atrule">system</span><span class="token punctuation">:</span>
-    <span class="token punctuation">...</span>
-    <span class="token key atrule">docker</span><span class="token punctuation">:</span>
-        <span class="token punctuation">...</span>
-        <span class="token key atrule">mutagen</span><span class="token punctuation">:</span>
-            <span class="token key atrule">ignore</span><span class="token punctuation">:</span>
-                <span class="token key atrule">paths</span><span class="token punctuation">:</span>
-                    <span class="token comment"># Single app</span>
-                    <span class="token punctuation">-</span> /var/cache
-                    <span class="token punctuation">-</span> /var/log
-                    <span class="token comment"># Multi app</span>
-                    <span class="token punctuation">-</span> /foo/var/cache
-                    <span class="token punctuation">-</span> /foo/var/log</code></pre>
 <h3 id="nginx">Nginx<a href="#nginx" class="anchor"></a></h3>
 <p>Ensure nginx logs path are properly set on <code class="code-inline" id="59ac7dd69b6e446cfabd13100ad77d14">/srv/log</code> in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>.</p>
 <pre class="code-multiline language-yaml"><code class="language-yaml" id="bd5e3db59e4cef90858c337106590e78"><span class="token key atrule">system</span><span class="token punctuation">:</span>
@@ -375,7 +359,7 @@ sass-migrator --migrate-deps division <span class="token string">"assets/**/*.sc
         </article>
     </section>
 
-    <time datetime="2025-10-30UTC07:35:39+00:00">Last modified: October 30, 2025 07:35</time>
+    <time datetime="2025-10-30UTC07:35:53+00:00">Last modified: October 30, 2025 07:35</time>
         </div>
 
         <footer class="footer">
