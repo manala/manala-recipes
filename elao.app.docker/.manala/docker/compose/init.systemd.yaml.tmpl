@@ -1,0 +1,23 @@
+services:
+
+    #######
+    # App #
+    #######
+
+    app:
+        build:
+            args:
+                MANALA_INIT: systemd
+        cgroup: host
+        tty: true
+        {{- if gt (.Vars.system.version|int) 11 }}
+        security_opt:
+            - seccomp:unconfined
+        {{- end }}
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:rw
+        tmpfs:
+            - /run
+            {{- if le (.Vars.system.version|int) 12 }}
+            - /run/lock
+            {{- end }}

@@ -6,6 +6,7 @@ manala:
       - .manala/certificates/ca.crt
       - .manala/certificates/ca.key
       - .manala/docker
+      - .manala/etc
       - .manala/github
       - .manala/make
       - .manala/.dockerignore
