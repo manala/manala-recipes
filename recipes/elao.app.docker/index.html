@@ -218,7 +218,7 @@ App:</code></pre>
 <pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- --follow</code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="3bddf1d122261aac46ac364194ab1a39"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="bd25fdea6221b83da0e773e9aa7beb04"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
@@ -231,7 +231,7 @@ App:</code></pre>
 <span class="token comment">##########</span>
 
 <span class="token key atrule">system</span><span class="token punctuation">:</span>
-    <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">12</span>
+    <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">13</span>
     <span class="token comment">#timezone: Etc/UTC # Optional</span>
     <span class="token comment">#locales: # Optional</span>
     <span class="token comment">#    default: C.UTF-8</span>
@@ -243,7 +243,7 @@ App:</code></pre>
         <span class="token comment">#preferences: [] # Optional</span>
         <span class="token key atrule">packages</span><span class="token punctuation">:</span>
           <span class="token punctuation">-</span> pdftk
-          <span class="token punctuation">-</span> https<span class="token punctuation">:</span>//github.com/wkhtmltopdf/packaging/releases/download/0.12.6<span class="token punctuation">-</span>1/wkhtmltox_0.12.6<span class="token punctuation">-</span>1.buster_<span class="token punctuation">{</span><span class="token punctuation">{</span> apt_architecture <span class="token punctuation">}</span><span class="token punctuation">}</span>.deb
+          <span class="token punctuation">-</span> https<span class="token punctuation">:</span>//github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1<span class="token punctuation">-</span>3/wkhtmltox_0.12.6.1<span class="token punctuation">-</span>3.bookworm_<span class="token punctuation">{</span><span class="token punctuation">{</span> apt_architecture <span class="token punctuation">}</span><span class="token punctuation">}</span>.deb
     <span class="token key atrule">files</span><span class="token punctuation">:</span>
       <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> /srv/app/var/log
         <span class="token key atrule">src</span><span class="token punctuation">:</span> /srv/log
@@ -308,10 +308,10 @@ App:</code></pre>
                 <span class="token key atrule">upload_max_filesize</span><span class="token punctuation">:</span> 16M
                 <span class="token key atrule">post_max_size</span><span class="token punctuation">:</span> 16M
     <span class="token key atrule">nodejs</span><span class="token punctuation">:</span>
-        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">22</span>
+        <span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token number">24</span>
         <span class="token comment"># packages:</span>
         <span class="token comment">#   - package: mjml</span>
-        <span class="token comment">#     version: 4.6.3</span>
+        <span class="token comment">#     version: 4.16.1</span>
         <span class="token comment"># yarn:</span>
         <span class="token comment">#     version: 1</span>
     <span class="token comment"># cron:</span>
@@ -358,7 +358,7 @@ App:</code></pre>
     #             command=/bin/foo
     # MariaDB
     mariadb:
-        version: 11.4
+        version: 11.8
     # ...*OR* MySQL...
     mysql:
         version: "8.0"
@@ -367,7 +367,7 @@ App:</code></pre>
     #     # config:
     #     #     save: '""' # Disable persistence
     elasticsearch:
-        version: 7
+        version: 8
         plugins:
           - analysis-icu
     # influxdb:
@@ -395,7 +395,7 @@ App:</code></pre>
     docker:
         services:
             whoami:
-                image: traefik/whoami:v1.7.1
+                image: traefik/whoami:v1.11.0
                 network_mode: service:app
                 profiles:
                     - development
@@ -428,7 +428,7 @@ App:</code></pre>
 Consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.manala/github/integration/README.md</code> to learn how you can write your own workflows using these actions.</p>
 <h3 id="common-integration-tasks">Common integration tasks<a href="#common-integration-tasks" class="anchor"></a></h3>
 <p>Add in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>:</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="626e3a6cd593698728b85ecac62a1cc7"><span class="token comment">###########</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="41f2f8a1732767704895ff24825b1632"><span class="token comment">###########</span>
 <span class="token comment"># Install #</span>
 <span class="token comment">###########</span>
 
@@ -436,13 +436,13 @@ Consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.man
 
 <span class="token target symbol">install@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> APP_ENV <span class="token operator">=</span> test
 <span class="token target symbol">install@integration</span><span class="token punctuation">:</span>
-    <span class="token comment"># Composer</span>
-    composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
-    <span class="token comment">#composer run-script symfony-scripts --ansi --verbose --no-interaction</span>
-    <span class="token comment"># Npm</span>
-    npm install --color<span class="token operator">=</span>always --no-progress --no-audit
-    <span class="token comment"># Yarn</span>
-    yarn install --color<span class="token operator">=</span>always --no-progress
+  <span class="token comment"># Composer</span>
+  composer install --ansi --verbose --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
+  <span class="token comment">#composer run-script symfony-scripts --ansi --verbose --no-interaction</span>
+  <span class="token comment"># Npm</span>
+  npm install --color<span class="token operator">=</span>always --no-progress --no-audit
+  <span class="token comment"># Yarn</span>
+  yarn install --color<span class="token operator">=</span>always --no-progress
 
 <span class="token comment">#########</span>
 <span class="token comment"># Build #</span>
@@ -451,8 +451,8 @@ Consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.man
 ...
 
 <span class="token target symbol">build@integration</span><span class="token punctuation">:</span>
-    <span class="token comment"># Webpack Encore</span>
-    npx encore production --color<span class="token operator">=</span>always --no-progress
+  <span class="token comment"># Webpack Encore</span>
+  npx encore production --color<span class="token operator">=</span>always --no-progress
 
 <span class="token comment">########</span>
 <span class="token comment"># Lint #</span>
@@ -461,32 +461,32 @@ Consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.man
 ...
 
 <span class="token target symbol">lint.php-cs-fixer@integration</span><span class="token punctuation">:</span>
-    mkdir -p report/junit
-    vendor/bin/php-cs-fixer fix --dry-run --diff --format<span class="token operator">=</span>junit &gt; report/junit/php-cs-fixer.xml
+  mkdir -p report/junit
+  vendor/bin/php-cs-fixer fix --dry-run --diff --format<span class="token operator">=</span>junit &gt; report/junit/php-cs-fixer.xml
 
 <span class="token target symbol">lint.phpstan@integration</span><span class="token punctuation">:</span>
-    mkdir -p report/junit
-    vendor/bin/phpstan --error-format<span class="token operator">=</span>junit --no-progress --no-interaction analyse &gt; report/junit/phpstan.xml
+  mkdir -p report/junit
+  vendor/bin/phpstan --error-format<span class="token operator">=</span>junit --no-progress --no-interaction analyse &gt; report/junit/phpstan.xml
 
 <span class="token target symbol">lint.twig@integration</span><span class="token punctuation">:</span>
-<span class="token target symbol">    bin/console lint</span><span class="token punctuation">:</span>twig templates --ansi --no-interaction
+<span class="token target symbol">  bin/console lint</span><span class="token punctuation">:</span>twig templates --ansi --no-interaction
 
 <span class="token target symbol">lint.yaml@integration</span><span class="token punctuation">:</span>
-<span class="token target symbol">    bin/console lint</span><span class="token punctuation">:</span>yaml config translations --ansi --no-interaction
+<span class="token target symbol">  bin/console lint</span><span class="token punctuation">:</span>yaml config translations --ansi --no-interaction
 
 <span class="token target symbol">lint.eslint@integration</span><span class="token punctuation">:</span>
-    npx eslint src --format junit --output-file report/junit/eslint.xml
+  npx eslint src --format junit --output-file report/junit/eslint.xml
 
 <span class="token target symbol">lint.stylelint@integration</span><span class="token punctuation">:</span>
-    mkdir -p report/junit
-    npx stylelint <span class="token string">"assets/styles/**/*.scss"</span> \
-        --syntax scss \
-        --custom-formatter <span class="token string">"node_modules/stylelint-junit-formatter"</span> \
-        &gt; report/junit/stylelint.xml
+  mkdir -p report/junit
+  npx stylelint <span class="token string">"assets/styles/**/*.scss"</span> \
+    --syntax scss \
+    --custom-formatter <span class="token string">"node_modules/stylelint-junit-formatter"</span> \
+    &gt; report/junit/stylelint.xml
 
 <span class="token target symbol">lint.flow@integration</span><span class="token punctuation">:</span>
-    mkdir -p report/junit
-    npx flow check --json <span class="token operator">|</span> npx flow-junit-transformer &gt; report/junit/flow.xml
+  mkdir -p report/junit
+  npx flow check --json <span class="token operator">|</span> npx flow-junit-transformer &gt; report/junit/flow.xml
 
 <span class="token comment">############</span>
 <span class="token comment"># Security #</span>
@@ -495,13 +495,13 @@ Consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.man
 ...
 
 <span class="token target symbol">security.symfony@integration</span><span class="token punctuation">:</span>
-<span class="token target symbol">    symfony check</span><span class="token punctuation">:</span>security
+<span class="token target symbol">  symfony check</span><span class="token punctuation">:</span>security
 
 <span class="token target symbol">security.yarn@integration</span><span class="token punctuation">:</span>
-    yarn audit <span class="token punctuation">;</span> RC<span class="token operator">=</span><span class="token variable">$$</span><span class="token punctuation">{</span>?<span class="token punctuation">}</span> <span class="token punctuation">;</span> [ <span class="token variable">$$</span><span class="token punctuation">{</span>RC<span class="token punctuation">}</span> -gt 2 ] &amp;&amp; exit <span class="token variable">$$</span><span class="token punctuation">{</span>RC<span class="token punctuation">}</span> <span class="token operator">|</span><span class="token operator">|</span> exit 0
+  yarn audit <span class="token punctuation">;</span> RC<span class="token operator">=</span><span class="token variable">$$</span><span class="token punctuation">{</span>?<span class="token punctuation">}</span> <span class="token punctuation">;</span> [ <span class="token variable">$$</span><span class="token punctuation">{</span>RC<span class="token punctuation">}</span> -gt 2 ] &amp;&amp; exit <span class="token variable">$$</span><span class="token punctuation">{</span>RC<span class="token punctuation">}</span> <span class="token operator">|</span><span class="token operator">|</span> exit 0
 
 <span class="token target symbol">security.npm@integration</span><span class="token punctuation">:</span>
-    npm audit --audit-level moderate
+  npm audit --audit-level moderate
 
 <span class="token comment">########</span>
 <span class="token comment"># Test #</span>
@@ -511,16 +511,16 @@ Consult the <code class="code-inline" id="b6b91fab4c739687eb6057bf25a869d1">.man
 
 <span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> APP_ENV <span class="token operator">=</span> test
 <span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
-    <span class="token comment"># Db</span>
-<span class="token target symbol">    bin/console doctrine</span><span class="token punctuation">:</span>database<span class="token punctuation">:</span>create --ansi
-<span class="token target symbol">    bin/console doctrine</span><span class="token punctuation">:</span>schema<span class="token punctuation">:</span>create --ansi
-    <span class="token comment"># PHPUnit</span>
-    bin/phpunit --colors<span class="token operator">=</span>always --log-junit report/junit/phpunit.xml
+  <span class="token comment"># Db</span>
+<span class="token target symbol">  bin/console doctrine</span><span class="token punctuation">:</span>database<span class="token punctuation">:</span>create --ansi
+<span class="token target symbol">  bin/console doctrine</span><span class="token punctuation">:</span>schema<span class="token punctuation">:</span>create --ansi
+  <span class="token comment"># PHPUnit</span>
+  bin/phpunit --colors<span class="token operator">=</span>always --log-junit report/junit/phpunit.xml
 
 <span class="token target symbol">test.jest@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> JEST_JUNIT_OUTPUT_DIR <span class="token operator">=</span> report/junit
 <span class="token target symbol">test.jest@integration</span><span class="token punctuation">:</span> <span class="token keyword">export</span> JEST_JUNIT_OUTPUT_NAME <span class="token operator">=</span> jest.xml
 <span class="token target symbol">test.jest@integration</span><span class="token punctuation">:</span>
-    npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
+  npx jest --ci --color --reporters<span class="token operator">=</span>default --reporters<span class="token operator">=</span>jest-junit</code></pre>
 <h2 id="deliveries">Deliveries<a href="#deliveries" class="anchor"></a></h2>
 <p>Here is an example of a production/staging deliveries configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
 <pre class="code-multiline language-yaml"><code class="language-yaml" id="e31055d1b19a4377e0cc18d7fccd529a"><span class="token comment">##############</span>
@@ -623,37 +623,37 @@ It uses the <a href="https://github.com/cli/cli" target="_blank">Github CLI tool
 <p>at least once on your machine, if not already.</p>
 <h2 id="makefile">Makefile<a href="#makefile" class="anchor"></a></h2>
 <p>Makefile targets that are supposed to be runned via docker must be prefixed.</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="5befc441f6580e670658d8808eb4d0ca"><span class="token target symbol">foo</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="a105900458a6af74d413970a56d52b9f"><span class="token target symbol">foo</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">foo</span><span class="token punctuation">:</span>
-    <span class="token comment"># Do something really foo...</span></code></pre>
+  <span class="token comment"># Do something really foo...</span></code></pre>
 <p>Ssh</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="9bfdf568655da64bd1d472c7b7d98e59"><span class="token comment">#######</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="58bde62772a7b14c67a2a75891e7c3d9"><span class="token comment">#######</span>
 <span class="token comment"># Ssh #</span>
 <span class="token comment">#######</span>
 
 <span class="token comment">## Ssh to staging server</span>
 <span class="token target symbol">ssh@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">ssh@staging</span><span class="token punctuation">:</span>
-    ssh app<span class="token operator">@</span>foo.staging.rix.link
+  ssh app<span class="token operator">@</span>foo.staging.rix.link
 
 <span class="token comment"># Single host...</span>
 
 <span class="token target symbol">ssh@production</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">ssh@production</span><span class="token punctuation">:</span>
-    ...
+  ...
 
 <span class="token comment"># Multi host...</span>
 
 <span class="token target symbol">ssh@production-01</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">ssh@production-01</span><span class="token punctuation">:</span>
-    ...</code></pre>
+  ...</code></pre>
 <p>Sync</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="b7879d57b170db132938f548fd9d298c"><span class="token target symbol">sync@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="bb787229b9b9befdb9c221b6f7c868c4"><span class="token target symbol">sync@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token target symbol">sync@staging</span><span class="token punctuation">:</span>
-    mkdir -p var
-    rsync --archive --compress --verbose --delete-after \
-<span class="token target symbol">        app@foo.staging.rix.link</span><span class="token punctuation">:</span>/srv/app/current/var/files/ \
-        var/files/
+  mkdir -p var
+  rsync --archive --compress --verbose --delete-after \
+<span class="token target symbol">    app@foo.staging.rix.link</span><span class="token punctuation">:</span>/srv/app/current/var/files/ \
+    var/files/
 
 <span class="token comment"># Multi targets...</span>
 <span class="token target symbol">sync-uploads@staging</span><span class="token punctuation">:</span> SHELL <span class="token operator">:=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">or</span> <span class="token variable">$</span><span class="token punctuation">(</span>MANALA_DOCKER_SHELL<span class="token punctuation">)</span>,<span class="token variable">$</span><span class="token punctuation">(</span>SHELL<span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -668,35 +668,35 @@ It uses the <a href="https://github.com/cli/cli" target="_blank">Github CLI tool
 <p>This recipe contains some git helpers such as the <a href="https://github.com/manala/manala-recipes/blob/main/elao.app.docker/.manala/make/git.mk" target="_blank"><code class="code-inline" id="47af118f85e5080692eb4c9e5b8e46ee">manala_git_diff</code></a> function.</p>
 <p>This function is useful for example to apply <code class="code-inline" id="bb7790bfaa80da52ecba1a151b299b55">php-cs</code>, <code class="code-inline" id="84a40fcfe7ec43f029d5956efb08d1c2">php-cs-fix</code> or <code class="code-inline" id="b098e670cdbfc421583801f6038ae38d">PHPStan</code> checks only on the subset of updated PHP files and not on any PHP file of your project.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="9d5bcf1164670f5f8afc6b80e182b5ef"><span class="token target symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span> DIFF <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> manala_git_diff, php, src tests<span class="token punctuation">)</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="25df393a0e779af6ef328d8c7209285e"><span class="token target symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span> DIFF <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> manala_git_diff, php, src tests<span class="token punctuation">)</span>
 <span class="token target symbol">lint.php-cs-fixer</span><span class="token punctuation">:</span>
-    <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">if</span> <span class="token variable">$</span><span class="token punctuation">(</span>DIFF<span class="token punctuation">)</span>, \
-        vendor/bin/php-cs-fixer fix --config<span class="token operator">=</span>.php_cs.dist --path-mode<span class="token operator">=</span>intersection --diff --dry-run <span class="token variable">$</span><span class="token punctuation">(</span>DIFF<span class="token punctuation">)</span>, \
-        printf <span class="token string">"You have made no change in PHP files\n"</span> \
-    <span class="token punctuation">)</span></code></pre>
+  <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">if</span> <span class="token variable">$</span><span class="token punctuation">(</span>DIFF<span class="token punctuation">)</span>, \
+    vendor/bin/php-cs-fixer fix --config<span class="token operator">=</span>.php_cs.dist --path-mode<span class="token operator">=</span>intersection --diff --dry-run <span class="token variable">$</span><span class="token punctuation">(</span>DIFF<span class="token punctuation">)</span>, \
+    printf <span class="token string">"You have made no change in PHP files\n"</span> \
+  <span class="token punctuation">)</span></code></pre>
 <h3 id="try-tools">Try tools<a href="#try-tools" class="anchor"></a></h3>
 <p>This recipe contains some try helpers such as the <a href="https://github.com/manala/manala-recipes/blob/main/elao.app.docker/.manala/make/try.mk" target="_blank"><code class="code-inline" id="844a849d3b1c1f2b318c37a8afbb32b9">manala_try_finally</code></a> function.</p>
 <p>This function is useful for example to run <code class="code-inline" id="85af727fd022d3a13e7972fd6a418582">phpunit</code> tests needing a started symfony server, and to stop this server regardless of the tests return code.</p>
 <p>Usage (in your <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>):</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="71f30a117e209f2744480fb56642732e"><span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
-<span class="token target symbol">    symfony server</span><span class="token punctuation">:</span>start --ansi --no-humanize --daemon --no-tls --port<span class="token operator">=</span>8000
-    <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> manala_try_finally, \
-        bin/phpunit --colors<span class="token operator">=</span>always --log-junit report/junit/phpunit.xml, \
-<span class="token target symbol">        symfony server</span><span class="token punctuation">:</span>stop --ansi \
-    <span class="token punctuation">)</span></code></pre>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="25d75eef5d42623fb03a5ed1007c3160"><span class="token target symbol">test.phpunit@integration</span><span class="token punctuation">:</span>
+<span class="token target symbol">  symfony server</span><span class="token punctuation">:</span>start --ansi --no-humanize --daemon --no-tls --port<span class="token operator">=</span>8000
+  <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">call</span> manala_try_finally, \
+    bin/phpunit --colors<span class="token operator">=</span>always --log-junit report/junit/phpunit.xml, \
+<span class="token target symbol">    symfony server</span><span class="token punctuation">:</span>stop --ansi \
+  <span class="token punctuation">)</span></code></pre>
 <h2 id="secrets">Secrets<a href="#secrets" class="anchor"></a></h2>
 <p>In order to generate secrets, use <a href="https://docs.gomplate.ca" target="_blank">Gomplate</a>, called by a make task.
 Gomplate takes a template, queries its values from a Vault server and renders a file.</p>
 <p>Add the following tasks in the <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>:</p>
-<pre class="code-multiline language-makefile"><code class="language-makefile" id="1715a774596725ae54a686ff3863fe0b"><span class="token comment">###########</span>
+<pre class="code-multiline language-makefile"><code class="language-makefile" id="01f83589ccf1927a7ad1c0caa750f2fb"><span class="token comment">###########</span>
 <span class="token comment"># Secrets #</span>
 <span class="token comment">###########</span>
 
 <span class="token target symbol">secrets@production</span><span class="token punctuation">:</span>
-    gomplate --input-dir<span class="token operator">=</span>secrets/production --output-map<span class="token operator">=</span><span class="token string">'{{ .in | replaceAll ".gohtml" "" }}'</span>
+  gomplate --input-dir<span class="token operator">=</span>secrets/production --output-map<span class="token operator">=</span><span class="token string">'{{ .in | replaceAll ".gohtml" "" }}'</span>
 
 <span class="token target symbol">secrets@staging</span><span class="token punctuation">:</span>
-    gomplate --input-dir<span class="token operator">=</span>secrets/staging --output-map<span class="token operator">=</span><span class="token string">'{{ .in | replaceAll ".gohtml" "" }}'</span></code></pre>
+  gomplate --input-dir<span class="token operator">=</span>secrets/staging --output-map<span class="token operator">=</span><span class="token string">'{{ .in | replaceAll ".gohtml" "" }}'</span></code></pre>
 <p>Put your templates in <code class="code-inline" id="1ca4b42ca90e819f64f33c96b270e1c1">.gohtml</code> files inside a <code class="code-inline" id="df9fb49a2fc451d46b4f322d61a159d5">secrets/[production|staging]</code> directory at the root of the project.<br>
 Respect destination file names, extensions, and paths:</p>
 <pre class="code-multiline language-treeview"><code class="language-treeview" id="e677d579d06fde32d814f6be1f3d6881"><span class="token treeview-part"><span class="token entry-name dir">secrets</span></span>
@@ -788,14 +788,13 @@ with the proper paths mapping.</p>
     <span class="token key atrule">ide</span><span class="token punctuation">:</span> <span class="token string">'%env(string:default::SYMFONY_IDE)%'</span></code></pre>
 <h2 id="caveats">Caveats<a href="#caveats" class="anchor"></a></h2>
 <ul>
-<li>MySQL 5.7 docker images are not available on arm64, that's why amd64 architecture is forced. Expect rare speed and stability issues.</li>
 <li>OpenSSL debian packages for buster are broken on arm64, that's why bullseye ones are used. Expect rare behavior issues.</li>
 <li>Firefox is blocking some ports like <code class="code-inline" id="ebd774c929a7f6c7e5df19e355f61e23">10080</code>. Try to avoid them.</li>
 </ul></body>
         </article>
     </section>
 
-    <time datetime="2025-10-30UTC07:35:38+00:00">Last modified: October 30, 2025 07:35</time>
+    <time datetime="2025-10-30UTC07:35:53+00:00">Last modified: October 30, 2025 07:35</time>
         </div>
 
         <footer class="footer">
