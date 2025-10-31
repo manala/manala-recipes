@@ -10,5 +10,5 @@ ZSH_THEME_GIT_PROMPT_CLEAN=""
 base_prompt="%{${reset_color}%}%F{magenta}%n%F{cyan}@%F{yellow}$(hostname --fqdn)%F{red}:%F{cyan}%0~%F{red}|%f"
 post_prompt="%{${reset_color}%}%F{cyan}⇒%f  "
 
-PROMPT="%K{green}%F{black}❱Dev❰%{${reset_color}%} ${base_prompt}\$(git_prompt_info)${post_prompt}"
+PROMPT="%K{green}%F{black}❱Dev❰%f%k ${base_prompt}\$(git_prompt_info)${post_prompt}"
 unset base_prompt post_prompt
