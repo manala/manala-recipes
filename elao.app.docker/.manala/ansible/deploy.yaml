@@ -1,7 +1,9 @@
 ---
 
-- hosts: deploy
+- name: Deploy
+  hosts: deploy
   any_errors_fatal: true
   tasks:
-    - import_role:
+    - name: Deploy
+      ansible.builtin.import_role:
         name: deploy

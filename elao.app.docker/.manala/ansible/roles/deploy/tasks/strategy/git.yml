@@ -1,18 +1,18 @@
 ---
 
-- name: strategy/git
+- name: Strategy/git
   block:
 
-    - name: strategy/git > Repository
+    - name: Strategy/git > Repository
       ansible.builtin.git:
-        repo:           "{{ deploy_strategy_git_repo }}"
-        dest:           "{{ deploy_dir ~ '/repo' }}"
-        version:        "{{ deploy_strategy_git_ref }}"
+        repo: "{{ deploy_strategy_git_repo }}"
+        dest: "{{ deploy_dir ~ '/repo' }}"
+        version: "{{ deploy_strategy_git_ref }}"
         accept_hostkey: true
-        update:         true
-        force:          true
+        update: true
+        force: true
 
-    - name: strategy/git > Get head
+    - name: Strategy/git > Get head
       ansible.builtin.shell: >
         git rev-parse --short HEAD
       args:
@@ -20,11 +20,11 @@
       tags: log_failed
       register: __deploy_strategy_git_head_result
 
-    - name: strategy/git > Set head
+    - name: Strategy/git > Set head
       ansible.builtin.set_fact:
         deploy_strategy_git_head: "{{ __deploy_strategy_git_head_result.stdout }}"
 
-    - name: strategy/git > Export repository
+    - name: Strategy/git > Export repository
       ansible.builtin.shell: >
         git checkout-index -f -a --prefix="{{ ansible_facts.deploy_helper.new_release_path }}/"
       args:

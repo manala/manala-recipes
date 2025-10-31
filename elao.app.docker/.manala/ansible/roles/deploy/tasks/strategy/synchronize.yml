@@ -1,10 +1,10 @@
 ---
 
-- name: strategy/synchronize
+- name: Strategy/synchronize
   block:
 
-    - name: strategy/synchronize > Synchronize
+    - name: Strategy/synchronize > Synchronize
       ansible.posix.synchronize:
-        src:  "{{ deploy_strategy_synchronize_src }}"
+        src: "{{ deploy_strategy_synchronize_src }}"
         dest: "{{ ansible_facts.deploy_helper.new_release_path }}/"
         rsync_opts: "{{ deploy_strategy_synchronize_rsync_options }}"

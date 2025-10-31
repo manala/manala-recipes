@@ -1,18 +1,18 @@
 ---
 
-- name: writable/dirs > "{{ item.dir }}"
+- name: Writable/dirs > "{{ item.dir }}"
   ansible.builtin.file:
-    path:    "{{ ansible_facts.deploy_helper.new_release_path ~ '/' ~ item.dir }}"
-    recurse: "{{ item.recurse|default(omit) }}"
-    follow:  "{{ item.follow|default(omit) }}"
-    mode:    "{{ item.mode|default(omit) }}"
-    state:   directory
+    path: "{{ ansible_facts.deploy_helper.new_release_path ~ '/' ~ item.dir }}"
+    recurse: "{{ item.recurse | default(omit) }}"
+    follow: "{{ item.follow | default(omit) }}"
+    mode: "{{ item.mode | default(omit) }}"
+    state: directory
   with_deploy_writable_dirs:
     - "{{ deploy_writable_dirs }}"
     - "{{ deploy_writable_dirs_default }}"
 
-- name: writable/dirs > Raw "{{ item.dir }}"
-  ansible.builtin.raw: "{{ item.raw|format(dir=ansible_facts.deploy_helper.new_release_path ~ '/' ~ item.dir) }}"
+- name: Writable/dirs > Raw "{{ item.dir }}"
+  ansible.builtin.raw: "{{ item.raw | format(dir=ansible_facts.deploy_helper.new_release_path ~ '/' ~ item.dir) }}"
   when: item.raw is defined
   with_deploy_writable_dirs:
     - "{{ deploy_writable_dirs }}"

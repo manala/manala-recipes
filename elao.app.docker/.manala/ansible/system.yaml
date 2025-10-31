@@ -8,9 +8,6 @@
         - all
         - "!hardware"
 
-  collections:
-    - manala.roles
-
   vars:
 
     ################
@@ -318,122 +315,124 @@
 
   tasks:
 
-    - import_role:
-        name: apt
+    - name: Apt
+      ansible.builtin.import_role:
+        name: manala.roles.apt
       when: system_apt
       tags: [apt]
 
-    - import_role:
-        name: zsh
+    - name: Zsh
+      ansible.builtin.import_role:
+        name: manala.roles.zsh
       when: system_zsh
       tags: [zsh]
 
-    - import_role:
-        name: locales
+    - ansible.builtin.import_role:
+        name: manala.roles.locales
       when: system_locales
       tags: [locales]
 
-    - import_role:
-        name: ssh
+    - ansible.builtin.import_role:
+        name: manala.roles.ssh
       when: system_ssh
       tags: [ssh]
 
-    - import_role:
-        name: timezone
+    - ansible.builtin.import_role:
+        name: manala.roles.timezone
       when: system_timezone
       tags: [timezone]
 
-    - import_role:
-        name: vim
+    - ansible.builtin.import_role:
+        name: manala.roles.vim
       when: system_vim
       tags: [vim]
 
-    - import_role:
-        name: git
+    - ansible.builtin.import_role:
+        name: manala.roles.git
       when: system_git
       tags: [git]
 
-    - import_role:
-        name: ohmyzsh
+    - ansible.builtin.import_role:
+        name: manala.roles.ohmyzsh
       when: system_ohmyzsh
       tags: [ohmyzsh]
 
-    - import_role:
-        name: alternatives
+    - ansible.builtin.import_role:
+        name: manala.roles.alternatives
       when: system_alternatives
       tags: [alternatives]
 
-    - import_role:
-        name: files
+    - ansible.builtin.import_role:
+        name: manala.roles.files
       when: system_files
       tags: [files]
 
-    - import_role:
-        name: nodejs
+    - ansible.builtin.import_role:
+        name: manala.roles.nodejs
       when: system_nodejs
       tags: [nodejs, node]
 
-    - import_role:
-        name: npm
+    - ansible.builtin.import_role:
+        name: manala.roles.npm
       when: system_nodejs_npm
       tags: [npm, nodejs, node]
 
-    - import_role:
-        name: yarn
+    - ansible.builtin.import_role:
+        name: manala.roles.yarn
       when: system_nodejs_yarn
       tags: [yarn, nodejs, node]
 
-    - import_role:
-        name: php
+    - ansible.builtin.import_role:
+        name: manala.roles.php
       when: system_php
       tags: [php]
 
-    - import_role:
-        name: composer
+    - ansible.builtin.import_role:
+        name: manala.roles.composer
       when: system_php_composer
       tags: [composer]
 
-    - import_role:
+    - ansible.builtin.import_role:
         name: certificates
       when: system_certificates
       tags: [certificates, nginx]
 
-    - import_role:
-        name: nginx
+    - ansible.builtin.import_role:
+        name: manala.roles.nginx
       when: system_nginx
       tags: [nginx, certificates]
 
-    - import_role:
-        name: redis
+    - ansible.builtin.import_role:
+        name: manala.roles.redis
       when: system_redis
       tags: [redis]
 
-    - import_role:
-        name: cron
+    - ansible.builtin.import_role:
+        name: manala.roles.cron
       when: system_cron
       tags: [cron]
 
-    - import_role:
-        name: supervisor
+    - ansible.builtin.import_role:
+        name: manala.roles.supervisor
       when: system_supervisor
       tags: [supervisor]
 
-    - import_role:
-        name: mysql
+    - ansible.builtin.import_role:
+        name: manala.roles.mysql
       when: system_mysql or system_mariadb
       tags: [mysql, mariadb]
 
-    - import_role:
-        name: influxdb
+    - ansible.builtin.import_role:
+        name: manala.roles.influxdb
       when: system_influxdb
       tags: [influxdb]
 
-    - import_role:
-        name: gomplate
+    - ansible.builtin.import_role:
+        name: manala.roles.gomplate
       when: system_gomplate
       tags: [gomplate]
 
-    - import_role:
-        name: ngrok
+    - ansible.builtin.import_role:
+        name: manala.roles.ngrok
       when: system_ngrok
       tags: [ngrok]
