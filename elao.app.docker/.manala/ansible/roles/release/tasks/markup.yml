@@ -1,6 +1,6 @@
 # Pushes an empty commit to the original repository,
 # so that the release repository commit is easily identifiable.
-- name: git > Get release repo informations
+- name: Git > Get release repo informations
   ansible.builtin.git:
     repo: "{{ release_repo }}"
     dest: "{{ release_dir }}"
@@ -9,13 +9,13 @@
   register: __release_repo_git_info
 
 # Pull the original repository changes to prevent concurrent releases issues
-- name: git > Pull original repository
+- name: Git > Pull original repository
   ansible.builtin.shell: git pull --rebase origin
   args:
     chdir: "{{ release_git_dir }}"
   tags: log_failed
 
-- name: git > Commit to original repository
+- name: Git > Commit to original repository
   ansible.builtin.shell: |
     git {{
       release_author|ternary(release_author|regex_replace(release_email_regex, '-c user.name="\g<name>" -c user.email="\g<email>"'), '')
@@ -32,7 +32,7 @@
     }}/commit/{{ __release_repo_git_info.after }}"
   tags: log_failed
 
-- name: git > Push to original repository
+- name: Git > Push to original repository
   ansible.builtin.shell: >
     git push --set-upstream origin
     && git push origin HEAD

@@ -1,6 +1,8 @@
 ---
 
-- hosts: release
+- name: Release
+  hosts: release
   tasks:
-    - import_role:
+    - name: Release
+      ansible.builtin.import_role:
         name: release

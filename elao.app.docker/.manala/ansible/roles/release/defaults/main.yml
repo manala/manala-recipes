@@ -1,12 +1,12 @@
 ---
 
 # Dirs
-release_dir:        ~
+release_dir: ~
 release_target_dir: ~
 
 # Git
 release_git_dir: ~
-release_repo:    ~
+release_repo: ~
 release_ref: master
 
 # Whether to markup releases on original repository.

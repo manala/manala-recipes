@@ -1,6 +1,6 @@
 ---
 
-- name: git > Get url
+- name: Git > Get url
   ansible.builtin.shell: >
     git config --get remote.origin.url
   args:
@@ -8,7 +8,7 @@
   tags: log_failed
   register: __original_repo
 
-- name: git > Get informations
+- name: Git > Get informations
   ansible.builtin.git:
     repo: "{{ __original_repo.stdout }}"
     dest: "{{ release_git_dir }}"
@@ -22,7 +22,7 @@
     && mkdir -p {{ release_dir }}
   tags: log_failed
 
-- name: git > Export repository
+- name: Git > Export repository
   ansible.builtin.shell: >
     git archive HEAD{{
       ' ' ~ release_target_dir if (release_target_dir) else ''
@@ -37,12 +37,12 @@
     chdir: "{{ release_git_dir }}"
   tags: log_failed
 
-- name: tasks
+- name: Tasks
   ansible.builtin.include_tasks: task/{{ item.task }}.yml
   loop: "{{ query('release_tasks', release_tasks) }}"
   when: item.when
 
-- name: git > Init "{{ release_repo }}" on branch "{{ release_ref }}"
+- name: Git > Init "{{ release_repo }}" on branch "{{ release_ref }}"
   ansible.builtin.shell: >
     git init
     && git checkout -b {{ release_ref }}
@@ -64,11 +64,11 @@
 
 - name: Remove
   ansible.builtin.shell: >
-    rm --recursive --force --verbose {{ [release_dir, item]|join('/') }}
+    rm --recursive --force --verbose {{ [release_dir, item] | join('/') }}
   tags: log_failed
   loop: "{{ release_remove }}"
 
-- name: git > Add all
+- name: Git > Add all
   ansible.builtin.shell: >
     git add --force --all
   args:
@@ -76,7 +76,7 @@
   when: release_add|length == 0
   tags: log_failed
 
-- name: git > Add
+- name: Git > Add
   ansible.builtin.shell: >
     git add --force {{ item }}
   args:
@@ -84,7 +84,7 @@
   loop: "{{ release_add }}"
   tags: log_failed
 
-- name: git > Commit
+- name: Git > Commit
   ansible.builtin.shell: |
     git {{
       release_author|ternary(release_author|regex_replace(release_email_regex, '-c user.name="\g<name>" -c user.email="\g<email>"'), '')
@@ -103,7 +103,7 @@
     chdir: "{{ release_dir }}"
   tags: log_failed
 
-- name: git > Push "{{ release_ref }}"
+- name: Git > Push "{{ release_ref }}"
   ansible.builtin.shell: >
     git push --set-upstream origin {{ release_ref }}
     && git push origin HEAD
@@ -111,5 +111,6 @@
     chdir: "{{ release_dir }}"
   tags: log_failed
 
-- include_tasks: markup.yml
+- name: Markup
+  ansible.builtin.include_tasks: markup.yml
   when: release_markup

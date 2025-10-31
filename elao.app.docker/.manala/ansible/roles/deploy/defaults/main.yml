@@ -1,10 +1,10 @@
 ---
 
 # Dirs
-deploy_dir:          ~
-deploy_current_dir:  current
+deploy_dir: ~
+deploy_current_dir: current
 deploy_releases_dir: releases
-deploy_shared_dir:   shared
+deploy_shared_dir: shared
 
 # Releases
 deploy_releases: 5
@@ -13,7 +13,7 @@ deploy_releases: 5
 deploy_strategy: git
 
 # Strategy - Git
-deploy_strategy_git_repo:    ~
+deploy_strategy_git_repo: ~
 deploy_strategy_git_ref: master
 
 # [READ-ONLY] This variable will be filled with the head commit hash
@@ -29,7 +29,7 @@ deploy_strategy_unarchive_src: ~
 
 # Shared
 deploy_shared_files: []
-deploy_shared_dirs:  []
+deploy_shared_dirs: []
 
 # Copied
 deploy_copied: []
@@ -39,11 +39,11 @@ deploy_remove: []
 
 # Writable
 deploy_writable_dirs_default: # Ensure backward compatibility
-  mode:    "{{ deploy_writable_dirs_mode|default('ug=rwx,o=rx') }}"
-  follow:  true
+  mode: "{{ deploy_writable_dirs_mode | default('ug=rwx,o=rx') }}"
+  follow: true
   recurse: true
 deploy_writable_dirs: []
 
 # Tasks
-deploy_tasks:      []
+deploy_tasks: []
 deploy_post_tasks: []

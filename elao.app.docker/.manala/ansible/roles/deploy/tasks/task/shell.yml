@@ -1,9 +1,9 @@
 ---
 
-- name: task/shell
+- name: Task/shell
   block:
 
-    - name: task/shell > "{{ item.options }}" in "{{ item.dir }}"
+    - name: Task/shell > "{{ item.options }}" in "{{ item.dir }}"
       ansible.builtin.shell: >
         {{ item.options }}
       args:

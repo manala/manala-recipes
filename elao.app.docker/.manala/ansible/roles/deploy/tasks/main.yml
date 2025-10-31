@@ -1,7 +1,7 @@
 ---
 
 # Setup
-- name: setup > Create structure
+- name: Setup > Create structure
   community.general.deploy_helper:
     path:          "{{ deploy_dir }}"
     current_path:  "{{ deploy_current_dir }}"
@@ -11,7 +11,7 @@
     state:         present
 
 # Strategy
-- name: strategy
+- name: Strategy
   ansible.builtin.include_tasks: "strategy/{{ deploy_strategy }}.yml"
 
 # Unfinished
@@ -21,16 +21,17 @@
     state: touch
 
 # Shared
-- ansible.builtin.import_tasks: shared.yml
+- name: Shared
+  ansible.builtin.import_tasks: shared.yml
 
 # Copied
-- name: copied > Stat
+- name: Copied > Stat
   ansible.builtin.stat:
     path: "{{ ansible_facts.deploy_helper.previous_release_path ~ '/' ~ item }}"
   register: __deploy_copied_stats_output
   with_items: "{{ deploy_copied }}"
 
-- name: copied > Copy
+- name: Copied > Copy
   ansible.builtin.shell: >
     cp -R {{ ansible_facts.deploy_helper.previous_release_path ~ '/' ~ item.1 ~ (__deploy_copied_stats_output.results[item.0].stat.isdir|ternary('/', '')) }}
     {{ ansible_facts.deploy_helper.new_release_path ~ '/' ~ item.1 }}
@@ -40,45 +41,46 @@
   tags: log_failed
 
 # Writable - Dirs
-- ansible.builtin.import_tasks: writable/dirs.yml
+- name: Writable/dirs
+  ansible.builtin.import_tasks: writable/dirs.yml
 
 # Tasks
-- name: tasks
+- name: Tasks
   ansible.builtin.include_tasks: task/{{ item.task }}.yml
   loop: "{{ query('deploy_tasks', deploy_tasks) }}"
   when: item.when
 
 # Remove
-- name: remove > Files
+- name: Remove > Files
   file:
-    path:  "{{ ansible_facts.deploy_helper.new_release_path ~ '/' ~ item }}"
+    path: "{{ ansible_facts.deploy_helper.new_release_path ~ '/' ~ item }}"
     state: absent
   with_items: "{{ deploy_remove }}"
 
 # Finalize
-- name: finalize > Remove the unfinished file and create a symlink to the newly deployed release
+- name: Finalize > Remove the unfinished file and create a symlink to the newly deployed release
   community.general.deploy_helper:
-    path:          "{{ deploy_dir }}"
-    current_path:  "{{ deploy_current_dir }}"
+    path: "{{ deploy_dir }}"
+    current_path: "{{ deploy_current_dir }}"
     releases_path: "{{ deploy_releases_dir }}"
-    release:       "{{ ansible_facts.deploy_helper.new_release }}"
+    release: "{{ ansible_facts.deploy_helper.new_release }}"
     keep_releases: "{{ deploy_releases }}"
-    state:         finalize
-    clean:         false
+    state: finalize
+    clean: false
 
 # Clean
-- name: clean > Remove failed and old releases, keeping "{{ deploy_releases }}" releases
+- name: Clean > Remove failed and old releases, keeping "{{ deploy_releases }}" releases
   community.general.deploy_helper:
-    path:          "{{ deploy_dir }}"
-    current_path:  "{{ deploy_current_dir }}"
+    path: "{{ deploy_dir }}"
+    current_path: "{{ deploy_current_dir }}"
     releases_path: "{{ deploy_releases_dir }}"
-    release:       "{{ ansible_facts.deploy_helper.new_release }}"
+    release: "{{ ansible_facts.deploy_helper.new_release }}"
     keep_releases: "{{ deploy_releases }}"
-    state:         clean
+    state: clean
   ignore_errors: true
 
 # Post tasks
-- name: post tasks
-  include_tasks: task/{{ item.task }}.yml
+- name: Post tasks
+  ansible.builtin.include_tasks: task/{{ item.task }}.yml
   loop: "{{ query('deploy_tasks', deploy_post_tasks) }}"
   when: item.when
