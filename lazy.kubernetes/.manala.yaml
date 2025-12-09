@@ -71,7 +71,7 @@ system:
         # @option {"label": "Kubectl version"}
         version: ~
     kustomize:
-        # @schema {"enum": ["5.7.1"]}
+        # @schema {"enum": [null, "5.7.1"]}
         # @option {"label": "Kustomize version"}
         version: ~
     krew:
