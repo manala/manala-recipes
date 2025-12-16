@@ -154,3 +154,8 @@ command:
     exit-status: 0
     stdout:
       - gke-gcloud-auth-plugin
+  # AWS cli
+  aws --version:
+    exit-status: 0
+    stdout:
+      - aws-cli/{{ .Vars.system.aws.version }}
