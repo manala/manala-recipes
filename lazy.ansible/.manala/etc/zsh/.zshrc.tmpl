@@ -86,6 +86,9 @@ plugins=(
 {{- if .Vars.system.gcloud.version }}
   gcloud
 {{- end }}
+{{- if .Vars.system.aws.version }}
+  aws
+{{- end }}
 )
 
 source $ZSH/oh-my-zsh.sh

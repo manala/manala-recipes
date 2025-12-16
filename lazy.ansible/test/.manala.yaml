@@ -52,3 +52,5 @@ system:
         version: 541.0.0
         components:
             - gke-gcloud-auth-plugin
+    aws:
+        version: 2.32.17

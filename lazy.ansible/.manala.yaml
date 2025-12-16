@@ -103,3 +103,7 @@ system:
         version: ~
         # @schema {"items": {"type": "string"}}
         components: []
+    aws:
+        # @schema {"enum": [null, "2.32.17"]}
+        # @option {"label": "AWS cli version"}
+        version: ~
