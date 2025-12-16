@@ -144,7 +144,7 @@ system:
         # @option {"label": "Sops version"}
         version: ~
     aws:
-        # @schema {"enum": [null, "2.31.9"]}
+        # @schema {"enum": [null, "2.32.17"]}
         # @option {"label": "AWS cli version"}
         version: ~
     gcloud:

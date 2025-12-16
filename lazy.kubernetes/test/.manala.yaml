@@ -62,7 +62,7 @@ system:
     sops:
         version: 3.11.0
     aws:
-        version: 2.31.9
+        version: 2.32.17
     gcloud:
         version: 541.0.0
         components:
