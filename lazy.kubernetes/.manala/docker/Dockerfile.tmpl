@@ -369,6 +369,7 @@ EOF
 {{ $aws := .Vars.system.aws -}}
 {{ if $aws.version -}}
 # AWS cli
+ENV AWS_CONFIG_FILE="/etc/aws/config"
 RUN <<EOF
 apt-get --quiet update
 apt-get --quiet --yes --no-install-recommends --verbose-versions install \

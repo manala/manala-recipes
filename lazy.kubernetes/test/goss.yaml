@@ -44,6 +44,11 @@ file:
     exists: true
     contents:
       - "# Git config template"
+  # Aws
+  /etc/aws/config:
+    exists: true
+    contents:
+      - "[profile test]"
 
 command:
   # Base
