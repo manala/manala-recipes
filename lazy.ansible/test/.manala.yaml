@@ -54,3 +54,5 @@ system:
             - gke-gcloud-auth-plugin
     aws:
         version: 2.32.17
+        config: |
+            [profile test]

@@ -86,6 +86,8 @@ system:
     {{- if .Vars.system.aws.version }}
     aws:
         version: {{ .Vars.system.aws.version | toYaml }}
+        config: |
+            # Set your profiles here
     {{- end }}
     {{- if .Vars.system.gcloud }}
     gcloud:

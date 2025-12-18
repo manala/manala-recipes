@@ -147,6 +147,8 @@ system:
         # @schema {"enum": [null, "2.32.17"]}
         # @option {"label": "AWS cli version"}
         version: ~
+        # @schema {"type": ["null", "string"]}
+        config: ~
     gcloud:
         # @schema {"enum": [null, "541.0.0"]}
         # @option {"label": "Google Cloud cli version"}

@@ -58,6 +58,11 @@ file:
     exists: true
     contents:
       - "# Ssh config template"
+  # Aws
+  /etc/aws/config:
+    exists: true
+    contents:
+      - "[profile test]"
 
 command:
   # Base
