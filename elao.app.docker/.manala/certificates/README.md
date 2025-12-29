@@ -10,7 +10,7 @@ openssl genpkey -aes-256-cbc -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out c
 
 Generate self signed certificate:
 ```
-openssl req -new -x509 -sha256 -days 825 -subj "/O=Elao/CN=Elao Development Only - 2023" -key ca.key -out ca.crt
+openssl req -new -x509 -sha256 -days 825 -subj "/O=Elao/CN=Elao Development Only - 2025" -key ca.key -out ca.crt
 ```
 
 ⚠️ No more than 825 days of validity for OSX based systems (https://support.apple.com/en-us/HT210176).
