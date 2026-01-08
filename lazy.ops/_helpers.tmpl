@@ -1,0 +1,10 @@
+{{/* Architecture map */}}
+{{ define "arch_map" -}}
+$(case $(dpkg --print-architecture) in
+  {{- range $k, $v := . }} "{{ $k }}") echo "{{ $v }}" ;;{{ end }} esac)
+{{- end }}
+
+{{/* Os release */}}
+{{ define "os_release" -}}
+$(. /etc/os-release; echo "{{ printf "${%s}" . }}")
+{{- end }}

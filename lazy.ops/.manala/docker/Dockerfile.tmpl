@@ -1,0 +1,536 @@
+# syntax=docker/dockerfile:1
+
+########
+# Base #
+########
+
+FROM debian:trixie-slim
+
+ARG DEBIAN_FRONTEND="noninteractive"
+
+ARG MANALA_USER_ID="1000"
+ARG MANALA_GROUP_ID="1000"
+
+ARG GOMPLATE_VERSION="5.0.0"
+ARG DIRENV_VERSION="2.37.1"
+ARG JQ_VERSION="1.7.1"
+ARG YQ_VERSION="4.52.2"
+ARG STARSHIP_VERSION="1.24.2"
+ARG FZF_VERSION="0.67.0"
+
+# The 'container' environment variable tells systemd that it's running inside a
+# Docker container environment.
+# It's also internally used for checking we're running inside a container.
+ENV container="docker"
+
+# Starship
+ENV STARSHIP_CONFIG=/etc/starship/starship.toml
+
+SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
+
+RUN <<EOF
+# Packages
+apt-get --quiet update
+apt-get --quiet --yes --purge --autoremove upgrade
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    bzip2 \
+    ca-certificates \
+    curl \
+    git \
+    gnupg \
+    gosu \
+    less \
+    libarchive-tools \
+    make \
+    rsync \
+    s6 \
+    socat \
+    sudo \
+    telnet \
+    vim \
+    zsh
+{{- if ne .Vars.system.locale "C.UTF-8" }}
+# Locale
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    locales
+sed -i "/^# *{{ .Vars.system.locale }}\b/s/^# *//" /etc/locale.gen
+dpkg-reconfigure locales
+{{- end }}
+# User
+addgroup --gid ${MANALA_GROUP_ID} lazy
+adduser --home /home/lazy --shell /bin/zsh --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy
+install --verbose --mode 0755 --group lazy --owner lazy --directory /run/user/${MANALA_USER_ID}
+echo "lazy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lazy
+# Gomplate
+curl -sSLf "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/gomplate
+chmod +x /usr/local/bin/gomplate
+# Direnv
+curl -sSLf "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/direnv
+chmod +x /usr/local/bin/direnv
+# Jq
+curl -sSLf "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/jq
+chmod +x /usr/local/bin/jq
+# Yq
+curl -sSLf "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/yq
+chmod +x /usr/local/bin/yq
+# Oh My Zsh
+git clone https://github.com/ohmyzsh/ohmyzsh.git /usr/local/share/oh-my-zsh
+# See: https://github.com/ohmyzsh/ohmyzsh/issues/11995
+git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+echo "ZDOTDIR=/etc/zsh" > /etc/zsh/zshenv
+# Starship
+curl -sSLf "https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-unknown-linux-musl.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin
+echo "Defaults env_keep += STARSHIP_CONFIG" > /etc/sudoers.d/starship
+# Fzf
+curl -sSLf "https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin
+chmod +x /usr/local/bin/fzf
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
+
+# Locale
+ENV LANG="{{ .Vars.system.locale }}"
+
+##########
+# System #
+##########
+
+ENV PIPX_HOME="/usr/local/pipx"
+ENV PIPX_BIN_DIR="/usr/local/bin"
+
+ARG VIM_GNUPG_VERSION="2.7.1"
+
+{{ $apt := .Vars.system.apt -}}
+
+RUN <<EOF
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    openssh-client \
+    pipx \
+    python3 \
+    shellcheck \
+    sshpass
+    {{- if $apt.packages }} \
+    {{- range $i, $package := $apt.packages }}
+    {{- if $i }} \{{- end }}
+    {{ $package }}
+    {{- end }}
+    {{- end }}
+# Sudo
+echo "Defaults env_keep += \"PIPX_*\"" > /etc/sudoers.d/pipx
+# Vim Gnupg
+install --verbose --mode 0755 --directory /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg
+curl -sSLf https://github.com/jamessan/vim-gnupg/releases/download/v${VIM_GNUPG_VERSION}/vim-gnupg-v${VIM_GNUPG_VERSION}.tar.gz \
+    | bsdtar -xvf - -C /usr/share/vim/vimfiles/pack/plugins/start/vim-gnupg --strip-components=1 vim-gnupg-${VIM_GNUPG_VERSION}
+echo "let g:GPGPreferSymmetric = 1" >> /etc/vim/vimrc
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
+
+{{ if .Vars.system.docker -}}
+# Docker
+RUN <<EOF
+curl -sSLf https://download.docker.com/linux/debian/gpg \
+    --output /etc/apt/keyrings/docker.asc
+printf "\
+Types: deb\n\
+URIs: https://download.docker.com/linux/debian\n\
+Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
+Components: stable\n\
+Signed-By: /etc/apt/keyrings/docker.asc\n\
+" > /etc/apt/sources.list.d/docker.sources
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    docker-ce-cli
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
+
+{{ end -}}
+
+{{ $ansible := .Vars.system.ansible -}}
+{{ if $ansible.version -}}
+# Ansible
+RUN <<EOF
+pipx install --pip-args="--no-cache-dir" \
+    ansible-core=={{ $ansible.version }}
+{{- if $ansible.dependencies }}
+pipx inject --pip-args="--no-cache-dir" ansible-core \
+    {{- range $i, $dependency := $ansible.dependencies }}
+    {{- if $i }} \{{- end }}
+    {{ $dependency }}
+    {{- end }}
+{{- end }}
+EOF
+
+{{ end -}}
+
+{{ $ansibleLint := index .Vars.system "ansible-lint" -}}
+{{ if $ansibleLint.version -}}
+# Ansible Lint
+RUN <<EOF
+BUILD_PACKAGES=( \
+    libpython3-dev gcc \
+)
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    "${BUILD_PACKAGES[@]}"
+pipx install --pip-args="--no-cache-dir" \
+    ansible-lint[lock]=={{ $ansibleLint.version }}
+{{- if $ansibleLint.dependencies }}
+pipx inject --pip-args="--no-cache-dir" ansible-lint \
+    {{- range $i, $dependency := $ansibleLint.dependencies }}
+    {{- if $i }} \{{- end }}
+    {{ $dependency }}
+    {{- end }}
+{{- end }}
+# Clean
+apt-get --quiet --yes --autoremove purge \
+    "${BUILD_PACKAGES[@]}"
+rm -rf /var/lib/apt/lists/*
+EOF
+
+{{ end -}}
+
+{{ $ansibleCreator := index .Vars.system "ansible-creator" -}}
+{{ if $ansibleCreator.version -}}
+# Ansible Creator
+RUN <<EOF
+pipx install --pip-args="--no-cache-dir" \
+    ansible-creator=={{ $ansibleCreator.version }}
+EOF
+
+{{ end -}}
+
+{{ $molecule := .Vars.system.molecule -}}
+{{ if $molecule.version -}}
+# Molecule
+RUN <<EOF
+pipx install --pip-args="--no-cache-dir" \
+    molecule=={{ $molecule.version }}
+{{- if $molecule.dependencies }}
+pipx inject --pip-args="--no-cache-dir" molecule \
+    {{- range $i, $dependency := $molecule.dependencies }}
+    {{- if $i }} \{{- end }}
+    {{ $dependency }}
+    {{- end }}
+{{- end }}
+EOF
+
+{{ end -}}
+
+{{ $terraform := .Vars.system.terraform -}}
+{{ if $terraform.version -}}
+# Terraform
+RUN <<EOF
+curl -sSLf "https://releases.hashicorp.com/terraform/{{ $terraform.version }}/terraform_{{ $terraform.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
+    | bsdtar -xvf - -C /usr/local/bin
+chmod +x /usr/local/bin/terraform
+EOF
+
+{{ end -}}
+
+{{ $kubectl := .Vars.system.kubectl -}}
+{{ if $kubectl.version -}}
+# Kubectl
+RUN <<EOF
+curl -sSLf "https://dl.k8s.io/v{{ $kubectl.version }}/kubernetes-client-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin --strip-components=3 kubernetes/client/bin/kubectl
+EOF
+
+{{ end -}}
+
+{{ $kustomize := .Vars.system.kustomize -}}
+{{ if $kustomize.version -}}
+# Kustomize
+RUN <<EOF
+curl -sSLf "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v{{ $kustomize.version }}/kustomize_v{{ $kustomize.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin
+EOF
+
+{{ end -}}
+
+{{ $krew := .Vars.system.krew -}}
+{{- if $krew.version }} \
+# Krew
+ENV KREW_ROOT="/usr/local/share/krew"
+ENV PATH="$KREW_ROOT/bin:$PATH"
+RUN <<EOF
+curl -sSLf "https://github.com/kubernetes-sigs/krew/releases/download/v{{ $krew.version }}/krew-linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar --no-xattrs -xvf - -C /tmp "krew-linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}"
+/tmp/krew-linux_"{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" install krew
+rm -rf /tmp/krew-linux_"{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}"
+echo "Defaults env_keep += KREW_ROOT" > /etc/sudoers.d/krew
+{{- if $krew.plugins }}
+# Plugins
+{{- range $plugin := $krew.plugins }}
+kubectl krew install {{ $plugin }}
+{{- end }}
+{{- end }}
+EOF
+
+{{ end -}}
+
+{{ $helm := .Vars.system.helm -}}
+{{ if $helm.version -}}
+# Helm
+ENV HELM_PLUGINS="/usr/local/share/helm/plugins"
+RUN <<EOF
+curl -sSLf "https://get.helm.sh/helm-v{{ $helm.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin --strip-components=1 "linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/helm"
+echo "Defaults env_keep += HELM_PLUGINS" > /etc/sudoers.d/helm
+{{- if $helm.plugins }}
+# Plugins
+{{- range $plugin := $helm.plugins }}
+helm plugin install
+    {{- if hasKey $plugin "verify" }} --verify={{ $plugin.verify | toYaml }}{{ end -}}
+    {{- if hasKey $plugin "url" }} {{ $plugin.url }}{{ end -}}
+    {{- if hasKey $plugin "path" }} {{ $plugin.path }}{{ end -}}
+    {{- if hasKey $plugin "version" }} --version {{ $plugin.version }}{{ end -}}
+{{- end }}
+{{- end }}
+EOF
+
+{{ end -}}
+
+{{ $helmfile := .Vars.system.helmfile -}}
+{{ if $helmfile.version -}}
+# Helmfile
+ENV HELMFILE_UPGRADE_NOTICE_DISABLED="1"
+RUN <<EOF
+curl -sSLf "https://github.com/helmfile/helmfile/releases/download/v{{ $helmfile.version }}/helmfile_{{ $helmfile.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin helmfile
+# Oh My Zsh plugin
+# See: https://github.com/ohmyzsh/ohmyzsh/pull/12750
+mkdir /usr/local/share/oh-my-zsh/custom/plugins/helmfile
+printf "\
+if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_helmfile\" ]]; then\n\
+  typeset -g -A _comps\n\
+  autoload -Uz _helmfile\n\
+  _comps[helmfile]=_helmfile\n\
+fi\n\
+helmfile completion zsh >| \"\$ZSH_CACHE_DIR/completions/_helmfile\" &|\n\
+alias hf='helmfile'\n\
+alias hfi='helmfile --interactive'\n\
+" > /usr/local/share/oh-my-zsh/custom/plugins/helmfile/helmfile.plugin.zsh
+EOF
+
+{{ end -}}
+
+{{ $k9s := .Vars.system.k9s -}}
+{{ if $k9s.version -}}
+# K9s
+RUN <<EOF
+curl -sSLf "https://github.com/derailed/k9s/releases/download/v{{ $k9s.version }}/k9s_Linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin k9s
+EOF
+
+{{ end -}}
+
+{{ $stern := .Vars.system.stern -}}
+{{ if $stern.version -}}
+# Stern
+RUN <<EOF
+curl -sSLf "https://github.com/stern/stern/releases/download/v{{ $stern.version }}/stern_{{ $stern.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin stern
+# Oh My Zsh plugin
+# See: https://github.com/ohmyzsh/ohmyzsh/pull/12751
+mkdir /usr/local/share/oh-my-zsh/custom/plugins/stern
+printf "\
+if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_stern\" ]]; then\n\
+  typeset -g -A _comps\n\
+  autoload -Uz _stern\n\
+  _comps[stern]=_stern\n\
+fi\n\
+stern --completion zsh >| \"\$ZSH_CACHE_DIR/completions/_stern\" &|\n\
+" > /usr/local/share/oh-my-zsh/custom/plugins/stern/stern.plugin.zsh
+EOF
+
+{{ end -}}
+
+{{ $popeye := .Vars.system.popeye -}}
+{{ if $popeye.version -}}
+# Popeye
+RUN <<EOF
+curl -sSLf "https://github.com/derailed/popeye/releases/download/v{{ $popeye.version }}/popeye_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin popeye
+EOF
+
+{{ end -}}
+
+{{ $vault := .Vars.system.vault -}}
+{{ if $vault.version -}}
+# Vault
+RUN <<EOF
+curl -sSLf "https://releases.hashicorp.com/vault/{{ $vault.version }}/vault_{{ $vault.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
+    | bsdtar -xvf - -C /usr/local/bin vault
+chmod +x /usr/local/bin/vault
+EOF
+
+{{ end -}}
+
+{{ $rclone := .Vars.system.rclone -}}
+{{ if $rclone.version -}}
+# Rclone
+RUN <<EOF
+curl -sSLf "https://downloads.rclone.org/v{{ $rclone.version }}/rclone-v{{ $rclone.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.zip" \
+    | bsdtar -xvf - -C /usr/local/bin --strip-components=1 "rclone-v{{ $rclone.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/rclone"
+chmod +x /usr/local/bin/rclone
+EOF
+
+{{ end -}}
+
+{{ $openstack := .Vars.system.openstack -}}
+{{ if $openstack.version -}}
+# Openstack
+RUN <<EOF
+BUILD_PACKAGES=( \
+    gcc \
+    libpython3-dev \
+)
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    "${BUILD_PACKAGES[@]}"
+pipx install \
+    python-openstackclient=={{ $openstack.version }}
+# Bash completion
+openstack complete > /etc/bash_completion.d/openstack
+# Clean
+apt-get --quiet --yes --autoremove purge \
+    "${BUILD_PACKAGES[@]}"
+rm -rf /var/lib/apt/lists/*
+EOF
+
+{{ end -}}
+
+{{ $swift := .Vars.system.swift -}}
+{{ if $swift.version -}}
+# Swift
+RUN <<EOF
+BUILD_PACKAGES=( \
+    gcc \
+    libpython3-dev \
+)
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    "${BUILD_PACKAGES[@]}"
+pipx install \
+    python-swiftclient=={{ $swift.version }}
+{{ if $swift.keystone.version -}}
+pipx inject python-swiftclient \
+    python-keystoneclient=={{ $swift.keystone.version }}
+{{ end -}}
+# Clean
+apt-get --quiet --yes --autoremove purge \
+    "${BUILD_PACKAGES[@]}"
+rm -rf /var/lib/apt/lists/*
+EOF
+
+{{ end -}}
+
+{{ $scw := .Vars.system.scw -}}
+{{ if $scw.version -}}
+# Scaleway cli
+RUN <<EOF
+curl -sSLf "https://github.com/scaleway/scaleway-cli/releases/download/v{{ $scw.version }}/scaleway-cli_{{ $scw.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/scw
+chmod +x /usr/local/bin/scw
+EOF
+
+{{ end -}}
+
+{{ $sops := .Vars.system.sops -}}
+{{ if $sops.version -}}
+# Sops
+RUN <<EOF
+curl -sSLf "https://github.com/mozilla/sops/releases/download/v{{ $sops.version }}/sops-v{{ $sops.version }}.linux.{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/sops
+chmod +x /usr/local/bin/sops
+EOF
+
+{{ end -}}
+
+{{ $aws := .Vars.system.aws -}}
+{{ if $aws.version -}}
+# AWS cli
+ENV AWS_CONFIG_FILE="/etc/aws/config"
+RUN <<EOF
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    groff
+curl -sSLf "https://awscli.amazonaws.com/awscli-exe-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-{{ $aws.version }}.zip" \
+    --output aws.zip
+bsdtar -xvf aws.zip
+aws/install \
+    --install-dir /usr/local/aws-cli \
+    --bin-dir /usr/local/bin
+rm -rf aws*
+# Bash completion
+echo "complete -C /usr/local/bin/aws_completer aws" > /etc/bash_completion.d/aws
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
+
+{{ end -}}
+
+{{ $gcloud := .Vars.system.gcloud -}}
+{{ if $gcloud.version -}}
+# Google Cloud cli
+ENV PATH="/usr/local/google-cloud-sdk/bin:${PATH}"
+ENV CLOUDSDK_CORE_DISABLE_USAGE_REPORTING="1"
+ENV CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK="1"
+RUN <<EOF
+apt-get --quiet update
+apt-get --quiet --yes --no-install-recommends --verbose-versions install \
+    python3
+curl -sSLf "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm") }}.tar.gz" \
+    | bsdtar -xf - -C /usr/local
+# Profile
+touch /etc/profile.d/gcloud.sh
+/usr/local/google-cloud-sdk/install.sh \
+    --rc-path /etc/profile.d/gcloud.sh \
+    --command-completion true \
+    --path-update true \
+{{- if $gcloud.components }}
+    --additional-components {{ $gcloud.components | join " " }} \
+{{- end }}
+    --quiet
+rm -rf /etc/profile.d/gcloud.sh.backup
+# Clean
+rm -rf /var/lib/apt/lists/*
+EOF
+
+{{ end -}}
+
+{{ $age := .Vars.system.age -}}
+{{ if $age.version -}}
+# Age
+RUN <<EOF
+curl -sSLf "https://github.com/FiloSottile/age/releases/download/v{{ $age.version }}/age-v{{ $age.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin --strip-components=1 age/age age/age-keygen
+EOF
+
+{{ end -}}
+
+{{ $argocd := .Vars.system.argocd -}}
+{{ if $argocd.version -}}
+# ArgoCD
+RUN <<EOF
+curl -sSL "https://github.com/argoproj/argo-cd/releases/download/v{{ $argocd.version }}/argocd-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}" \
+    --output /usr/local/bin/argocd
+chmod +x /usr/local/bin/argocd
+EOF
+
+{{ end -}}
+
+# Run
+COPY docker/entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["zsh"]
