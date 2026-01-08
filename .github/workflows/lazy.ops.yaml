@@ -1,0 +1,82 @@
+name: Lazy - Ops
+
+on:
+  pull_request:
+    paths:
+      - lazy.ops/**
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        description: Run with tmate debugging
+        required: false
+        default: false
+
+jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Manala update
+        uses: manala/github-action-manala@v1
+        with:
+          dir: lazy.ops/test
+
+      - name: Lint
+        working-directory: lazy.ops/test
+        run: |
+          make lint \
+            VERBOSE=1
+
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ inputs.debug && always() }}
+        timeout-minutes: 15
+
+  test:
+    name: Test
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Manala update
+        uses: manala/github-action-manala@v1
+        with:
+          dir: lazy.ops/test
+
+      - name: Set up system
+        uses: ./lazy.ops/test/.manala/github/system/setup
+        with:
+          dir: lazy.ops/test
+          docker_build_cache_scope: docker.lazy.ops
+          docker_env: >
+            FOO=BAR
+
+      - name: Test
+        working-directory: lazy.ops/test
+        run: |
+          make test
+
+      - name: Test - Run
+        uses: ./lazy.ops/test/.manala/github/system/run
+        with:
+          dir: lazy.ops/test
+          docker_dir: /tmp
+          docker_env: >
+            BAR=BAZ
+          run: |
+            whoami
+            pwd
+            env | sort
+
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ inputs.debug && always() }}
+        timeout-minutes: 15
