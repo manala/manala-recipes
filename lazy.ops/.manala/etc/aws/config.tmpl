@@ -1,0 +1,5 @@
+# Aws config template
+# Don't edit this file directly. Instead, set config in project .manala.yaml, and run `manala up`.
+{{ if .Vars.system.aws.config }}
+{{ .Vars.system.aws.config }}
+{{- end -}}
