@@ -196,6 +196,7 @@ curl -sSLf "https://get.helm.sh/helm-v{{ $helm.version }}-linux-{{ include "arch
 # Plugins
 {{- range $plugin := $helm.plugins }}
 helm plugin install
+    {{- if hasKey $plugin "verify" }} --verify={{ $plugin.verify | toYaml }}{{ end -}}
     {{- if hasKey $plugin "url" }} {{ $plugin.url }}{{ end -}}
     {{- if hasKey $plugin "path" }} {{ $plugin.path }}{{ end -}}
     {{- if hasKey $plugin "version" }} --version {{ $plugin.version }}{{ end -}}

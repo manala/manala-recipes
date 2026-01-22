@@ -90,7 +90,8 @@ system:
         #         "properties": {
         #             "url": {"type": "string"},
         #             "path": {"type": "string"},
-        #             "version": {"type": "string"}
+        #             "version": {"type": "string"},
+        #             "verify": {"type": "boolean"}
         #         },
         #         "oneOf": [
         #             {"required": ["url"]},
