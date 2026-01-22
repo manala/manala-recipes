@@ -10,7 +10,7 @@
         "file-loader": "^6.2.0",
         "node-sass": "^8.0.0",
         "postcss-loader": "^7.0.1",
-        "prismjs": "^1.27.0",
+        "prismjs": "^1.30.0",
         "regenerator-runtime": "^0.13.2",
         "sass-loader": "^13.2.0",
         "stimulus": "^2.0.0",
