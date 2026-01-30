@@ -28,28 +28,27 @@ system:
     # apt:
     #     packages:
     #         - nano
-    git:
-        config: |
-            # Silence false positive dubious ownership errors
-            #[safe]
-            #directory = *
-    ssh:
-        config: |
-            # Allow host autocompletion by disabling hashing in known_hosts file
-            #HashKnownHosts no
-            # Automatically accept host keys
-            #StrictHostKeyChecking no
-            # Reduce log level
-            #LogLevel ERROR
+    # git:
+    #     config: |
+    #         # Silence false positive dubious ownership errors
+    #         [safe]
+    #         directory = *
+    # ssh:
+    #     config: |
+    #         # Allow host autocompletion by disabling hashing in known_hosts file
+    #         HashKnownHosts no
+    #         # Automatically accept host keys
+    #         StrictHostKeyChecking no
+    #         # Reduce log level
+    #         LogLevel ERROR
+    #
+    #         # Example
+    #         Host *.example.com
+    #             User foo
+    #             ForwardAgent yes
 
-            # Example
-            Host *.example.com
-                User foo
-                ForwardAgent yes
-    
-    {{- $ansible := .Vars.system.ansible }}
     ansible:
-        version: {{ $ansible.version | toYaml }}
+        version: {{ .Vars.system.ansible.version | toYaml }}
         config: |
             [defaults]
             #force_color = True
@@ -64,7 +63,7 @@ system:
         #     - docker==6.0.1
         #     # Collection community.hashi_vault
         #     - hvac==1.1.0 
-    
+
     {{- $ansibleLint := index .Vars.system "ansible-lint" }}
     {{- if $ansibleLint.version }}
     ansible-lint:
@@ -77,26 +76,26 @@ system:
         version: {{ $ansibleCreator.version | toYaml }}
     {{- end }}
 
-    {{- $molecule := .Vars.system.molecule }}
-    {{- if $molecule.version }}
+    {{- if .Vars.system.molecule.version }}
     molecule:
-        version: {{ $molecule.version | toYaml }}
+        version: {{ .Vars.system.molecule.version | toYaml }}
         # dependencies:
         #     - molecule-plugins==23.0.0
         #     - molecule-plugins[docker]==23.0.0
     {{- end }}
 
-    {{- $terraform := .Vars.system.terraform }}
-    {{- if $terraform.version }}
+    {{- if .Vars.system.terraform.version }}
     terraform:
-        version: {{ $terraform.version | toYaml }}
+        version: {{ .Vars.system.terraform.version | toYaml }}
     {{- end }}
+
     {{- if .Vars.system.aws.version }}
     aws:
         version: {{ .Vars.system.aws.version | toYaml }}
         config: |
             # Set your profiles here
     {{- end }}
+
     {{- if .Vars.system.gcloud.version }}
     gcloud:
         version: {{ .Vars.system.gcloud.version | toYaml }}
