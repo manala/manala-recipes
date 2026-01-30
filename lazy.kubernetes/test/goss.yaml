@@ -2,6 +2,8 @@ package:
   # Base
   gosu:
     installed: true
+  telnet:
+    installed: true
   # Docker
   docker-ce-cli:
     installed: true
