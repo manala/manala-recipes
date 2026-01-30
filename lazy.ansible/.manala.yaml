@@ -97,15 +97,15 @@ system:
         # @schema {"enum": [null, "1.13.3", "1.12.2", "1.11.4", "1.10.5", "1.9.8"]}
         # @option {"label": "Terraform version"}
         version: ~
-    gcloud:
-        # @schema {"enum": [null, "541.0.0"]}
-        # @option {"label": "Google Cloud cli version"}
-        version: ~
-        # @schema {"items": {"type": "string"}}
-        components: []
     aws:
-        # @schema {"enum": [null, "2.32.17"]}
+        # @schema {"enum": [null, "2.33.4"]}
         # @option {"label": "AWS cli version"}
         version: ~
         # @schema {"type": ["null", "string"]}
         config: ~
+    gcloud:
+        # @schema {"enum": [null, "553.0.0"]}
+        # @option {"label": "Google Cloud cli version"}
+        version: ~
+        # @schema {"items": {"type": "string"}}
+        components: []

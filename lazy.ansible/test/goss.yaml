@@ -152,6 +152,12 @@ command:
     exit-status: 0
     stdout:
       - Terraform v{{ .Vars.system.terraform.version }}
+  # AWS cli
+  aws --version:
+    exit-status: 0
+    stdout:
+      - aws-cli/{{ .Vars.system.aws.version }}
+
   # Google Cloud cli
   gcloud --version:
     exit-status: 0
@@ -161,8 +167,3 @@ command:
     exit-status: 0
     stdout:
       - gke-gcloud-auth-plugin
-  # AWS cli
-  aws --version:
-    exit-status: 0
-    stdout:
-      - aws-cli/{{ .Vars.system.aws.version }}

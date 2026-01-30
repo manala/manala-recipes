@@ -182,11 +182,11 @@ command:
     stdout:
       - aws-cli/{{ .Vars.system.aws.version }}
   # Google Cloud cli
-  /usr/local/share/google-cloud-sdk/bin/gcloud --version:
+  gcloud --version:
     exit-status: 0
     stdout:
       - Google Cloud SDK {{ .Vars.system.gcloud.version }}
-  /usr/local/share/google-cloud-sdk/bin/gcloud components list --only-local-state:
+  gcloud components list:
     exit-status: 0
     stdout:
       - gke-gcloud-auth-plugin

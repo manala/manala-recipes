@@ -48,11 +48,11 @@ system:
             - molecule-plugins[docker]==25.8.12
     terraform:
         version: 1.13.3
-    gcloud:
-        version: 541.0.0
-        components:
-            - gke-gcloud-auth-plugin
     aws:
-        version: 2.32.17
+        version: 2.33.4
         config: |
             [profile test]
+    gcloud:
+        version: 553.0.0
+        components:
+            - gke-gcloud-auth-plugin
