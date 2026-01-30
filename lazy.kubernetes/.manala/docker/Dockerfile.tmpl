@@ -395,6 +395,7 @@ EOF
 {{ $gcloud := .Vars.system.gcloud -}}
 {{ if $gcloud.version -}}
 # Google Cloud cli
+ENV PATH="/usr/local/google-cloud-sdk/bin:${PATH}"
 ENV CLOUDSDK_CORE_DISABLE_USAGE_REPORTING="1"
 ENV CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK="1"
 RUN <<EOF
@@ -402,11 +403,18 @@ apt-get --quiet update
 apt-get --quiet --yes --no-install-recommends --verbose-versions install \
     python3
 curl -sSLf "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ $gcloud.version }}-linux-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm") }}.tar.gz" \
-    | bsdtar -xf - -C /usr/local/share
-{{- if $gcloud.components }}
-/usr/local/share/google-cloud-sdk/install.sh \
-    --additional-components {{ $gcloud.components | join " " }}
-{{- end }}
+    | bsdtar -xf - -C /usr/local
+# Profile
+touch /etc/profile.d/gcloud.sh
+/usr/local/google-cloud-sdk/install.sh \
+    --rc-path /etc/profile.d/gcloud.sh \
+    --command-completion true \
+    --path-update true \
+    {{- if $gcloud.components }}
+    --additional-components {{ $gcloud.components | join " " }} \
+    {{- end }}
+    --quiet
+rm -rf /etc/profile.d/gcloud.sh.backup
 # Clean
 rm -rf /var/lib/apt/lists/*
 EOF

@@ -91,15 +91,15 @@ system:
     terraform:
         version: {{ $terraform.version | toYaml }}
     {{- end }}
-    {{- if .Vars.system.gcloud }}
-    gcloud:
-        version: {{ .Vars.system.gcloud.version | toYaml }}
-        # components:
-        #     - gke-gcloud-auth-plugin
-    {{- end }}
     {{- if .Vars.system.aws.version }}
     aws:
         version: {{ .Vars.system.aws.version | toYaml }}
         config: |
             # Set your profiles here
+    {{- end }}
+    {{- if .Vars.system.gcloud.version }}
+    gcloud:
+        version: {{ .Vars.system.gcloud.version | toYaml }}
+        # components:
+        #     - gke-gcloud-auth-plugin
     {{- end }}

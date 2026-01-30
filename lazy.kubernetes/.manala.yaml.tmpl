@@ -89,7 +89,7 @@ system:
         config: |
             # Set your profiles here
     {{- end }}
-    {{- if .Vars.system.gcloud }}
+    {{- if .Vars.system.gcloud.version }}
     gcloud:
         version: {{ .Vars.system.gcloud.version | toYaml }}
         # components:

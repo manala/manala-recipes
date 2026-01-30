@@ -36,13 +36,13 @@ printf "    \033[36m· {{ $dependency }}\033[0m\n"
 {{- if $terraform.version }}
 printf " \033[36m‣ terraform \033[35m{{ $terraform.version }}\033[0m\n"
 {{- end }}
-{{- $gcloud := .Vars.system.gcloud }}
-{{- if $gcloud.version }}
-printf " \033[36m‣ gcloud \033[35m{{ $gcloud.version }}\033[0m\n"
-{{- end }}
 {{- $aws := .Vars.system.aws }}
 {{- if $aws.version }}
 printf " \033[36m‣ aws \033[35m{{ $aws.version }}\033[0m\n"
+{{- end }}
+{{- $gcloud := .Vars.system.gcloud }}
+{{- if $gcloud.version }}
+printf " \033[36m‣ gcloud \033[35m{{ $gcloud.version }}\033[0m\n"
 {{- end }}
 printf "\n"
 
