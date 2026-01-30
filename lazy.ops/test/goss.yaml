@@ -1,0 +1,266 @@
+package:
+  # Base
+  gosu:
+    installed: true
+  telnet:
+    installed: true
+  # System
+  openssh-client:
+    installed: true
+  sshpass:
+    installed: true
+  pipx:
+    installed: true
+  shellcheck:
+    installed: true
+  # Docker
+  docker-ce-cli:
+    installed: true
+  # Project
+  nano:
+    installed: true
+
+group:
+  # Base
+  lazy:
+    exists: true
+
+user:
+  # Base
+  lazy:
+    exists: true
+    groups:
+      - lazy
+    shell: /bin/zsh
+
+mount:
+  # Tmpfs
+  /tmpfs:
+    exists: true
+    filesystem: tmpfs
+    opts: [rw, nosuid, nodev, noexec, relatime]
+  /tmpfs/exec:
+    exists: true
+    filesystem: tmpfs
+    opts: [rw, nosuid, nodev, relatime]
+
+file:
+  # Base
+  /etc/os-release:
+    exists: true
+    contents:
+      - PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
+  # Git
+  /etc/gitconfig:
+    exists: true
+    contents:
+      - "# Git config template"
+  # Ssh
+  /etc/ssh/ssh_config.d/ssh_config.conf:
+    exists: true
+    contents:
+      - "# Ssh config template"
+  # Ansible
+  /etc/ansible/ansible.cfg:
+    exists: true
+    contents:
+      - "# Ansible config template"
+  # Aws
+  /etc/aws/config:
+    exists: true
+    contents:
+      - "[profile test]"
+
+command:
+  # Base
+  gomplate --version:
+    exit-status: 0
+    stdout:
+      - "/gomplate version \\d+\\.\\d+\\.\\d+/"
+  direnv --version:
+    exit-status: 0
+    stdout:
+      - "/\\d+\\.\\d+\\.\\d+/"
+  jq --version:
+    exit-status: 0
+    stdout:
+      - "/jq-\\d+\\.\\d+\\.\\d+/"
+  yq --version:
+    exit-status: 0
+    stdout:
+      - "/yq \\(https://github.com/mikefarah/yq/\\) version v\\d+\\.\\d+\\.\\d+/"
+  starship --version:
+    exit-status: 0
+    stdout:
+      - "/starship \\d+\\.\\d+\\.\\d+/"
+  fzf --version:
+    exit-status: 0
+    stdout:
+      - "/\\d+\\.\\d+\\.\\d+/"
+  # Locale
+  locale -a:
+    exit-status: 0
+    stdout:
+      - en_US.utf8
+  # Env
+  echo ${TEST}:
+    exit-status: 0
+    stdout:
+      - test
+  # Env File
+  echo ${TEST_FOO}:
+    exit-status: 0
+    stdout:
+      - foo
+  echo ${TEST_BAR}:
+    exit-status: 0
+    stdout:
+      - bar
+  # Ansible
+  ansible --version:
+    exit-status: 0
+    stdout:
+      - ansible [core {{ .Vars.system.ansible.version }}]
+  sudo pipx runpip ansible-core list:
+    exit-status: 0
+    stdout:
+      - "/ansible-core(\\s+){{ .Vars.system.ansible.version }}/"
+      - "/hvac(\\s+)\\d+\\.\\d+\\.\\d+/"
+  # Ansible Lint
+  ansible-lint --nocolor --version:
+    exit-status: 0
+    stdout:
+      - ansible-lint {{ (index .Vars.system "ansible-lint").version }}
+  sudo pipx runpip ansible-lint list:
+    exit-status: 0
+    stdout:
+      - "/ansible-lint(\\s+){{ (index .Vars.system "ansible-lint").version }}/"
+      - "/pytest(\\s+)\\d+\\.\\d+\\.\\d+/"
+  # Ansible Creator
+  ansible-creator --version:
+    exit-status: 0
+    stdout:
+      - {{ (index .Vars.system "ansible-creator").version }}
+  # Molecule
+  FORCE_COLOR=0 molecule --version:
+    exit-status: 0
+    stdout:
+      - molecule {{ .Vars.system.molecule.version }}
+      - "/docker:\\d+\\.\\d+\\.\\d+ from molecule_plugin/"
+  sudo pipx runpip molecule list:
+    exit-status: 0
+    stdout:
+      - "/molecule(\\s+){{ .Vars.system.molecule.version }}/"
+      - "/molecule-plugins(\\s+)\\d+\\.\\d+\\.\\d+/"
+  # Terraform
+  terraform -version:
+    exit-status: 0
+    stdout:
+      - Terraform v{{ .Vars.system.terraform.version }}
+  # Kubectl
+  kubectl version --client true:
+    exit-status: 0
+    stdout:
+      - "Client Version: v{{ .Vars.system.kubectl.version }}"
+  # Kustomize
+  kustomize version:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.kustomize.version }}
+  # Krew
+  kubectl krew version:
+    exit-status: 0
+    stdout:
+      - "GitTag            v{{ .Vars.system.krew.version }}"
+  kubectl plugin list:
+    exit-status: 0
+    stdout:
+      - "/usr/local/share/krew/bin/kubectl-krew"
+      - "/usr/local/share/krew/bin/kubectl-ns"
+  # Helm
+  helm version --short:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.helm.version }}
+  helm plugin list:
+    exit-status: 0
+    stdout:
+      - diff	{{ (index .Vars.system.helm.plugins 0).version }}
+  # Helmfile
+  helmfile --version:
+    exit-status: 0
+    stdout:
+      - helmfile version {{ .Vars.system.helmfile.version }}
+  # K9s
+  k9s version --short:
+    exit-status: 0
+    stdout:
+      - "Version              v{{ .Vars.system.k9s.version }}"
+  # Stern
+  stern --version:
+    exit-status: 0
+    stdout:
+      - "version: {{ .Vars.system.stern.version }}"
+  # Popeye
+  popeye version:
+    exit-status: 0
+    stdout:
+      - {{ .Vars.system.popeye.version }}
+  # Vault
+  vault version:
+    exit-status: 0
+    stdout:
+      - Vault v{{ .Vars.system.vault.version }}
+  # Rclone
+  rclone version:
+    exit-status: 0
+    stdout:
+      - rclone v{{ .Vars.system.rclone.version }}
+  # Openstack
+  openstack --version:
+    exit-status: 0
+    stdout:
+      - openstack {{ .Vars.system.openstack.version }}
+  # Swift
+  swift --version:
+    exit-status: 0
+    stdout:
+      - python-swiftclient {{ .Vars.system.swift.version }}
+  # Scaleway cli
+  scw version:
+    exit-status: 0
+    stdout:
+      - Version          {{ .Vars.system.scw.version }}
+  # Sops
+  sops --version:
+    exit-status: 0
+    stdout:
+      - sops {{ .Vars.system.sops.version }}
+  # AWS cli
+  aws --version:
+    exit-status: 0
+    stdout:
+      - aws-cli/{{ .Vars.system.aws.version }}
+  # Google Cloud cli
+  gcloud --version:
+    exit-status: 0
+    stdout:
+      - Google Cloud SDK {{ .Vars.system.gcloud.version }}
+  gcloud components list:
+    exit-status: 0
+    stdout:
+      - gke-gcloud-auth-plugin
+  # Age
+  age --version:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.age.version }}
+  age-keygen --version:
+    exit-status: 0
+    stdout:
+      - v{{ .Vars.system.age.version }}
+  # ArgoCD
+  argocd version --client:
+    exit-status: 0
+    stdout:
+      - "argocd: v{{ .Vars.system.argocd.version }}"
