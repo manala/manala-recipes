@@ -193,6 +193,7 @@ ENV HELM_PLUGINS="/usr/local/share/helm/plugins"
 RUN <<EOF
 curl -sSLf "https://get.helm.sh/helm-v{{ $helm.version }}-linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
     | bsdtar -xvf - -C /usr/local/bin --strip-components=1 "linux-{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/helm"
+echo "Defaults env_keep += HELM_PLUGINS" > /etc/sudoers.d/helm
 {{- if $helm.plugins }}
 # Plugins
 {{- range $plugin := $helm.plugins }}
