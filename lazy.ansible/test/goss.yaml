@@ -60,6 +60,11 @@ file:
     exists: true
     contents:
       - "# Ssh config template"
+  # Ansible
+  /etc/ansible/ansible.cfg:
+    exists: true
+    contents:
+      - "# Ansible config template"
   # Aws
   /etc/aws/config:
     exists: true
@@ -157,7 +162,6 @@ command:
     exit-status: 0
     stdout:
       - aws-cli/{{ .Vars.system.aws.version }}
-
   # Google Cloud cli
   gcloud --version:
     exit-status: 0
