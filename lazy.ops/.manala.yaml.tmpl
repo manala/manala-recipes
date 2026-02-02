@@ -1,0 +1,180 @@
+####################################################################
+# !!! REMINDER !!!                                                 #
+# Don't forget to run `manala up` each time you update this file ! #
+####################################################################
+
+manala:
+    recipe: lazy.ops
+
+###########
+# Project #
+###########
+
+project:
+    name: {{ .Vars.project.name | toYaml }}
+
+##########
+# System #
+##########
+
+system:
+    # env_file:
+    #     - .env
+    #     - path: .env.local
+    #       required: false
+    # tmpfs:
+    #     - /tmp
+    #     - /foo/bar:exec
+    # apt:
+    #     packages:
+    #         - nano
+    # git:
+    #     config: |
+    #         # Silence false positive dubious ownership errors
+    #         [safe]
+    #         directory = *
+    # ssh:
+    #     config: |
+    #         # Allow host autocompletion by disabling hashing in known_hosts file
+    #         HashKnownHosts no
+    #         # Automatically accept host keys
+    #         StrictHostKeyChecking no
+    #         # Reduce log level
+    #         LogLevel ERROR
+    #
+    #         # Example
+    #         Host *.example.com
+    #             User foo
+    #             ForwardAgent yes
+
+    {{- if .Vars.system.ansible.version }}
+    ansible:
+        version: {{ .Vars.system.ansible.version | toYaml }}
+        # config: |
+        #     [defaults]
+        #     force_color = True
+        #     retry_files_enabled = False
+        #     [ssh_connection]
+        #     # Improve performance
+        #     pipelining = True
+        #     # Avoid issues on ssh too long socket path and/or invalid permissions
+        #     control_path_dir = /tmp/ansible/cp
+        # dependencies:
+        #     # Collection community.docker
+        #     - docker==7.1.0
+        #     # Collection community.hashi_vault
+        #     - hvac==2.4.0
+    {{- end }}
+
+    {{- $ansibleLint := index .Vars.system "ansible-lint" }}
+    {{- if $ansibleLint.version }}
+    ansible-lint:
+        version: {{ $ansibleLint.version | toYaml }}
+    {{- end }}
+
+    {{- $ansibleCreator := index .Vars.system "ansible-creator" }}
+    {{- if $ansibleCreator.version }}
+    ansible-creator:
+        version: {{ $ansibleCreator.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.molecule.version }}
+    molecule:
+        version: {{ .Vars.system.molecule.version | toYaml }}
+        # dependencies:
+        #     - molecule-plugins[docker]==25.8.12
+    {{- end }}
+
+    {{- if .Vars.system.terraform.version }}
+    terraform:
+        version: {{ .Vars.system.terraform.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.kubectl.version }}
+    kubectl:
+        version: {{ .Vars.system.kubectl.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.kustomize.version }}
+    kustomize:
+        version: {{ .Vars.system.kustomize.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.helm.version }}
+    helm:
+        version: {{ .Vars.system.helm.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.helmfile.version }}
+    helmfile:
+        version: {{ .Vars.system.helmfile.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.k9s.version }}
+    k9s:
+        version: {{ .Vars.system.k9s.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.stern.version }}
+    stern:
+        version: {{ .Vars.system.stern.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.popeye.version }}
+    popeye:
+        version: {{ .Vars.system.popeye.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.vault.version }}
+    vault:
+        version: {{ .Vars.system.vault.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.rclone.version }}
+    rclone:
+        version: {{ .Vars.system.rclone.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.openstack.version }}
+    openstack:
+        version: {{ .Vars.system.openstack.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.swift.version }}
+    swift:
+        version: {{ .Vars.system.swift.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.scw.version }}
+    scw:
+        version: {{ .Vars.system.scw.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.sops.version }}
+    sops:
+        version: {{ .Vars.system.sops.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.aws.version }}
+    aws:
+        version: {{ .Vars.system.aws.version | toYaml }}
+        config: |
+            # Set your profiles here
+    {{- end }}
+
+    {{- if .Vars.system.gcloud.version }}
+    gcloud:
+        version: {{ .Vars.system.gcloud.version | toYaml }}
+        # components:
+        #     - gke-gcloud-auth-plugin
+    {{- end }}
+
+    {{- if .Vars.system.age.version }}
+    age:
+        version: {{ .Vars.system.age.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.argocd.version }}
+    argocd:
+        version: {{ .Vars.system.argocd.version | toYaml }}
+    {{- end }}

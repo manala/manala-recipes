@@ -1,0 +1,5 @@
+# Git config template
+# Don't edit this file directly. Instead, set config in project .manala.yaml, and run `manala up`.
+{{ if .Vars.system.git.config }}
+{{ .Vars.system.git.config }}
+{{- end -}}
