@@ -20,7 +20,7 @@ lint: .manala
 		--interactive \
 		$(if $(VERBOSE), --env HADOLINT_VERBOSE=1) \
 		$(if $(_HADOLINT_IGNORE), --env HADOLINT_IGNORE=$(_HADOLINT_IGNORE)) \
-		hadolint/hadolint:$(_HADOLINT_VERSION) \
+		hadolint/hadolint:v$(_HADOLINT_VERSION) \
 			< .manala/docker/Dockerfile
 
 ########
