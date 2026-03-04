@@ -261,7 +261,7 @@ system:
     #     # config:
     #     #     save: '""' # Disable persistence
     elasticsearch:
-        version: 8
+        version: 9
         plugins:
           - analysis-icu
     # influxdb:
@@ -278,8 +278,6 @@ system:
     #       - database: app
     #         user: app
     #         grant: ALL
-    # mongodb:
-    #     version: 4.4
     ssh:
         client:
             config: |

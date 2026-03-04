@@ -81,7 +81,7 @@ system:
     redis:
         version: "*"
     elasticsearch:
-        version: 8
+        version: 9
         plugins:
             - analysis-icu
     ssh:
