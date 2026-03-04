@@ -5,7 +5,6 @@ collections:
   - community.crypto
   - community.docker
   - community.general
-  - community.mongodb
   - community.mysql
   - gluster.gluster
   - manala.roles
