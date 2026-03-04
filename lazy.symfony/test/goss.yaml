@@ -57,6 +57,14 @@ file:
 
 command:
   # Base
+  printenv PATH:
+    exit-status: 0
+    stdout:
+      - /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/Users/nervo/workspace/manala/recipes/lazy.symfony/test/.manala/.cache/home/.config/composer/vendor/bin:/Users/nervo/workspace/manala/recipes/lazy.symfony/test/.manala/.cache/home/.yarn/bin
+  sudo printenv PATH:
+    exit-status: 0
+    stdout:
+      - /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/Users/nervo/workspace/manala/recipes/lazy.symfony/test/.manala/.cache/home/.config/composer/vendor/bin:/Users/nervo/workspace/manala/recipes/lazy.symfony/test/.manala/.cache/home/.yarn/bin
   gomplate --version:
     exit-status: 0
     stdout:

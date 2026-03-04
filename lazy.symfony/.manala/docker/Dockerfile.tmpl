@@ -56,6 +56,8 @@ apt-get --quiet --yes --no-install-recommends --verbose-versions install \
 sed -i "/^# *{{ .Vars.system.locale }}\b/s/^# *//" /etc/locale.gen
 dpkg-reconfigure locales
 {{- end }}
+# Sudo
+echo "Defaults !secure_path" > /etc/sudoers.d/path
 # User
 addgroup --gid ${MANALA_GROUP_ID} lazy
 adduser --home /home/lazy --shell /bin/zsh --uid ${MANALA_USER_ID} --gecos lazy --ingroup lazy --disabled-password lazy

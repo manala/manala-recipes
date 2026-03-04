@@ -73,6 +73,14 @@ file:
 
 command:
   # Base
+  printenv PATH:
+    exit-status: 0
+    stdout:
+      - /usr/local/google-cloud-sdk/bin:/usr/local/share/krew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  sudo printenv PATH:
+    exit-status: 0
+    stdout:
+      - /usr/local/google-cloud-sdk/bin:/usr/local/share/krew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   gomplate --version:
     exit-status: 0
     stdout:
