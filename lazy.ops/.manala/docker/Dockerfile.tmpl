@@ -144,10 +144,11 @@ curl -sSLf https://download.docker.com/linux/debian/gpg \
 printf "\
 Types: deb\n\
 URIs: https://download.docker.com/linux/debian\n\
-Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
+Suites: %s\n\
 Components: stable\n\
 Signed-By: /etc/apt/keyrings/docker.asc\n\
-" > /etc/apt/sources.list.d/docker.sources
+" "{{ include "os_release" "VERSION_CODENAME" }}" \
+    > /etc/apt/sources.list.d/docker.sources
 apt-get --quiet update
 apt-get --quiet --yes --no-install-recommends --verbose-versions install \
     docker-ce-cli

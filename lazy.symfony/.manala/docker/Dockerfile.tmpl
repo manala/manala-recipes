@@ -128,10 +128,11 @@ curl -sSLf https://download.docker.com/linux/debian/gpg \
 printf "\
 Types: deb\n\
 URIs: https://download.docker.com/linux/debian\n\
-Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
+Suites: %s\n\
 Components: stable\n\
 Signed-By: /etc/apt/keyrings/docker.asc\n\
-" > /etc/apt/sources.list.d/docker.sources
+" "{{ include "os_release" "VERSION_CODENAME" }}" \
+    > /etc/apt/sources.list.d/docker.sources
 apt-get --quiet update
 apt-get --quiet --yes --no-install-recommends --verbose-versions install \
     docker-ce-cli
@@ -149,10 +150,11 @@ curl -sSLf http://nginx.org/keys/nginx_signing.key \
 printf "\
 Types: deb\n\
 URIs: http://nginx.org/packages/debian\n\
-Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
+Suites: %s\n\
 Components: nginx\n\
 Signed-By: /etc/apt/keyrings/nginx.asc\n\
-" > /etc/apt/sources.list.d/nginx.sources
+" "{{ include "os_release" "VERSION_CODENAME" }}" \
+    > /etc/apt/sources.list.d/nginx.sources
 printf "\
 Package: nginx\n\
 Pin: version {{ $nginx.version }}.*\n\
@@ -173,10 +175,11 @@ curl -sSLf https://packages.sury.org/php/apt.gpg \
 printf "\
 Types: deb\n\
 URIs: https://packages.sury.org/php/\n\
-Suites: {{ include "os_release" "VERSION_CODENAME" }}\n\
+Suites: %s\n\
 Components: main\n\
 Signed-By: /etc/apt/keyrings/sury_php.gpg\n\
-" > /etc/apt/sources.list.d/sury_php.sources
+" "{{ include "os_release" "VERSION_CODENAME" }}" \
+    > /etc/apt/sources.list.d/sury_php.sources
 apt-get --quiet update
 apt-get --quiet --yes --no-install-recommends --verbose-versions install \
     php{{ $php.version }}-cli \
