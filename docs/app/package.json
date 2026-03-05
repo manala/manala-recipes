@@ -4,7 +4,7 @@
         "@babel/eslint-parser": "^7.19.1",
         "@babel/preset-env": "^7.20.2",
         "@symfony/stimulus-bridge": "^3.0.0",
-        "@symfony/webpack-encore": "^4.1.1",
+        "@symfony/webpack-encore": "^5.3.1",
         "autoprefixer": "^10.4.23",
         "core-js": "^3.15.2",
         "file-loader": "^6.2.0",
