@@ -4,83 +4,68 @@
     "config:recommended"
   ],
   "ignorePaths": [],
-  "enabledManagers": [
-    "custom.regex"
-  ],
   "packageRules": [
     {
-      "matchDepTypes": ["components"],
-      "groupName": "components"
+      "matchManagers": ["custom.regex"],
+      "groupName": "components",
+      "labels": ["renovate"]
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/Dockerfile\\.tmpl/"],
-      "matchStrings": ["ARG GOMPLATE_VERSION=\"(?<currentValue>.+)\""],
-      "depNameTemplate": "gomplate",
-      "depTypeTemplate": "components",
+      "managerFilePatterns": ["/^Dockerfile\\.tmpl$/"],
+      "matchStrings": ["ARG GOMPLATE_VERSION=\"(?<currentValue>\\S+)\""],
+      "depNameTemplate": "hairyhenderson/gomplate",
       "datasourceTemplate": "github-releases",
-      "packageNameTemplate": "hairyhenderson/gomplate",
       "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["/Dockerfile\\.tmpl/"],
-      "matchStrings": ["ARG DIRENV_VERSION=\"(?<currentValue>.+)\""],
-      "depNameTemplate": "direnv",
-      "depTypeTemplate": "components",
+      "managerFilePatterns": ["/^Dockerfile\\.tmpl$/"],
+      "matchStrings": ["ARG DIRENV_VERSION=\"(?<currentValue>\\S+)\""],
+      "depNameTemplate": "direnv/direnv",
       "datasourceTemplate": "github-releases",
-      "packageNameTemplate": "direnv/direnv",
       "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["/Dockerfile\\.tmpl/"],
-      "matchStrings": ["ARG JQ_VERSION=\"(?<currentValue>.+)\""],
+      "managerFilePatterns": ["/^Dockerfile\\.tmpl$/"],
+      "matchStrings": ["ARG JQ_VERSION=\"(?<currentValue>\\S+)\""],
       "depNameTemplate": "jq",
-      "depTypeTemplate": "components",
       "datasourceTemplate": "github-releases",
       "packageNameTemplate": "jqlang/jq",
       "extractVersionTemplate": "^jq-(?<version>.+)$"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["/Dockerfile\\.tmpl/"],
-      "matchStrings": ["ARG YQ_VERSION=\"(?<currentValue>.+)\""],
-      "depNameTemplate": "yq",
-      "depTypeTemplate": "components",
+      "managerFilePatterns": ["/^Dockerfile\\.tmpl$/"],
+      "matchStrings": ["ARG YQ_VERSION=\"(?<currentValue>\\S+)\""],
+      "depNameTemplate": "mikefarah/yq",
       "datasourceTemplate": "github-releases",
-      "packageNameTemplate": "mikefarah/yq",
       "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["/Dockerfile\\.tmpl/"],
-      "matchStrings": ["ARG STARSHIP_VERSION=\"(?<currentValue>.+)\""],
-      "depNameTemplate": "starship",
-      "depTypeTemplate": "components",
+      "managerFilePatterns": ["/Dockerfile\\.tmpl$/"],
+      "matchStrings": ["ARG STARSHIP_VERSION=\"(?<currentValue>\\S+)\""],
+      "depNameTemplate": "starship/starship",
       "datasourceTemplate": "github-releases",
-      "packageNameTemplate": "starship/starship",
       "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["/Dockerfile\\.tmpl/"],
-      "matchStrings": ["ARG FZF_VERSION=\"(?<currentValue>.+)\""],
-      "depNameTemplate": "fzf",
-      "depTypeTemplate": "components",
-      "datasourceTemplate": "github-releases",
-      "packageNameTemplate": "junegunn/fzf"
+      "managerFilePatterns": ["/^Dockerfile\\.tmpl$/"],
+      "matchStrings": ["ARG FZF_VERSION=\"(?<currentValue>\\S+)\""],
+      "depNameTemplate": "junegunn/fzf",
+      "datasourceTemplate": "github-releases"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["/Makefile/"],
-      "matchStrings": ["_HADOLINT_VERSION = (?<currentValue>.+)"],
-      "depNameTemplate": "hadolint",
-      "depTypeTemplate": "components",
+      "managerFilePatterns": ["/^Makefile$/"],
+      "matchStrings": ["_HADOLINT_VERSION = (?<currentValue>\\S+)"],
+      "depNameTemplate": "hadolint/hadolint",
       "datasourceTemplate": "docker",
-      "packageNameTemplate": "hadolint/hadolint",
       "extractVersionTemplate": "^v(?<version>.+)$"
     }
   ]
