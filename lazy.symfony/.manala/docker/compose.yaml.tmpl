@@ -24,7 +24,13 @@ services:
         volumes:
             - ../..:${MANALA_DIR}
             {{- range $mount := .Vars.system.mount }}
-              {{- if isAbs $mount }}
+              {{- if contains ":" $mount }}
+                {{- $parts := splitList ":" $mount }}
+                {{- $source := first $parts }}
+                {{- $target := index $parts 1 }}
+            - {{ if not (isAbs $source) }}../../{{ end }}{{ $source -}}
+                :{{ if not (isAbs $target) }}${MANALA_DIR}/{{ end }}{{ $target }}
+              {{- else if isAbs $mount }}
             - {{ $mount }}:{{ $mount }}
               {{- else }}
             - ../../{{ $mount }}:${MANALA_DIR}/{{ $mount }}
