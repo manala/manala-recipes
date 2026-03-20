@@ -49,6 +49,11 @@ file:
     exists: true
     contents:
       - PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
+  # Mount
+  fixtures/mount_relative/file:
+    exists: true
+  /fixtures/mount_native/file:
+    exists: true
   # Git
   /etc/gitconfig:
     exists: true

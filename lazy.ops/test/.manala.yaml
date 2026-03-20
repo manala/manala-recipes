@@ -10,11 +10,13 @@ system:
     env:
         TEST: test
     env_file:
-        - .env.1
-        - path: .env.2
+        - fixtures/.env.1
+        - path: fixtures/.env.2
+        - path: fixtures/.env.3
           required: false
-        - path: .env.3
-          required: false
+    mount:
+        - fixtures/mount_relative
+        - fixtures/mount_native:/fixtures/mount_native
     tmpfs:
         - /tmpfs
         - /tmpfs/exec:exec
