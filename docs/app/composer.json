@@ -8,7 +8,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^1.10",
-        "stenope/stenope": "^0.7.1",
+        "stenope/stenope": "^0.9.0",
         "symfony/console": "5.4.*",
         "symfony/dotenv": "5.4.*",
         "symfony/flex": "^2.4",
