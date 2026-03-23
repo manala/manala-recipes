@@ -7,8 +7,12 @@
   "packageRules": [
     {
       "matchManagers": ["custom.regex"],
-      "groupName": "components",
+      "groupName": "custom components",
       "labels": ["renovate"]
+    },
+    {
+      "matchFileNames": ["docs/app/**"],
+      "groupName": "docs app components"
     }
   ],
   "customManagers": [
