@@ -42,7 +42,7 @@ runs:
     # to be consumed by docker github action cache
     # See: https://docs.docker.com/build/cache/backends/gha/
     - name: Expose GitHub Runtime
-      uses: crazy-max/ghaction-github-runtime@v3
+      uses: crazy-max/ghaction-github-runtime@v4
 
     - name: Set environment variables file
       if: inputs.docker_env != ''
