@@ -13,6 +13,16 @@
     {
       "matchFileNames": ["docs/app/**"],
       "groupName": "docs app components"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchFileNames": [".github/**"],
+      "groupName": "github actions"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "excludeFileNames": [".github/**"],
+      "groupName": "recipes github actions"
     }
   ],
   "customManagers": [
