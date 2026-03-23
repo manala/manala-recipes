@@ -247,9 +247,9 @@ ARG SYMFONY_IDE
 ENV LANG="{{ .locales.default }}"
 
 {{- if eq (.version|int) 11 }}
-COPY --from=python:3.11.2-slim-bullseye /usr/local/bin/python3.11 /usr/local/bin/
-COPY --from=python:3.11.2-slim-bullseye /usr/local/lib/libpython3.11.so.1.0 /usr/local/lib/
-COPY --from=python:3.11.2-slim-bullseye /usr/local/lib/python3.11/ /usr/local/lib/python3.11/
+COPY --from=python:3.13.6-slim-bullseye /usr/local/bin/python3.11 /usr/local/bin/
+COPY --from=python:3.13.6-slim-bullseye /usr/local/lib/libpython3.11.so.1.0 /usr/local/lib/
+COPY --from=python:3.13.6-slim-bullseye /usr/local/lib/python3.11/ /usr/local/lib/python3.11/
 {{- end }}
 RUN <<EOF
 apt-get --quiet update
