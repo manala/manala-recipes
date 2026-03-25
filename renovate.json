@@ -5,6 +5,11 @@
     "schedule:weekly"
   ],
   "ignorePaths": [],
+  "github-actions": {
+    "managerFilePatterns": [
+      "/(^|/)action\\.ya?ml\\.tmpl$/"
+    ]
+  },
   "packageRules": [
     {
       "matchManagers": ["custom.regex"],
