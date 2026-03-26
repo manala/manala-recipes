@@ -77,6 +77,13 @@
     },
     {
       "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile\\.tmpl$/"],
+      "matchStrings": ["ARG ZOXIDE_VERSION=\"(?<currentValue>\\S+)\""],
+      "depNameTemplate": "ajeetdsouza/zoxide",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
       "managerFilePatterns": ["/^Makefile$/"],
       "matchStrings": ["_HADOLINT_VERSION = (?<currentValue>\\S+)"],
       "depNameTemplate": "hadolint/hadolint",
