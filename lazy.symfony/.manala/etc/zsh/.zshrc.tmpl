@@ -124,3 +124,18 @@ zstyle ':completion:*:make:*' tag-order targets
 
 # Starship
 eval "$(starship init zsh)"
+
+# Zoxide
+eval "$(zoxide init zsh --no-cmd)"
+
+function cd {
+  if [ $# -eq 0 ]; then
+    builtin cd ${MANALA_DIR}
+  else
+    __zoxide_z "$@"
+  fi
+}
+
+function cdi() {
+  __zoxide_zi "$@"
+}
