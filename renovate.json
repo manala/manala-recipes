@@ -22,7 +22,7 @@
     },
     {
       "matchManagers": ["github-actions"],
-      "excludeFileNames": [".github/**"],
+      "matchFileNames": ["!.github/**"],
       "groupName": "recipes github actions"
     }
   ],
