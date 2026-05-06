@@ -3,14 +3,14 @@
 code,
 pre {
     font-family: $code-font;
-    color: rgba(255, 255, 255, .8);
+    color: rgb(255 255 255 / 80%);
     white-space: break-spaces;
     background: #272822;
 
     &[class*="language-"] {
         font-family: $code-font;
         font-size: 14px;
-        color: rgba(255, 255, 255, .8);
+        color: rgb(255 255 255 / 80%);
         white-space: break-spaces;
     }
 }

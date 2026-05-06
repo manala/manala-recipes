@@ -23,7 +23,7 @@ serve:
 start:
 	symfony server:start --no-tls
 
-## Start webpack dev server with HMR (Hot reload)
+## Start webpack watcher
 watch:
 	npx encore dev --watch
 
@@ -55,7 +55,10 @@ serve.static:
 # Lint #
 ########
 
-lint: lint.php-cs-fixer lint.twig lint.yaml lint.container lint.composer
+lint: lint.php-cs-fixer lint.twig lint.yaml lint.container lint.composer lint.styles
+
+lint.styles:
+	npx stylelint 'assets/**/*.scss'
 
 lint.composer:
 	symfony composer validate --no-check-publish
