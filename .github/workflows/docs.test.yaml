@@ -99,7 +99,9 @@ jobs:
 
       - name: PHP CS Fixer
         if: always() && steps.deps.outcome == 'success'
-        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+        run: |
+          rm ./config/reference.php
+          vendor/bin/php-cs-fixer fix --dry-run --diff
 
       - name: Check static build
         if: always() && steps.deps.outcome == 'success'

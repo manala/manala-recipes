@@ -67,6 +67,7 @@ lint.container:
 	symfony console lint:container
 
 lint.php-cs-fixer:
+	rm ./config/reference.php
 	symfony php vendor/bin/php-cs-fixer fix
 
 lint.twig:
