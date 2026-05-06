@@ -27,7 +27,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v6
         with:
-            node-version: 16
+            node-version: 24
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -35,7 +35,7 @@ jobs:
           coverage: "none"
           extensions: "json"
           ini-values: "memory_limit=-1"
-          php-version: "8.0"
+          php-version: "8.5"
 
       - name: Determine composer cache directory
         id: composer-cache
