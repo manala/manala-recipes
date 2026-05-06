@@ -4,29 +4,28 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/annotations": "^1.10",
-        "stenope/stenope": "^0.7.1",
-        "symfony/console": "5.4.*",
-        "symfony/dotenv": "5.4.*",
+        "stenope/stenope": "^0.9",
+        "symfony/console": "7.4.*",
+        "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2.4",
-        "symfony/framework-bundle": "5.4.*",
-        "symfony/runtime": "5.4.*",
-        "symfony/twig-bundle": "5.4.*",
-        "symfony/webpack-encore-bundle": "^1.7",
-        "symfony/yaml": "5.4.*",
-        "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "symfony/framework-bundle": "7.4.*",
+        "symfony/runtime": "7.4.*",
+        "symfony/twig-bundle": "7.4.*",
+        "symfony/webpack-encore-bundle": "^2.0",
+        "symfony/yaml": "7.4.*",
+        "twig/extra-bundle": "^3.0",
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
-        "symfony/debug-bundle": "5.4.*",
+        "symfony/debug-bundle": "7.4.*",
         "symfony/monolog-bundle": "^3.0",
-        "symfony/stopwatch": "5.4.*",
-        "symfony/var-dumper": "5.4.*",
-        "symfony/web-profiler-bundle": "5.4.*"
+        "symfony/stopwatch": "7.4.*",
+        "symfony/var-dumper": "7.4.*",
+        "symfony/web-profiler-bundle": "7.4.*"
     },
     "config": {
         "optimize-autoloader": true,
@@ -76,7 +75,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.4.*"
+            "require": "7.4.*"
         }
     }
 }

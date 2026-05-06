@@ -19,7 +19,7 @@ class ReadmeDirProvider implements ContentProviderInterface
     public function __construct(
         string $supportedClass,
         string $path,
-        array $excludes = []
+        array $excludes = [],
     ) {
         $this->supportedClass = $supportedClass;
         $this->localProvider = new LocalFilesystemProvider($supportedClass, $path, '1', $excludes, ['*/README.md']);

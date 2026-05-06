@@ -22,6 +22,6 @@ return (new PhpCsFixer\Config())
         'phpdoc_order' => true,
         'single_line_throw' => false,
         'simplified_null_return' => false,
-        'yoda_style' => [],
+        'yoda_style' => false,
     ])
 ;
