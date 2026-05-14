@@ -1,25 +1,26 @@
+@use 'sass:math';
+
 @mixin clearfix() {
     *zoom: 1;
 
-    &:before,
-    &:after {
+    &::before,
+    &::after {
         display: table;
         content: "";
     }
 
-    &:after {
+    &::after {
         clear: both;
     }
 }
 
 @mixin row-sizes($preffix) {
-
     @for $i from 1 through $grid-columns - 1 {
         .col-#{ $preffix }-#{ $i } { float: left; }
-        .col-#{ $preffix }-#{ $i } { width: percentage(($i / $grid-columns)); }
-        .col-#{ $preffix }-push-#{ $i } { left: percentage(($i / $grid-columns)); }
-        .col-#{ $preffix }-pull-#{ $i } { right: percentage(($i / $grid-columns)); }
-        .col-#{ $preffix }-offset-#{ $i } { margin-left: percentage(($i / $grid-columns)); }
+        .col-#{ $preffix }-#{ $i } { width: math.percentage(calc($i / $grid-columns)); }
+        .col-#{ $preffix }-push-#{ $i } { left: math.percentage(calc($i / $grid-columns)); }
+        .col-#{ $preffix }-pull-#{ $i } { right: math.percentage(calc($i / $grid-columns)); }
+        .col-#{ $preffix }-offset-#{ $i } { margin-left: math.percentage(calc($i / $grid-columns)); }
     }
 
     .col-#{ $preffix }-push-0 { left: auto; }

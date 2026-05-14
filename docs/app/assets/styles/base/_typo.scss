@@ -15,9 +15,10 @@ h1, h2, h3, h4 {
     line-height: $headings-line-height;
     color: $headings-color;
     letter-spacing: $headings-letter-spacing;
+    margin: 0 0 10px;
 
-    small,
-    .small {
+    small, .small {
+        font-size: 65%;
         font-weight: normal;
         line-height: 1;
         color: $headings-small-color;
@@ -25,15 +26,6 @@ h1, h2, h3, h4 {
 
     a {
         color: $headings-color;
-    }
-}
-
-h1, h2, h3 , h4 {
-    margin: 0 0 10px;
-
-    small,
-    .small {
-        font-size: 65%;
     }
 }
 
@@ -58,7 +50,7 @@ h4 {
 }
 
 p {
-    margin: 0 0 20px 0;
+    margin: 0 0 20px;
 }
 
 .orange {

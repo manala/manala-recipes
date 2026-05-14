@@ -1,11 +1,20 @@
+// Fonts
+@import 'https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Open+Sans:wght@300..800&family=Sacramento&display=swap';
+
+// Base
 @import "base/reset";
 @import "base/variables";
+@import "base/typo";
+
+// Helpers
 @import "helpers/mixins";
 @import "helpers/shortcuts";
-@import "base/typo";
+
+// Layout
 @import "layout/grid";
 @import "layout/layout";
 
+// Components
 @import "components/admonitions";
 @import "components/buttons";
 @import "components/dropdown";
@@ -14,4 +23,5 @@
 @import "components/toc";
 @import "components/treeview";
 
+// Pages
 @import "pages/homepage";

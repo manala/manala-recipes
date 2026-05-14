@@ -10,9 +10,7 @@ use Stenope\Bundle\ContentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route(path="/migrations", name="migrations_")
- */
+#[Route(path: '/migrations', name: 'migrations_')]
 class MigrationController extends AbstractController
 {
     private ContentManagerInterface $contentManager;
@@ -22,14 +20,12 @@ class MigrationController extends AbstractController
         $this->contentManager = $contentManager;
     }
 
-    /**
-     * @Route(path="/{migration}", name="show", requirements={"migration"=".+"})
-     */
+    #[Route(path: '/{migration}', name: 'show', requirements: ['migration' => '.+'])]
     public function show(Migration $migration)
     {
         return $this->render('migrations/show.html.twig', [
-           'recipe' => $this->contentManager->getContent(Recipe::class, $migration->recipe),
-           'migration' => $migration,
+            'recipe' => $this->contentManager->getContent(Recipe::class, $migration->recipe),
+            'migration' => $migration,
         ]);
     }
 }
