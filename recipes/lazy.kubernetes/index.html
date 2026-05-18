@@ -9,10 +9,9 @@
         <title>    Manala Recipes - Lazy - Kubernetes
 </title>
 
-                    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
-            <link rel="stylesheet" href="/manala-recipes/build/app.55c9e3f3.css">
+                    <link rel="stylesheet" href="/manala-recipes/build/app.3bf4c036.css">
         
-                    <script src="/manala-recipes/build/runtime.c692ee2f.js" defer></script><script src="/manala-recipes/build/app.22225b09.js" defer></script>
+                    <script src="/manala-recipes/build/runtime.d4e4faff.js" defer></script><script src="/manala-recipes/build/app.22225b09.js" defer></script>
             </head>
     <body>
 
@@ -95,7 +94,7 @@
     
     <section>
         <article>
-            <body><h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
+            <h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
 <ul>
 <li><a href="https://manala.github.io/manala/installation/" target="_blank">Manala CLI</a> to update the recipe</li>
 <li>Make</li>
@@ -121,7 +120,7 @@ EOF</span>
 /etc</code></pre>
 <p>Expose a container port 4321 on localhost:1234</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="1b8b4323502c6c21f2ec3acf73d54c0c"><span class="token function">make</span> <span class="token function">sh</span> <span class="token assign-left variable">PORT</span><span class="token operator">=</span><span class="token number">1234</span>:4321
-kubectl --namespace <span class="token punctuation">[</span>namespace<span class="token punctuation">]</span> port-forward --address <span class="token number">0.0</span>.0.0 svc/<span class="token punctuation">[</span>service<span class="token punctuation">]</span> <span class="token number">4321</span>:<span class="token punctuation">[</span>port<span class="token punctuation">]</span></code></pre>
+kubectl <span class="token parameter variable">--namespace</span> <span class="token punctuation">[</span>namespace<span class="token punctuation">]</span> port-forward <span class="token parameter variable">--address</span> <span class="token number">0.0</span>.0.0 svc/<span class="token punctuation">[</span>service<span class="token punctuation">]</span> <span class="token number">4321</span>:<span class="token punctuation">[</span>port<span class="token punctuation">]</span></code></pre>
 <h3 id="makefile">Makefile<a href="#makefile" class="anchor"></a></h3>
 <p>One of the first directive of your project's Makefile should be to include manala recipe <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code></p>
 <pre class="code-multiline language-makefile"><code class="language-makefile" id="c469751d466f49d3a21f2f56fe8563a0"><span class="token keyword">include</span> .manala/Makefile</code></pre>
@@ -208,11 +207,11 @@ Bar:
 <pre class="code-multiline language-shell"><code class="language-shell" id="c268e5f74b8b150ac20c1c624b5517f5">kubectl version
 Client Version: <span class="token punctuation">..</span>.
 k version
-Client Version: <span class="token punctuation">..</span>.</code></pre></body>
+Client Version: <span class="token punctuation">..</span>.</code></pre>
         </article>
     </section>
 
-    <time datetime="2026-04-24UTC13:10:36+00:00">Last modified: April 24, 2026 13:10</time>
+    <time datetime="2026-05-18T07:44:01+00:00">Last modified: May 18, 2026 07:44</time>
         </div>
 
         <footer class="footer">

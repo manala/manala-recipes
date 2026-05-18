@@ -9,10 +9,9 @@
         <title>    Manala Recipes - Elao - App - Docker
 </title>
 
-                    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
-            <link rel="stylesheet" href="/manala-recipes/build/app.55c9e3f3.css">
+                    <link rel="stylesheet" href="/manala-recipes/build/app.3bf4c036.css">
         
-                    <script src="/manala-recipes/build/runtime.c692ee2f.js" defer></script><script src="/manala-recipes/build/app.22225b09.js" defer></script>
+                    <script src="/manala-recipes/build/runtime.d4e4faff.js" defer></script><script src="/manala-recipes/build/app.22225b09.js" defer></script>
             </head>
     <body>
 
@@ -151,7 +150,7 @@
     
     <section>
         <article>
-            <body><h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
+            <h2 id="requirements">Requirements<a href="#requirements" class="anchor"></a></h2>
 <ul>
 <li><a href="https://manala.github.io/manala/installation/" target="_blank">Manala CLI</a> to update the recipe</li>
 <li>Make</li>
@@ -172,7 +171,7 @@
 <p>This recipe contains some helpful scripts in the context of a php/nodejs app, such as Makefile tasks in order to release and deploy your app.</p>
 <h2 id="init">Init<a href="#init" class="anchor"></a></h2>
 <pre class="code-multiline language-shell"><code class="language-shell" id="0a315574906857275052dffa43cf2349"><span class="token builtin class-name">cd</span> <span class="token punctuation">[</span>workspace<span class="token punctuation">]</span>
-manala init -i elao.app.docker <span class="token punctuation">[</span>project<span class="token punctuation">]</span></code></pre>
+manala init <span class="token parameter variable">-i</span> elao.app.docker <span class="token punctuation">[</span>project<span class="token punctuation">]</span></code></pre>
 <h2 id="quick-start">Quick start<a href="#quick-start" class="anchor"></a></h2>
 <p>In a shell terminal, change directory to your app, and run the following commands:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="54405844b4665d159d041271eae7661a"><span class="token builtin class-name">cd</span> /path/to/my/app
@@ -214,7 +213,7 @@ App:</code></pre>
 <p>Custom docker compose command:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="6bd301f7d95d8f77fd162d6459dc268a"><span class="token function">make</span> <span class="token function">docker</span> <span class="token punctuation">[</span>COMMAND<span class="token punctuation">]</span></code></pre>
 <p>⚠︎ separate hyphen based arguments or flags with <code class="code-inline" id="cfab1ba8c67c7c838db98d666f02a132">--</code> to avoid shell miss-interpretation:</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- --follow</code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- <span class="token parameter variable">--follow</span></code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
 <pre class="code-multiline language-yaml"><code class="language-yaml" id="33a82f564d19ea23085fc457f9b7c981"><span class="token comment">###########</span>
@@ -403,10 +402,10 @@ App:</code></pre>
                     - 12345:80</span></code></pre>
 <p>Details:</p>
 <ul>
-<li><code class="code-inline" id="46f86faa6bbf9ac94a7e459509a20ed0">project</code>
-<ul>
+<li><code class="code-inline" id="46f86faa6bbf9ac94a7e459509a20ed0">project</code><ul>
 <li><code class="code-inline" id="9fb4cc62d9fee9c73612d87ea60dbca2">ports_prefix</code>: docker network behavior force <code class="code-inline" id="421aa90e079fa326b6494f812ad13e79">localhost</code> usage for all projects. In order to runs multiple projects simultaneously, a kind of range ports must be set to avoid conflicts. Choose a prefix value, greater or equal to 20, and lower or equal to 640, like 123. All project ports will be based on this value, like 12380 for http or 12343 for https accesses.</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <h2 id="integration">Integration<a href="#integration" class="anchor"></a></h2>
 <h3 id="github-actions">GitHub Actions<a href="#github-actions" class="anchor"></a></h3>
@@ -599,7 +598,7 @@ Consult the <code class="code-inline" id="f04b542e973164f9c88bf55021f5da97">.man
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>
-    The <code class="code-inline" id="8cbf89b6b04f3ffe0c8c990f779880b7">github_ssh_key_secret</code> key must be set on each delivery, with the Github Secret key that holds the
+    The <code class="code-inline" id="8cbf89b6b04f3ffe0c8c990f779880b7">github_ssh_key_secret</code> key must be set on each delivery, with the Github Secret key that holds the 
     SSH private key used to access the release repository and the deployment server.
 </p>
 </div>
@@ -734,7 +733,7 @@ parameters:
 <ol>
 <li>
 <p>ensure elao ca certificate has been added to your local keychain (one time for <em>all</em> projects)</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="c3dcbef8d973dace788b1dd85bc3c3ee">$ <span class="token function">sudo</span> security add-trusted-cert -d -r trustRoot -k <span class="token string">"/Library/Keychains/System.keychain"</span> .manala/certificates/ca.crt</code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="d40f3935f4a8cce1f9a976bdd5f85ef5">$ <span class="token function">sudo</span> security add-trusted-cert <span class="token parameter variable">-d</span> <span class="token parameter variable">-r</span> trustRoot <span class="token parameter variable">-k</span> <span class="token string">"/Library/Keychains/System.keychain"</span> .manala/certificates/ca.crt</code></pre>
 </li>
 <li>
 <p>For firefox only, browse to <code class="code-inline" id="e43648ef7c80e1a6aa2fc5e3182ed187">about:config</code> and ensure <code class="code-inline" id="40169ca3c0758a897e82d7000d02abe3">security.enterprise_roots.enabled</code> value is set to true (one time for <em>all</em> projects)</p>
@@ -744,8 +743,8 @@ parameters:
 <ol>
 <li>
 <p>ensure elao ca certificate has been added to your local keychain (one time for <em>all</em> projects)</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="65160f7db640eeea228db59cb7312ad1">$ <span class="token function">sudo</span> <span class="token function">cp</span> .manala/certificates/ca.crt /usr/local/share/ca-certificates
-$ <span class="token function">sudo</span> update-ca-certificates</code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="1f2dfa6840b84a663c3e58929a6efa6c">$ <span class="token function">sudo</span> <span class="token function">cp</span> .manala/certificates/ca.crt /usr/local/share/ca-certificates
+ $ <span class="token function">sudo</span> update-ca-certificates</code></pre>
 </li>
 <li>
 <p>For Chrone and Firefox, add .manala/certificates/ca.crt certificate on Security and Privacy (one time for <em>all</em> projects).</p>
@@ -759,8 +758,8 @@ $ <span class="token function">sudo</span> update-ca-certificates</code></pre>
 <p>Check the following sections for extra gems included with this recipe.</p>
 <h3 id="symfony">Symfony<a href="#symfony" class="anchor"></a></h3>
 <h4 id="ide-configuration">IDE configuration<a href="#ide-configuration" class="anchor"></a></h4>
-<p>As of <a href="https://symfony.com/blog/new-in-symfony-6-1-profiler-improvements-part-2#better-code-editor-selection" target="_blank">Symfony &gt;= 6.1</a>,
-a <code class="code-inline" id="fe8bbdd9762eed82d6c37972f0876d22">SYMFONY_IDE</code> env var allows you to <a href="https://symfony.com/doc/current/reference/configuration/framework.html#ide" target="_blank">configure your IDE</a>
+<p>As of <a href="https://symfony.com/blog/new-in-symfony-6-1-profiler-improvements-part-2#better-code-editor-selection" target="_blank">Symfony &gt;= 6.1</a>, 
+a <code class="code-inline" id="fe8bbdd9762eed82d6c37972f0876d22">SYMFONY_IDE</code> env var allows you to <a href="https://symfony.com/doc/current/reference/configuration/framework.html#ide" target="_blank">configure your IDE</a> 
 once on your machine:</p>
 <p>PhpStorm:</p>
 <pre class="code-multiline language-shell"><code class="language-shell" id="1b8b9ba6e8e995cd90c711ac6f616edb"><span class="token builtin class-name">printf</span> <span class="token string">"SYMFONY_IDE=<span class="token entity" title='\"'>\"</span>phpstorm://open?file=%%f&amp;line=%%l<span class="token entity" title='\"'>\"</span>"</span> <span class="token operator">&gt;&gt;</span> ~/.zshrc</code></pre>
@@ -776,11 +775,11 @@ with the proper paths mapping.</p>
 <ul>
 <li>OpenSSL debian packages for buster are broken on arm64, that's why bullseye ones are used. Expect rare behavior issues.</li>
 <li>Firefox is blocking some ports like <code class="code-inline" id="ebd774c929a7f6c7e5df19e355f61e23">10080</code>. Try to avoid them.</li>
-</ul></body>
+</ul>
         </article>
     </section>
 
-    <time datetime="2026-04-24UTC13:10:36+00:00">Last modified: April 24, 2026 13:10</time>
+    <time datetime="2026-05-18T07:44:01+00:00">Last modified: May 18, 2026 07:44</time>
         </div>
 
         <footer class="footer">

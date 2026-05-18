@@ -9,10 +9,9 @@
         <title>    Manala Recipes - Migration from elao.app (Vagrant) - 2022-01 (Elao - App - Docker)
 </title>
 
-                    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Sacramento|Inconsolata:400,700' rel='stylesheet' type='text/css'>
-            <link rel="stylesheet" href="/manala-recipes/build/app.55c9e3f3.css">
+                    <link rel="stylesheet" href="/manala-recipes/build/app.3bf4c036.css">
         
-                    <script src="/manala-recipes/build/runtime.c692ee2f.js" defer></script><script src="/manala-recipes/build/app.22225b09.js" defer></script>
+                    <script src="/manala-recipes/build/runtime.d4e4faff.js" defer></script><script src="/manala-recipes/build/app.22225b09.js" defer></script>
             </head>
     <body>
 
@@ -96,7 +95,7 @@
     
     <section>
         <article>
-            <body><h1 id="migration-from-elao-app-vagrant-2022-01">Migration from elao.app (Vagrant) - 2022-01<a href="#migration-from-elao-app-vagrant-2022-01" class="anchor"></a></h1>
+            <h1 id="migration-from-elao-app-vagrant-2022-01">Migration from elao.app (Vagrant) - 2022-01<a href="#migration-from-elao-app-vagrant-2022-01" class="anchor"></a></h1>
 <p>How to migrate from <code class="code-inline" id="69b98e33f6a5a028366525d1603ee777">elao.app</code> recipe, and basically from a vagrant to a docker stack.</p>
 <h2 id="on-a-per-machine-basis">On a per-machine basis<a href="#on-a-per-machine-basis" class="anchor"></a></h2>
 <p>These are the tasks required to cleanup local environments for each <code class="code-inline" id="69b98e33f6a5a028366525d1603ee777">elao.app</code> based project, before switching to <code class="code-inline" id="a2dc15b148e98f1eb3db05de87ad51ff">elao.app.docker</code>.</p>
@@ -104,11 +103,11 @@
 <pre class="code-multiline language-shell"><code class="language-shell" id="b74cb271031e65f1d47b7ae55d66bdb0"><span class="token comment"># Properly destroy vagrant machine</span>
 <span class="token function">make</span> destroy
 <span class="token comment"># Remove local vagrant stuff</span>
-<span class="token function">rm</span> -Rf .manala/.vagrant
+<span class="token function">rm</span> <span class="token parameter variable">-Rf</span> .manala/.vagrant
 <span class="token comment"># Remove local cache</span>
-<span class="token function">rm</span> -Rf .manala/.cache
+<span class="token function">rm</span> <span class="token parameter variable">-Rf</span> .manala/.cache
 <span class="token comment"># Delete broken symlinks</span>
-<span class="token function">find</span> -L <span class="token builtin class-name">.</span> -type l -exec <span class="token function">rm</span> -i <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">\</span><span class="token punctuation">;</span></code></pre>
+<span class="token function">find</span> <span class="token parameter variable">-L</span> <span class="token builtin class-name">.</span> <span class="token parameter variable">-type</span> l <span class="token parameter variable">-exec</span> <span class="token function">rm</span> <span class="token parameter variable">-i</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">\</span><span class="token punctuation">;</span></code></pre>
 <p>Once all of your local environment are clean, you can proudly uninstall vagrant, landrush and virtualbox if not needed elsewhere.</p>
 <h2 id="on-a-per-project-basis">On a per-project basis<a href="#on-a-per-project-basis" class="anchor"></a></h2>
 <p>These are the steps to migrate a project</p>
@@ -155,7 +154,7 @@ system:
 </span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">    memory: 4096
 </span><span class="token prefix deleted">-</span><span class="token line">    cpus: 2</span></span></code></pre>
 <h3 id="motd">Motd<a href="#motd" class="anchor"></a></h3>
-<p>Sorry, <code class="code-inline" id="8776dc2b7228908a1ba75b6547efede7">motd</code> is no more supported in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>... It was tightly coupled to <code class="code-inline" id="1787d7646304c5d987cf4e64a3973dc7">ssh</code>, which became useless using docker instead of vagrant.</p>
+<p>Sorry, <code class="code-inline" id="8776dc2b7228908a1ba75b6547efede7">motd</code> is no more supported in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>... It was tightly coupled to <code class="code-inline" id="0a95d4712d87c063c07cb1b90a202e3b">ssh</code>, which became useless using docker instead of vagrant.</p>
 <pre class="code-multiline language-diff"><code class="language-diff" id="c3be8bed91afcdb1e8db633e12e3a36a">system:
 <span class="token unchanged"><span class="token prefix unchanged"> </span><span class="token line">   ...
 </span></span><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">    motd:
@@ -343,7 +342,7 @@ integration:
 <span class="token function">yarn</span> remove node-sass
 <span class="token function">yarn</span> <span class="token function">add</span> sass <span class="token punctuation">[</span>--dev<span class="token punctuation">]</span>
 <span class="token comment"># Handle deprecations</span>
-<span class="token function">sudo</span> <span class="token function">npm</span> <span class="token function">install</span> -g sass-migrator
+<span class="token function">sudo</span> <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> sass-migrator
 sass-migrator --migrate-deps division <span class="token string">"assets/**/*.scss"</span></code></pre>
 <h3 id="watch-webpack-encore">Watch / Webpack / Encore<a href="#watch-webpack-encore" class="anchor"></a></h3>
 <p>Remove vagrant related stuff in <code class="code-inline" id="b67911656ef5d18c4ae36cb6741b7965">Makefile</code>:</p>
@@ -356,11 +355,11 @@ sass-migrator --migrate-deps division <span class="token string">"assets/**/*.sc
 </span><span class="token prefix deleted">-</span><span class="token line">   options.allowedHosts = 'all';
 </span><span class="token prefix deleted">-</span><span class="token line">   options.port = 'auto';
 </span><span class="token prefix deleted">-</span><span class="token line"> })</span></span></code></pre>
-<p>Use <code class="code-inline" id="b935f4b52d8bb71497d62615e2601eb0">Makefile.dist</code> watch targets as a base to refactor own project's makefile targets.</p></body>
+<p>Use <code class="code-inline" id="b935f4b52d8bb71497d62615e2601eb0">Makefile.dist</code> watch targets as a base to refactor own project's makefile targets.</p>
         </article>
     </section>
 
-    <time datetime="2026-04-24UTC13:10:20+00:00">Last modified: April 24, 2026 13:10</time>
+    <time datetime="2026-05-18T07:43:28+00:00">Last modified: May 18, 2026 07:43</time>
         </div>
 
         <footer class="footer">
