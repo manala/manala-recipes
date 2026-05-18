@@ -25,7 +25,7 @@ class DefaultController extends AbstractController
         $page = $this->contentManager->getContent(DefaultPage::class, 'index');
 
         return $this->render('index.html.twig', [
-           'page' => $page,
+            'page' => $page,
         ]);
     }
 }

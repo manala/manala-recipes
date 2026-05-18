@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 .btn {
     padding: 13px 40px;
     background: $color-primary;
@@ -12,7 +14,7 @@
     }
 
     &:hover {
-        background: transparentize($color-primary, 0.15);
+        background: color.adjust($color-primary, $alpha: -0.15);
         text-decoration: none;
     }
 }

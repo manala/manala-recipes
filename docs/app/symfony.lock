@@ -8,21 +8,6 @@
     "composer/xdebug-handler": {
         "version": "2.0.1"
     },
-    "doctrine/annotations": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "a2759dd6123694c8d901d0ec80006e044c2e6457"
-        },
-        "files": [
-            "config/routes/annotations.yaml"
-        ]
-    },
-    "doctrine/lexer": {
-        "version": "1.2.1"
-    },
     "erusev/parsedown": {
         "version": "1.7.4"
     },
@@ -40,9 +25,6 @@
     },
     "monolog/monolog": {
         "version": "2.1.1"
-    },
-    "php-cs-fixer/diff": {
-        "version": "v2.0.2"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -196,9 +178,6 @@
         "version": "v1.18.1"
     },
     "symfony/polyfill-mbstring": {
-        "version": "v1.18.1"
-    },
-    "symfony/polyfill-php73": {
         "version": "v1.18.1"
     },
     "symfony/polyfill-php80": {

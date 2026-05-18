@@ -1,0 +1,11 @@
+controllers:
+    resource:
+        path: ../../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+kernel:
+    resource:
+        path: ../../src/Kernel.php
+        namespace: App
+    type: attribute

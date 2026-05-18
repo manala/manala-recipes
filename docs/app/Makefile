@@ -17,15 +17,15 @@ install:
 ## Start the whole application for development purposes (local only)
 serve:
 	# https://www.npmjs.com/package/concurrently
-	npx concurrently "make serve.php" "make serve.assets" --names="Symfony,Webpack" --prefix=name --kill-others --kill-others-on-fail
+	npx concurrently "make start" "make watch" --names="Symfony,Webpack" --prefix=name --kill-others --kill-others-on-fail
 
 ## Start Symfony server
-serve.php:
+start:
 	symfony server:start --no-tls
 
-## Start webpack dev server with HMR (Hot reload)
-serve.assets:
-	npx encore dev-server --mode=development
+## Start webpack watcher
+watch:
+	npx encore dev --watch
 
 clear:
 	rm -rf build public/build
@@ -55,7 +55,10 @@ serve.static:
 # Lint #
 ########
 
-lint: lint.php-cs-fixer lint.twig lint.yaml lint.container lint.composer
+lint: lint.php-cs-fixer lint.twig lint.yaml lint.container lint.composer lint.styles
+
+lint.styles:
+	npx stylelint 'assets/**/*.scss'
 
 lint.composer:
 	symfony composer validate --no-check-publish

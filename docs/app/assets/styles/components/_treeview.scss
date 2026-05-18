@@ -1,6 +1,6 @@
 @import "~prismjs/plugins/treeview/prism-treeview.css";
 
-.token.treeview-part .entry-name:before {
+.token.treeview-part .entry-name::before {
   filter: invert(0.8);
 }
 

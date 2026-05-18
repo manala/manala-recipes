@@ -1,26 +1,31 @@
+@use 'sass:color';
+
 .admonition {
   margin: 15px 0;
 
   p {
     padding: 10px;
     margin: 0;
-    color: transparentize($text-color, 0.3);
+    color: color.adjust($text-color, $alpha: -0.3);
   }
 
   &.warning {
-    background-color: lighten($color-warning, 30);
+    background-color: color.adjust($color-warning, $lightness: 30%);
+
     .admonition-title {
       color: $color-warning;
-      background-color: lighten($color-warning, 25);
+      background-color: color.adjust($color-warning, $lightness: 25%);
     }
   }
 
   &.note {
-    background-color: lighten($color-info, 40);
+    background-color: color.adjust($color-info, $lightness: 40%);
+
     .admonition-title {
       color: $color-info;
-      background-color: lighten($color-info, 35);
+      background-color: color.adjust($color-info, $lightness: 35%);
     }
+
     p {
       color: $color-info;
     }

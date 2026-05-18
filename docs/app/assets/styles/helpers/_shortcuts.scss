@@ -1,12 +1,15 @@
 .text-left {
     text-align: left;
 }
+
 .text-right {
     text-align: right;
 }
+
 .text-center {
     text-align: center;
 }
+
 .text-justify {
     text-align: justify;
 }
@@ -14,6 +17,7 @@
 .pull-right {
     float: right !important;
 }
+
 .pull-left {
     float: left !important;
 }
@@ -23,7 +27,7 @@
 }
 
 .hide-text {
-    font: #{0/0} a;
+    font: #{0 / 0} a;
     color: transparent;
     text-shadow: none;
     background-color: transparent;
@@ -39,7 +43,7 @@
 }
 
 .clearfix {
-    @include clearfix();
+    @include clearfix;
 }
 
 hr {
@@ -50,8 +54,8 @@ hr {
 
     &.big {
         border-top: 2px solid #DDD;
-        margin-top: $base-line-height*2;
-        margin-bottom: $base-line-height*2;
+        margin-top: $base-line-height * 2;
+        margin-bottom: $base-line-height * 2;
     }
 }
 

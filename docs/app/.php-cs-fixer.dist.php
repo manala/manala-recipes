@@ -4,6 +4,7 @@ $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
     ->exclude('var')
     ->exclude('node_modules')
+    ->notPath('config/reference.php')
 ;
 
 return (new PhpCsFixer\Config())
@@ -22,6 +23,6 @@ return (new PhpCsFixer\Config())
         'phpdoc_order' => true,
         'single_line_throw' => false,
         'simplified_null_return' => false,
-        'yoda_style' => [],
+        'yoda_style' => false,
     ])
 ;

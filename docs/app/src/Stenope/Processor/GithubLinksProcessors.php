@@ -50,7 +50,7 @@ class GithubLinksProcessors implements ProcessorInterface
 
     private function processLink(\DOMElement $link, Content $content): void
     {
-        $link->setAttribute('href', sprintf(
+        $link->setAttribute('href', \sprintf(
             '%s/%s/%s',
             rtrim($this->githubRawContentUrl, '/'),
             $content->getSlug(),
