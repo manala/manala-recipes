@@ -1,10 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    "schedule:weekly"
+    "config:recommended"
   ],
   "ignorePaths": [],
+  "labels": ["renovate"],
   "github-actions": {
     "managerFilePatterns": [
       "/(^|/)action\\.ya?ml\\.tmpl$/"
@@ -13,8 +13,7 @@
   "packageRules": [
     {
       "matchManagers": ["custom.regex"],
-      "groupName": "custom components",
-      "labels": ["renovate"]
+      "groupName": "custom components"
     },
     {
       "matchFileNames": ["docs/app/**"],
