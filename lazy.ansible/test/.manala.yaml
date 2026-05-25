@@ -32,29 +32,29 @@ system:
         config: |
             # Ssh config
     ansible:
-        version: 2.19.7
+        version: 2.19.10
         config: |
             # Ansible config
         dependencies:
             - hvac==2.4.0
     ansible-lint:
-        version: 26.2.0
+        version: 26.4.0
         dependencies:
-            - pytest==9.0.2
+            - pytest==9.0.3
     ansible-creator:
-        version: 26.2.0
+        version: 26.4.3
     molecule:
-        version: 26.2.0
+        version: 26.4.0
         dependencies:
             - molecule-plugins==25.8.12
             - molecule-plugins[docker]==25.8.12
     terraform:
-        version: 1.13.5
+        version: 1.15.4
     aws:
-        version: 2.34.1
+        version: 2.34.53
         config: |
             [profile test]
     gcloud:
-        version: 559.0.0
+        version: 569.0.0
         components:
             - gke-gcloud-auth-plugin

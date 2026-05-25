@@ -70,7 +70,7 @@ system:
         # @schema {"type": ["null", "string"]}
         config: ~
     ansible:
-        # @schema {"enum": [null, "2.19.7", "2.18.14", "2.17.14", "2.16.17"]}
+        # @schema {"enum": [null, "2.19.10", "2.18.17", "2.17.14", "2.16.18"]}
         # @option {"label": "Ansible version"}
         version: ~
         # @schema {"type": ["null", "string"]}
@@ -78,27 +78,27 @@ system:
         # @schema {"items": {"type": "string"}}
         dependencies: []
     ansible-lint:
-        # @schema {"enum": [null, "26.2.0", "25.9.2", "25.7.0", "24.9.2", "24.7.0", "24.6.1"]}
+        # @schema {"enum": [null, "26.4.0", "26.2.0", "25.9.2", "25.7.0", "24.9.2", "24.7.0"]}
         # @option {"label": "Ansible-lint version"}
         version: ~
         # @schema {"items": {"type": "string"}}
         dependencies: []
     ansible-creator:
-        # @schema {"enum": [null, "26.2.0", "25.9.0"]}
+        # @schema {"enum": [null, "26.4.3", "26.2.0"]}
         # @option {"label": "Ansible-creator version"}
         version: ~
     molecule:
-        # @schema {"enum": [null, "26.2.0", "25.9.0", "25.7.0", "24.9.0", "24.8.0", "24.7.0"]}
+        # @schema {"enum": [null, "26.4.0", "26.2.0", "25.9.0", "25.7.0", "24.9.0", "24.8.0"]}
         # @option {"label": "Molecule version"}
         version: ~
         # @schema {"items": {"type": "string"}}
         dependencies: []
     terraform:
-        # @schema {"enum": [null, "1.13.5", "1.12.2", "1.11.4", "1.10.5", "1.9.8"]}
+        # @schema {"enum": [null, "1.15.4", "1.14.9", "1.13.5", "1.12.2", "1.11.4"]}
         # @option {"label": "Terraform version"}
         version: ~
     kubectl:
-        # @schema {"enum": [null, "1.35.2", "1.34.5", "1.33.9", "1.32.13"]}
+        # @schema {"enum": [null, "1.36.1", "1.35.5", "1.34.8", "1.33.12", "1.32.13"]}
         # @option {"label": "Kubectl version"}
         version: ~
     kustomize:
@@ -112,7 +112,7 @@ system:
         # @schema {"items": {"type": "string"}}
         plugins: []
     helm:
-        # @schema {"enum": [null, "4.1.1", "4.0.5", "3.20.0", "3.19.5", "3.18.6"]}
+        # @schema {"enum": [null, "4.2.0", "4.1.4", "4.0.5", "3.21.0", "3.20.2"]}
         # @option {"label": "Helm version"}
         version: ~
         # @schema {
@@ -132,7 +132,7 @@ system:
         # }
         plugins: []
     helmfile:
-        # @schema {"enum": [null, "1.4.1", "1.3.2", "1.2.3", "1.1.9", "0.171.0"]}
+        # @schema {"enum": [null, "1.5.2", "1.4.5", "1.3.2", "1.2.3", "0.171.0"]}
         # @option {"label": "Helmfile version"}
         version: ~
     k9s:
@@ -140,7 +140,7 @@ system:
         # @option {"label": "K9s version"}
         version: ~
     stern:
-        # @schema {"enum": [null, "1.33.1"]}
+        # @schema {"enum": [null, "1.34.0"]}
         # @option {"label": "Stern version"}
         version: ~
     popeye:
@@ -148,15 +148,15 @@ system:
         # @option {"label": "Popeye version"}
         version: ~
     vault:
-        # @schema {"enum": [null, "1.21.2", "1.20.4", "1.19.5", "1.18.5"]}
+        # @schema {"enum": [null, "2.0.1", "1.21.4", "1.20.4", "1.19.5"]}
         # @option {"label": "Vault version"}
         version: ~
     rclone:
-        # @schema {"enum": [null, "1.73.1"]}
+        # @schema {"enum": [null, "1.74.2"]}
         # @option {"label": "Rclone version"}
         version: ~
     openstack:
-        # @schema {"enum": [null, "9.0.0", "8.3.0", "7.5.0"]}
+        # @schema {"enum": [null, "10.0.0", "9.0.0", "8.3.0"]}
         # @option {"label": "Openstack client version"}
         version: ~
     swift:
@@ -168,21 +168,21 @@ system:
             # @option {"label": "Swift keystone client version"}
             version: ~
     scw:
-        # @schema {"enum": [null, "2.52.0"]}
+        # @schema {"enum": [null, "2.56.0"]}
         # @option {"label": "Scaleway cli version"}
         version: ~
     sops:
-        # @schema {"enum": [null, "3.12.1"]}
+        # @schema {"enum": [null, "3.13.1"]}
         # @option {"label": "Sops version"}
         version: ~
     aws:
-        # @schema {"enum": [null, "2.34.1"]}
+        # @schema {"enum": [null, "2.34.53"]}
         # @option {"label": "AWS cli version"}
         version: ~
         # @schema {"type": ["null", "string"]}
         config: ~
     gcloud:
-        # @schema {"enum": [null, "559.0.0"]}
+        # @schema {"enum": [null, "569.0.0"]}
         # @option {"label": "Google Cloud cli version"}
         version: ~
         # @schema {"items": {"type": "string"}}
@@ -192,6 +192,6 @@ system:
         # @option {"label": "Age version"}
         version: ~
     argocd:
-        # @schema {"enum": [null, "3.3.2", "3.2.7", "3.1.12", "2.14.21"]}
+        # @schema {"enum": [null, "3.4.2", "3.3.10", "3.2.12", "2.14.21"]}
         # @option {"label": "ArgoCD version"}
         version: ~
