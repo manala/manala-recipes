@@ -85,6 +85,12 @@ plugins=(
 {{- if .Vars.system.terraform.version }}
   terraform
 {{- end }}
+{{- if .Vars.system.opentofu.version }}
+  opentofu
+{{- end }}
+{{- if .Vars.system.terragrunt.version }}
+  terragrunt
+{{- end }}
 {{- if .Vars.system.kubectl.version }}
   kubectl
 {{- end }}

@@ -244,6 +244,51 @@ EOF
 
 {{ end -}}
 
+{{ $opentofu := .Vars.system.opentofu -}}
+{{ if $opentofu.version -}}
+# OpenTofu
+RUN <<EOF
+curl -sSLf "https://github.com/opentofu/opentofu/releases/download/v{{ $opentofu.version }}/tofu_{{ $opentofu.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin tofu
+EOF
+
+{{ end -}}
+
+{{ $terragrunt := .Vars.system.terragrunt -}}
+{{ if $terragrunt.version -}}
+# Terragrunt
+RUN <<EOF
+curl -sSLf "https://github.com/gruntwork-io/terragrunt/releases/download/v{{ $terragrunt.version }}/terragrunt_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin -s "/terragrunt_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}/terragrunt/"
+chmod +x /usr/local/bin/terragrunt
+# Oh My Zsh plugin
+# See: https://github.com/ohmyzsh/ohmyzsh/pull/13261
+mkdir /usr/local/share/oh-my-zsh/custom/plugins/terragrunt
+printf "\
+autoload -Uz bashcompinit && bashcompinit\n\
+complete -C terragrunt terragrunt\n\
+alias tg='terragrunt'\n\
+alias tga='terragrunt -- run apply'\n\
+alias tgaa='terragrunt -- run apply -auto-approve'\n\
+alias tgc='terragrunt -- run console'\n\
+alias tgd='terragrunt -- run destroy'\n\
+alias tgd!='terragrunt -- run destroy -auto-approve'\n\
+alias tgf='terragrunt -- run fmt'\n\
+alias tgfr='terragrunt -- run fmt -recursive'\n\
+alias tgi='terragrunt -- run init'\n\
+alias tgo='terragrunt -- run output'\n\
+alias tgp='terragrunt -- run plan'\n\
+alias tgv='terragrunt -- run validate'\n\
+alias tgs='terragrunt -- run state'\n\
+alias tgsh='terragrunt -- run show'\n\
+alias tgr='terragrunt -- run refresh'\n\
+alias tgt='terragrunt -- run test'\n\
+alias tgws='terragrunt -- run workspace'\n\
+" > /usr/local/share/oh-my-zsh/custom/plugins/terragrunt/terragrunt.plugin.zsh
+EOF
+
+{{ end -}}
+
 {{ $kubectl := .Vars.system.kubectl -}}
 {{ if $kubectl.version -}}
 # Kubectl

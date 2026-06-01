@@ -50,6 +50,10 @@ system:
             - molecule-plugins[docker]==25.8.12
     terraform:
         version: 1.15.4
+    opentofu:
+        version: 1.12.1
+    terragrunt:
+        version: 1.0.6
     kubectl:
         version: 1.36.1
     kustomize:
