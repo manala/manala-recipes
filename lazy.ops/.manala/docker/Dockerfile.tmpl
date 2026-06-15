@@ -453,6 +453,19 @@ EOF
 
 {{ end -}}
 
+{{ $ovhcloud := .Vars.system.ovhcloud -}}
+{{ if $ovhcloud.version -}}
+# OVHcloud cli
+RUN <<EOF
+curl -sSLf "https://github.com/ovh/ovhcloud-cli/releases/download/v{{ $ovhcloud.version }}/ovhcloud-cli_Linux_{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "arm64") }}.tar.gz" \
+    | bsdtar -xvf - -C /usr/local/bin ovhcloud
+# Oh My Zsh plugin
+mkdir /usr/local/share/oh-my-zsh/custom/plugins/ovhcloud
+ovhcloud completion zsh > /usr/local/share/oh-my-zsh/custom/plugins/ovhcloud/ovhcloud.plugin.zsh
+EOF
+
+{{ end -}}
+
 {{ $sops := .Vars.system.sops -}}
 {{ if $sops.version -}}
 # Sops

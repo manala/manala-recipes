@@ -93,7 +93,7 @@ printf " \033[33m│\033[0m \033[36m‣ stern \033[35m{{ $stern.version }}\033[0
 printf " \033[33m└\033[0m\n"
 {{- end }}
 
-{{- $hasCloud := or .Vars.system.aws.version .Vars.system.gcloud.version .Vars.system.openstack.version .Vars.system.scw.version .Vars.system.swift.version }}
+{{- $hasCloud := or .Vars.system.aws.version .Vars.system.gcloud.version .Vars.system.openstack.version .Vars.system.scw.version .Vars.system.ovhcloud.version .Vars.system.swift.version }}
 {{- if $hasCloud }}
 printf " \033[33m┌ Cloud Providers\033[0m\n"
 {{- $aws := .Vars.system.aws }}
@@ -111,6 +111,10 @@ printf " \033[33m│\033[0m \033[36m‣ openstack \033[35m{{ $openstack.version 
 {{- $scw := .Vars.system.scw }}
 {{- if $scw.version }}
 printf " \033[33m│\033[0m \033[36m‣ scw \033[35m{{ $scw.version }}\033[0m\n"
+{{- end }}
+{{- $ovhcloud := .Vars.system.ovhcloud }}
+{{- if $ovhcloud.version }}
+printf " \033[33m│\033[0m \033[36m‣ ovhcloud \033[35m{{ $ovhcloud.version }}\033[0m\n"
 {{- end }}
 {{- $swift := .Vars.system.swift }}
 {{- if $swift.version }}

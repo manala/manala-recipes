@@ -150,6 +150,11 @@ system:
         version: {{ .Vars.system.scw.version | toYaml }}
     {{- end }}
 
+    {{- if .Vars.system.ovhcloud.version }}
+    ovhcloud:
+        version: {{ .Vars.system.ovhcloud.version | toYaml }}
+    {{- end }}
+
     {{- if .Vars.system.sops.version }}
     sops:
         version: {{ .Vars.system.sops.version | toYaml }}

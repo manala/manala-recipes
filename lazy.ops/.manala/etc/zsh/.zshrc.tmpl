@@ -109,6 +109,9 @@ plugins=(
 {{- if .Vars.system.scw.version }}
   scw
 {{- end }}
+{{- if .Vars.system.ovhcloud.version }}
+  ovhcloud
+{{- end }}
 {{- if .Vars.system.aws.version }}
   aws
 {{- end }}
