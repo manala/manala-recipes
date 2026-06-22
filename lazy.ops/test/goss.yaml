@@ -247,6 +247,11 @@ command:
     exit-status: 0
     stdout:
       - Version          {{ .Vars.system.scw.version }}
+  # OVHcloud cli
+  ovhcloud version --output 'version':
+    exit-status: 0
+    stdout:
+      - "v{{ .Vars.system.ovhcloud.version }}"
   # Sops
   sops --version:
     exit-status: 0
