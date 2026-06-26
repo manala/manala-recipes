@@ -90,6 +90,16 @@ system:
         version: {{ .Vars.system.terraform.version | toYaml }}
     {{- end }}
 
+    {{- if .Vars.system.opentofu.version }}
+    opentofu:
+        version: {{ .Vars.system.opentofu.version | toYaml }}
+    {{- end }}
+
+    {{- if .Vars.system.terragrunt.version }}
+    terragrunt:
+        version: {{ .Vars.system.terragrunt.version | toYaml }}
+    {{- end }}
+
     {{- if .Vars.system.kubectl.version }}
     kubectl:
         version: {{ .Vars.system.kubectl.version | toYaml }}
