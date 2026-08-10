@@ -29,7 +29,7 @@ system:
         config: |
             # Git config
     kubectl:
-        version: 1.36.1
+        version: 1.36.3
     kustomize:
         version: 5.8.1
     krew:
@@ -37,42 +37,42 @@ system:
         plugins:
             - ns
     helm:
-        version: 4.2.0
+        version: 4.2.3
         plugins:
             - url: https://github.com/databus23/helm-diff
-              version: 3.15.7
+              version: 3.15.11
               verify: false
     helmfile:
-        version: 1.5.2
+        version: 1.7.3
     k9s:
-        version: 0.50.18
+        version: 0.51.0
     stern:
         version: 1.34.0
     popeye:
         version: 0.22.1
     vault:
-        version: 2.0.1
+        version: 2.0.4
     rclone:
-        version: 1.74.2
+        version: 1.75.0
     openstack:
-        version: 10.0.0
+        version: 10.2.1
     swift:
         version: 4.10.0
         keystone:
             version: 5.8.0
     scw:
-        version: 2.56.0
+        version: 2.60.0
     sops:
-        version: 3.13.1
+        version: 3.13.3
     aws:
-        version: 2.34.53
+        version: 2.36.19
         config: |
             [profile test]
     gcloud:
-        version: 569.0.0
+        version: 579.0.0
         components:
             - gke-gcloud-auth-plugin
     age:
         version: 1.3.1
     argocd:
-        version: 3.4.2
+        version: 3.5.0
