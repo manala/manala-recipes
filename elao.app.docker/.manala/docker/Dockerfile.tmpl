@@ -18,7 +18,6 @@ LABEL org.opencontainers.image.authors="Elao <contact@elao.com>"
 ARG DEBIAN_FRONTEND="noninteractive"
 
 ARG MANALA_HOST_OS="linux"
-ARG MANALA_HOST_DIR
 ARG MANALA_USER="app"
 ARG MANALA_USER_ID="1000"
 ARG MANALA_USER_COMMENT="App"
@@ -26,7 +25,6 @@ ARG MANALA_GROUP="app"
 ARG MANALA_GROUP_ID="1000"
 
 ENV MANALA_HOST_OS="${MANALA_HOST_OS}"
-ENV MANALA_HOST_DIR="${MANALA_HOST_DIR}"
 
 # The 'container' environment variable is internally used for
 # checking we're running inside a container.
@@ -308,5 +306,11 @@ EOF
 #######
 
 FROM provision-${MANALA_PROVISION} AS app
+
+# Only exposed on the final stage. Its value varies between builds, and
+# would otherwise invalidate the cache of every layer below.
+ARG MANALA_HOST_DIR
+
+ENV MANALA_HOST_DIR="${MANALA_HOST_DIR}"
 
 {{- end }}

@@ -52,7 +52,7 @@ runs:
       uses: ./.manala/github/system/setup
       with:
         dir: ${{ env.INPUT_DIR }}
-        docker_build_cache_scope: app-docker-${{ hashFiles('.manala/docker/Dockerfile', '.manala/Makefile', '.manala/ansible/**', '.manala/certificates/**') }}
+        docker_build_cache_scope: app-docker-${{ hashFiles(format('{0}/.manala/docker/Dockerfile', env.INPUT_DIR), format('{0}/.manala/Makefile', env.INPUT_DIR), format('{0}/.manala/ansible/**', env.INPUT_DIR), format('{0}/.manala/certificates/**', env.INPUT_DIR)) }}
         docker_compose_profile: integration
         docker_env: ${{ inputs.env }}
         docker_services: ${{ inputs.services }}
