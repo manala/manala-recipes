@@ -82,9 +82,6 @@ curl -sSLf "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_
 chmod +x /usr/local/bin/yq
 # Oh My Zsh
 git clone https://github.com/ohmyzsh/ohmyzsh.git /usr/local/share/oh-my-zsh
-# See: https://github.com/ohmyzsh/ohmyzsh/issues/11995
-git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 echo "ZDOTDIR=/etc/zsh" > /etc/zsh/zshenv
 # Starship
 curl -sSLf "https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-unknown-linux-musl.tar.gz" \
@@ -223,17 +220,20 @@ RUN <<EOF
 curl -sSLf "https://github.com/helmfile/helmfile/releases/download/v{{ $helmfile.version }}/helmfile_{{ $helmfile.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
     | bsdtar -xvf - -C /usr/local/bin helmfile
 # Oh My Zsh plugin
-# See: https://github.com/ohmyzsh/ohmyzsh/pull/12750
 mkdir /usr/local/share/oh-my-zsh/custom/plugins/helmfile
 printf "\
+alias hf='helmfile'\n\
+alias hfi='helmfile --interactive'\n\
 if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_helmfile\" ]]; then\n\
   typeset -g -A _comps\n\
   autoload -Uz _helmfile\n\
   _comps[helmfile]=_helmfile\n\
 fi\n\
-helmfile completion zsh >| \"\$ZSH_CACHE_DIR/completions/_helmfile\" &|\n\
-alias hf='helmfile'\n\
-alias hfi='helmfile --interactive'\n\
+zmodload -F zsh/files b:zf_mv\n\
+() {\n\
+  local TMPPREFIX=\"\$ZSH_CACHE_DIR/completions/._helmfile\"\n\
+  zf_mv -f -- =( helmfile completion zsh ) \"\$ZSH_CACHE_DIR/completions/_helmfile\"\n\
+} &|\n\
 " > /usr/local/share/oh-my-zsh/custom/plugins/helmfile/helmfile.plugin.zsh
 EOF
 
@@ -256,7 +256,6 @@ RUN <<EOF
 curl -sSLf "https://github.com/stern/stern/releases/download/v{{ $stern.version }}/stern_{{ $stern.version }}_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
     | bsdtar -xvf - -C /usr/local/bin stern
 # Oh My Zsh plugin
-# See: https://github.com/ohmyzsh/ohmyzsh/pull/12751
 mkdir /usr/local/share/oh-my-zsh/custom/plugins/stern
 printf "\
 if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_stern\" ]]; then\n\
@@ -264,7 +263,11 @@ if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_stern\" ]]; then\n\
   autoload -Uz _stern\n\
   _comps[stern]=_stern\n\
 fi\n\
-stern --completion zsh >| \"\$ZSH_CACHE_DIR/completions/_stern\" &|\n\
+zmodload -F zsh/files b:zf_mv\n\
+() {\n\
+  local TMPPREFIX=\"\$ZSH_CACHE_DIR/completions/._stern\"\n\
+  zf_mv -f -- =( stern --completion zsh ) \"\$ZSH_CACHE_DIR/completions/_stern\"\n\
+} &|\n\
 " > /usr/local/share/oh-my-zsh/custom/plugins/stern/stern.plugin.zsh
 EOF
 
