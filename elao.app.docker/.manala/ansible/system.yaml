@@ -53,9 +53,6 @@
         state: "{{ 'present' if (system_php) else 'ignore' }}"
       - preference: symfony-cli@symfony
         state: "{{ 'present' if (system_php) else 'ignore' }}"
-      # InfluxDB
-      - preference: influxdb@influxdata
-        state: "{{ 'present' if (system_influxdb) else 'ignore' }}"
       # Nginx
       - preference: nginx@nginx
         state: "{{ 'present' if (system_nginx) else 'ignore' }}"
@@ -154,19 +151,6 @@
     ############
 
     manala_gomplate_version: 3.11.1
-
-    ############
-    # InfluxDB #
-    ############
-
-    manala_influxdb_config_template: config/influxdata/influxdb.conf.j2
-    manala_influxdb_config: "{{ system_influxdb_config }}"
-
-    manala_influxdb_databases: "{{ system_influxdb_databases }}"
-
-    manala_influxdb_users: "{{ system_influxdb_users }}"
-
-    manala_influxdb_privileges: "{{ system_influxdb_privileges }}"
 
     ###########
     # Locales #
@@ -423,16 +407,6 @@
       tags: [mysql, mariadb]
 
     - ansible.builtin.import_role:
-        name: manala.roles.influxdb
-      when: system_influxdb
-      tags: [influxdb]
-
-    - ansible.builtin.import_role:
         name: manala.roles.gomplate
       when: system_gomplate
       tags: [gomplate]
-
-    - ansible.builtin.import_role:
-        name: manala.roles.ngrok
-      when: system_ngrok
-      tags: [ngrok]

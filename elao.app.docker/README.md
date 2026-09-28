@@ -264,20 +264,6 @@ system:
         version: 9
         plugins:
           - analysis-icu
-    # influxdb:
-    #     version: "*"
-    #     config:
-    #       reporting-disabled: true
-    #     databases:
-    #       - app
-    #     users:
-    #       - database: app
-    #         name: app
-    #         password: app
-    #     privileges:
-    #       - database: app
-    #         user: app
-    #         grant: ALL
     ssh:
         client:
             config: |
