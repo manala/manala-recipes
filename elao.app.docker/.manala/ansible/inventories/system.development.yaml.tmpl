@@ -23,22 +23,16 @@ system:
             system_certificates: true
             # Cron
             system_cron: {{ not (empty .Vars.system.cron.files) | ternary "true" "false" }}
-            # Elasticsearch
-            system_elasticsearch: {{ not (empty .Vars.system.elasticsearch.version) | ternary "true" "false" }}
             # Files
             system_files: true
             # Git
             system_git: true
             # Gomplate
             system_gomplate: true
-            # InfluxDB
-            system_influxdb: {{ not (empty .Vars.system.influxdb.version) | ternary "true" "false" }}
             # Locales
             system_locales: true
             # Nginx
             system_nginx: {{ not (empty .Vars.system.nginx.configs) | ternary "true" "false" }}
-            # Ngrok
-            system_ngrok: true
             # NodeJS
             system_nodejs: {{ not (empty .Vars.system.nodejs.version) | ternary "true" "false" }}
             # Oh my zsh

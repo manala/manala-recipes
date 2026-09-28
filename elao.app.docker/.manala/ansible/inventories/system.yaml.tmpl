@@ -29,10 +29,6 @@ system:
         # Cron
         system_cron: false
         {{- dict "system_cron_files" .Vars.system.cron.files | toYaml | nindent 8 }}
-        # Elasticsearch
-        system_elasticsearch: false
-        system_elasticsearch_version: {{ .Vars.system.elasticsearch.version | toYaml }}
-        {{- dict "system_elasticsearch_plugins" .Vars.system.elasticsearch.plugins | toYaml | nindent 8 }}
         # Files
         system_files: false
         {{- dict "system_files_attributes" .Vars.system.files | toYaml | nindent 8 }}
@@ -40,12 +36,6 @@ system:
         system_git: false
         # Gomplate
         system_gomplate: false
-        # InfluxDB
-        system_influxdb: false
-        {{- dict "system_influxdb_config" .Vars.system.influxdb.config | toYaml | nindent 8 }}
-        {{- dict "system_influxdb_databases" .Vars.system.influxdb.databases | toYaml | nindent 8 }}
-        {{- dict "system_influxdb_users" .Vars.system.influxdb.users | toYaml | nindent 8 }}
-        {{- dict "system_influxdb_privileges" .Vars.system.influxdb.privileges | toYaml | nindent 8 }}
         # Locales
         system_locales: false
         {{- dict "system_locales_codes" .Vars.system.locales.codes | toYaml | nindent 8 }}
@@ -64,8 +54,6 @@ system:
         # Nginx
         system_nginx: false
         {{- dict "system_nginx_configs" .Vars.system.nginx.configs | toYaml | nindent 8 }}
-        # Ngrok
-        system_ngrok: false
         # NodeJS
         system_nodejs: false
         system_nodejs_version: {{ .Vars.system.nodejs.version | toYaml }}
