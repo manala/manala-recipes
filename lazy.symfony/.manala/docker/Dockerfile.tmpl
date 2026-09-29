@@ -82,9 +82,6 @@ curl -sSLf "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_
 chmod +x /usr/local/bin/yq
 # Oh My Zsh
 git clone https://github.com/ohmyzsh/ohmyzsh.git /usr/local/share/oh-my-zsh
-# See: https://github.com/ohmyzsh/ohmyzsh/issues/11995
-git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/local/share/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 echo "ZDOTDIR=/etc/zsh" > /etc/zsh/zshenv
 # Starship
 curl -sSLf "https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-{{ include "arch_map" (dict "amd64" "x86_64" "arm64" "aarch64") }}-unknown-linux-musl.tar.gz" \
@@ -212,7 +209,6 @@ curl -sSLf https://getcomposer.org/installer \
 curl -sSLf "https://github.com/symfony-cli/symfony-cli/releases/latest/download/symfony-cli_linux_{{ include "arch_map" (dict "amd64" "amd64" "arm64" "arm64") }}.tar.gz" \
     | bsdtar -xvf - -C /usr/local/bin symfony
 # Oh My Zsh plugin
-# See: https://github.com/ohmyzsh/ohmyzsh/pull/12768
 mkdir /usr/local/share/oh-my-zsh/custom/plugins/symfony-cli
 printf "\
 if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_symfony-cli\" ]]; then\n\
@@ -220,7 +216,11 @@ if [[ ! -f \"\$ZSH_CACHE_DIR/completions/_symfony-cli\" ]]; then\n\
   autoload -Uz _symfony-cli\n\
   _comps[symfony]=_symfony-cli\n\
 fi\n\
-symfony self:completion zsh >| \"\$ZSH_CACHE_DIR/completions/_symfony-cli\" &|\n\
+zmodload -F zsh/files b:zf_mv\n\
+() {\n\
+  local TMPPREFIX=\"\$ZSH_CACHE_DIR/completions/._symfony-cli\"\n\
+  zf_mv -f -- =( symfony self:completion zsh ) \"\$ZSH_CACHE_DIR/completions/_symfony-cli\"\n\
+} &|\n\
 " > /usr/local/share/oh-my-zsh/custom/plugins/symfony-cli/symfony-cli.plugin.zsh
 # Clean
 rm -rf /var/lib/apt/lists/*
