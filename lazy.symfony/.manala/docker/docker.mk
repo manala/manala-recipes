@@ -183,7 +183,7 @@ MANALA_DOCKER_MAKE = $(manala_docker_command) make
 else
 define manala_docker_shell
 	$(if $(2), \
-		$(call message_error, Unable to run docker shell command with options inside a docker container) ; exit 1 ;, \
+		$(call manala_message_error, Unable to run docker shell command with options inside a docker container) ; exit 1 ;, \
 		$(strip $(1)) \
 	)	
 endef
