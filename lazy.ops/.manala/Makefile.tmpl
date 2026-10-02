@@ -50,7 +50,7 @@ sh:
 		$(call manala_docker_command, \
 			--no-TTY \
 			$(if $(PORT),--publish $(PORT)), \
-		) sh -s ; \
+		) sh -se ; \
 	else \
 		$(call manala_docker_command, \
 			$(if $(PORT),--publish $(PORT)), \
