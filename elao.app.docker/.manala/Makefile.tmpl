@@ -103,7 +103,7 @@ MANALA_HELP += $(call manala_help,sh,                    Shell to the environmen
 sh: MANALA_DOCKER_COMMAND_DIR ?= $(if $(findstring command line,$(origin DIR)),$(DIR))
 sh:
 	if [ ! -t 0 ] ; then \
-		$(call manala_docker_command, --no-TTY) sh -s ; \
+		$(call manala_docker_command, --no-TTY) sh -se ; \
 	else \
 		$(manala_docker_command) sh -c ' \
 			if [ -x "$$(command -v zsh)" ] ; then \
