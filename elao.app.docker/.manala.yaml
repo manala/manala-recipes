@@ -134,17 +134,6 @@ system:
         version: ~
         # @schema {"items": {"type": "string"}}
         plugins: []
-    influxdb:
-        # @option {"label": "InfluxDB version"}
-        # @schema {"enum": [null, "*"]}
-        version: ~
-        config: {}
-        # @schema {"items": {"type": "string"}}
-        databases: []
-        # @schema {"items": {"type": "object"}}
-        users: []
-        # @schema {"items": {"type": "object"}}
-        privileges: []
     ssh:
         client:
             # @schema {"type": ["null", "string"]}

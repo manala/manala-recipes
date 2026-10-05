@@ -94,11 +94,6 @@ system:
         version: {{ .elasticsearch.version | toYaml }}
     {{- end }}
 
-    {{- if .influxdb.version }}
-    influxdb:
-        version: {{ .influxdb.version | toYaml }}
-    {{- end }}
-
     # ssh:
     #     client:
     #         config: |
