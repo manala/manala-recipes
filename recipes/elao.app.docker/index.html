@@ -216,7 +216,7 @@ App:</code></pre>
 <pre class="code-multiline language-shell"><code class="language-shell" id="be40da5ccc83bae95dc5c03a850491c2"><span class="token function">make</span> <span class="token function">docker</span> logs -- <span class="token parameter variable">--follow</span></code></pre>
 <h2 id="configuration">Configuration<a href="#configuration" class="anchor"></a></h2>
 <p>Here is an example of a configuration in <code class="code-inline" id="b02a9fece427527328ec7bdc57422dda">.manala.yaml</code>:</p>
-<pre class="code-multiline language-yaml"><code class="language-yaml" id="33a82f564d19ea23085fc457f9b7c981"><span class="token comment">###########</span>
+<pre class="code-multiline language-yaml"><code class="language-yaml" id="fd14213568bdbeee34738ddf09199b4f"><span class="token comment">###########</span>
 <span class="token comment"># Project #</span>
 <span class="token comment">###########</span>
 
@@ -368,20 +368,6 @@ App:</code></pre>
         version: 9
         plugins:
           - analysis-icu
-    # influxdb:
-    #     version: "*"
-    #     config:
-    #       reporting-disabled: true
-    #     databases:
-    #       - app
-    #     users:
-    #       - database: app
-    #         name: app
-    #         password: app
-    #     privileges:
-    #       - database: app
-    #         user: app
-    #         grant: ALL
     ssh:
         client:
             config: |
@@ -779,7 +765,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2026-10-02T08:32:28+00:00">Last modified: October 2, 2026 08:32</time>
+    <time datetime="2026-10-05T08:40:15+00:00">Last modified: October 5, 2026 08:40</time>
         </div>
 
         <footer class="footer">
