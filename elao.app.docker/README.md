@@ -738,5 +738,4 @@ framework:
 
 ## Caveats
 
-- OpenSSL debian packages for buster are broken on arm64, that's why bullseye ones are used. Expect rare behavior issues.
 - Firefox is blocking some ports like `10080`. Try to avoid them.
