@@ -33,7 +33,7 @@ project:
 
 system:
     # @option {"label": "System version"}
-    # @schema {"enum": [13, 12, 11]}
+    # @schema {"enum": [13, 12]}
     version: ~
     # @schema {"type": "string", "pattern": "^[a-zA-Z]+/[a-zA-Z]+$"}
     timezone: Etc/UTC
@@ -108,7 +108,7 @@ system:
         configs: []
     nodejs:
         # @option {"label": "Nodejs version"}
-        # @schema {"enum": [null, 24, 22, 20, 18, 16, 14, 12, 10]}
+        # @schema {"enum": [null, 24, 22, 20, 18, 16, 14, 12]}
         version: ~
         # @schema {"items": {"type": "object"}}
         packages: []
@@ -117,7 +117,7 @@ system:
             version: ~
     mariadb:
         # @option {"label": "MariaDB version"}
-        # @schema {"enum": [null, 11.8, 11.4, 10.11, 10.6, 10.5]}
+        # @schema {"enum": [null, 11.8, 11.4, 10.11]}
         version: ~
     mysql:
         # @option {"label": "MySQL version"}
