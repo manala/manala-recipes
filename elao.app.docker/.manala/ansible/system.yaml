@@ -233,7 +233,8 @@
 
     manala_php_extensions_exclusive: true
     manala_php_extensions:
-      - opcache
+      - extension: opcache
+        state: "{{ 'present' if (manala_php_version and manala_php_version|string is version('8.5', '<')) else 'ignore' }}"
       - readline
       - extension: json
         state: "{{ 'present' if (manala_php_version and manala_php_version|string is version('8.0', '<')) else 'ignore' }}"
