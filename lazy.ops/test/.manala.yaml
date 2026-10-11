@@ -74,6 +74,7 @@ system:
         version: 0.22.1
     vault:
         version: 2.0.4
+        token_helper: true
     rclone:
         version: 1.75.0
     openstack:

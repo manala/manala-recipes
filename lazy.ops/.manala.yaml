@@ -2,6 +2,7 @@ manala:
     description: Ops environment, opiniated and docker based, for lazy people
     template: .manala.yaml.tmpl
     sync:
+      - .manala/bin
       - .manala/docker
       - .manala/etc
       - .manala/github
@@ -151,6 +152,8 @@ system:
         # @schema {"enum": [null, "2.0.4", "1.21.4", "1.20.4", "1.19.5"]}
         # @option {"label": "Vault version"}
         version: ~
+        # @schema {"type": "boolean"}
+        token_helper: false
     rclone:
         # @schema {"enum": [null, "1.75.0"]}
         # @option {"label": "Rclone version"}
