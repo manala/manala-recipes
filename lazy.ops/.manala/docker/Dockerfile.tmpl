@@ -262,7 +262,7 @@ EOF
 {{ end -}}
 
 {{ $krew := .Vars.system.krew -}}
-{{- if $krew.version }} \
+{{- if $krew.version }}
 # Krew
 ENV KREW_ROOT="/usr/local/share/krew"
 ENV KREW_NO_UPGRADE_CHECK=1
