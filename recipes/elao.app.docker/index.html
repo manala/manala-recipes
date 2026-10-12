@@ -748,9 +748,9 @@ parameters:
 a <code class="code-inline" id="fe8bbdd9762eed82d6c37972f0876d22">SYMFONY_IDE</code> env var allows you to <a href="https://symfony.com/doc/current/reference/configuration/framework.html#ide" target="_blank">configure your IDE</a> 
 once on your machine:</p>
 <p>PhpStorm:</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="1b8b9ba6e8e995cd90c711ac6f616edb"><span class="token builtin class-name">printf</span> <span class="token string">"SYMFONY_IDE=<span class="token entity" title='\"'>\"</span>phpstorm://open?file=%%f&amp;line=%%l<span class="token entity" title='\"'>\"</span>"</span> <span class="token operator">&gt;&gt;</span> ~/.zshrc</code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="1b8b9ba6e8e995cd90c711ac6f616edb"><span class="token builtin class-name">printf</span> <span class="token string">"SYMFONY_IDE=<span class="token entity" title="\&quot;">\"</span>phpstorm://open?file=%%f&amp;line=%%l<span class="token entity" title="\&quot;">\"</span>"</span> <span class="token operator">&gt;&gt;</span> ~/.zshrc</code></pre>
 <p>Sublime:</p>
-<pre class="code-multiline language-shell"><code class="language-shell" id="96ff8142a43ae489fd21c4c29b2fa250"><span class="token builtin class-name">printf</span> <span class="token string">"SYMFONY_IDE=<span class="token entity" title='\"'>\"</span>subl://open?url=file://%%f&amp;line=%%l<span class="token entity" title='\"'>\"</span>"</span> <span class="token operator">&gt;&gt;</span> ~/.zshrc</code></pre>
+<pre class="code-multiline language-shell"><code class="language-shell" id="96ff8142a43ae489fd21c4c29b2fa250"><span class="token builtin class-name">printf</span> <span class="token string">"SYMFONY_IDE=<span class="token entity" title="\&quot;">\"</span>subl://open?url=file://%%f&amp;line=%%l<span class="token entity" title="\&quot;">\"</span>"</span> <span class="token operator">&gt;&gt;</span> ~/.zshrc</code></pre>
 <p>However, since the paths in the container differs from the ones on your machine, you need an extra mapping per project.
 Hopefully, the Manala recipe will detect your host <code class="code-inline" id="fe8bbdd9762eed82d6c37972f0876d22">SYMFONY_IDE</code> env var and forwards it to the container automatically
 with the proper paths mapping.</p>
@@ -764,7 +764,7 @@ with the proper paths mapping.</p>
         </article>
     </section>
 
-    <time datetime="2026-10-12T14:13:27+00:00">Last modified: October 12, 2026 14:13</time>
+    <time datetime="2026-10-12T14:14:06+00:00">Last modified: October 12, 2026 14:14</time>
         </div>
 
         <footer class="footer">
