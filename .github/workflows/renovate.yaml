@@ -22,7 +22,7 @@ jobs:
 
   renovate:
     name: Renovate
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Create GitHub App Token
         id: app-token
