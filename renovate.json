@@ -5,6 +5,8 @@
   ],
   "ignorePaths": [],
   "labels": ["renovate"],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
   "github-actions": {
     "managerFilePatterns": [
       "/(^|/)action\\.ya?ml\\.tmpl$/"
