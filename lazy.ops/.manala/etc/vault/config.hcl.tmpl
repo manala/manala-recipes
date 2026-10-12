@@ -1,0 +1,7 @@
+# Vault config template
+# Don't edit this file directly. Instead, set config in project .manala.yaml, and run `manala up`.
+
+{{ if .Vars.system.vault.token_helper -}}
+# See: https://developer.hashicorp.com/vault/docs/commands/token-helper
+token_helper = "/usr/local/bin/vault-token-helper"
+{{- end }}

@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Vault token helper
+# One token file per vault, named after the server address host
+# See: https://developer.hashicorp.com/vault/docs/commands/token-helper
+
+set -e
+
+umask 077
+
+if [ -z "${VAULT_ADDR}" ] ; then
+  echo "Error: VAULT_ADDR environment variable unset." >&2
+  exit 100
+fi
+
+# Extract host from address, e.g. https://user@vault.example.com:8200/foo -> vault.example.com
+TOKEN_HOST="${VAULT_ADDR#*://}"    # strip scheme
+TOKEN_HOST="${TOKEN_HOST%%[/?#]*}" # strip path, query and fragment
+TOKEN_HOST="${TOKEN_HOST#*@}"      # strip userinfo
+case "${TOKEN_HOST}" in
+  \[*) TOKEN_HOST="${TOKEN_HOST%%]*}]" ;; # ipv6 host, keep brackets
+  *)   TOKEN_HOST="${TOKEN_HOST%%:*}" ;;  # strip port
+esac
+
+if [ -z "${TOKEN_HOST}" ] ; then
+  echo "Error: unable to extract host from VAULT_ADDR \"${VAULT_ADDR}\"." >&2
+  exit 100
+fi
+
+TOKEN_FILE="${HOME}/.vault-tokens/${TOKEN_HOST}"
+
+case "${1}" in
+  get)   [ ! -f "${TOKEN_FILE}" ] || cat "${TOKEN_FILE}" ;;
+  store) mkdir -p "${HOME}/.vault-tokens" && cat > "${TOKEN_FILE}" ;;
+  erase) rm -f "${TOKEN_FILE}" ;;
+  *)
+    echo "Error: Provide a valid command: get, store, or erase." >&2
+    exit 101
+    ;;
+esac

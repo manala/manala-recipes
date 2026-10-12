@@ -128,6 +128,7 @@ system:
     {{- if .Vars.system.vault.version }}
     vault:
         version: {{ .Vars.system.vault.version | toYaml }}
+        # token_helper: true
     {{- end }}
 
     {{- if .Vars.system.rclone.version }}
