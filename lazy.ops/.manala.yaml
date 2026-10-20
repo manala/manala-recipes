@@ -175,7 +175,7 @@ system:
         # @option {"label": "Scaleway cli version"}
         version: ~
     ovhcloud:
-        # @schema {"enum": [null, "0.12.0"]}
+        # @schema {"enum": [null, "0.16.0"]}
         # @option {"label": "OVHcloud cli version"}
         version: ~
     sops:
