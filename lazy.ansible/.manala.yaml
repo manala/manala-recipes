@@ -94,17 +94,17 @@ system:
         # @schema {"items": {"type": "string"}}
         dependencies: []
     terraform:
-        # @schema {"enum": [null, "1.17.1", "1.16.7", "1.15.9", "1.14.9", "1.13.5"]}
+        # @schema {"enum": [null, "1.17.2", "1.16.7", "1.15.9", "1.14.9", "1.13.5"]}
         # @option {"label": "Terraform version"}
         version: ~
     aws:
-        # @schema {"enum": [null, "2.39.4"]}
+        # @schema {"enum": [null, "2.42.1"]}
         # @option {"label": "AWS cli version"}
         version: ~
         # @schema {"type": ["null", "string"]}
         config: ~
     gcloud:
-        # @schema {"enum": [null, "592.0.0"]}
+        # @schema {"enum": [null, "594.0.1"]}
         # @option {"label": "Google Cloud cli version"}
         version: ~
         # @schema {"items": {"type": "string"}}
