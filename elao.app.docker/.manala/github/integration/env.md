@@ -86,16 +86,25 @@ jobs:
       # […]
       - name: 'Get Workflows Knight app token'
         id: get_app_token
-        uses: machine-learning-apps/actions-app-token@master
+        uses: actions/create-github-app-token@v3
         with:
-          APP_PEM: ${{ secrets.WORKFLOWS_KNIGHT_APP_PEM_BASE_64 }}
-          APP_ID: ${{ secrets.WORKFLOWS_KNIGHT_APP_ID }}
+          client-id: ${{ vars.WORKFLOWS_KNIGHT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.WORKFLOWS_KNIGHT_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
 
       - name: 'Setup container with Manala'
         uses: ./.manala/github/deliveries/setup
         with:
           # […]
           env: |
-            COMPOSER_AUTH='{ "github-oauth": { "github.com": "${{ steps.get_app_token.outputs.app_token }}" } }'
+            COMPOSER_AUTH='{ "github-oauth": { "github.com": "${{ steps.get_app_token.outputs.token }}" } }'
       # […]
 ```
+
+The `WORKFLOWS_KNIGHT_APP_CLIENT_ID` variable holds the app's Client ID (not its numeric App ID), and the `WORKFLOWS_KNIGHT_APP_PRIVATE_KEY` secret holds its private key as is, in PEM format (not base64 encoded). Both are set at the organization level.
+
+`owner` is required: without it, the token only grants access to the current repository, which defeats the purpose of reading other private repositories.
+
+### Migrating from `machine-learning-apps/actions-app-token`
+
+Former versions of this documentation used `machine-learning-apps/actions-app-token`, which is archived and relies on the deprecated `set-output` command. To migrate a project, replace the step as above, and read the token from `outputs.token` instead of `outputs.app_token`. The former `WORKFLOWS_KNIGHT_APP_PEM_BASE_64` and `WORKFLOWS_KNIGHT_APP_ID` secrets keep working with the former action until every project has migrated.
